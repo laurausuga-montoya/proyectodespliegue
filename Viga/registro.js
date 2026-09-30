@@ -43,7 +43,7 @@ formulario.addEventListener("submit", async function(event) {
     try {
 
         const respuesta = await fetch(
-            "http://localhost:3000/registrar",
+            "https://viga-c607.onrender.com/registrar",
             {
 
                 method: "POST",

@@ -1,99 +1,75 @@
 const formulario = document.getElementById("registroForm");
 
+formulario.addEventListener("submit", function (e) {
 
-formulario.addEventListener("submit", function(e){
+    e.preventDefault();
 
+    const usuario = {
 
-e.preventDefault();
+        identificacion:
+            document.getElementById("identificacion").value.trim(),
 
+        nombres:
+            document.getElementById("nombres").value.trim(),
 
+        apellidos:
+            document.getElementById("apellidos").value.trim(),
 
-const usuario = {
+        fecha_nacimiento:
+            document.getElementById("fecha_nacimiento").value,
 
+        telefono:
+            document.getElementById("telefono").value.trim(),
 
-identificacion:
-document.getElementById("identificacion").value,
+        correo:
+            document.getElementById("correo").value.trim(),
 
+        password:
+            document.getElementById("password").value
+    };
 
-nombres:
-document.getElementById("nombres").value,
+    fetch("https://viga-c607.onrender.com", {
 
+        method: "POST",
 
-apellidos:
-document.getElementById("apellidos").value,
+        headers: {
+            "Content-Type": "application/json"
+        },
 
+        body: JSON.stringify(usuario)
 
-fecha_nacimiento:
-document.getElementById("fecha_nacimiento").value,
+    })
 
+    .then(async response => {
 
-telefono:
-document.getElementById("telefono").value,
+        const data = await response.json();
 
+        if (!response.ok) {
+            throw new Error(
+                data.error || "No se pudo registrar el usuario"
+            );
+        }
 
-correo:
-document.getElementById("correo").value,
+        return data;
 
+    })
 
-password:
-document.getElementById("password").value
+    .then(data => {
 
+        document.getElementById("mensaje").textContent =
+            data.mensaje || "Usuario registrado correctamente.";
 
-};
+        formulario.reset();
 
+    })
 
+    .catch(error => {
 
+        console.error("Error:", error);
 
+        document.getElementById("mensaje").textContent =
+            error.message || "Error al conectar con el servidor.";
 
-fetch("http://localhost:3000/registro",{
-
-
-method:"POST",
-
-
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify(usuario)
-
-
-
-})
-
-
-.then(res=>res.json())
-
-
-.then(data=>{
-
-
-document.getElementById("mensaje").innerHTML=data.mensaje;
-
-
-formulario.reset();
-
-
-})
-
-
-.catch(error=>{
-
-
-console.log(error);
-
-
-document.getElementById("mensaje").innerHTML=
-"Error al conectar con el servidor";
-
-
-});
-
-
+    });
 
 });
