@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>VIGA | Mi cuenta</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Poppins', sans-serif;
+
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            background: #121212;
+
+            color: white;
+
+        }
+
+
+        /* HEADER */
+
+        header {
+
+            height: 80px;
+
+            background: #1b1b1b;
+
+            border-bottom: 1px solid #2d2d2d;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+
+            padding: 0 50px;
+
+        }
+
+
+        .volver {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 28px;
+
+        }
+
+
+        .logo {
+
+            color: #37E359;
+
+            font-size: 36px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
+        }
+
+
+        /* CONTENEDOR */
+
+        .contenedor {
+
+            max-width: 850px;
+
+            margin: 50px auto;
+
+            padding: 0 25px;
+
+        }
+
+
+        .titulo {
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .titulo h1 {
+
+            font-size: 38px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .titulo p {
+
+            color: #999;
+
+        }
+
+
+        /* TARJETA */
+
+        .cuenta {
+
+            background: #1b1b1b;
+
+            border: 1px solid #292929;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+        }
+
+
+        .perfil {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 35px;
+
+            padding-bottom: 25px;
+
+            border-bottom: 1px solid #303030;
+
+        }
+
+
+        .avatar {
+
+            width: 75px;
+
+            height: 75px;
+
+            border-radius: 50%;
+
+            background: #37E359;
+
+            color: #111;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+        }
+
+
+        .perfil h2 {
+
+            font-size: 25px;
+
+        }
+
+
+        .perfil p {
+
+            color: #999;
+
+        }
+
+
+        /* DATOS */
+
+        .datos {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+
+        }
+
+
+        .dato {
+
+            background: #222;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+        }
+
+
+        .dato .etiqueta {
+
+            display: block;
+
+            color: #888;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .dato .valor {
+
+            color: white;
+
+            font-size: 16px;
+
+            word-break: break-word;
+
+        }
+
+
+        .cargando {
+
+            text-align: center;
+
+            color: #999;
+
+            padding: 30px;
+
+        }
+
+
+        .error {
+
+            background: #351c1c;
+
+            border: 1px solid #7a3030;
+
+            color: #ff7777;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .datos {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            header {
+
+                padding: 0 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <header>
+
+        <a
+            href="configuracion.html"
+            class="volver"
+        >
+            ←
+        </a>
+
+        <div class="logo">
+            VIGA
+        </div>
+
+    </header>
+
+
+
+    <main class="contenedor">
+
+
+        <div class="titulo">
+
+            <h1>
+                Mi cuenta
+            </h1>
+
+            <p>
+                Información registrada en VIGA
+            </p>
+
+        </div>
+
+
+
+        <div
+            id="contenido"
+            class="cuenta"
+        >
+
+            <div class="cargando">
+
+                Cargando información...
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <script>
+
+        // ==========================================
+        // OBTENER IDENTIFICACIÓN
+        // ==========================================
+
+        const identificacion =
+            localStorage.getItem(
+                "identificacionUsuario"
+            );
+
+
+        const contenido =
+            document.getElementById(
+                "contenido"
+            );
+
+
+        // ==========================================
+        // COMPROBAR SESIÓN
+        // ==========================================
+
+        if (!identificacion) {
+
+            contenido.innerHTML = `
+
+                <div class="error">
+
+                    No encontramos una sesión activa.
+
+                    <br><br>
+
+                    <a
+                        href="login.html"
+                        style="
+                            color:#37E359;
+                            font-weight:bold;
+                        "
+                    >
+                        Iniciar sesión
+                    </a>
+
+                </div>
+
+            `;
+
+        } else {
+
+            cargarCuenta();
+
+        }
+
+
+        // ==========================================
+        // CONSULTAR XAMPP
+        // ==========================================
+
+        async function cargarCuenta() {
+
+            try {
+
+
+                const respuesta =
+                    await fetch(
+
+                        "http://localhost:3000/usuario/"
+                        +
+                        encodeURIComponent(
+                            identificacion
+                        )
+
+                    );
+
+
+                const usuario =
+                    await respuesta.json();
+
+
+                if (!respuesta.ok) {
+
+                    throw new Error(
+                        usuario.error ||
+                        "No se pudo obtener la información."
+                    );
+
+                }
+
+
+                // ==================================
+                // PRIMERA LETRA
+                // ==================================
+
+                const inicial =
+                    usuario.nombres
+                        .charAt(0)
+                        .toUpperCase();
+
+
+                // ==================================
+                // MOSTRAR DATOS
+                // ==================================
+
+                contenido.innerHTML = `
+
+                    <div class="perfil">
+
+                        <div class="avatar">
+
+                            ${inicial}
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+
+                                ${usuario.nombres}
+                                ${usuario.apellidos}
+
+                            </h2>
+
+                            <p>
+                                Usuario VIGA
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="datos">
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Identificación
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.identificacion}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Nombres
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.nombres}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Apellidos
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.apellidos}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Fecha de nacimiento
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.fecha_nacimiento}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Teléfono
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.telefono || "No registrado"}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span class="etiqueta">
+                                Correo electrónico
+                            </span>
+
+                            <span class="valor">
+
+                                ${usuario.correo}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                `;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                contenido.innerHTML = `
+
+                    <div class="error">
+
+                        ❌ No se pudo cargar
+                        la información de la cuenta.
+
+                        <br><br>
+
+                        ${error.message}
+
+                        <br><br>
+
+                        Verifica que
+                        <strong>app.js</strong>
+                        esté ejecutándose.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

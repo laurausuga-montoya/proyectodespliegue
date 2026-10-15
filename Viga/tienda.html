@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VIGA | Tienda</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- TEMA GLOBAL VIGA -->
+    <script src="tema.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           HEADER
+        ========================================== */
+
+        header {
+            height: 80px;
+            background: #1b1b1b;
+            border-bottom: 1px solid #2d2d2d;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 60px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 100;
+        }
+
+        .logo {
+            color: #37E359;
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .volver {
+            color: #ddd;
+            text-decoration: none;
+            margin-left: 30px;
+        }
+
+        .volver:hover {
+            color: #37E359;
+        }
+
+        .header-izquierda {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ==========================================
+           CONTENEDOR PRINCIPAL
+        ========================================== */
+
+        .contenedor {
+            width: 94%;
+            max-width: 1400px;
+            margin: 40px auto;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .titulo h1 {
+            color: #37E359;
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .titulo p {
+            color: #999;
+            font-size: 16px;
+        }
+
+        /* ==========================================
+           DOS COLUMNAS
+        ========================================== */
+
+        .tienda-layout {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                390px;
+
+            gap: 30px;
+
+            align-items: start;
+        }
+
+        /* ==========================================
+           CATÁLOGO
+        ========================================== */
+
+        .catalogo {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .producto {
+            background: #1b1b1b;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 18px;
+
+            display: flex;
+
+            gap: 25px;
+
+            align-items: center;
+
+            transition: .3s;
+        }
+
+        .producto:hover {
+            border-color: #37E359;
+            transform: translateX(3px);
+        }
+
+        .imagen-producto {
+            width: 190px;
+            height: 160px;
+
+            object-fit: cover;
+
+            border-radius: 12px;
+
+            flex-shrink: 0;
+        }
+
+        .informacion {
+            flex: 1;
+        }
+
+        .informacion h2 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .descripcion {
+            color: #999;
+
+            font-size: 14px;
+
+            line-height: 22px;
+
+            margin-bottom: 10px;
+        }
+
+        .precio {
+            color: #37E359;
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+            margin-bottom: 12px;
+        }
+
+        .boton-agregar {
+            border: none;
+
+            background: #37E359;
+
+            color: #111;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .boton-agregar:hover {
+            background: #65ef7d;
+        }
+
+        /* ==========================================
+           CARRITO LATERAL
+        ========================================== */
+
+        .carrito {
+            background: #1b1b1b;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            position: sticky;
+
+            top: 105px;
+
+            max-height: calc(100vh - 130px);
+
+            overflow-y: auto;
+        }
+
+        .carrito-titulo {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+
+            padding-bottom: 18px;
+
+            border-bottom: 1px solid #333;
+        }
+
+        .carrito-titulo h2 {
+            color: #37E359;
+
+            font-size: 23px;
+        }
+
+        .contador {
+            background: #37E359;
+
+            color: #111;
+
+            width: 28px;
+            height: 28px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 700;
+
+            font-size: 13px;
+        }
+
+        /* ==========================================
+           PRODUCTO DENTRO DEL CARRITO
+        ========================================== */
+
+        .producto-carrito {
+            padding: 15px 0;
+
+            border-bottom: 1px solid #333;
+        }
+
+        .producto-carrito:last-child {
+            border-bottom: none;
+        }
+
+        .carrito-arriba {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .imagen-carrito {
+            width: 65px;
+            height: 65px;
+
+            object-fit: cover;
+
+            border-radius: 8px;
+
+            flex-shrink: 0;
+        }
+
+        .datos-carrito {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .datos-carrito h3 {
+            font-size: 15px;
+
+            margin-bottom: 3px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .precio-unitario {
+            color: #37E359;
+
+            font-size: 13px;
+        }
+
+        /* ==========================================
+           CONTROLES
+        ========================================== */
+
+        .controles {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            gap: 7px;
+
+            margin-top: 12px;
+        }
+
+        .control-cantidad {
+            width: 29px;
+            height: 29px;
+
+            border-radius: 7px;
+
+            border: 1px solid #444;
+
+            background: #252525;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .control-cantidad:hover {
+            background: #37E359;
+
+            color: #111;
+
+            border-color: #37E359;
+        }
+
+        .numero {
+            min-width: 30px;
+
+            text-align: center;
+
+            font-weight: 600;
+        }
+
+        .subtotal {
+            margin-left: auto;
+
+            color: #ddd;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .eliminar {
+            width: 30px;
+            height: 30px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #3a2020;
+
+            color: #ff7777;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .eliminar:hover {
+            background: #ff4d4d;
+
+            color: white;
+        }
+
+        /* ==========================================
+           CARRITO VACÍO
+        ========================================== */
+
+        .carrito-vacio {
+            text-align: center;
+
+            padding: 40px 10px;
+
+            color: #777;
+        }
+
+        .carrito-vacio .icono {
+            font-size: 45px;
+
+            margin-bottom: 10px;
+        }
+
+        /* ==========================================
+           TOTAL
+        ========================================== */
+
+        .total {
+            border-top: 1px solid #444;
+
+            margin-top: 15px;
+
+            padding-top: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .total-texto {
+            font-size: 17px;
+
+            font-weight: 600;
+        }
+
+        #totalCarrito {
+            color: #37E359;
+
+            font-size: 23px;
+
+            font-weight: 700;
+        }
+
+        .vaciar {
+            width: 100%;
+
+            margin-top: 18px;
+
+            padding: 11px;
+
+            border: 1px solid #444;
+
+            background: transparent;
+
+            color: #bbb;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        .vaciar:hover {
+            border-color: #ff7777;
+
+            color: #ff7777;
+        }
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+
+        footer {
+            text-align: center;
+
+            color: #777;
+
+            padding: 45px;
+        }
+
+        /* ==========================================
+           MODO CLARO
+        ========================================== */
+
+        html.tema-claro body,
+        body.tema-claro {
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        html.tema-claro header,
+        body.tema-claro header {
+            background: #ffffff;
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .volver,
+        body.tema-claro .volver {
+            color: #555;
+        }
+
+        html.tema-claro .volver:hover,
+        body.tema-claro .volver:hover {
+            color: #37E359;
+        }
+
+        html.tema-claro .titulo p,
+        body.tema-claro .titulo p {
+            color: #666;
+        }
+
+        html.tema-claro .producto,
+        body.tema-claro .producto {
+            background: #ffffff;
+            border-color: #dddddd;
+        }
+
+        html.tema-claro .informacion h2,
+        body.tema-claro .informacion h2 {
+            color: #222;
+        }
+
+        html.tema-claro .descripcion,
+        body.tema-claro .descripcion {
+            color: #666;
+        }
+
+        html.tema-claro .carrito,
+        body.tema-claro .carrito {
+            background: #ffffff;
+            border-color: #dddddd;
+        }
+
+        html.tema-claro .carrito-titulo,
+        body.tema-claro .carrito-titulo {
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .producto-carrito,
+        body.tema-claro .producto-carrito {
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .control-cantidad,
+        body.tema-claro .control-cantidad {
+            background: #eeeeee;
+            color: #222;
+            border-color: #cccccc;
+        }
+
+        html.tema-claro .control-cantidad:hover,
+        body.tema-claro .control-cantidad:hover {
+            background: #37E359;
+            color: #111;
+            border-color: #37E359;
+        }
+
+        html.tema-claro .subtotal,
+        body.tema-claro .subtotal {
+            color: #555;
+        }
+
+        html.tema-claro .carrito-vacio,
+        body.tema-claro .carrito-vacio {
+            color: #777;
+        }
+
+        html.tema-claro .total {
+            border-top-color: #cccccc;
+        }
+
+        html.tema-claro .vaciar,
+        body.tema-claro .vaciar {
+            border-color: #cccccc;
+            color: #555;
+        }
+
+        html.tema-claro footer,
+        body.tema-claro footer {
+            color: #666;
+        }
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 1000px) {
+
+            .tienda-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .carrito {
+                position: static;
+
+                max-height: none;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 30px;
+            }
+
+            .volver {
+                display: none;
+            }
+
+            .producto {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .imagen-producto {
+                width: 100%;
+
+                height: 220px;
+            }
+
+            .titulo h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+    <div class="header-izquierda">
+
+        <div class="logo">
+            VIGA
+        </div>
+
+        <a
+            href="inicio.html"
+            class="volver"
+        >
+            ← Volver al inicio
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     CONTENIDO
+===================================================== -->
+
+<div class="contenedor">
+
+
+    <div class="titulo">
+
+        <h1>
+            Tienda VIGA
+        </h1>
+
+        <p>
+            Productos para complementar
+            tu entrenamiento
+        </p>
+
+    </div>
+
+
+    <div class="tienda-layout">
+
+
+        <!-- =================================================
+             CATÁLOGO
+        ================================================== -->
+
+        <section class="catalogo">
+
+
+            <!-- PRODUCTO 1 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=700&q=80"
+                    alt="Bandas de resistencia"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Bandas de resistencia
+                    </h2>
+
+                    <p class="descripcion">
+                        Bandas elásticas para ejercicios
+                        de fuerza y movilidad.
+                    </p>
+
+                    <div class="precio">
+                        $35.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Bandas de resistencia',
+                            35000,
+                            'https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTO 2 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=700&q=80"
+                    alt="Mancuernas"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Mancuernas
+                    </h2>
+
+                    <p class="descripcion">
+                        Mancuernas ideales para ejercicios
+                        de fuerza.
+                    </p>
+
+                    <div class="precio">
+                        $80.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Mancuernas',
+                            80000,
+                            'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTO 3 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=700&q=80"
+                    alt="Balón deportivo"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Balón deportivo
+                    </h2>
+
+                    <p class="descripcion">
+                        Balón para diferentes
+                        actividades deportivas.
+                    </p>
+
+                    <div class="precio">
+                        $65.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Balón deportivo',
+                            65000,
+                            'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTO 4 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=700&q=80"
+                    alt="Botella deportiva"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Botella deportiva
+                    </h2>
+
+                    <p class="descripcion">
+                        Botella reutilizable para
+                        mantenerte hidratado.
+                    </p>
+
+                    <div class="precio">
+                        $30.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Botella deportiva',
+                            30000,
+                            'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTO 5 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=700&q=80"
+                    alt="Colchoneta"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Colchoneta deportiva
+                    </h2>
+
+                    <p class="descripcion">
+                        Ideal para abdominales,
+                        estiramientos y yoga.
+                    </p>
+
+                    <div class="precio">
+                        $55.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Colchoneta deportiva',
+                            55000,
+                            'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTO 6 -->
+
+            <div class="producto">
+
+                <img
+                    class="imagen-producto"
+                    src="https://images.unsplash.com/photo-1598289431512-b97b0917affc?auto=format&fit=crop&w=700&q=80"
+                    alt="Cuerda para saltar"
+                >
+
+                <div class="informacion">
+
+                    <h2>
+                        Cuerda para saltar
+                    </h2>
+
+                    <p class="descripcion">
+                        Para ejercicios cardiovasculares
+                        y entrenamiento de resistencia.
+                    </p>
+
+                    <div class="precio">
+                        $25.000
+                    </div>
+
+                    <button
+                        class="boton-agregar"
+                        onclick="agregarCarrito(
+                            'Cuerda para saltar',
+                            25000,
+                            'https://images.unsplash.com/photo-1598289431512-b97b0917affc?auto=format&fit=crop&w=700&q=80'
+                        )"
+                    >
+                        🛒 Añadir al carrito
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             CARRITO LATERAL
+        ================================================== -->
+
+        <aside class="carrito">
+
+
+            <div class="carrito-titulo">
+
+                <h2>
+                    🛒 Mi carrito
+                </h2>
+
+                <span
+                    class="contador"
+                    id="contadorCarrito"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div id="listaCarrito">
+
+                <div class="carrito-vacio">
+
+                    <div class="icono">
+                        🛒
+                    </div>
+
+                    <p>
+                        Tu carrito está vacío.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="total">
+
+                <span class="total-texto">
+                    Total:
+                </span>
+
+                <span id="totalCarrito">
+                    $0
+                </span>
+
+            </div>
+
+
+            <button
+                class="vaciar"
+                onclick="vaciarCarrito()"
+            >
+                🗑️ Vaciar carrito
+            </button>
+
+
+        </aside>
+
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    © 2026 VIGA ·
+    Vive saludable, entrena inteligente.
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   CARRITO
+===================================================== */
+
+let carrito = [];
+
+
+/* =====================================================
+   AGREGAR PRODUCTO
+===================================================== */
+
+function agregarCarrito(
+    nombre,
+    precio,
+    imagen
+) {
+
+    const existente =
+        carrito.find(
+            producto =>
+                producto.nombre === nombre
+        );
+
+    if (existente) {
+
+        existente.cantidad++;
+
+    } else {
+
+        carrito.push({
+
+            nombre: nombre,
+
+            precio: precio,
+
+            imagen: imagen,
+
+            cantidad: 1
+
+        });
+
+    }
+
+    actualizarCarrito();
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR CARRITO
+===================================================== */
+
+function actualizarCarrito() {
+
+    const lista =
+        document.getElementById(
+            "listaCarrito"
+        );
+
+    const contador =
+        document.getElementById(
+            "contadorCarrito"
+        );
+
+    const totalElemento =
+        document.getElementById(
+            "totalCarrito"
+        );
+
+
+    lista.innerHTML = "";
+
+
+    if (carrito.length === 0) {
+
+        lista.innerHTML = `
+
+            <div class="carrito-vacio">
+
+                <div class="icono">
+                    🛒
+                </div>
+
+                <p>
+                    Tu carrito está vacío.
+                </p>
+
+            </div>
+
+        `;
+
+        contador.textContent = "0";
+
+        totalElemento.textContent = "$0";
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+    let cantidadTotal = 0;
+
+
+    carrito.forEach(
+        (producto, indice) => {
+
+            const subtotal =
+                producto.precio *
+                producto.cantidad;
+
+
+            total += subtotal;
+
+            cantidadTotal +=
+                producto.cantidad;
+
+
+            const elemento =
+                document.createElement(
+                    "div"
+                );
+
+
+            elemento.className =
+                "producto-carrito";
+
+
+            elemento.innerHTML = `
+
+                <div class="carrito-arriba">
+
+                    <img
+                        src="${producto.imagen}"
+                        class="imagen-carrito"
+                        alt="${producto.nombre}"
+                    >
+
+                    <div class="datos-carrito">
+
+                        <h3>
+                            ${producto.nombre}
+                        </h3>
+
+                        <span class="precio-unitario">
+
+                            $${formatearPrecio(
+                                producto.precio
+                            )}
+
+                            cada uno
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="controles">
+
+                    <button
+                        class="control-cantidad"
+                        onclick="disminuirCantidad(${indice})"
+                    >
+                        −
+                    </button>
+
+
+                    <span class="numero">
+                        ${producto.cantidad}
+                    </span>
+
+
+                    <button
+                        class="control-cantidad"
+                        onclick="aumentarCantidad(${indice})"
+                    >
+                        +
+                    </button>
+
+
+                    <span class="subtotal">
+
+                        $${formatearPrecio(
+                            subtotal
+                        )}
+
+                    </span>
+
+
+                    <button
+                        class="eliminar"
+                        onclick="eliminarProducto(${indice})"
+                        title="Eliminar"
+                    >
+                        🗑️
+                    </button>
+
+                </div>
+
+            `;
+
+
+            lista.appendChild(
+                elemento
+            );
+
+        }
+    );
+
+
+    contador.textContent =
+        cantidadTotal;
+
+
+    totalElemento.textContent =
+        "$" +
+        formatearPrecio(total);
+
+}
+
+
+/* =====================================================
+   AUMENTAR
+===================================================== */
+
+function aumentarCantidad(indice) {
+
+    carrito[indice].cantidad++;
+
+    actualizarCarrito();
+
+}
+
+
+/* =====================================================
+   DISMINUIR
+===================================================== */
+
+function disminuirCantidad(indice) {
+
+    if (
+        carrito[indice].cantidad > 1
+    ) {
+
+        carrito[indice].cantidad--;
+
+    } else {
+
+        eliminarProducto(indice);
+
+        return;
+
+    }
+
+    actualizarCarrito();
+
+}
+
+
+/* =====================================================
+   ELIMINAR
+===================================================== */
+
+function eliminarProducto(indice) {
+
+    carrito.splice(
+        indice,
+        1
+    );
+
+    actualizarCarrito();
+
+}
+
+
+/* =====================================================
+   VACIAR
+===================================================== */
+
+function vaciarCarrito() {
+
+    if (
+        carrito.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Quieres vaciar todo el carrito?"
+        );
+
+
+    if (confirmar) {
+
+        carrito = [];
+
+        actualizarCarrito();
+
+    }
+
+}
+
+
+/* =====================================================
+   FORMATEAR PRECIO
+===================================================== */
+
+function formatearPrecio(numero) {
+
+    return numero.toLocaleString(
+        "es-CO"
+    );
+
+}
+
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+actualizarCarrito();
+
+</script>
+
+
+</body>
+
+</html>

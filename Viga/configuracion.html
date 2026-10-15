@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VIGA - Configuraciones</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            font-family: "Poppins", sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(10, 10, 10, 0.93),
+                    rgba(10, 10, 10, 0.97)
+                );
+
+            color: white;
+
+            min-height: 100vh;
+
+            transition:
+                background 0.3s,
+                color 0.3s;
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        header {
+
+            height: 75px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.08);
+
+            background: #111;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+        }
+
+
+        .volver {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 28px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .volver:hover {
+
+            color: #37e359;
+
+            transform: translateX(-3px);
+        }
+
+
+        .logo {
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
+            color: #37e359;
+        }
+
+
+        .espacio {
+
+            width: 30px;
+        }
+
+
+        /* ================================
+           CONTENEDOR
+        ================================= */
+
+        .contenedor {
+
+            width: 90%;
+
+            max-width: 1000px;
+
+            margin: 45px auto;
+
+        }
+
+
+        .titulo {
+
+            text-align: center;
+
+            margin-bottom: 10px;
+
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+
+        .subtitulo {
+
+            text-align: center;
+
+            color: #aaa;
+
+            margin-bottom: 35px;
+
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           TARJETAS
+        ================================= */
+
+        .configuraciones {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+
+        .tarjeta {
+
+            background: #181818;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            transition:
+                transform 0.2s,
+                border 0.2s;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.25);
+        }
+
+
+        .tarjeta:hover {
+
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(55,227,89,0.45);
+        }
+
+
+        .tarjeta h2 {
+
+            font-size: 19px;
+
+            margin-bottom: 8px;
+
+            color: white;
+        }
+
+
+        .descripcion {
+
+            color: #999;
+
+            font-size: 13px;
+
+            margin-bottom: 20px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ================================
+           MI CUENTA
+        ================================= */
+
+        .cuenta-boton {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #37e359;
+
+            color: #071009;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .cuenta-boton:hover {
+
+            background: #2fd04f;
+
+            transform: scale(1.01);
+        }
+
+
+        /* ================================
+           CAMPOS
+        ================================= */
+
+        .campo {
+
+            margin-bottom: 15px;
+        }
+
+
+        .campo label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #ccc;
+
+            font-size: 13px;
+        }
+
+
+        .campo input {
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid #333;
+
+            background: #101010;
+
+            color: white;
+
+            outline: none;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .campo input:focus {
+
+            border-color: #37e359;
+        }
+
+
+        .boton {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #37e359;
+
+            color: #071009;
+
+            font-family: inherit;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .boton:hover {
+
+            background: #2fd04f;
+        }
+
+
+        .boton-secundario {
+
+            margin-top: 10px;
+
+            background: #292929;
+
+            color: white;
+        }
+
+
+        .boton-secundario:hover {
+
+            background: #333;
+        }
+
+
+        /* ================================
+           NOTIFICACIONES
+        ================================= */
+
+        .opcion {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.07);
+        }
+
+
+        .opcion:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .opcion-texto {
+
+            padding-right: 15px;
+        }
+
+
+        .opcion-titulo {
+
+            font-size: 14px;
+
+            color: white;
+
+            font-weight: 500;
+        }
+
+
+        .opcion-descripcion {
+
+            color: #888;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+
+        /* ================================
+           SWITCH
+        ================================= */
+
+        .switch {
+
+            position: relative;
+
+            width: 48px;
+
+            height: 26px;
+
+            flex-shrink: 0;
+        }
+
+
+        .switch input {
+
+            opacity: 0;
+
+            width: 0;
+
+            height: 0;
+        }
+
+
+        .slider {
+
+            position: absolute;
+
+            cursor: pointer;
+
+            inset: 0;
+
+            background: #333;
+
+            border-radius: 30px;
+
+            transition: 0.3s;
+        }
+
+
+        .slider::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 20px;
+
+            height: 20px;
+
+            left: 3px;
+
+            top: 3px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: 0.3s;
+        }
+
+
+        .switch input:checked + .slider {
+
+            background: #37e359;
+        }
+
+
+        .switch input:checked + .slider::before {
+
+            transform: translateX(22px);
+        }
+
+
+        /* ================================
+           APARIENCIA
+        ================================= */
+
+        .tema-opciones {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        .tema {
+
+            flex: 1;
+
+            padding: 13px;
+
+            border:
+                1px solid #333;
+
+            border-radius: 10px;
+
+            background: #101010;
+
+            color: #bbb;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            transition: 0.2s;
+        }
+
+
+        .tema:hover {
+
+            border-color: #37e359;
+        }
+
+
+        .tema.activo {
+
+            border-color: #37e359;
+
+            background:
+                rgba(55,227,89,0.12);
+
+            color: #37e359;
+        }
+
+
+        /* ================================
+           PRIVACIDAD
+        ================================= */
+
+        .privacidad-box {
+
+            background: #101010;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            color: #aaa;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================================
+           MENSAJES
+        ================================= */
+
+        #mensaje {
+
+            position: fixed;
+
+            bottom: 25px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            background: #222;
+
+            color: white;
+
+            padding: 13px 22px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            display: none;
+
+            z-index: 999;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.4);
+        }
+
+
+        #mensaje.exito {
+
+            border:
+                1px solid #37e359;
+        }
+
+
+        #mensaje.error {
+
+            border:
+                1px solid #ff5252;
+        }
+
+
+        /* ================================
+           TEMA CLARO
+        ================================= */
+
+        body.claro {
+
+            background: #f3f3f3;
+
+            color: #111;
+        }
+
+
+        body.claro header {
+
+            background: white;
+
+            border-bottom:
+                1px solid #ddd;
+        }
+
+
+        body.claro .volver {
+
+            color: #111;
+        }
+
+
+        body.claro .titulo {
+
+            color: #111;
+        }
+
+
+        body.claro .subtitulo {
+
+            color: #666;
+        }
+
+
+        body.claro .tarjeta {
+
+            background: white;
+
+            border:
+                1px solid #ddd;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.08);
+        }
+
+
+        body.claro .tarjeta h2 {
+
+            color: #111;
+        }
+
+
+        body.claro .opcion-titulo {
+
+            color: #111;
+        }
+
+
+        body.claro .campo label {
+
+            color: #333;
+        }
+
+
+        body.claro .campo input {
+
+            background: #f7f7f7;
+
+            color: #111;
+
+            border-color: #ddd;
+        }
+
+
+        body.claro .tema {
+
+            background: #f7f7f7;
+
+            color: #555;
+
+            border-color: #ddd;
+        }
+
+
+        body.claro .tema.activo {
+
+            color: #159c35;
+
+            border-color: #37e359;
+
+            background:
+                rgba(55,227,89,0.1);
+        }
+
+
+        body.claro .privacidad-box {
+
+            background: #f4f4f4;
+
+            color: #666;
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 750px) {
+
+            header {
+
+                padding: 0 20px;
+            }
+
+
+            .logo {
+
+                font-size: 24px;
+            }
+
+
+            .configuraciones {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .contenedor {
+
+                width: 92%;
+
+                margin-top: 30px;
+            }
+
+
+            .titulo {
+
+                font-size: 27px;
+            }
+
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+</head>
+
+
+<body>
+
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <header>
+
+        <a
+            href="#"
+            class="volver"
+            onclick="volverInicio(event)"
+        >
+            ←
+        </a>
+
+
+        <div class="logo">
+            VIGA
+        </div>
+
+
+        <div class="espacio"></div>
+
+    </header>
+
+
+
+    <!-- ================================
+         CONTENIDO
+    ================================= -->
+
+    <main class="contenedor">
+
+
+        <h1 class="titulo">
+            Configuraciones
+        </h1>
+
+
+        <p class="subtitulo">
+            Personaliza tu experiencia en VIGA
+        </p>
+
+
+
+        <section class="configuraciones">
+
+
+            <!-- ============================
+                 MI CUENTA
+            ============================= -->
+
+            <div class="tarjeta">
+
+                <h2>
+                    Mi cuenta
+                </h2>
+
+                <p class="descripcion">
+                    Consulta y modifica tus datos personales,
+                    información de contacto y perfil.
+                </p>
+
+                <button
+                    class="cuenta-boton"
+                    onclick="irCuenta()"
+                >
+                    Administrar mi cuenta
+                </button>
+
+            </div>
+
+
+
+            <!-- ============================
+                 SEGURIDAD
+            ============================= -->
+
+            <div class="tarjeta">
+
+                <h2>
+                    Seguridad
+                </h2>
+
+                <p class="descripcion">
+                    Cambia la contraseña de tu cuenta VIGA.
+                </p>
+
+
+                <div class="campo">
+
+                    <label>
+                        Contraseña actual
+                    </label>
+
+                    <input
+                        type="password"
+                        id="passwordActual"
+                        placeholder="Escribe tu contraseña actual"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>
+                        Nueva contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="passwordNueva"
+                        placeholder="Escribe la nueva contraseña"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>
+                        Confirmar nueva contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="passwordConfirmar"
+                        placeholder="Repite la nueva contraseña"
+                    >
+
+                </div>
+
+
+                <button
+                    class="boton"
+                    onclick="cambiarPassword()"
+                >
+                    Cambiar contraseña
+                </button>
+
+            </div>
+
+
+
+            <!-- ============================
+                 NOTIFICACIONES
+            ============================= -->
+
+            <div class="tarjeta">
+
+                <h2>
+                    Notificaciones
+                </h2>
+
+                <p class="descripcion">
+                    Controla qué avisos quieres recibir de VIGA.
+                </p>
+
+
+                <div class="opcion">
+
+                    <div class="opcion-texto">
+
+                        <div class="opcion-titulo">
+                            Recordatorios de rutinas
+                        </div>
+
+                        <div class="opcion-descripcion">
+                            Recibe avisos sobre tus entrenamientos.
+                        </div>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="notificacionesRutina"
+                            onchange="guardarConfiguraciones()"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="opcion">
+
+                    <div class="opcion-texto">
+
+                        <div class="opcion-titulo">
+                            Recordatorios de alimentación
+                        </div>
+
+                        <div class="opcion-descripcion">
+                            Recibe avisos relacionados con tu plan.
+                        </div>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="notificacionesAlimentacion"
+                            onchange="guardarConfiguraciones()"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ============================
+                 APARIENCIA
+            ============================= -->
+
+            <div class="tarjeta">
+
+                <h2>
+                    Apariencia
+                </h2>
+
+                <p class="descripcion">
+                    Selecciona cómo quieres visualizar VIGA.
+                </p>
+
+
+                <div class="tema-opciones">
+
+                    <button
+                        class="tema"
+                        id="temaOscuro"
+                        onclick="seleccionarTema('oscuro')"
+                    >
+                        Oscuro
+                    </button>
+
+
+                    <button
+                        class="tema"
+                        id="temaClaro"
+                        onclick="seleccionarTema('claro')"
+                    >
+                        Claro
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ============================
+                 PRIVACIDAD
+            ============================= -->
+
+            <div class="tarjeta">
+
+                <h2>
+                    Privacidad
+                </h2>
+
+                <p class="descripcion">
+                    Información sobre el uso de tus datos
+                    dentro de VIGA.
+                </p>
+
+
+                <div class="privacidad-box">
+
+                    Tus datos personales se utilizan para
+                    personalizar tu experiencia en VIGA,
+                    mostrar tus rutinas, planes de alimentación
+                    y mantener la información de tu cuenta.
+
+                    <br><br>
+
+                    Puedes modificar tus datos personales
+                    desde la sección <strong>Mi cuenta</strong>.
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================================
+         MENSAJE
+    ================================= -->
+
+    <div id="mensaje"></div>
+
+
+
+    <script>
+
+        const API =
+            "http://localhost:3000";
+
+
+        let identificacion = null;
+
+        let usuarioActual = null;
+
+
+
+        /* =================================
+           OBTENER IDENTIFICACIÓN
+        ================================= */
+
+        function obtenerIdentificacion() {
+
+            const parametros =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const idURL =
+                parametros.get("id");
+
+
+            if (idURL) {
+
+                return idURL;
+
+            }
+
+
+            const usuarioGuardado =
+                localStorage.getItem("usuario");
+
+
+            if (usuarioGuardado) {
+
+                try {
+
+                    const usuario =
+                        JSON.parse(usuarioGuardado);
+
+
+                    if (usuario.identificacion) {
+
+                        return usuario.identificacion;
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+                }
+
+            }
+
+
+            return null;
+        }
+
+
+
+        /* =================================
+           MENSAJE
+        ================================= */
+
+        function mostrarMensaje(
+            texto,
+            tipo = "exito"
+        ) {
+
+            const mensaje =
+                document.getElementById("mensaje");
+
+
+            mensaje.textContent =
+                texto;
+
+
+            mensaje.className =
+                tipo;
+
+
+            mensaje.style.display =
+                "block";
+
+
+            setTimeout(function () {
+
+                mensaje.style.display =
+                    "none";
+
+            }, 3000);
+
+        }
+
+
+
+        /* =================================
+           VOLVER A INICIO
+        ================================= */
+
+        function volverInicio(event) {
+
+            event.preventDefault();
+
+
+            if (!identificacion) {
+
+                window.location.href =
+                    "inicio.html";
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "inicio.html?id=" +
+                encodeURIComponent(
+                    identificacion
+                );
+        }
+
+
+
+        /* =================================
+           IR A MI CUENTA
+        ================================= */
+
+        function irCuenta() {
+
+            if (!identificacion) {
+
+                mostrarMensaje(
+                    "No se encontró la identificación del usuario.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "cuenta.html?id=" +
+                encodeURIComponent(
+                    identificacion
+                );
+
+        }
+
+
+
+        /* =================================
+           CARGAR USUARIO
+        ================================= */
+
+        async function cargarUsuario() {
+
+            if (!identificacion) {
+
+                mostrarMensaje(
+                    "No se encontró la sesión del usuario.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        API +
+                        "/usuario/" +
+                        encodeURIComponent(
+                            identificacion
+                        )
+                    );
+
+
+                if (!respuesta.ok) {
+
+                    throw new Error(
+                        "No se pudo obtener el usuario."
+                    );
+
+                }
+
+
+                usuarioActual =
+                    await respuesta.json();
+
+
+                /* -------------------------
+                   NOTIFICACIONES
+                ------------------------- */
+
+                document.getElementById(
+                    "notificacionesRutina"
+                ).checked =
+                    Number(
+                        usuarioActual.notificaciones_rutina
+                    ) === 1;
+
+
+                document.getElementById(
+                    "notificacionesAlimentacion"
+                ).checked =
+                    Number(
+                        usuarioActual.notificaciones_alimentacion
+                    ) === 1;
+
+
+                /* -------------------------
+                   TEMA
+                ------------------------- */
+
+                const tema =
+                    usuarioActual.tema === "claro"
+                        ? "claro"
+                        : "oscuro";
+
+
+                aplicarTema(
+                    tema
+                );
+
+
+                /* -------------------------
+                   ACTUALIZAR LOCALSTORAGE
+                ------------------------- */
+
+                const usuarioGuardado = {
+
+                    ...usuarioActual
+
+                };
+
+
+                localStorage.setItem(
+                    "usuario",
+                    JSON.stringify(
+                        usuarioGuardado
+                    )
+                );
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+
+                mostrarMensaje(
+                    "No se pudo conectar con el servidor.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================
+           APLICAR TEMA
+        ================================= */
+
+        function aplicarTema(tema) {
+
+            if (window.vigaAplicarTema) {
+                window.vigaAplicarTema(tema);
+            } else {
+                localStorage.setItem(
+                    "vigaTema",
+                    tema === "claro" ? "claro" : "oscuro"
+                );
+            }
+
+            if (tema === "claro") {
+
+                document.body.classList.add(
+                    "claro"
+                );
+
+            }
+            else {
+
+                document.body.classList.remove(
+                    "claro"
+                );
+
+            }
+
+
+            document.getElementById(
+                "temaOscuro"
+            ).classList.toggle(
+                "activo",
+                tema === "oscuro"
+            );
+
+
+            document.getElementById(
+                "temaClaro"
+            ).classList.toggle(
+                "activo",
+                tema === "claro"
+            );
+
+        }
+
+
+
+        /* =================================
+           SELECCIONAR TEMA
+        ================================= */
+
+        async function seleccionarTema(
+            tema
+        ) {
+
+            aplicarTema(
+                tema
+            );
+
+
+            await guardarConfiguraciones();
+
+        }
+
+
+
+        /* =================================
+           GUARDAR CONFIGURACIONES
+        ================================= */
+
+        async function guardarConfiguraciones() {
+
+            if (!identificacion) {
+
+                return;
+
+            }
+
+
+            const tema =
+                document.body.classList.contains(
+                    "claro"
+                )
+                    ? "claro"
+                    : "oscuro";
+
+            localStorage.setItem("vigaTema", tema);
+
+            if (window.vigaAplicarTema) {
+                window.vigaAplicarTema(tema);
+            }
+
+
+            const rutina =
+                document.getElementById(
+                    "notificacionesRutina"
+                ).checked
+                    ? 1
+                    : 0;
+
+
+            const alimentacion =
+                document.getElementById(
+                    "notificacionesAlimentacion"
+                ).checked
+                    ? 1
+                    : 0;
+
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        API +
+                        "/configuracion/" +
+                        encodeURIComponent(
+                            identificacion
+                        ),
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body: JSON.stringify({
+
+                                tema:
+                                    tema,
+
+                                notificaciones_rutina:
+                                    rutina,
+
+                                notificaciones_alimentacion:
+                                    alimentacion
+
+                            })
+
+                        }
+                    );
+
+
+                const datos =
+                    await respuesta.json();
+
+
+                if (!respuesta.ok) {
+
+                    throw new Error(
+                        datos.mensaje ||
+                        "No se pudieron guardar las configuraciones."
+                    );
+
+                }
+
+
+                /* -------------------------
+                   ACTUALIZAR LOCALSTORAGE
+                ------------------------- */
+
+                if (usuarioActual) {
+
+                    usuarioActual.tema =
+                        tema;
+
+                    usuarioActual.notificaciones_rutina =
+                        rutina;
+
+                    usuarioActual.notificaciones_alimentacion =
+                        alimentacion;
+
+
+                    localStorage.setItem(
+                        "usuario",
+                        JSON.stringify(
+                            usuarioActual
+                        )
+                    );
+
+                }
+
+
+                mostrarMensaje(
+                    "Configuración guardada correctamente.",
+                    "exito"
+                );
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+
+                mostrarMensaje(
+                    error.message ||
+                    "No se pudo conectar con el servidor.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================
+           CAMBIAR CONTRASEÑA
+        ================================= */
+
+        async function cambiarPassword() {
+
+            if (!identificacion) {
+
+                mostrarMensaje(
+                    "No se encontró la sesión del usuario.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const passwordActual =
+                document.getElementById(
+                    "passwordActual"
+                ).value.trim();
+
+
+            const passwordNueva =
+                document.getElementById(
+                    "passwordNueva"
+                ).value.trim();
+
+
+            const passwordConfirmar =
+                document.getElementById(
+                    "passwordConfirmar"
+                ).value.trim();
+
+
+
+            if (
+                !passwordActual ||
+                !passwordNueva ||
+                !passwordConfirmar
+            ) {
+
+                mostrarMensaje(
+                    "Completa todos los campos de contraseña.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+
+            if (
+                passwordNueva !==
+                passwordConfirmar
+            ) {
+
+                mostrarMensaje(
+                    "Las nuevas contraseñas no coinciden.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+
+            if (
+                passwordNueva.length < 4
+            ) {
+
+                mostrarMensaje(
+                    "La nueva contraseña debe tener al menos 4 caracteres.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        API +
+                        "/configuracion/" +
+                        encodeURIComponent(
+                            identificacion
+                        ) +
+                        "/password",
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body: JSON.stringify({
+
+                                passwordActual:
+                                    passwordActual,
+
+                                passwordNueva:
+                                    passwordNueva
+
+                            })
+
+                        }
+                    );
+
+
+                const datos =
+                    await respuesta.json();
+
+
+                if (!respuesta.ok) {
+
+                    throw new Error(
+                        datos.mensaje ||
+                        "No se pudo cambiar la contraseña."
+                    );
+
+                }
+
+
+                document.getElementById(
+                    "passwordActual"
+                ).value = "";
+
+
+                document.getElementById(
+                    "passwordNueva"
+                ).value = "";
+
+
+                document.getElementById(
+                    "passwordConfirmar"
+                ).value = "";
+
+
+                mostrarMensaje(
+                    "Contraseña cambiada correctamente.",
+                    "exito"
+                );
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+
+                mostrarMensaje(
+                    error.message ||
+                    "No se pudo conectar con el servidor.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================
+           INICIO
+        ================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                identificacion =
+                    obtenerIdentificacion();
+
+
+                cargarUsuario();
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

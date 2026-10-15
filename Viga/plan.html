@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VIGA | Plan de alimentación</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- TEMA GLOBAL -->
+    <script src="tema.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 80px;
+            background: #1b1b1b;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 60px;
+
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: 700;
+            color: #37E359;
+            letter-spacing: 2px;
+        }
+
+        .volver {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .volver:hover {
+            color: #37E359;
+        }
+
+        /* ================= CONTENEDOR ================= */
+
+        .contenedor {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #37E359;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .titulo p {
+            color: #aaa;
+        }
+
+        /* ================= DATOS ================= */
+
+        .datos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .dato {
+            background: #1b1b1b;
+            padding: 18px 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #292929;
+        }
+
+        .dato span {
+            display: block;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .dato strong {
+            color: #37E359;
+            font-size: 21px;
+        }
+
+        /* ================= DIAS ================= */
+
+        .dias {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .dia {
+            border: none;
+            background: #252525;
+            color: #ddd;
+
+            padding: 14px 28px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+            font-weight: 500;
+
+            transition: .3s;
+        }
+
+        .dia:hover {
+            background: #303030;
+        }
+
+        .dia.activo {
+            background: #37E359;
+            color: #111;
+            font-weight: 700;
+        }
+
+        /* ================= DIA SELECCIONADO ================= */
+
+        .dia-titulo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .dia-titulo h2 {
+            font-size: 28px;
+        }
+
+        .dia-titulo span {
+            color: #37E359;
+        }
+
+        /* ================= COMIDAS ================= */
+
+        .comidas {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .comida {
+            background: #1b1b1b;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid #292929;
+            transition: .3s;
+        }
+
+        .comida:hover {
+            transform: translateY(-5px);
+            border-color: #37E359;
+        }
+
+        .comida img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .contenido {
+            padding: 25px;
+        }
+
+        .contenido h2 {
+            color: #37E359;
+            margin-bottom: 8px;
+        }
+
+        .contenido h3 {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .contenido ul {
+            list-style: none;
+        }
+
+        .contenido li {
+            color: #ccc;
+            padding: 7px 0;
+            border-bottom: 1px solid #292929;
+        }
+
+        .contenido li:last-child {
+            border-bottom: none;
+        }
+
+        /* ================= RECOMENDACION ================= */
+
+        .recomendacion {
+            margin-top: 35px;
+
+            background: #1b1b1b;
+
+            padding: 25px;
+
+            border-left: 4px solid #37E359;
+
+            border-radius: 12px;
+        }
+
+        .recomendacion h2 {
+            color: #37E359;
+            margin-bottom: 10px;
+        }
+
+        .recomendacion p {
+            color: #aaa;
+            line-height: 28px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 40px;
+        }
+
+        /* =========================
+           MODO CLARO
+        ========================= */
+
+        html.tema-claro body,
+        body.tema-claro {
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        html.tema-claro header,
+        body.tema-claro header {
+            background: #ffffff;
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .volver,
+        body.tema-claro .volver {
+            color: #555;
+        }
+
+        html.tema-claro .volver:hover,
+        body.tema-claro .volver:hover {
+            color: #37E359;
+        }
+
+        html.tema-claro .titulo p,
+        body.tema-claro .titulo p {
+            color: #666;
+        }
+
+        html.tema-claro .dato,
+        body.tema-claro .dato {
+            background: #ffffff;
+            border-color: #dddddd;
+        }
+
+        html.tema-claro .dato span,
+        body.tema-claro .dato span {
+            color: #666;
+        }
+
+        html.tema-claro .dia,
+        body.tema-claro .dia {
+            background: #e8e8e8;
+            color: #222;
+        }
+
+        html.tema-claro .dia:hover,
+        body.tema-claro .dia:hover {
+            background: #dcdcdc;
+        }
+
+        html.tema-claro .dia.activo,
+        body.tema-claro .dia.activo {
+            background: #37E359;
+            color: #111;
+        }
+
+        html.tema-claro .comida,
+        body.tema-claro .comida {
+            background: #ffffff;
+            border-color: #dddddd;
+        }
+
+        html.tema-claro .contenido h3,
+        body.tema-claro .contenido h3 {
+            color: #777;
+        }
+
+        html.tema-claro .contenido li,
+        body.tema-claro .contenido li {
+            color: #444;
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .recomendacion,
+        body.tema-claro .recomendacion {
+            background: #ffffff;
+        }
+
+        html.tema-claro .recomendacion p,
+        body.tema-claro .recomendacion p {
+            color: #666;
+        }
+
+        html.tema-claro footer,
+        body.tema-claro footer {
+            color: #666;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 800px) {
+
+            .comidas {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 0 25px;
+            }
+
+            .titulo h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        VIGA
+    </div>
+
+    <a
+        href="inicio.html"
+        class="volver"
+    >
+        ← Volver al inicio
+    </a>
+
+</header>
+
+
+<div class="contenedor">
+
+
+    <!-- TITULO -->
+
+    <div class="titulo">
+
+        <h1>
+            Mi plan de alimentación
+        </h1>
+
+        <p id="mensaje">
+            Plan personalizado para ti
+        </p>
+
+    </div>
+
+
+    <!-- DATOS -->
+
+    <div class="datos">
+
+        <div class="dato">
+
+            <span>
+                Peso actual
+            </span>
+
+            <strong id="pesoActual">
+                --
+            </strong>
+
+        </div>
+
+
+        <div class="dato">
+
+            <span>
+                Peso objetivo
+            </span>
+
+            <strong id="pesoObjetivo">
+                --
+            </strong>
+
+        </div>
+
+
+        <div class="dato">
+
+            <span>
+                Objetivo
+            </span>
+
+            <strong id="tipoObjetivo">
+                --
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- DIAS -->
+
+    <div class="dias">
+
+        <button
+            class="dia activo"
+            onclick="mostrarDia('lunes', this)"
+        >
+            Lunes
+        </button>
+
+        <button
+            class="dia"
+            onclick="mostrarDia('martes', this)"
+        >
+            Martes
+        </button>
+
+        <button
+            class="dia"
+            onclick="mostrarDia('miercoles', this)"
+        >
+            Miércoles
+        </button>
+
+        <button
+            class="dia"
+            onclick="mostrarDia('jueves', this)"
+        >
+            Jueves
+        </button>
+
+        <button
+            class="dia"
+            onclick="mostrarDia('viernes', this)"
+        >
+            Viernes
+        </button>
+
+    </div>
+
+
+    <!-- DIA ACTUAL -->
+
+    <div class="dia-titulo">
+
+        <h2>
+
+            Alimentación del
+
+            <span id="nombreDia">
+                Lunes
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <!-- COMIDAS -->
+
+    <div
+        class="comidas"
+        id="comidas"
+    >
+    </div>
+
+
+    <!-- RECOMENDACION -->
+
+    <div class="recomendacion">
+
+        <h2>
+            💡 Recomendación VIGA
+        </h2>
+
+        <p id="recomendacionTexto">
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 VIGA ·
+    Vive saludable, entrena inteligente.
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   RECIBIR DATOS
+===================================================== */
+
+const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const pesoActual =
+    parametros.get("actual");
+
+
+const pesoObjetivo =
+    parametros.get("objetivo");
+
+
+const tipo =
+    parametros.get("tipo");
+
+
+document.getElementById("pesoActual").textContent =
+    pesoActual ? pesoActual + " kg" : "--";
+
+
+document.getElementById("pesoObjetivo").textContent =
+    pesoObjetivo ? pesoObjetivo + " kg" : "--";
+
+
+/* =====================================================
+   OBJETIVO
+===================================================== */
+
+let objetivoTexto = "";
+
+let recomendacion = "";
+
+
+if (tipo === "bajar") {
+
+    objetivoTexto = "Bajar de peso";
+
+    recomendacion =
+        "Prioriza alimentos naturales, verduras, proteínas magras y suficiente agua.";
+
+}
+
+else if (tipo === "subir") {
+
+    objetivoTexto = "Aumentar de peso";
+
+    recomendacion =
+        "Incluye suficientes proteínas, carbohidratos y alimentos nutritivos para aumentar tu consumo energético.";
+
+}
+
+else {
+
+    objetivoTexto = "Mantener peso";
+
+    recomendacion =
+        "Mantén una alimentación equilibrada combinando proteínas, carbohidratos, frutas, verduras y grasas saludables.";
+
+}
+
+
+document.getElementById("tipoObjetivo").textContent =
+    objetivoTexto;
+
+
+document.getElementById("mensaje").textContent =
+    "Plan personalizado para " +
+    objetivoTexto.toLowerCase();
+
+
+document.getElementById("recomendacionTexto").textContent =
+    recomendacion;
+
+
+/* =====================================================
+   PLANES DE ALIMENTACION
+===================================================== */
+
+const planes = {
+
+    lunes: {
+
+        nombre: "Lunes",
+
+        comidas: [
+
+            {
+                titulo: "🌅 Desayuno",
+                hora: "7:00 AM",
+                imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Huevos revueltos",
+                    "Pan integral",
+                    "Papaya",
+                    "Café o té sin azúcar"
+                ]
+            },
+
+            {
+                titulo: "🍎 Media mañana",
+                hora: "10:00 AM",
+                imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Manzana",
+                    "Yogur natural"
+                ]
+            },
+
+            {
+                titulo: "🍗 Almuerzo",
+                hora: "12:30 PM",
+                imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pollo a la plancha",
+                    "Arroz",
+                    "Ensalada",
+                    "Aguacate"
+                ]
+            },
+
+            {
+                titulo: "🥛 Merienda",
+                hora: "4:00 PM",
+                imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Yogur",
+                    "Fresas",
+                    "Frutos secos"
+                ]
+            },
+
+            {
+                titulo: "🌙 Cena",
+                hora: "7:00 PM",
+                imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pescado",
+                    "Papa cocida",
+                    "Ensalada"
+                ]
+            }
+
+        ]
+
+    },
+
+
+    martes: {
+
+        nombre: "Martes",
+
+        comidas: [
+
+            {
+                titulo: "🌅 Desayuno",
+                hora: "7:00 AM",
+                imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Avena con leche",
+                    "Banano",
+                    "Huevos",
+                    "Pan integral"
+                ]
+            },
+
+            {
+                titulo: "🍊 Media mañana",
+                hora: "10:00 AM",
+                imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Naranja",
+                    "Yogur",
+                    "Almendras"
+                ]
+            },
+
+            {
+                titulo: "🍝 Almuerzo",
+                hora: "12:30 PM",
+                imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pasta",
+                    "Carne magra",
+                    "Ensalada",
+                    "Aguacate"
+                ]
+            },
+
+            {
+                titulo: "🥜 Merienda",
+                hora: "4:00 PM",
+                imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Banano",
+                    "Mantequilla de maní",
+                    "Yogur"
+                ]
+            },
+
+            {
+                titulo: "🌙 Cena",
+                hora: "7:00 PM",
+                imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pollo",
+                    "Arroz",
+                    "Verduras"
+                ]
+            }
+
+        ]
+
+    },
+
+
+    miercoles: {
+
+        nombre: "Miércoles",
+
+        comidas: [
+
+            {
+                titulo: "🌅 Desayuno",
+                hora: "7:00 AM",
+                imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Arepa integral",
+                    "Huevos",
+                    "Queso",
+                    "Fruta"
+                ]
+            },
+
+            {
+                titulo: "🍓 Media mañana",
+                hora: "10:00 AM",
+                imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Fresas",
+                    "Yogur griego",
+                    "Granola"
+                ]
+            },
+
+            {
+                titulo: "🍚 Almuerzo",
+                hora: "12:30 PM",
+                imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Arroz",
+                    "Pechuga de pollo",
+                    "Frijoles",
+                    "Ensalada"
+                ]
+            },
+
+            {
+                titulo: "🥤 Merienda",
+                hora: "4:00 PM",
+                imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Batido de frutas",
+                    "Avena",
+                    "Leche"
+                ]
+            },
+
+            {
+                titulo: "🌙 Cena",
+                hora: "7:00 PM",
+                imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pescado",
+                    "Papa",
+                    "Verduras"
+                ]
+            }
+
+        ]
+
+    },
+
+
+    jueves: {
+
+        nombre: "Jueves",
+
+        comidas: [
+
+            {
+                titulo: "🌅 Desayuno",
+                hora: "7:00 AM",
+                imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Tostadas integrales",
+                    "Huevos",
+                    "Aguacate",
+                    "Fruta"
+                ]
+            },
+
+            {
+                titulo: "🍌 Media mañana",
+                hora: "10:00 AM",
+                imagen: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Banano",
+                    "Yogur natural",
+                    "Nueces"
+                ]
+            },
+
+            {
+                titulo: "🍗 Almuerzo",
+                hora: "12:30 PM",
+                imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pechuga de pollo",
+                    "Arroz integral",
+                    "Ensalada",
+                    "Aguacate"
+                ]
+            },
+
+            {
+                titulo: "🥣 Merienda",
+                hora: "4:00 PM",
+                imagen: "https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Avena",
+                    "Leche",
+                    "Fruta"
+                ]
+            },
+
+            {
+                titulo: "🌙 Cena",
+                hora: "7:00 PM",
+                imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Carne magra",
+                    "Puré de papa",
+                    "Ensalada"
+                ]
+            }
+
+        ]
+
+    },
+
+
+    viernes: {
+
+        nombre: "Viernes",
+
+        comidas: [
+
+            {
+                titulo: "🌅 Desayuno",
+                hora: "7:00 AM",
+                imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Arepa",
+                    "Huevos",
+                    "Queso",
+                    "Banano"
+                ]
+            },
+
+            {
+                titulo: "🍏 Media mañana",
+                hora: "10:00 AM",
+                imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Manzana",
+                    "Yogur",
+                    "Frutos secos"
+                ]
+            },
+
+            {
+                titulo: "🍛 Almuerzo",
+                hora: "12:30 PM",
+                imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Carne magra",
+                    "Arroz",
+                    "Frijoles",
+                    "Ensalada"
+                ]
+            },
+
+            {
+                titulo: "🥤 Merienda",
+                hora: "4:00 PM",
+                imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Yogur",
+                    "Banano",
+                    "Avena"
+                ]
+            },
+
+            {
+                titulo: "🌙 Cena",
+                hora: "7:00 PM",
+                imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+                alimentos: [
+                    "Pescado",
+                    "Arroz",
+                    "Verduras",
+                    "Aguacate"
+                ]
+            }
+
+        ]
+
+    }
+
+};
+
+
+/* =====================================================
+   MOSTRAR DIA
+===================================================== */
+
+function mostrarDia(dia, boton) {
+
+    document
+        .querySelectorAll(".dia")
+        .forEach(function(btn) {
+
+            btn.classList.remove("activo");
+
+        });
+
+
+    boton.classList.add("activo");
+
+
+    document.getElementById("nombreDia").textContent =
+        planes[dia].nombre;
+
+
+    const contenedor =
+        document.getElementById("comidas");
+
+
+    contenedor.innerHTML = "";
+
+
+    planes[dia].comidas.forEach(function(comida) {
+
+        const tarjeta =
+            document.createElement("div");
+
+
+        tarjeta.className =
+            "comida";
+
+
+        tarjeta.innerHTML = `
+
+            <img
+                src="${comida.imagen}"
+                alt="${comida.titulo}"
+            >
+
+            <div class="contenido">
+
+                <h2>
+                    ${comida.titulo}
+                </h2>
+
+                <h3>
+                    ${comida.hora}
+                </h3>
+
+                <ul>
+
+                    ${comida.alimentos
+                        .map(function(alimento) {
+
+                            return `
+                                <li>
+                                    ✓ ${alimento}
+                                </li>
+                            `;
+
+                        })
+                        .join("")
+                    }
+
+                </ul>
+
+            </div>
+
+        `;
+
+
+        contenedor.appendChild(tarjeta);
+
+    });
+
+}
+
+
+/* =====================================================
+   MOSTRAR LUNES AL ABRIR
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const botonLunes =
+            document.querySelector(".dia");
+
+        mostrarDia(
+            "lunes",
+            botonLunes
+        );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

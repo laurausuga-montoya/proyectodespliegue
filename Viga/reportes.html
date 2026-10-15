@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VIGA | Informes</title>
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+        body {
+
+            background: #121212;
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        header {
+
+            height: 80px;
+
+            background: #1b1b1b;
+
+            border-bottom: 1px solid #2d2d2d;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 60px;
+        }
+
+
+        .logo {
+
+            font-size: 40px;
+
+            font-weight: 700;
+
+            color: #37E359;
+
+            letter-spacing: 2px;
+        }
+
+
+        .volver {
+
+            color: #ddd;
+
+            text-decoration: none;
+        }
+
+
+        .volver:hover {
+
+            color: #37E359;
+        }
+
+
+        .contenedor {
+
+            width: 90%;
+
+            max-width: 1200px;
+
+            margin: 45px auto;
+        }
+
+
+        .titulo {
+
+            margin-bottom: 35px;
+        }
+
+
+        .titulo h1 {
+
+            font-size: 40px;
+
+            color: #37E359;
+
+            margin-bottom: 10px;
+        }
+
+
+        .titulo p {
+
+            color: #999;
+        }
+
+
+        .reportes {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .reporte {
+
+            background: #1b1b1b;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            transition: .3s;
+        }
+
+
+        .reporte:hover {
+
+            transform: translateY(-5px);
+
+            border-color: #37E359;
+        }
+
+
+        .numero {
+
+            width: 40px;
+
+            height: 40px;
+
+            background: #37E359;
+
+            color: #111;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+
+        .reporte h2 {
+
+            margin-bottom: 10px;
+        }
+
+
+        .reporte p {
+
+            color: #aaa;
+
+            line-height: 25px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .sql {
+
+            display: inline-block;
+
+            background: #252525;
+
+            color: #37E359;
+
+            padding: 7px 12px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+        }
+
+
+        .total {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            background: #252525;
+
+            border-radius: 10px;
+
+            text-align: center;
+        }
+
+
+        .total strong {
+
+            display: block;
+
+            font-size: 30px;
+
+            color: #37E359;
+        }
+
+
+        footer {
+
+            text-align: center;
+
+            color: #777;
+
+            padding: 40px;
+        }
+
+
+        @media(max-width: 800px) {
+
+            .reportes {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        VIGA
+    </div>
+
+
+    <a
+        href="inicio.html"
+        class="volver"
+    >
+        ← Volver al inicio
+    </a>
+
+</header>
+
+
+<div class="contenedor">
+
+
+    <div class="titulo">
+
+        <h1>
+            Informes
+        </h1>
+
+        <p>
+            Información y estadísticas
+            de la plataforma VIGA.
+        </p>
+
+    </div>
+
+
+    <div class="reportes">
+
+
+        <!-- 1 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                1
+            </div>
+
+            <h2>
+                Usuarios registrados
+            </h2>
+
+            <p>
+                Total de usuarios registrados
+                en la plataforma.
+            </p>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+            <div class="total">
+
+                Total registrados
+
+                <strong id="totalUsuarios">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- 2 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                2
+            </div>
+
+            <h2>
+                Usuarios activos
+            </h2>
+
+            <p>
+                Cantidad de usuarios que
+                ingresan diariamente
+                o mensualmente.
+            </p>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 3 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                3
+            </div>
+
+            <h2>
+                Rutinas más utilizadas
+            </h2>
+
+            <p>
+                Muestra cuáles rutinas
+                realizan más los usuarios.
+            </p>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+            <span class="sql">
+                ORDER BY
+            </span>
+
+        </div>
+
+
+        <!-- 4 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                4
+            </div>
+
+            <h2>
+                Planes de alimentación
+            </h2>
+
+            <p>
+                Cantidad de planes asignados
+                según el objetivo:
+                bajar, mantener o aumentar peso.
+            </p>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 5 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                5
+            </div>
+
+            <h2>
+                Productos más vendidos
+            </h2>
+
+            <p>
+                Lista los productos deportivos
+                con mayor número de ventas.
+            </p>
+
+            <span class="sql">
+                SUM()
+            </span>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 6 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                6
+            </div>
+
+            <h2>
+                Ventas mensuales
+            </h2>
+
+            <p>
+                Total de ingresos por ventas
+                cada mes.
+            </p>
+
+            <span class="sql">
+                SUM()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 7 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                7
+            </div>
+
+            <h2>
+                Inventario
+            </h2>
+
+            <p>
+                Productos disponibles,
+                agotados y con bajo stock.
+            </p>
+
+            <span class="sql">
+                MIN()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 8 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                8
+            </div>
+
+            <h2>
+                Ingresos generales
+            </h2>
+
+            <p>
+                Total de dinero generado
+                por la tienda.
+            </p>
+
+            <span class="sql">
+                SUM()
+            </span>
+
+        </div>
+
+
+        <!-- 9 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                9
+            </div>
+
+            <h2>
+                Progreso de usuarios
+            </h2>
+
+            <p>
+                Promedio de peso perdido
+                o ganado por los usuarios.
+            </p>
+
+            <span class="sql">
+                AVG()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+        <!-- 10 -->
+
+        <div class="reporte">
+
+            <div class="numero">
+                10
+            </div>
+
+            <h2>
+                Usuarios por objetivo
+            </h2>
+
+            <p>
+                Cantidad de usuarios cuyo
+                objetivo es ganar músculo,
+                perder peso o mantenerse.
+            </p>
+
+            <span class="sql">
+                COUNT()
+            </span>
+
+            <span class="sql">
+                GROUP BY
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    © 2026 VIGA ·
+    Vive saludable,
+    entrena inteligente.
+
+</footer>
+
+
+<script>
+
+    /*
+       Este código consulta tu servidor
+       para mostrar el total real
+       de usuarios registrados.
+    */
+
+    fetch("http://localhost:3000/reportes/usuarios")
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Error obteniendo usuarios"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            document
+                .getElementById("totalUsuarios")
+                .textContent = data.total;
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            document
+                .getElementById("totalUsuarios")
+                .textContent = "Error";
+
+        });
+
+</script>
+
+
+</body>
+
+</html>

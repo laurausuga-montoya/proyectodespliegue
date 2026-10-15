@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VIGA - Mi Perfil</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            font-family: "Poppins", sans-serif;
+
+            background: #121212;
+
+            color: white;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        header {
+
+            width: 100%;
+
+            height: 75px;
+
+            background: #181818;
+
+            border-bottom: 1px solid #292929;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+        }
+
+
+        .lado-izquierdo {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+        }
+
+
+        .volver {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 28px;
+
+            cursor: pointer;
+
+            transition: .2s;
+
+        }
+
+
+        .volver:hover {
+
+            color: #37E359;
+
+        }
+
+
+        .logo {
+
+            color: #37E359;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        .titulo-header {
+
+            color: #ddd;
+
+            font-size: 15px;
+
+        }
+
+
+        /* ==============================
+           CONTENEDOR
+        ============================== */
+
+        main {
+
+            width: 100%;
+
+            max-width: 850px;
+
+            margin: auto;
+
+            padding: 45px 25px 60px;
+
+        }
+
+
+        .titulo {
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .titulo h1 {
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .titulo p {
+
+            color: #999;
+
+            font-size: 14px;
+
+        }
+
+
+        /* ==============================
+           TARJETA
+        ============================== */
+
+        .tarjeta {
+
+            background: #1b1b1b;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 35px;
+
+        }
+
+
+        /* ==============================
+           ICONO
+        ============================== */
+
+        .zona-icono {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .avatar {
+
+            width: 110px;
+
+            height: 110px;
+
+            border-radius: 50%;
+
+            background: #37E359;
+
+            color: #111;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 48px;
+
+            font-weight: 700;
+
+            border: 3px solid #37E359;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .texto-icono {
+
+            color: #999;
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .selector-iconos {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+        }
+
+
+        .icono {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 50%;
+
+            border: 1px solid #444;
+
+            background: #252525;
+
+            color: white;
+
+            font-size: 22px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition: .2s;
+
+        }
+
+
+        .icono:hover {
+
+            border-color: #37E359;
+
+            transform: scale(1.05);
+
+        }
+
+
+        .icono.seleccionado {
+
+            border: 2px solid #37E359;
+
+            background: #303030;
+
+        }
+
+
+        /* ==============================
+           CAMPOS
+        ============================== */
+
+        .formulario {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+        .campo {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .campo-completo {
+
+            grid-column: 1 / -1;
+
+        }
+
+
+        label {
+
+            color: #ddd;
+
+            font-size: 14px;
+
+            font-weight: 500;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            background: #252525;
+
+            color: white;
+
+            border: 1px solid #3b3b3b;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 14px;
+
+        }
+
+
+        input:focus {
+
+            border-color: #37E359;
+
+        }
+
+
+        input:disabled {
+
+            color: #aaa;
+
+            cursor: not-allowed;
+
+            background: #202020;
+
+        }
+
+
+        /* ==============================
+           BOTONES
+        ============================== */
+
+        .botones {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-top: 30px;
+
+        }
+
+
+        button {
+
+            font-family: "Poppins", sans-serif;
+
+        }
+
+
+        .boton {
+
+            flex: 1;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: .2s;
+
+        }
+
+
+        .modificar {
+
+            background: #252525;
+
+            color: white;
+
+            border: 1px solid #444;
+
+        }
+
+
+        .modificar:hover {
+
+            border-color: #37E359;
+
+            color: #37E359;
+
+        }
+
+
+        .guardar {
+
+            background: #37E359;
+
+            color: #101010;
+
+        }
+
+
+        .guardar:hover {
+
+            background: #65ef7d;
+
+        }
+
+
+        .guardar:disabled {
+
+            background: #333;
+
+            color: #777;
+
+            cursor: not-allowed;
+
+        }
+
+
+        /* ==============================
+           MENSAJE
+        ============================== */
+
+        #mensaje {
+
+            display: none;
+
+            margin-bottom: 20px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+        }
+
+
+        .mensaje-exito {
+
+            display: block !important;
+
+            background: #17351d;
+
+            color: #69ed82;
+
+            border: 1px solid #245c30;
+
+        }
+
+
+        .mensaje-error {
+
+            display: block !important;
+
+            background: #3b2020;
+
+            color: #ff8585;
+
+            border: 1px solid #633333;
+
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 700px) {
+
+            header {
+
+                padding: 0 18px;
+
+            }
+
+
+            .titulo-header {
+
+                display: none;
+
+            }
+
+
+            main {
+
+                padding: 30px 15px;
+
+            }
+
+
+            .tarjeta {
+
+                padding: 25px 20px;
+
+            }
+
+
+            .formulario {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .campo-completo {
+
+                grid-column: auto;
+
+            }
+
+
+            .botones {
+
+                flex-direction: column;
+
+            }
+
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="lado-izquierdo">
+
+        <a
+            href="#"
+            class="volver"
+            onclick="volverInicio(); return false;"
+        >
+            ←
+        </a>
+
+        <div class="logo">
+            VIGA
+        </div>
+
+    </div>
+
+
+    <div class="titulo-header">
+        Mi perfil
+    </div>
+
+</header>
+
+
+
+<main>
+
+
+    <div class="titulo">
+
+        <h1>
+            Mi perfil
+        </h1>
+
+        <p>
+            Consulta y modifica la información de tu cuenta.
+        </p>
+
+    </div>
+
+
+    <div
+        id="mensaje"
+    ></div>
+
+
+    <section class="tarjeta">
+
+
+        <!-- ==========================
+             ICONO
+        =========================== -->
+
+        <div class="zona-icono">
+
+
+            <div
+                class="avatar"
+                id="avatar"
+            >
+                👤
+            </div>
+
+
+            <div class="texto-icono">
+                Elige tu icono de perfil
+            </div>
+
+
+            <div class="selector-iconos">
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('👤')"
+                >
+                    👤
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('😀')"
+                >
+                    😀
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('😎')"
+                >
+                    😎
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('🧑')"
+                >
+                    🧑
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('🏋️')"
+                >
+                    🏋️
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('💪')"
+                >
+                    💪
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('🔥')"
+                >
+                    🔥
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icono"
+                    onclick="seleccionarIcono('⭐')"
+                >
+                    ⭐
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================
+             FORMULARIO
+        =========================== -->
+
+        <div class="formulario">
+
+
+            <div class="campo">
+
+                <label for="identificacion">
+                    Identificación
+                </label>
+
+                <input
+                    type="text"
+                    id="identificacion"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo">
+
+                <label for="nombres">
+                    Nombres
+                </label>
+
+                <input
+                    type="text"
+                    id="nombres"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo">
+
+                <label for="apellidos">
+                    Apellidos
+                </label>
+
+                <input
+                    type="text"
+                    id="apellidos"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo">
+
+                <label for="fecha_nacimiento">
+                    Fecha de nacimiento
+                </label>
+
+                <input
+                    type="date"
+                    id="fecha_nacimiento"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo">
+
+                <label for="telefono">
+                    Teléfono
+                </label>
+
+                <input
+                    type="text"
+                    id="telefono"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo">
+
+                <label for="correo">
+                    Correo
+                </label>
+
+                <input
+                    type="email"
+                    id="correo"
+                    disabled
+                >
+
+            </div>
+
+
+
+            <div class="campo campo-completo">
+
+                <label for="direccion">
+                    Dirección
+                </label>
+
+                <input
+                    type="text"
+                    id="direccion"
+                    disabled
+                >
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================
+             BOTONES
+        =========================== -->
+
+        <div class="botones">
+
+
+            <button
+                type="button"
+                class="boton modificar"
+                id="btnModificar"
+                onclick="activarEdicion()"
+            >
+                Modificar
+            </button>
+
+
+            <button
+                type="button"
+                class="boton guardar"
+                id="btnGuardar"
+                onclick="guardarPerfil()"
+                disabled
+            >
+                Guardar cambios
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+
+/* ==========================================
+   SERVIDOR
+========================================== */
+
+const API =
+    "http://localhost:3000";
+
+
+/* ==========================================
+   VARIABLES
+========================================== */
+
+let usuarioActual = null;
+
+let iconoSeleccionado = "👤";
+
+let editando = false;
+
+
+/* ==========================================
+   OBTENER IDENTIFICACIÓN
+========================================== */
+
+function obtenerIdentificacion() {
+
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    let identificacion =
+        parametros.get("id");
+
+
+    if (!identificacion) {
+
+
+        const usuarioGuardado =
+            localStorage.getItem("usuario");
+
+
+        if (usuarioGuardado) {
+
+            try {
+
+                const usuario =
+                    JSON.parse(
+                        usuarioGuardado
+                    );
+
+                identificacion =
+                    usuario.identificacion;
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+
+    }
+
+
+    return identificacion;
+
+}
+
+
+/* ==========================================
+   MOSTRAR MENSAJE
+========================================== */
+
+function mostrarMensaje(
+    texto,
+    tipo
+) {
+
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.className =
+        tipo === "error"
+            ? "mensaje-error"
+            : "mensaje-exito";
+
+
+}
+
+
+/* ==========================================
+   CARGAR PERFIL
+========================================== */
+
+async function cargarPerfil() {
+
+
+    const identificacion =
+        obtenerIdentificacion();
+
+
+    if (!identificacion) {
+
+
+        mostrarMensaje(
+            "No se pudo identificar al usuario.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const respuesta =
+            await fetch(
+
+                API +
+                "/usuario/" +
+                encodeURIComponent(
+                    identificacion
+                )
+
+            );
+
+
+        const usuario =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+
+            throw new Error(
+                usuario.error ||
+                "No se pudo cargar el perfil."
+            );
+
+        }
+
+
+        usuarioActual =
+            usuario;
+
+        if (usuario.tema) {
+            if (window.vigaAplicarTema) {
+                window.vigaAplicarTema(usuario.tema);
+            } else {
+                localStorage.setItem(
+                    "vigaTema",
+                    usuario.tema === "claro"
+                        ? "claro"
+                        : "oscuro"
+                );
+            }
+        }
+
+
+        /* ==========================
+           CAMPOS
+        =========================== */
+
+        document
+            .getElementById(
+                "identificacion"
+            )
+            .value =
+            usuario.identificacion || "";
+
+
+        document
+            .getElementById(
+                "nombres"
+            )
+            .value =
+            usuario.nombres || "";
+
+
+        document
+            .getElementById(
+                "apellidos"
+            )
+            .value =
+            usuario.apellidos || "";
+
+
+        document
+            .getElementById(
+                "fecha_nacimiento"
+            )
+            .value =
+            formatearFecha(
+                usuario.fecha_nacimiento
+            );
+
+
+        document
+            .getElementById(
+                "telefono"
+            )
+            .value =
+            usuario.telefono || "";
+
+
+        document
+            .getElementById(
+                "correo"
+            )
+            .value =
+            usuario.correo || "";
+
+
+        document
+            .getElementById(
+                "direccion"
+            )
+            .value =
+            usuario.direccion || "";
+
+
+        /* ==========================
+           ICONO
+        =========================== */
+
+        iconoSeleccionado =
+            usuario.icono ||
+            "👤";
+
+
+        document
+            .getElementById(
+                "avatar"
+            )
+            .textContent =
+            iconoSeleccionado;
+
+
+        marcarIcono();
+
+
+        /* ==========================
+           GUARDAR LOCALMENTE
+        =========================== */
+
+        localStorage.setItem(
+            "usuario",
+            JSON.stringify(
+                usuario
+            )
+        );
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Error cargando perfil:",
+            error
+        );
+
+
+        mostrarMensaje(
+            "No se pudo cargar el perfil. Verifica que Node esté ejecutándose.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   FORMATEAR FECHA
+========================================== */
+
+function formatearFecha(fecha) {
+
+
+    if (!fecha) {
+
+        return "";
+
+    }
+
+
+    if (
+        typeof fecha === "string" &&
+        fecha.length >= 10
+    ) {
+
+        return fecha.substring(
+            0,
+            10
+        );
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ==========================================
+   ACTIVAR EDICIÓN
+========================================== */
+
+function activarEdicion() {
+
+
+    editando = true;
+
+
+    document
+        .getElementById(
+            "nombres"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "apellidos"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "fecha_nacimiento"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "telefono"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "correo"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "direccion"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "btnGuardar"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "btnModificar"
+        )
+        .disabled = true;
+
+
+}
+
+
+/* ==========================================
+   SELECCIONAR ICONO
+========================================== */
+
+function seleccionarIcono(
+    icono
+) {
+
+
+    if (!editando) {
+
+        mostrarMensaje(
+            "Primero presiona Modificar para cambiar tu icono.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    iconoSeleccionado =
+        icono;
+
+
+    document
+        .getElementById(
+            "avatar"
+        )
+        .textContent =
+        icono;
+
+
+    marcarIcono();
+
+}
+
+
+/* ==========================================
+   MARCAR ICONO
+========================================== */
+
+function marcarIcono() {
+
+
+    const botones =
+        document.querySelectorAll(
+            ".icono"
+        );
+
+
+    botones.forEach(
+        function(boton) {
+
+
+            if (
+                boton.textContent.trim() ===
+                iconoSeleccionado
+            ) {
+
+                boton.classList.add(
+                    "seleccionado"
+                );
+
+            } else {
+
+                boton.classList.remove(
+                    "seleccionado"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   GUARDAR PERFIL
+========================================== */
+
+async function guardarPerfil() {
+
+
+    const identificacion =
+        obtenerIdentificacion();
+
+
+    if (!identificacion) {
+
+
+        mostrarMensaje(
+            "No se pudo identificar al usuario.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    const nombres =
+        document
+            .getElementById(
+                "nombres"
+            )
+            .value
+            .trim();
+
+
+    const apellidos =
+        document
+            .getElementById(
+                "apellidos"
+            )
+            .value
+            .trim();
+
+
+    const fecha_nacimiento =
+        document
+            .getElementById(
+                "fecha_nacimiento"
+            )
+            .value;
+
+
+    const telefono =
+        document
+            .getElementById(
+                "telefono"
+            )
+            .value
+            .trim();
+
+
+    const correo =
+        document
+            .getElementById(
+                "correo"
+            )
+            .value
+            .trim();
+
+
+    const direccion =
+        document
+            .getElementById(
+                "direccion"
+            )
+            .value
+            .trim();
+
+
+    if (
+        !nombres ||
+        !apellidos ||
+        !correo
+    ) {
+
+
+        mostrarMensaje(
+            "Nombres, apellidos y correo son obligatorios.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const respuesta =
+            await fetch(
+
+                API +
+                "/usuario/" +
+                encodeURIComponent(
+                    identificacion
+                ),
+
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            nombres:
+                                nombres,
+
+                            apellidos:
+                                apellidos,
+
+                            fecha_nacimiento:
+                                fecha_nacimiento,
+
+                            telefono:
+                                telefono,
+
+                            correo:
+                                correo,
+
+                            direccion:
+                                direccion,
+
+                            icono:
+                                iconoSeleccionado
+
+                        })
+
+                }
+
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+
+            throw new Error(
+                resultado.error ||
+                "No se pudieron guardar los cambios."
+            );
+
+        }
+
+
+        mostrarMensaje(
+            "Perfil actualizado correctamente.",
+            "exito"
+        );
+
+
+        /* ==========================
+           VOLVER A MODO CONSULTA
+        =========================== */
+
+        editando = false;
+
+
+        document
+            .getElementById(
+                "nombres"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "apellidos"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "fecha_nacimiento"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "telefono"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "correo"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "direccion"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "btnGuardar"
+            )
+            .disabled = true;
+
+
+        document
+            .getElementById(
+                "btnModificar"
+            )
+            .disabled = false;
+
+
+        /* ==========================
+           ACTUALIZAR LOCALSTORAGE
+        =========================== */
+
+        usuarioActual.nombres =
+            nombres;
+
+        usuarioActual.apellidos =
+            apellidos;
+
+        usuarioActual.fecha_nacimiento =
+            fecha_nacimiento;
+
+        usuarioActual.telefono =
+            telefono;
+
+        usuarioActual.correo =
+            correo;
+
+        usuarioActual.direccion =
+            direccion;
+
+        usuarioActual.icono =
+            iconoSeleccionado;
+
+
+        localStorage.setItem(
+            "usuario",
+            JSON.stringify(
+                usuarioActual
+            )
+        );
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Error guardando perfil:",
+            error
+        );
+
+
+        mostrarMensaje(
+            error.message ||
+            "No se pudieron guardar los cambios.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   VOLVER A INICIO
+========================================== */
+
+function volverInicio() {
+
+
+    const identificacion =
+        obtenerIdentificacion();
+
+
+    if (!identificacion) {
+
+        window.location.href =
+            "inicio.html";
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "inicio.html?id=" +
+        encodeURIComponent(
+            identificacion
+        );
+
+}
+
+
+/* ==========================================
+   CARGAR AL ABRIR
+========================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        cargarPerfil();
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

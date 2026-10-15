@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VIGA - Inicio</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: "Poppins", sans-serif;
+
+            background: #121212;
+
+            color: white;
+
+            min-height: 100vh;
+
+            transition:
+                background 0.3s,
+                color 0.3s;
+
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        header {
+
+            width: 100%;
+
+            height: 75px;
+
+            background: #181818;
+
+            border-bottom:
+                1px solid #292929;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            position: relative;
+
+            z-index: 1000;
+
+            transition:
+                background 0.3s,
+                border-color 0.3s;
+
+        }
+
+
+        /* ==============================
+           PARTE IZQUIERDA
+        ============================== */
+
+        .lado-izquierdo {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+        }
+
+
+        .menu-btn {
+
+            width: 45px;
+
+            height: 45px;
+
+            border: none;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 30px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition: 0.2s;
+
+        }
+
+
+        .menu-btn:hover {
+
+            color: #37E359;
+
+        }
+
+
+        .logo {
+
+            color: #37E359;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        /* ==============================
+           USUARIO
+        ============================== */
+
+        .usuario {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .nombre {
+
+            color: #ddd;
+
+            font-size: 15px;
+
+            font-weight: 500;
+
+        }
+
+
+        .avatar {
+
+            width: 46px;
+
+            height: 46px;
+
+            border-radius: 50%;
+
+            background: #37E359;
+
+            color: #101010;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+            border: 2px solid #37E359;
+
+            cursor: pointer;
+
+            user-select: none;
+
+            transition: 0.2s;
+
+        }
+
+
+        .avatar:hover {
+
+            transform: scale(1.08);
+
+            box-shadow:
+                0 0 18px
+                rgba(55, 227, 89, 0.30);
+
+        }
+
+
+        /* ==============================
+           MENU LATERAL
+        ============================== */
+
+        .menu {
+
+            position: fixed;
+
+            top: 75px;
+
+            left: -290px;
+
+            width: 290px;
+
+            height:
+                calc(100vh - 75px);
+
+            background: #181818;
+
+            border-right:
+                1px solid #292929;
+
+            padding: 25px 15px;
+
+            transition:
+                left 0.3s ease,
+                background 0.3s,
+                border-color 0.3s;
+
+            z-index: 999;
+
+        }
+
+
+        .menu.activo {
+
+            left: 0;
+
+        }
+
+
+        .menu a {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: white;
+
+            padding: 15px 18px;
+
+            margin-bottom: 8px;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            transition:
+                background 0.2s,
+                color 0.2s;
+
+        }
+
+
+        .menu a:hover {
+
+            background: #252525;
+
+            color: #37E359;
+
+        }
+
+
+        /* ==============================
+           CONTENIDO
+        ============================== */
+
+        main {
+
+            width: 100%;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 50px 30px;
+
+        }
+
+
+        .bienvenida {
+
+            margin-bottom: 40px;
+
+        }
+
+
+        .bienvenida h1 {
+
+            font-size: 36px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .bienvenida h1 span {
+
+            color: #37E359;
+
+        }
+
+
+        .bienvenida p {
+
+            color: #999;
+
+            font-size: 15px;
+
+        }
+
+
+        /* ==============================
+           TARJETAS
+        ============================== */
+
+        .contenedor-tarjetas {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+
+        }
+
+
+        .tarjeta {
+
+            background: #1b1b1b;
+
+            border:
+                1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            min-height: 285px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            transition:
+                background 0.3s,
+                border-color 0.25s,
+                transform 0.25s,
+                box-shadow 0.25s;
+
+        }
+
+
+        .tarjeta:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                #37E359;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, 0.30);
+
+        }
+
+
+        .icono-tarjeta {
+
+            font-size: 45px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .tarjeta h2 {
+
+            font-size: 23px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .tarjeta p {
+
+            color: #999;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+        }
+
+
+        .boton {
+
+            display: inline-block;
+
+            width: 100%;
+
+            background: #37E359;
+
+            color: #101010;
+
+            text-decoration: none;
+
+            text-align: center;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            font-weight: 600;
+
+            margin-top: 25px;
+
+            transition: 0.2s;
+
+        }
+
+
+        .boton:hover {
+
+            background: #2fc84e;
+
+            transform:
+                translateY(-1px);
+
+        }
+
+
+        /* ==============================
+           CAPA PARA CERRAR MENU
+        ============================== */
+
+        .fondo-menu {
+
+            display: none;
+
+            position: fixed;
+
+            top: 75px;
+
+            left: 0;
+
+            width: 100%;
+
+            height:
+                calc(100vh - 75px);
+
+            background:
+                rgba(0, 0, 0, 0.45);
+
+            z-index: 998;
+
+        }
+
+
+        .fondo-menu.activo {
+
+            display: block;
+
+        }
+
+
+        /* =================================================
+           MODO CLARO
+           SOLO AGREGA EL TEMA, NO CAMBIA EL DISEÑO
+        ================================================= */
+
+        body.claro {
+
+            background: #f3f3f3;
+
+            color: #111;
+
+        }
+
+
+        body.claro header {
+
+            background: #ffffff;
+
+            border-bottom:
+                1px solid #dddddd;
+
+        }
+
+
+        body.claro .menu-btn {
+
+            color: #222;
+
+        }
+
+
+        body.claro .menu-btn:hover {
+
+            color: #37E359;
+
+        }
+
+
+        body.claro .nombre {
+
+            color: #444;
+
+        }
+
+
+        body.claro .menu {
+
+            background: #ffffff;
+
+            border-right:
+                1px solid #dddddd;
+
+        }
+
+
+        body.claro .menu a {
+
+            color: #222;
+
+        }
+
+
+        body.claro .menu a:hover {
+
+            background: #f0f0f0;
+
+            color: #159c35;
+
+        }
+
+
+        body.claro .bienvenida p {
+
+            color: #666;
+
+        }
+
+
+        body.claro .tarjeta {
+
+            background: #ffffff;
+
+            border:
+                1px solid #dddddd;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.08);
+
+        }
+
+
+        body.claro .tarjeta:hover {
+
+            background: #ffffff;
+
+            border-color:
+                #37E359;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, 0.12);
+
+        }
+
+
+        body.claro .tarjeta h2 {
+
+            color: #111;
+
+        }
+
+
+        body.claro .tarjeta p {
+
+            color: #666;
+
+        }
+
+
+        body.claro .fondo-menu {
+
+            background:
+                rgba(0, 0, 0, 0.20);
+
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 850px) {
+
+            .contenedor-tarjetas {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            header {
+
+                padding: 0 18px;
+
+            }
+
+
+            .nombre {
+
+                display: none;
+
+            }
+
+
+            .logo {
+
+                font-size: 24px;
+
+            }
+
+
+            main {
+
+                padding:
+                    35px 18px;
+
+            }
+
+
+            .bienvenida h1 {
+
+                font-size: 28px;
+
+            }
+
+        }
+
+    </style>
+
+
+    <!-- TEMA GLOBAL -->
+
+    <link
+        rel="stylesheet"
+        href="tema.css"
+    >
+
+    <script
+        src="tema.js"
+    ></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================
+         HEADER
+    ================================== -->
+
+    <header>
+
+
+        <div class="lado-izquierdo">
+
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+                onclick="abrirMenu()"
+            >
+
+                ☰
+
+            </button>
+
+
+            <div class="logo">
+
+                VIGA
+
+            </div>
+
+
+        </div>
+
+
+        <!-- PERFIL -->
+
+        <div class="usuario">
+
+
+            <span
+                class="nombre"
+                id="nombreUsuario"
+            >
+
+                Usuario
+
+            </span>
+
+
+            <div
+                class="avatar"
+                id="avatar"
+                onclick="irAlPerfil()"
+                title="Mi perfil"
+            >
+
+                U
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =================================
+         MENU
+    ================================== -->
+
+    <nav
+        class="menu"
+        id="menu"
+    >
+
+
+        <a href="reportes.html">
+
+            📊 Reportes
+
+        </a>
+
+
+        <a href="configuracion.html">
+
+            ⚙️ Configuraciones
+
+        </a>
+
+
+        <a
+            href="#"
+            onclick="irAlPerfil(); return false;"
+        >
+
+            👤 Mi cuenta
+
+        </a>
+
+
+        <a
+            href="login.html"
+            onclick="cerrarSesion()"
+        >
+
+            🚪 Cerrar sesión
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!-- FONDO DEL MENU -->
+
+    <div
+        class="fondo-menu"
+        id="fondoMenu"
+        onclick="cerrarMenu()"
+    ></div>
+
+
+
+    <!-- =================================
+         CONTENIDO
+    ================================== -->
+
+    <main>
+
+
+        <section class="bienvenida">
+
+
+            <h1>
+
+                Hola,
+
+                <span id="nombreBienvenida">
+
+                    Usuario
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                Bienvenido a VIGA.
+                ¿Qué quieres hacer hoy?
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             TARJETAS
+        ================================== -->
+
+        <section class="contenedor-tarjetas">
+
+
+            <!-- RUTINAS -->
+
+            <article class="tarjeta">
+
+
+                <div>
+
+                    <div class="icono-tarjeta">
+
+                        🏋️
+
+                    </div>
+
+
+                    <h2>
+
+                        Rutinas
+
+                    </h2>
+
+
+                    <p>
+
+                        Crea una rutina personalizada
+                        según tu peso, estatura,
+                        intensidad y lugar de entrenamiento.
+
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="#"
+                    id="btnRutinas"
+                    class="boton"
+                >
+
+                    Ver rutinas
+
+                </a>
+
+
+            </article>
+
+
+
+            <!-- ALIMENTACIÓN -->
+
+            <article class="tarjeta">
+
+
+                <div>
+
+                    <div class="icono-tarjeta">
+
+                        🥗
+
+                    </div>
+
+
+                    <h2>
+
+                        Alimentación
+
+                    </h2>
+
+
+                    <p>
+
+                        Consulta un plan de alimentación
+                        adaptado a tus objetivos.
+
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="#"
+                    id="btnAlimentacion"
+                    class="boton"
+                >
+
+                    Ver plan
+
+                </a>
+
+
+            </article>
+
+
+
+            <!-- TIENDA -->
+
+            <article class="tarjeta">
+
+
+                <div>
+
+                    <div class="icono-tarjeta">
+
+                        🛒
+
+                    </div>
+
+
+                    <h2>
+
+                        Tienda
+
+                    </h2>
+
+
+                    <p>
+
+                        Encuentra productos y accesorios
+                        para tus entrenamientos.
+
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="tienda.html"
+                    id="btnTienda"
+                    class="boton"
+                >
+
+                    Ir a tienda
+
+                </a>
+
+
+            </article>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =================================
+         JAVASCRIPT
+    ================================== -->
+
+    <script>
+
+
+        const API =
+            "http://localhost:3000";
+
+
+
+        /* =================================
+           OBTENER IDENTIFICACIÓN
+        ================================== */
+
+        function obtenerIdentificacion() {
+
+
+            const parametros =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            let identificacion =
+                parametros.get("id");
+
+
+            /*
+                Si no existe en la URL,
+                buscamos la sesión.
+            */
+
+            if (!identificacion) {
+
+
+                const usuarioGuardado =
+                    localStorage.getItem(
+                        "usuario"
+                    );
+
+
+                if (usuarioGuardado) {
+
+
+                    try {
+
+
+                        const usuario =
+                            JSON.parse(
+                                usuarioGuardado
+                            );
+
+
+                        identificacion =
+                            usuario.identificacion;
+
+
+                    } catch (error) {
+
+
+                        console.error(
+                            "Error leyendo usuario:",
+                            error
+                        );
+
+
+                    }
+
+                }
+
+            }
+
+
+            return identificacion;
+
+        }
+
+
+
+        /* =================================
+           IR AL PERFIL
+        ================================== */
+
+        function irAlPerfil() {
+
+
+            const identificacion =
+                obtenerIdentificacion();
+
+
+            if (!identificacion) {
+
+
+                alert(
+                    "No se pudo identificar al usuario."
+                );
+
+
+                return;
+
+            }
+
+
+            window.location.href =
+
+                "perfil.html?id=" +
+                encodeURIComponent(
+                    identificacion
+                );
+
+        }
+
+
+
+        /* =================================
+           CARGAR USUARIO
+        ================================== */
+
+        async function cargarUsuario() {
+
+
+            const identificacion =
+                obtenerIdentificacion();
+
+
+            if (!identificacion) {
+
+
+                console.log(
+                    "No existe una identificación."
+                );
+
+
+                return;
+
+            }
+
+
+            try {
+
+
+                const respuesta =
+                    await fetch(
+
+                        API +
+                        "/usuario/" +
+                        encodeURIComponent(
+                            identificacion
+                        )
+
+                    );
+
+
+                const usuario =
+                    await respuesta.json();
+
+
+                if (!respuesta.ok) {
+
+
+                    throw new Error(
+
+                        usuario.mensaje ||
+                        usuario.error ||
+                        "Usuario no encontrado."
+
+                    );
+
+                }
+
+
+                /* ==========================
+                   TEMA
+                ========================== */
+
+                if (usuario.tema) {
+
+                    if (
+                        window.vigaAplicarTema
+                    ) {
+
+                        window.vigaAplicarTema(
+                            usuario.tema
+                        );
+
+                    } else {
+
+                        localStorage.setItem(
+
+                            "vigaTema",
+
+                            usuario.tema === "claro"
+                                ? "claro"
+                                : "oscuro"
+
+                        );
+
+                    }
+
+                }
+
+
+
+                /* ==========================
+                   NOMBRE
+                ========================== */
+
+                const nombre =
+                    usuario.nombres ||
+                    "Usuario";
+
+
+                document
+                    .getElementById(
+                        "nombreUsuario"
+                    )
+                    .textContent =
+                    nombre;
+
+
+                document
+                    .getElementById(
+                        "nombreBienvenida"
+                    )
+                    .textContent =
+                    nombre;
+
+
+
+                /* ==========================
+                   ICONO
+                ========================== */
+
+                const avatar =
+                    document.getElementById(
+                        "avatar"
+                    );
+
+
+                if (usuario.icono) {
+
+
+                    avatar.textContent =
+                        usuario.icono;
+
+
+                } else {
+
+
+                    avatar.textContent =
+
+                        nombre
+                            .charAt(0)
+                            .toUpperCase();
+
+                }
+
+
+
+                /* ==========================
+                   GUARDAR SESIÓN
+                ========================== */
+
+                localStorage.setItem(
+
+                    "usuario",
+
+                    JSON.stringify(
+                        usuario
+                    )
+
+                );
+
+
+
+                /* ==========================
+                   ENLACES
+                ========================== */
+
+                document
+                    .getElementById(
+                        "btnRutinas"
+                    )
+                    .href =
+
+                    "rutinas.html?id=" +
+                    encodeURIComponent(
+                        identificacion
+                    );
+
+
+                document
+                    .getElementById(
+                        "btnAlimentacion"
+                    )
+                    .href =
+
+                    "alimentacion.html?id=" +
+                    encodeURIComponent(
+                        identificacion
+                    );
+
+
+                document
+                    .getElementById(
+                        "btnTienda"
+                    )
+                    .href =
+
+                    "tienda.html?id=" +
+                    encodeURIComponent(
+                        identificacion
+                    );
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "❌ Error cargando usuario:",
+                    error
+                );
+
+
+                /*
+                    Si ya tenemos datos guardados,
+                    mostramos esos datos mientras
+                    el servidor está disponible.
+                */
+
+                const usuarioGuardado =
+                    localStorage.getItem(
+                        "usuario"
+                    );
+
+
+                if (usuarioGuardado) {
+
+
+                    try {
+
+
+                        const usuario =
+                            JSON.parse(
+                                usuarioGuardado
+                            );
+
+
+                        /* ======================
+                           APLICAR TEMA GUARDADO
+                        ====================== */
+
+                        if (
+                            usuario.tema &&
+                            window.vigaAplicarTema
+                        ) {
+
+                            window.vigaAplicarTema(
+                                usuario.tema
+                            );
+
+                        }
+
+
+
+                        const nombre =
+                            usuario.nombres ||
+                            "Usuario";
+
+
+                        document
+                            .getElementById(
+                                "nombreUsuario"
+                            )
+                            .textContent =
+                            nombre;
+
+
+                        document
+                            .getElementById(
+                                "nombreBienvenida"
+                            )
+                            .textContent =
+                            nombre;
+
+
+                        if (
+                            usuario.icono
+                        ) {
+
+
+                            document
+                                .getElementById(
+                                    "avatar"
+                                )
+                                .textContent =
+                                usuario.icono;
+
+                        }
+
+
+                    } catch (e) {
+
+
+                        console.error(e);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+
+        /* =================================
+           ABRIR MENU
+        ================================== */
+
+        function abrirMenu() {
+
+
+            document
+                .getElementById(
+                    "menu"
+                )
+                .classList.add(
+                    "activo"
+                );
+
+
+            document
+                .getElementById(
+                    "fondoMenu"
+                )
+                .classList.add(
+                    "activo"
+                );
+
+        }
+
+
+
+        /* =================================
+           CERRAR MENU
+        ================================== */
+
+        function cerrarMenu() {
+
+
+            document
+                .getElementById(
+                    "menu"
+                )
+                .classList.remove(
+                    "activo"
+                );
+
+
+            document
+                .getElementById(
+                    "fondoMenu"
+                )
+                .classList.remove(
+                    "activo"
+                );
+
+        }
+
+
+
+        /* =================================
+           CERRAR SESIÓN
+        ================================== */
+
+        function cerrarSesion() {
+
+
+            localStorage.removeItem(
+                "usuario"
+            );
+
+        }
+
+
+
+        /* =================================
+           INICIAR
+        ================================== */
+
+        document.addEventListener(
+
+            "DOMContentLoaded",
+
+            function() {
+
+                cargarUsuario();
+
+            }
+
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

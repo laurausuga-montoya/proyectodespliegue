@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VIGA | Rutinas</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- TEMA GLOBAL -->
+    <script src="tema.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+        /* =================================================
+           MODO OSCURO
+        ================================================= */
+
+        body {
+
+            background: #121212;
+
+            color: white;
+
+            min-height: 100vh;
+
+        }
+
+
+        header {
+
+            height: 80px;
+
+            background: #1b1b1b;
+
+            border-bottom: 1px solid #2d2d2d;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 60px;
+
+        }
+
+
+        .logo {
+
+            color: #37E359;
+
+            font-size: 40px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        .volver {
+
+            color: #ddd;
+
+            text-decoration: none;
+
+            transition: .3s;
+
+        }
+
+
+        .volver:hover {
+
+            color: #37E359;
+
+        }
+
+
+        .contenedor {
+
+            width: 90%;
+
+            max-width: 800px;
+
+            margin: 60px auto;
+
+        }
+
+
+        .titulo {
+
+            text-align: center;
+
+            margin-bottom: 40px;
+
+        }
+
+
+        .titulo h1 {
+
+            font-size: 40px;
+
+            color: #37E359;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .titulo p {
+
+            color: #aaa;
+
+        }
+
+
+        .formulario {
+
+            background: #1b1b1b;
+
+            padding: 40px;
+
+            border-radius: 20px;
+
+            border: 1px solid #292929;
+
+        }
+
+
+        .campo {
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .campo label {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            font-weight: 500;
+
+        }
+
+
+        .campo input,
+        .campo select {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: 1px solid #444;
+
+            border-radius: 10px;
+
+            background: #252525;
+
+            color: white;
+
+            font-size: 16px;
+
+            outline: none;
+
+        }
+
+
+        .campo input:focus,
+        .campo select:focus {
+
+            border-color: #37E359;
+
+        }
+
+
+        .ayuda {
+
+            display: block;
+
+            margin-top: 7px;
+
+            color: #777;
+
+            font-size: 13px;
+
+        }
+
+
+        .resultado {
+
+            background: #252525;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            margin-bottom: 25px;
+
+            display: none;
+
+        }
+
+
+        .resultado strong {
+
+            color: #37E359;
+
+        }
+
+
+        .boton {
+
+            width: 100%;
+
+            padding: 16px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #37E359;
+
+            color: #111;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .3s;
+
+        }
+
+
+        .boton:hover {
+
+            background: #65ef7d;
+
+            transform: translateY(-2px);
+
+        }
+
+
+        footer {
+
+            text-align: center;
+
+            color: #777;
+
+            padding: 40px;
+
+        }
+
+
+        /* =================================================
+           MODO CLARO
+        ================================================= */
+
+        html.tema-claro body,
+        body.tema-claro {
+
+            background: #f5f5f5;
+
+            color: #222;
+
+        }
+
+
+        html.tema-claro header,
+        body.tema-claro header {
+
+            background: #ffffff;
+
+            border-bottom-color: #dddddd;
+
+        }
+
+
+        html.tema-claro .volver,
+        body.tema-claro .volver {
+
+            color: #555;
+
+        }
+
+
+        html.tema-claro .titulo p,
+        body.tema-claro .titulo p {
+
+            color: #666;
+
+        }
+
+
+        html.tema-claro .formulario,
+        body.tema-claro .formulario {
+
+            background: #ffffff;
+
+            border-color: #dddddd;
+
+        }
+
+
+        html.tema-claro .campo input,
+        html.tema-claro .campo select,
+        body.tema-claro .campo input,
+        body.tema-claro .campo select {
+
+            background: #f1f1f1;
+
+            color: #222;
+
+            border-color: #cccccc;
+
+        }
+
+
+        html.tema-claro .campo input::placeholder,
+        body.tema-claro .campo input::placeholder {
+
+            color: #888;
+
+        }
+
+
+        html.tema-claro .resultado,
+        body.tema-claro .resultado {
+
+            background: #eeeeee;
+
+        }
+
+
+        html.tema-claro .ayuda,
+        body.tema-claro .ayuda {
+
+            color: #777;
+
+        }
+
+
+        html.tema-claro footer,
+        body.tema-claro footer {
+
+            color: #666;
+
+        }
+
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media(max-width:600px) {
+
+            header {
+
+                padding: 0 25px;
+
+            }
+
+
+            .logo {
+
+                font-size: 32px;
+
+            }
+
+
+            .formulario {
+
+                padding: 25px;
+
+            }
+
+
+            .titulo h1 {
+
+                font-size: 30px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        VIGA
+    </div>
+
+
+    <a
+        href="inicio.html"
+        class="volver"
+    >
+        ← Volver al inicio
+    </a>
+
+</header>
+
+
+
+<div class="contenedor">
+
+
+    <div class="titulo">
+
+        <h1>
+            Personaliza tu rutina
+        </h1>
+
+
+        <p>
+            Ingresa tus datos para crear una rutina
+            adaptada a ti.
+        </p>
+
+    </div>
+
+
+
+    <div class="formulario">
+
+
+        <!-- PESO -->
+
+        <div class="campo">
+
+            <label for="peso">
+                ¿Cuál es tu peso? (kg)
+            </label>
+
+
+            <input
+                type="number"
+                id="peso"
+                min="1"
+                max="500"
+                step="0.1"
+                placeholder="Ejemplo: 70"
+            >
+
+
+            <span class="ayuda">
+                Máximo permitido: 500 kg
+            </span>
+
+        </div>
+
+
+
+        <!-- ESTATURA -->
+
+        <div class="campo">
+
+            <label for="estatura">
+                ¿Cuál es tu estatura? (m)
+            </label>
+
+
+            <input
+                type="number"
+                id="estatura"
+                min="0.50"
+                max="2.50"
+                step="0.01"
+                placeholder="Ejemplo: 1.70"
+            >
+
+
+            <span class="ayuda">
+                Máximo permitido: 2,50 m
+            </span>
+
+        </div>
+
+
+
+        <!-- TIPO -->
+
+        <div class="campo">
+
+            <label for="tipo">
+                ¿Dónde deseas entrenar?
+            </label>
+
+
+            <select id="tipo">
+
+                <option value="">
+                    Selecciona una opción
+                </option>
+
+
+                <option value="casa">
+                    🏠 Entrenar en casa
+                </option>
+
+
+                <option value="gym">
+                    🏋️ Entrenar en gimnasio
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- RESULTADO -->
+
+        <div
+            id="resultado"
+            class="resultado"
+        ></div>
+
+
+
+        <button
+            class="boton"
+            onclick="crearRutina()"
+        >
+            Continuar
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<footer>
+
+    © 2026 VIGA ·
+    Vive saludable, entrena inteligente.
+
+</footer>
+
+
+
+<script>
+
+
+function crearRutina() {
+
+
+    const peso =
+        parseFloat(
+            document.getElementById("peso").value
+        );
+
+
+    const estatura =
+        parseFloat(
+            document.getElementById("estatura").value
+        );
+
+
+    const tipo =
+        document.getElementById("tipo").value;
+
+
+
+    /* VALIDAR PESO */
+
+    if (
+        isNaN(peso) ||
+        peso < 1 ||
+        peso > 500
+    ) {
+
+        alert(
+            "El peso debe estar entre 1 y 500 kg."
+        );
+
+        return;
+
+    }
+
+
+
+    /* VALIDAR ESTATURA */
+
+    if (
+        isNaN(estatura) ||
+        estatura < 0.50 ||
+        estatura > 2.50
+    ) {
+
+        alert(
+            "La estatura debe estar entre 0,50 y 2,50 metros."
+        );
+
+        return;
+
+    }
+
+
+
+    /* VALIDAR TIPO */
+
+    if (tipo === "") {
+
+        alert(
+            "Selecciona si deseas entrenar en casa o gimnasio."
+        );
+
+        return;
+
+    }
+
+
+
+    /* CALCULAR IMC */
+
+    const imc =
+        peso /
+        (estatura * estatura);
+
+
+    let categoria;
+
+
+    if (imc < 18.5) {
+
+        categoria = "Bajo peso";
+
+    }
+
+    else if (imc < 25) {
+
+        categoria = "Peso normal";
+
+    }
+
+    else if (imc < 30) {
+
+        categoria = "Sobrepeso";
+
+    }
+
+    else {
+
+        categoria = "Obesidad";
+
+    }
+
+
+
+    /* MOSTRAR RESULTADO */
+
+    const resultado =
+        document.getElementById("resultado");
+
+
+    resultado.style.display =
+        "block";
+
+
+    resultado.innerHTML =
+
+        "Tu IMC aproximado es: " +
+
+        "<strong>" +
+        imc.toFixed(1) +
+        "</strong>" +
+
+        "<br>" +
+
+        "Clasificación aproximada: " +
+
+        "<strong>" +
+        categoria +
+        "</strong>";
+
+
+
+    /* IR A PLAN */
+
+    window.location.href =
+
+        "rutina.plan.html" +
+
+        "?peso=" +
+        encodeURIComponent(peso) +
+
+        "&estatura=" +
+        encodeURIComponent(estatura) +
+
+        "&tipo=" +
+        encodeURIComponent(tipo);
+
+}
+
+
+
+/* LIMITAR PESO */
+
+document
+    .getElementById("peso")
+    .addEventListener(
+        "input",
+        function () {
+
+            if (
+                parseFloat(this.value) > 500
+            ) {
+
+                this.value = 500;
+
+            }
+
+        }
+    );
+
+
+
+/* LIMITAR ESTATURA */
+
+document
+    .getElementById("estatura")
+    .addEventListener(
+        "input",
+        function () {
+
+            if (
+                parseFloat(this.value) > 2.50
+            ) {
+
+                this.value = 2.50;
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
