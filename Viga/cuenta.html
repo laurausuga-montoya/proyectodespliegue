@@ -408,207 +408,95 @@ if (!identificacion) {
         // CONSULTAR XAMPP
         // ==========================================
 
-        async function cargarCuenta() {
-
-            try {
-
-
-                const respuesta =
-                    await fetch(
-
-                        "https://viga-c607.onrender.com/usuario/"
-                        +
-                        encodeURIComponent(
-                            identificacion
-                        )
-
-                    );
-
-
-                const usuario =
-                    await respuesta.json();
-
-
-                if (!respuesta.ok) {
-
-                    throw new Error(
-                        usuario.error ||
-                        "No se pudo obtener la información."
-                    );
-
-                }
-
-
-                // ==================================
-                // PRIMERA LETRA
-                // ==================================
-
-                const inicial =
-                    usuario.nombres
-                        .charAt(0)
-                        .toUpperCase();
-
-
-                // ==================================
-                // MOSTRAR DATOS
-                // ==================================
-
-                contenido.innerHTML = `
-
-                    <div class="perfil">
-
-                        <div class="avatar">
-
-                            ${inicial}
-
-                        </div>
-
-                        <div>
-
-                            <h2>
-
-                                ${usuario.nombres}
-                                ${usuario.apellidos}
-
-                            </h2>
-
-                            <p>
-                                Usuario VIGA
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="datos">
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Identificación
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.identificacion}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Nombres
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.nombres}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Apellidos
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.apellidos}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Fecha de nacimiento
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.fecha_nacimiento}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Teléfono
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.telefono || "No registrado"}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="dato">
-
-                            <span class="etiqueta">
-                                Correo electrónico
-                            </span>
-
-                            <span class="valor">
-
-                                ${usuario.correo}
-
-                            </span>
-
-                        </div>
-
-
-                    </div>
-
-                `;
-
-
-            } catch (error) {
-
-                console.error(error);
-
-
-                contenido.innerHTML = `
-
-                    <div class="error">
-
-                        ❌ No se pudo cargar
-                        la información de la cuenta.
-
-                        <br><br>
-
-                        ${error.message}
-
-                        <br><br>
-
-                        Verifica que
-                        <strong>app.js</strong>
-                        esté ejecutándose.
-
-                    </div>
-
-                `;
-
-            }
-
+  async function cargarCuenta() {
+    try {
+        const respuesta = await fetch(
+            "https://viga-c607.onrender.com/usuario/" +
+            encodeURIComponent(identificacion)
+        );
+
+        const texto = await respuesta.text();
+
+        let usuario;
+
+        try {
+            usuario = JSON.parse(texto);
+        } catch {
+            throw new Error(
+                "El servidor no devolvió una respuesta JSON válida."
+            );
         }
 
+        if (!respuesta.ok) {
+            throw new Error(
+                usuario.error || "Error HTTP " + respuesta.status
+            );
+        }
+
+        if (!usuario.nombres) {
+            throw new Error(
+                "No se encontraron los datos del usuario."
+            );
+        }
+
+        const inicial = usuario.nombres.charAt(0).toUpperCase();
+
+        contenido.innerHTML = `
+            <div class="perfil">
+                <div class="avatar">${inicial}</div>
+                <div>
+                    <h2>${usuario.nombres} ${usuario.apellidos || ""}</h2>
+                    <p>Usuario VIGA</p>
+                </div>
+            </div>
+
+            <div class="datos">
+                <div class="dato">
+                    <span class="etiqueta">Identificación</span>
+                    <span class="valor">${usuario.identificacion ?? ""}</span>
+                </div>
+
+                <div class="dato">
+                    <span class="etiqueta">Nombres</span>
+                    <span class="valor">${usuario.nombres}</span>
+                </div>
+
+                <div class="dato">
+                    <span class="etiqueta">Apellidos</span>
+                    <span class="valor">${usuario.apellidos || "No registrados"}</span>
+                </div>
+
+                <div class="dato">
+                    <span class="etiqueta">Fecha de nacimiento</span>
+                    <span class="valor">${usuario.fecha_nacimiento || "No registrada"}</span>
+                </div>
+
+                <div class="dato">
+                    <span class="etiqueta">Teléfono</span>
+                    <span class="valor">${usuario.telefono || "No registrado"}</span>
+                </div>
+
+                <div class="dato">
+                    <span class="etiqueta">Correo electrónico</span>
+                    <span class="valor">${usuario.correo || "No registrado"}</span>
+                </div>
+            </div>
+        `;
+
+    } catch (error) {
+        console.error("Error al cargar la cuenta:", error);
+
+        contenido.innerHTML = `
+            <div class="error">
+                No se pudo cargar la información de la cuenta.
+                <br><br>
+                ${error.message === "Failed to fetch"
+                    ? "No se pudo conectar con el servidor de VIGA. Revisa Render y la configuración CORS."
+                    : error.message}
+            </div>
+        `;
+    }
+}
     </script>
 
 
