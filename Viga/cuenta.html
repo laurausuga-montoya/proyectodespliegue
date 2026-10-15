@@ -350,53 +350,60 @@
         // OBTENER IDENTIFICACIÓN
         // ==========================================
 
-        const identificacion =
-            localStorage.getItem(
-                "identificacionUsuario"
+       // Obtener la identificación del usuario
+function obtenerIdentificacion() {
+    const parametros = new URLSearchParams(
+        window.location.search
+    );
+
+    // Primero intenta obtenerla de la URL
+    let identificacion = parametros.get("id");
+
+    // Si no está en la URL, busca la sesión guardada
+    if (!identificacion) {
+        identificacion = localStorage.getItem(
+            "identificacionUsuario"
+        );
+    }
+
+    // Si todavía no aparece, busca el objeto usuario
+    if (!identificacion) {
+        try {
+            const usuarioGuardado =
+                localStorage.getItem("usuario");
+
+            if (usuarioGuardado) {
+                const usuario = JSON.parse(usuarioGuardado);
+                identificacion = usuario.identificacion;
+            }
+        } catch (error) {
+            console.error(
+                "Error leyendo el usuario guardado:",
+                error
             );
-
-
-        const contenido =
-            document.getElementById(
-                "contenido"
-            );
-
-
-        // ==========================================
-        // COMPROBAR SESIÓN
-        // ==========================================
-
-        if (!identificacion) {
-
-            contenido.innerHTML = `
-
-                <div class="error">
-
-                    No encontramos una sesión activa.
-
-                    <br><br>
-
-                    <a
-                        href="login.html"
-                        style="
-                            color:#37E359;
-                            font-weight:bold;
-                        "
-                    >
-                        Iniciar sesión
-                    </a>
-
-                </div>
-
-            `;
-
-        } else {
-
-            cargarCuenta();
-
         }
+    }
 
+    return identificacion;
+}
 
+const identificacion = obtenerIdentificacion();
+
+const contenido = document.getElementById("contenido");
+
+if (!identificacion) {
+    contenido.innerHTML = `
+        <div class="error">
+            No encontramos una sesión activa.
+            <br><br>
+            <a href="login.html" style="color:#37E359;">
+                Iniciar sesión
+            </a>
+        </div>
+    `;
+} else {
+    cargarCuenta();
+}
         // ==========================================
         // CONSULTAR XAMPP
         // ==========================================
