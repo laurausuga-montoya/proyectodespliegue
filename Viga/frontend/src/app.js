@@ -15,42 +15,36 @@ app.use(express.json());
 // Servir archivos estáticos desde la carpeta Viga
 app.use(express.static(path.resolve(__dirname, "../..")));
 
-// =====================================================
-// CONEXIÓN CON MYSQL - XAMPP
-// =====================================================
 
-const db = mysql.createConnection({
+/* =====================================================
+   CONEXIÓN CON MYSQL - AIVEN
+===================================================== */
 
-    host: "localhost",
-
-    user: "root",
-
-    password: "",
-
-    database: "basedb"
-
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: Number(process.env.DB_PORT || 3306),
+    ssl: {
+        rejectUnauthorized: false
+    },
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-
-db.connect((error) => {
-
+db.query("SELECT 1", (error) => {
     if (error) {
-
-        console.error(
-            "❌ ERROR CONECTANDO CON MYSQL:"
-        );
-
-        console.error(error.message);
-
+        console.error("❌ ERROR CONECTANDO CON AIVEN:", {
+            mensaje: error.message,
+            codigo: error.code
+        });
         return;
     }
 
-    console.log(
-        "✅ MySQL conectado correctamente"
-    );
-
+    console.log("✅ Conexión con Aiven disponible");
 });
-
 
 // =====================================================
 // RUTA PRINCIPAL
