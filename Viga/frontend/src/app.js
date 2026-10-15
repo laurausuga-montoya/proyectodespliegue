@@ -1,18 +1,19 @@
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const path = require("path");
 const app = express();
 
-
 // =====================================================
 // CONFIGURACIÓN
 // =====================================================
 
 app.use(cors());
-
 app.use(express.json());
 
+// Servir archivos estáticos desde la carpeta Viga
+app.use(express.static(path.resolve(__dirname, "../..")));
 
 // =====================================================
 // CONEXIÓN CON MYSQL - XAMPP
