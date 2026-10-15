@@ -18,7 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 // Archivos estáticos por si sirves el frontend desde el mismo Node
-app.use(express.static(path.join(__dirname)));
+
+app.use(express.static(path.resolve(__dirname, "../..")));
 
 
 /* =========================================
@@ -58,8 +59,9 @@ conexion.connect(function (error) {
    RUTA PRINCIPAL
 ========================================= */
 
+
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.resolve(__dirname, "../../index.html"));
 });
 
 
