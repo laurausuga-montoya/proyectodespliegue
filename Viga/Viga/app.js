@@ -61,7 +61,7 @@ conexion.connect(function (error) {
 
 
 app.get("/", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "../../index.html"));
+    res.sendFile(path.resolve(__dirname, "../frontend/index.html"));
 });
 
 /* =========================================
