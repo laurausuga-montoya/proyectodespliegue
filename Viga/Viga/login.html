@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Iniciar sesión</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #353535;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: var(--fondo);
+            color: var(--texto);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 950px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--panel);
+            border: 0px solid var(--borde);
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .informacion {
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(145deg, #1b1b1b, #203326);
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 60px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+        }
+
+        h1 { font-size: 30px; line-height: 1.4; margin-bottom: 15px; }
+
+        .informacion p {
+            color: #c7c7c7;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .beneficios { display: grid; gap: 17px; margin-top: 28px; }
+        .beneficios div { font-size: 13px; }
+
+        .formulario {
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 { font-size: 25px; margin-bottom: 8px; }
+
+        .subtitulo {
+            color: var(--secundario);
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .campo { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+        label { font-size: 12px; color: #ddd; }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #121212;
+            border: 1px solid #414141;
+            border-radius: 0px;
+            color: white;
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--verde); }
+
+        button {
+            width: 100%;
+            margin-top: 5px;
+            padding: 13px;
+            border: none;
+            border-radius: 0px;
+            background: var(--verde);
+            color: #102014;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:disabled { opacity: .6; cursor: wait; }
+
+        .mensaje { margin-top: 15px; font-size: 13px; overflow-wrap: anywhere; }
+        .error { color: #ff9292; }
+        .correcto { color: var(--verde); }
+
+        .enlaces {
+            text-align: center;
+            margin-top: 23px;
+            font-size: 12px;
+            line-height: 2.2;
+        }
+
+        a { color: var(--verde); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 680px) {
+            .contenedor { grid-template-columns: 1fr; }
+            .informacion { padding: 28px; }
+            .logo { margin-bottom: 14px; }
+            h1 { font-size: 25px; }
+            .beneficios { gap: 10px; margin-top: 17px; }
+            .formulario { padding: 30px 23px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="contenedor">
+
+    <section class="informacion">
+        <div class="logo">VIGA</div>
+
+        <h1>Bienvenido de nuevo</h1>
+
+        <p>
+            ¡Bienvenido a VIGA! Tu espacio para entrenar, alimentarte mejor y alcanzar tus metas
+        </p>
+
+        <div class="beneficios">
+            <div>Acceso exclusivo a rutinas personalizadas</div>
+            <div>Acceso a dietas personalizadas</div>
+            <div>Acceso a un gran catálogo en nuestras tiendas</div>
+        </div>
+    </section>
+
+    <section class="formulario">
+        <h2>Cuenta personal</h2>
+        <p class="subtitulo">Ingresa tus datos</p>
+
+        <form id="loginForm">
+            <div class="campo">
+                <label for="usuario">Correo o número telefónico</label>
+                <input id="usuario" type="text" autocomplete="username"
+                       placeholder="Ingresa tu correo o teléfono" required>
+            </div>
+
+            <div class="campo">
+                <label for="password">Contraseña *</label>
+                <input id="password" type="password"
+                       autocomplete="current-password"
+                       placeholder="Ingresa tu contraseña" required>
+            </div>
+
+            <button type="submit" id="btnEntrar">Iniciar sesión</button>
+        </form>
+
+        <p id="mensaje" class="mensaje" role="status"></p>
+
+        <div class="enlaces">
+            ¿Todavía no tienes cuenta?
+            <a href="index.html">Registrarse</a>
+            <br>
+            ¿Quieres iniciar sesión como empresa?
+            <a href="login.empresa.html">Iniciar sesión como empresa</a>
+            <br>
+        </div>
+    </section>
+</div>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+
+    const formulario = document.getElementById("loginForm");
+    const mensaje = document.getElementById("mensaje");
+    const boton = document.getElementById("btnEntrar");
+
+    formulario.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const usuario = document.getElementById("usuario").value.trim();
+        const password = document.getElementById("password").value;
+
+        boton.disabled = true;
+        boton.textContent = "Verificando...";
+        mensaje.textContent = "";
+        mensaje.className = "mensaje";
+
+        try {
+            const respuesta = await fetch(`${API}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ usuario, password })
+            });
+
+            const datos = await respuesta.json().catch(() => ({}));
+
+            if (!respuesta.ok) {
+                throw new Error(
+                    datos.error || "Usuario o contraseña incorrectos."
+                );
+            }
+
+            const usuarioLogueado = datos.usuario;
+
+            if (!usuarioLogueado || usuarioLogueado.identificacion == null) {
+                throw new Error(
+                    "No se pudo obtener la identificación del usuario."
+                );
+            }
+
+            const identificacion = usuarioLogueado.identificacion;
+
+            mensaje.textContent = "Acceso correcto. Entrando...";
+            mensaje.className = "mensaje correcto";
+
+            window.location.href =
+                "inicio.html?id=" + encodeURIComponent(identificacion);
+
+        } catch (error) {
+            mensaje.textContent =
+                error.message || "No fue posible conectar con el servidor.";
+            mensaje.className = "mensaje error";
+        } finally {
+            boton.disabled = false;
+            boton.textContent = "Iniciar sesión";
+        }
+    });
+</script>
+</body>
+</html>
