@@ -19,7 +19,7 @@ app.use(express.json());
 
 // Archivos estáticos por si sirves el frontend desde el mismo Node
 
-app.use(express.static(path.resolve(__dirname, "../..")));
+app.use(express.static(path.resolve(__dirname, "..")));
 
 
 /* =========================================
@@ -61,7 +61,12 @@ conexion.connect(function (error) {
 
 
 app.get("/", function (req, res) {
-res.sendFile(path.resolve(__dirname, "../index.html"));
+    res.sendFile(path.resolve(__dirname, "../index.html"), function (error) {
+        if (error) {
+            console.error("Error al cargar index.html:", error);
+            res.status(error.statusCode || 500).send("No se pudo cargar la página principal.");
+        }
+    });
 });
 
 /* =========================================
