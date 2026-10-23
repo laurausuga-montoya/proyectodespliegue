@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Archivos estáticos
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname)));
 
 /* =========================================
    CONFIGURACIÓN DE IMÁGENES (MULTER)
@@ -61,7 +61,29 @@ conexion.connect(function (error) {
     }
     console.log("✅ Conectado correctamente a MySQL");
 });
+/* =========================================
+   MIDDLEWARE Y ARCHIVOS ESTÁTICOS
+========================================= */
+app.use(cors());
+app.use(express.json());
 
+// Forzar la ruta del directorio actual
+app.use(express.static(path.join(__dirname)));
+
+/* =========================================
+   RUTA DIRECTA PARA EL CSS
+========================================= */
+app.get("/index.css", function (req, res) {
+    res.type("text/css");
+    res.sendFile(path.join(__dirname, "index.css"));
+});
+
+/* =========================================
+   VISTAS HTML (FRONTEND LOCAL)
+========================================= */
+app.get("/", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "index.html"));
+});
 /* =========================================
    VISTAS HTML (FRONTEND LOCAL)
 ========================================= */
