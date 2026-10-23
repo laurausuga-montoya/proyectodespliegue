@@ -1,15 +1,7 @@
 {
   "dependencies": {
     "cors": "^2.8.6",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "dotenv": "^18.0.9",
-=======
     "dotenv": "^16.4.5",
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
-=======
-    "dotenv": "^16.4.5",
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
     "express": "^5.2.1",
     "mysql2": "^3.24.4"
   },
