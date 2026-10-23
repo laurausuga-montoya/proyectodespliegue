@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIGA | Iniciar sesión empresarial</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -168,15 +167,14 @@
 
         <form id="loginEmpresaForm">
             <div class="campo">
-                <label for="correo">Correo empresarial </label>
+                <label for="correo">Correo empresarial</label>
                 <input id="correo" type="email" autocomplete="username"
                        placeholder="contacto@empresa.com" required>
             </div>
 
             <div class="campo">
-                <label for="password">Contraseña </label>
-                <input id="password" type="password"
-                       autocomplete="current-password"
+                <label for="password">Contraseña</label>
+                <input id="password" type="password" autocomplete="current-password"
                        placeholder="Ingresa tu contraseña" required>
             </div>
 
@@ -207,8 +205,9 @@
     formulario.addEventListener("submit", async function(event) {
         event.preventDefault();
 
+        // Obtener valores limpios de los inputs
         const correo = document.getElementById("correo").value.trim();
-        const password = document.getElementById("password").value;
+        const password = document.getElementById("password").value.trim();
 
         boton.disabled = true;
         boton.textContent = "Verificando...";
@@ -216,6 +215,7 @@
         mensaje.className = "mensaje";
 
         try {
+            // Enviar los datos con los nombres exactos que requiere el backend
             const respuesta = await fetch(`${API}/login-empresa`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -229,7 +229,7 @@
 
             if (!respuesta.ok) {
                 throw new Error(
-                    datos.error || "Correo o contraseña incorrectos."
+                    datos.error || "Correo o contraseña empresarial incorrectos."
                 );
             }
 
@@ -241,6 +241,7 @@
                 );
             }
 
+            // Guardar sesión en el navegador
             localStorage.setItem(
                 "empresaLogueada",
                 JSON.stringify(empresa)
@@ -249,6 +250,7 @@
             mensaje.textContent = "Acceso correcto. Entrando a tu tienda...";
             mensaje.className = "mensaje correcto";
 
+            // Redirigir al inicio empresarial
             window.location.href = "inicio.empresa.html";
 
         } catch (error) {
