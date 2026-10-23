@@ -2,7 +2,6 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const path = require("path");
-const { getPriority } = require('os');
 
 const app = express();
 
@@ -15,13 +14,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-<<<<<<< HEAD
-// Archivos estáticos por si sirves el frontend desde el mismo Node
-app.use(express.static(path.resolve(__dirname, "..")));
-=======
 // Servir archivos estáticos directamente desde la carpeta raíz
 app.use(express.static(path.resolve(__dirname)));
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
 
 
 /* =========================================
@@ -55,14 +49,8 @@ conexion.connect(function (error) {
 /* =========================================
    RUTA PRINCIPAL
 ========================================= */
-<<<<<<< HEAD
-
-app.get("/", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "index.html"), function (error){
-=======
 app.get("/", function (req, res) {
     res.sendFile(path.resolve(__dirname, "index.html"), function (error) {
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
         if (error) {
             console.error("Error al cargar index.html:", error);
             res.status(error.statusCode || 500).send("No se pudo cargar la página principal.");
@@ -70,36 +58,6 @@ app.get("/", function (req, res) {
     });
 });
 
-<<<<<<< HEAD
-
-/* =========================================
-   RUTAS DE EMPRESA (NUEVAS)
-========================================= */
-
-app.get("/empresa", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "index.empresa.html"), function (error){
-        if (error) {
-            console.error("Error al cargar index.empresa.html:", error);
-            res.status(error.statusCode || 500).send("No se pudo cargar la página principal de empresa.");
-        }
-    });
-});
-
-app.get("/login-empresa", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "login.empresa.html"), function (error){
-        if (error) {
-            console.error("Error al cargar login.empresa.html:", error);
-            res.status(error.statusCode || 500).send("No se pudo cargar el login de empresa.");
-        }
-    });
-});
-
-
-/* =========================================
-   REGISTRAR USUARIO
-========================================= */
-=======
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
 
 /* =========================================
    REGISTRAR USUARIO
@@ -463,12 +421,6 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
 /* =========================================
    INICIAR SERVIDOR (ÚNICO)
 ========================================= */
-<<<<<<< HEAD
-
-app.listen(PORT, function () {git 
-    console.log(`🚀 Servidor VIGA funcionando en http://localhost:${PORT}`);
-=======
 app.listen(PORT, function () {
     console.log(`🚀 Servidor VIGA funcionando en el puerto ${PORT}`);
->>>>>>> b4a339b8b8f87aacb895e52ea739759ccbcb1f10
 });
