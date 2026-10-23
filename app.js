@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Archivos estáticos
-app.use(express.static(path.resolve(__dirname, "..")));
+app.use(express.static(__dirname));
 
 /* =========================================
    CONFIGURACIÓN DE IMÁGENES (MULTER)
