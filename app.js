@@ -1,3 +1,4 @@
+require('dotenv').config(); // 👈 Vital para leer el archivo .env
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -5,22 +6,25 @@ const path = require("path");
 
 const app = express();
 
-// Puerto dinámico para Render (o 3000 por defecto en local)
+// Puerto dinámico para Render (o 3000 por defecto si estás en local)
 const PORT = process.env.PORT || 3000;
 
+
 /* =========================================
-   MIDDLEWARES ESENCIALES
+   MIDDLEWARE
 ========================================= */
+
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos directamente desde la carpeta raíz
-app.use(express.static(path.resolve(__dirname)));
+// Archivos estáticos por si sirves el frontend desde el mismo Node
+app.use(express.static(path.resolve(__dirname, "..")));
 
 
 /* =========================================
    CONEXIÓN MYSQL (Soporte local y Aiven/Render)
 ========================================= */
+
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
@@ -31,6 +35,7 @@ const conexion = mysql.createConnection({
         rejectUnauthorized: false 
     }
 });
+
 
 conexion.connect(function (error) {
     if (error) {
@@ -49,8 +54,9 @@ conexion.connect(function (error) {
 /* =========================================
    RUTA PRINCIPAL
 ========================================= */
+
 app.get("/", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "index.html"), function (error) {
+    res.sendFile(path.resolve(__dirname, "index.html"), function (error){
         if (error) {
             console.error("Error al cargar index.html:", error);
             res.status(error.statusCode || 500).send("No se pudo cargar la página principal.");
@@ -60,8 +66,32 @@ app.get("/", function (req, res) {
 
 
 /* =========================================
+   RUTAS DE EMPRESA (NUEVAS)
+========================================= */
+
+app.get("/empresa", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "index.empresa.html"), function (error){
+        if (error) {
+            console.error("Error al cargar index.empresa.html:", error);
+            res.status(error.statusCode || 500).send("No se pudo cargar la página principal de empresa.");
+        }
+    });
+});
+
+app.get("/login-empresa", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "login.empresa.html"), function (error){
+        if (error) {
+            console.error("Error al cargar login.empresa.html:", error);
+            res.status(error.statusCode || 500).send("No se pudo cargar el login de empresa.");
+        }
+    });
+});
+
+
+/* =========================================
    REGISTRAR USUARIO
 ========================================= */
+
 app.post("/registrar", function (req, res) {
     const {
         identificacion,
@@ -141,7 +171,9 @@ app.post("/registrar", function (req, res) {
 /* =========================================
    LOGIN
 ========================================= */
+
 app.post("/login", function (req, res) {
+    // Acepta tanto "usuario" como "correo" dependiendo de cómo lo envíe tu frontend
     const usuario = req.body.usuario || req.body.correo;
     const password = req.body.password;
 
@@ -206,6 +238,7 @@ app.post("/login", function (req, res) {
 /* =========================================
    OBTENER USUARIO
 ========================================= */
+
 app.get("/usuario/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
 
@@ -249,6 +282,7 @@ app.get("/usuario/:identificacion", function (req, res) {
 /* =========================================
    ACTUALIZAR PERFIL
 ========================================= */
+
 app.put("/usuario/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const {
@@ -302,6 +336,7 @@ app.put("/usuario/:identificacion", function (req, res) {
 /* =========================================
    GUARDAR CONFIGURACIONES
 ========================================= */
+
 app.put("/configuracion/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const {
@@ -351,6 +386,7 @@ app.put("/configuracion/:identificacion", function (req, res) {
 /* =========================================
    CAMBIAR CONTRASEÑA
 ========================================= */
+
 app.put("/configuracion/:identificacion/password", function (req, res) {
     const identificacion = req.params.identificacion;
     const { passwordActual, passwordNueva } = req.body;
@@ -419,8 +455,9 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
 
 
 /* =========================================
-   INICIAR SERVIDOR (ÚNICO)
+   INICIAR SERVIDOR
 ========================================= */
+
 app.listen(PORT, function () {
-    console.log(`🚀 Servidor VIGA funcionando en el puerto ${PORT}`);
+    console.log(`🚀 Servidor VIGA funcionando en http://localhost:${PORT}`);
 });
