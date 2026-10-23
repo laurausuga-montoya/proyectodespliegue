@@ -1,0 +1,403 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background:
+
+        linear-gradient(
+            rgba(0, 0, 0, 0.70),
+            rgba(0, 0, 0, 0.82)
+        ),
+
+        url("https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1800&q=80");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-attachment: fixed;
+
+    color: white;
+
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.contenedor {
+
+    width: 1100px;
+
+    max-width: 94%;
+
+    min-height: 650px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    background: rgba(20, 20, 20, 0.97);
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0, 0, 0, 0.7);
+
+}
+
+
+/* =========================================
+   INFORMACIÓN IZQUIERDA
+========================================= */
+
+.informacion {
+
+    padding: 65px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    background:
+
+        linear-gradient(
+            rgba(15, 15, 15, 0.78),
+            rgba(15, 15, 15, 0.95)
+        );
+
+}
+
+
+.logo {
+
+    font-size: 50px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    color: #37E359;
+
+    margin-bottom: 55px;
+
+}
+
+
+.informacion h1 {
+
+    font-size: 40px;
+
+    line-height: 1.2;
+
+    margin-bottom: 20px;
+
+}
+
+
+.informacion > p {
+
+    color: #bdbdbd;
+
+    font-size: 17px;
+
+    line-height: 30px;
+
+    margin-bottom: 35px;
+
+    max-width: 450px;
+
+}
+
+
+.beneficios {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+
+.beneficios div {
+
+    color: #dddddd;
+
+    font-size: 15px;
+
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.formulario {
+
+    padding: 45px 60px;
+
+    overflow-y: auto;
+
+}
+
+
+.formulario h2 {
+
+    font-size: 32px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.subtitulo {
+
+    color: #999;
+
+    font-size: 14px;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* =========================================
+   CAMPOS
+========================================= */
+
+.campo {
+
+    margin-bottom: 14px;
+
+}
+
+
+.campo label {
+
+    display: block;
+
+    color: #ddd;
+
+    font-size: 13px;
+
+    margin-bottom: 6px;
+
+}
+
+
+.campo input {
+
+    width: 100%;
+
+    padding: 12px 15px;
+
+    border-radius: 9px;
+
+    border: 1px solid #353535;
+
+    background: #222;
+
+    color: white;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.3s;
+
+}
+
+
+.campo input::placeholder {
+
+    color: #777;
+
+}
+
+
+.campo input:focus {
+
+    border-color: #37E359;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(55, 227, 89, 0.12);
+
+}
+
+
+/* =========================================
+   BOTÓN
+========================================= */
+
+#btnRegistrar {
+
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 8px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #37E359;
+
+    color: #111;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+#btnRegistrar:hover {
+
+    background: #5cff79;
+
+    transform: translateY(-2px);
+
+}
+
+
+#btnRegistrar:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+/* =========================================
+   MENSAJES
+========================================= */
+
+.mensaje {
+
+    min-height: 22px;
+
+    text-align: center;
+
+    margin-top: 13px;
+
+    font-size: 13px;
+
+}
+
+
+.mensaje.error {
+
+    color: #ff6565;
+
+}
+
+
+.mensaje.correcto {
+
+    color: #37E359;
+
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+.login {
+
+    text-align: center;
+
+    margin-top: 18px;
+
+    color: #999;
+
+    font-size: 14px;
+
+}
+
+
+.login a {
+
+    color: #37E359;
+
+    font-weight: 600;
+
+    text-decoration: underline;
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .contenedor {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .informacion {
+
+        padding: 40px;
+
+        min-height: 350px;
+
+    }
+
+
+    .logo {
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .informacion h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    .formulario {
+
+        padding: 40px 30px;
+
+    }
+
+}

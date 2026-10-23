@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VIGA | Alimentación</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- TEMA GLOBAL -->
+    <script src="tema.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 80px;
+            background: #1b1b1b;
+            border-bottom: 1px solid #2d2d2d;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 60px;
+        }
+
+        .logo {
+            color: #37E359;
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .volver {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 16px;
+            transition: .3s;
+        }
+
+        .volver:hover {
+            color: #37E359;
+        }
+
+        /* =========================
+           CONTENEDOR
+        ========================= */
+
+        .contenedor {
+            width: 90%;
+            max-width: 800px;
+            margin: 60px auto;
+        }
+
+        /* =========================
+           TITULO
+        ========================= */
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .titulo h1 {
+            font-size: 40px;
+            color: #37E359;
+            margin-bottom: 10px;
+        }
+
+        .titulo p {
+            color: #aaa;
+            font-size: 17px;
+            line-height: 28px;
+        }
+
+        /* =========================
+           FORMULARIO
+        ========================= */
+
+        .formulario {
+            background: #1b1b1b;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #292929;
+        }
+
+        /* =========================
+           CAMPOS
+        ========================= */
+
+        .campo {
+            margin-bottom: 25px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 15px;
+
+            border: 1px solid #444;
+            border-radius: 10px;
+
+            background: #252525;
+            color: white;
+
+            font-size: 16px;
+            outline: none;
+        }
+
+        .campo input:focus {
+            border-color: #37E359;
+            box-shadow: 0 0 0 2px rgba(55, 227, 89, 0.10);
+        }
+
+        .campo small {
+            display: block;
+            color: #777;
+            margin-top: 7px;
+            font-size: 13px;
+        }
+
+        /* =========================
+           BOTON
+        ========================= */
+
+        .boton {
+            width: 100%;
+            padding: 16px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #37E359;
+            color: #111;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .boton:hover {
+            background: #65ef7d;
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           RESULTADO
+        ========================= */
+
+        #resultado {
+            margin-top: 25px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .bajar {
+            background: #302020;
+            color: #ff7b7b;
+        }
+
+        .subir {
+            background: #203025;
+            color: #6df38a;
+        }
+
+        .mantener {
+            background: #252525;
+            color: #ddd;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 40px;
+        }
+
+        /* =========================
+           MODO CLARO
+        ========================= */
+
+        html.tema-claro body,
+        body.tema-claro {
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        html.tema-claro header,
+        body.tema-claro header {
+            background: #ffffff;
+            border-bottom-color: #dddddd;
+        }
+
+        html.tema-claro .volver,
+        body.tema-claro .volver {
+            color: #555;
+        }
+
+        html.tema-claro .volver:hover,
+        body.tema-claro .volver:hover {
+            color: #37E359;
+        }
+
+        html.tema-claro .titulo p,
+        body.tema-claro .titulo p {
+            color: #666;
+        }
+
+        html.tema-claro .formulario,
+        body.tema-claro .formulario {
+            background: #ffffff;
+            border-color: #dddddd;
+        }
+
+        html.tema-claro .campo input,
+        body.tema-claro .campo input {
+            background: #f1f1f1;
+            color: #222;
+            border-color: #cccccc;
+        }
+
+        html.tema-claro .campo input::placeholder,
+        body.tema-claro .campo input::placeholder {
+            color: #888;
+        }
+
+        html.tema-claro .campo small,
+        body.tema-claro .campo small {
+            color: #777;
+        }
+
+        html.tema-claro .bajar,
+        body.tema-claro .bajar {
+            background: #ffeaea;
+            color: #c62828;
+        }
+
+        html.tema-claro .subir,
+        body.tema-claro .subir {
+            background: #e8f8ec;
+            color: #16833a;
+        }
+
+        html.tema-claro .mantener,
+        body.tema-claro .mantener {
+            background: #eeeeee;
+            color: #444;
+        }
+
+        html.tema-claro footer,
+        body.tema-claro footer {
+            color: #666;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 0 25px;
+            }
+
+            .logo {
+                font-size: 32px;
+            }
+
+            .contenedor {
+                margin: 35px auto;
+            }
+
+            .formulario {
+                padding: 25px;
+            }
+
+            .titulo h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="logo">
+        VIGA
+    </div>
+
+    <a
+        href="inicio.html"
+        class="volver"
+    >
+        ← Volver al inicio
+    </a>
+
+</header>
+
+
+<!-- =========================
+     CONTENIDO
+========================= -->
+
+<div class="contenedor">
+
+
+    <div class="titulo">
+
+        <h1>
+            Tu plan de alimentación
+        </h1>
+
+        <p>
+            Completa tus datos y VIGA calculará
+            automáticamente tu objetivo.
+        </p>
+
+    </div>
+
+
+    <div class="formulario">
+
+
+        <!-- PESO ACTUAL -->
+
+        <div class="campo">
+
+            <label for="pesoActual">
+
+                ¿Cuánto pesas actualmente? (kg)
+
+            </label>
+
+            <input
+                type="number"
+                id="pesoActual"
+                placeholder="Ejemplo: 75"
+                min="1"
+                max="500"
+                step="0.1"
+                required
+            >
+
+            <small>
+                Peso máximo permitido: 500 kg
+            </small>
+
+        </div>
+
+
+        <!-- ESTATURA -->
+
+        <div class="campo">
+
+            <label for="estatura">
+
+                ¿Cuál es tu estatura? (m)
+
+            </label>
+
+            <input
+                type="number"
+                id="estatura"
+                placeholder="Ejemplo: 1.70"
+                min="0.50"
+                max="2.50"
+                step="0.01"
+                required
+            >
+
+            <small>
+                Estatura máxima permitida: 2,50 m
+            </small>
+
+        </div>
+
+
+        <!-- PESO OBJETIVO -->
+
+        <div class="campo">
+
+            <label for="pesoObjetivo">
+
+                ¿A qué peso quieres llegar? (kg)
+
+            </label>
+
+            <input
+                type="number"
+                id="pesoObjetivo"
+                placeholder="Ejemplo: 68"
+                min="1"
+                max="500"
+                step="0.1"
+                required
+            >
+
+            <small>
+                Peso máximo permitido: 500 kg
+            </small>
+
+        </div>
+
+
+        <!-- BOTON -->
+
+        <button
+            type="button"
+            class="boton"
+            onclick="generarPlan()"
+        >
+
+            Generar mi plan
+
+        </button>
+
+
+        <!-- RESULTADO -->
+
+        <div id="resultado"></div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    © 2026 VIGA ·
+    Vive saludable, entrena inteligente.
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   GENERAR PLAN
+===================================================== */
+
+function generarPlan() {
+
+    const pesoActual =
+        parseFloat(
+            document.getElementById("pesoActual").value
+        );
+
+    const estatura =
+        parseFloat(
+            document.getElementById("estatura").value
+        );
+
+    const pesoObjetivo =
+        parseFloat(
+            document.getElementById("pesoObjetivo").value
+        );
+
+
+    /* VALIDAR PESO ACTUAL */
+
+    if (
+        isNaN(pesoActual) ||
+        pesoActual < 1 ||
+        pesoActual > 500
+    ) {
+
+        alert(
+            "El peso actual debe estar entre 1 y 500 kg."
+        );
+
+        return;
+
+    }
+
+
+    /* VALIDAR ESTATURA */
+
+    if (
+        isNaN(estatura) ||
+        estatura < 0.50 ||
+        estatura > 2.50
+    ) {
+
+        alert(
+            "La estatura debe estar entre 0,50 m y 2,50 m."
+        );
+
+        return;
+
+    }
+
+
+    /* VALIDAR PESO OBJETIVO */
+
+    if (
+        isNaN(pesoObjetivo) ||
+        pesoObjetivo < 1 ||
+        pesoObjetivo > 500
+    ) {
+
+        alert(
+            "El peso objetivo debe estar entre 1 y 500 kg."
+        );
+
+        return;
+
+    }
+
+
+    /* CALCULAR OBJETIVO */
+
+    let objetivo;
+
+
+    if (pesoObjetivo < pesoActual) {
+
+        objetivo = "bajar";
+
+    }
+
+    else if (pesoObjetivo > pesoActual) {
+
+        objetivo = "subir";
+
+    }
+
+    else {
+
+        objetivo = "mantener";
+
+    }
+
+
+    /* MOSTRAR RESULTADO */
+
+    const resultado =
+        document.getElementById("resultado");
+
+
+    resultado.style.display = "block";
+
+
+    if (objetivo === "bajar") {
+
+        resultado.className = "bajar";
+
+        resultado.innerHTML =
+            "Tu objetivo es <strong>bajar de peso</strong>.";
+
+    }
+
+    else if (objetivo === "subir") {
+
+        resultado.className = "subir";
+
+        resultado.innerHTML =
+            "Tu objetivo es <strong>aumentar de peso</strong>.";
+
+    }
+
+    else {
+
+        resultado.className = "mantener";
+
+        resultado.innerHTML =
+            "Tu objetivo es <strong>mantener tu peso</strong>.";
+
+    }
+
+
+    /* IR A PLAN.HTML */
+
+    setTimeout(function() {
+
+        window.location.href =
+            "plan.html" +
+
+            "?actual=" +
+            encodeURIComponent(pesoActual) +
+
+            "&estatura=" +
+            encodeURIComponent(estatura) +
+
+            "&objetivo=" +
+            encodeURIComponent(pesoObjetivo) +
+
+            "&tipo=" +
+            encodeURIComponent(objetivo);
+
+    }, 1000);
+
+}
+
+
+/* =====================================================
+   LIMITAR PESO ACTUAL
+===================================================== */
+
+document
+    .getElementById("pesoActual")
+    .addEventListener("input", function () {
+
+        if (parseFloat(this.value) > 500) {
+
+            this.value = 500;
+
+        }
+
+    });
+
+
+/* =====================================================
+   LIMITAR PESO OBJETIVO
+===================================================== */
+
+document
+    .getElementById("pesoObjetivo")
+    .addEventListener("input", function () {
+
+        if (parseFloat(this.value) > 500) {
+
+            this.value = 500;
+
+        }
+
+    });
+
+
+/* =====================================================
+   LIMITAR ESTATURA
+===================================================== */
+
+document
+    .getElementById("estatura")
+    .addEventListener("input", function () {
+
+        if (parseFloat(this.value) > 2.50) {
+
+            this.value = 2.50;
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+
+</html>

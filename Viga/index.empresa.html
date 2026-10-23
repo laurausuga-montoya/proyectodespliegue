@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Registro de empresa</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #353535;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background: var(--fondo);
+            color: var(--texto);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 1050px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .informacion {
+            padding: 45px 35px;
+            background: linear-gradient(145deg, #1b1b1b, #203326);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 50px;
+            font-weight: 700;
+            color: var(--verde);
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+        }
+
+        h1 { font-size: 31px; line-height: 1.35; margin-bottom: 15px; }
+
+        .informacion > p {
+            color: #c7c7c7;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .beneficios { margin-top: 28px; display: grid; gap: 17px; }
+
+        .beneficios div { font-size: 13px; color: #e0e0e0; }
+
+        .formulario { padding: 35px; }
+
+        h2 { font-size: 25px; margin-bottom: 7px; }
+
+        .subtitulo {
+            color: var(--secundario);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .campo { display: flex; flex-direction: column; gap: 7px; }
+        .campo.completo { grid-column: 1 / -1; }
+
+        label { font-size: 12px; color: #ddd; }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #414141;
+            border-radius: 0px;
+            background: #121212;
+            color: white;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--verde); }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 0px;
+            background: var(--verde);
+            color: #102014;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:disabled { opacity: .6; cursor: wait; }
+
+        .mensaje { font-size: 13px; margin-top: 14px; overflow-wrap: anywhere; }
+        .error { color: #ff9292; }
+        .correcto { color: var(--verde); }
+
+        .enlaces { margin-top: 22px; text-align: center; font-size: 12px; line-height: 2; }
+        a { color: var(--verde); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 720px) {
+            .contenedor { grid-template-columns: 1fr; }
+            .informacion { padding: 28px; }
+            .logo { margin-bottom: 15px; }
+            h1 { font-size: 25px; }
+            .beneficios { gap: 10px; margin-top: 17px; }
+            .formulario { padding: 28px 22px; }
+        }
+
+        @media (max-width: 420px) {
+            .campos { grid-template-columns: 1fr; }
+            .campo.completo { grid-column: auto; }
+            body { padding: 12px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="contenedor">
+
+    <section class="informacion">
+        <div class="logo">VIGA</div>
+        <h1>Tu empresa también forma parte de VIGA</h1>
+        <p>
+            Crea tu cuenta empresarial y prepara tu tienda para
+            ofrecer implementos deportivos a nuestra comunidad.
+        </p>
+
+        <div class="beneficios">
+            <div>Perfil para tu negocio</div>
+            <div>Publica tus productos deportivos</div>
+            <div>Administra precios y existencias</div>
+            <div>Haz crecer tu tienda</div>
+        </div>
+    </section>
+
+    <section class="formulario">
+        <h2>Registrar empresa</h2>
+        <p class="subtitulo">Completa los datos de tu negocio</p>
+
+        <form id="registroEmpresaForm">
+            <div class="campos">
+
+                <div class="campo completo">
+                    <label for="nombre_comercial">Nombre comercial </label>
+                    <input id="nombre_comercial" name="nombre_comercial"
+                           maxlength="150" placeholder="Nombre de tu empresa" required>
+                </div>
+
+                <div class="campo">
+                    <label for="nit">NIT </label>
+                    <input id="nit" name="nit" maxlength="30"
+                           placeholder="NIT de la empresa" required>
+                </div>
+
+                <div class="campo">
+                    <label for="telefono">Teléfono empresarial </label>
+                    <input id="telefono" name="telefono" type="tel"
+                           maxlength="25" placeholder="Teléfono de contacto" required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="correo">Correo empresarial </label>
+                    <input id="correo" name="correo" type="email"
+                           maxlength="180" autocomplete="email"
+                           placeholder="contacto@empresa.com" required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="direccion">Dirección comercial </label>
+                    <input id="direccion" name="direccion" maxlength="255"
+                           placeholder="Dirección de la empresa" required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="password">Contraseña </label>
+                    <input id="password" name="password" type="password"
+                           minlength="8" autocomplete="new-password"
+                           placeholder="Mínimo 8 caracteres" required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="confirmar">Confirmar contraseña </label>
+                    <input id="confirmar" name="confirmar" type="password"
+                           minlength="8" autocomplete="new-password"
+                           placeholder="Escribe nuevamente tu contraseña" required>
+                </div>
+
+            </div>
+
+            <button type="submit" id="btnRegistrar">Crear cuenta empresarial</button>
+        </form>
+
+        <p id="mensaje" class="mensaje" role="status"></p>
+
+        <div class="enlaces">
+            ¿Ya tienes una cuenta empresarial?
+            <a href="login.empresa.html">Iniciar sesión</a>
+            <br>
+            ¿Eres usuario de VIGA?
+            <a href="login.html">Iniciar sesion como usuario</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    const formulario = document.getElementById("registroEmpresaForm");
+    const mensaje = document.getElementById("mensaje");
+    const boton = document.getElementById("btnRegistrar");
+
+    const API = "https://viga-c607.onrender.com";
+
+    formulario.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const empresa = {
+            nombre_comercial: document.getElementById("nombre_comercial").value.trim(),
+            nit: document.getElementById("nit").value.trim(),
+            telefono: document.getElementById("telefono").value.trim(),
+            correo: document.getElementById("correo").value.trim(),
+            direccion: document.getElementById("direccion").value.trim(),
+            password: document.getElementById("password").value
+        };
+
+        const confirmar = document.getElementById("confirmar").value;
+
+        if (empresa.password.length < 8) {
+            mensaje.textContent = "La contraseña debe tener al menos 8 caracteres.";
+            mensaje.className = "mensaje error";
+            return;
+        }
+
+        if (empresa.password !== confirmar) {
+            mensaje.textContent = "Las contraseñas no coinciden.";
+            mensaje.className = "mensaje error";
+            return;
+        }
+
+        boton.disabled = true;
+        boton.textContent = "Registrando empresa...";
+        mensaje.textContent = "";
+        mensaje.className = "mensaje";
+
+        try {
+            const respuesta = await fetch(`${API}/registrar-empresa`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(empresa)
+            });
+
+            const datos = await respuesta.json().catch(() => ({}));
+
+            if (!respuesta.ok) {
+                throw new Error(datos.error || "No se pudo registrar la empresa.");
+            }
+
+            mensaje.textContent =
+                "¡Empresa registrada! Ahora puedes iniciar sesión.";
+            mensaje.className = "mensaje correcto";
+
+            formulario.reset();
+
+            setTimeout(() => {
+                window.location.href = "login-empresa.html";
+            }, 1200);
+
+        } catch (error) {
+            mensaje.textContent =
+                error.message || "No fue posible conectar con el servidor.";
+            mensaje.className = "mensaje error";
+        } finally {
+            boton.disabled = false;
+            boton.textContent = "Crear cuenta empresarial";
+        }
+    });
+</script>
+</body>
+</html>
