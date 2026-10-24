@@ -31,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* HEADER ORIGINAL */
         header {
             height: 80px;
             background: var(--panel);
@@ -66,7 +65,6 @@
             margin-top: 4px;
         }
 
-        /* PERFIL CON MENÚ DESPLEGABLE */
         .perfil-contenedor {
             position: relative;
         }
@@ -113,12 +111,11 @@
             font-size: 17px;
         }
 
-        /* MENÚ DESPLEGABLE */
         .menu-desplegable {
             position: absolute;
             top: 55px;
             right: 0;
-            width: 210px;
+            width: 200px;
             background: #1e1e1e;
             border: 1px solid var(--borde);
             border-radius: 12px;
@@ -164,7 +161,6 @@
             color: var(--rojo);
         }
 
-        /* CONTENIDO PRINCIPAL */
         main {
             width: 90%;
             max-width: 1200px;
@@ -219,16 +215,6 @@
             border-color: var(--verde);
         }
 
-        .input-archivo {
-            background: #161616;
-            border: 1px solid var(--borde);
-            border-radius: 8px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .preview-img {
             max-width: 140px;
             max-height: 90px;
@@ -281,7 +267,6 @@
             display: none;
         }
 
-        /* CATÁLOGO DE PRODUCTOS */
         .seccion-productos h2 {
             font-size: 22px;
             margin-bottom: 20px;
@@ -349,11 +334,6 @@
             color: #aaa;
         }
 
-        .stock-tag.agotado {
-            color: var(--rojo);
-            font-weight: 600;
-        }
-
         .btn-eliminar {
             background: transparent;
             color: #ff9292;
@@ -380,122 +360,9 @@
             border: 1px solid var(--borde);
         }
 
-        /* ================= MODAL DE VENTAS ================= */
-        .modal-ventas-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-ventas-overlay.activo {
-            display: flex;
-        }
-
-        .modal-ventas-card {
-            background: #181818;
-            border: 1px solid var(--borde);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 900px;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
-
-        .modal-ventas-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--borde);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-ventas-header h2 {
-            font-size: 22px;
-            color: var(--verde);
-        }
-
-        .btn-cerrar-x {
-            background: transparent;
-            border: none;
-            color: #aaa;
-            font-size: 26px;
-            cursor: pointer;
-        }
-
-        .btn-cerrar-x:hover {
-            color: white;
-        }
-
-        .metricas-rapidas {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .metrica-card {
-            background: #202020;
-            border: 1px solid var(--borde);
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .metrica-card span {
-            font-size: 12px;
-            color: var(--secundario);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .metrica-card strong {
-            font-size: 22px;
-            color: var(--verde);
-        }
-
-        .tabla-contenedor {
-            overflow-x: auto;
-            border: 1px solid var(--borde);
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: left;
-        }
-
-        th {
-            background: #222;
-            padding: 14px 16px;
-            color: #ccc;
-            border-bottom: 1px solid var(--borde);
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #282828;
-            color: #eee;
-        }
-
-        tr:hover td {
-            background: #222;
-        }
-
         @media (max-width: 768px) {
             header { padding: 0 20px; }
             .fila-doble { grid-template-columns: 1fr; }
-            .metricas-rapidas { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -507,7 +374,6 @@
         <span class="sub-portal">PORTAL EMPRESARIAL</span>
     </div>
 
-    <!-- MENÚ DE PERFIL ORIGINAL -->
     <div class="perfil-contenedor">
         <button class="perfil-btn" id="btnPerfilMenu" onclick="toggleMenu()">
             <div class="perfil-texto">
@@ -518,9 +384,6 @@
         </button>
 
         <div class="menu-desplegable" id="menuDesplegable">
-            <button class="menu-item" onclick="abrirModalVentas()">
-                📊 Mis Ventas
-            </button>
             <button class="menu-item cerrar" onclick="cerrarSesion()">
                 🚪 Cerrar sesión
             </button>
@@ -529,7 +392,6 @@
 </header>
 
 <main>
-    <!-- FORMULARIO ORIGINAL DE PRODUCTOS -->
     <section class="formulario-card">
         <h2>Registrar Producto Deportivo</h2>
 
@@ -563,7 +425,7 @@
 
             <div class="campo">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Describe las medidas, materiales o beneficios del implemento..."></textarea>
+                <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Describe las características del implemento..."></textarea>
             </div>
 
             <div class="campo">
@@ -581,7 +443,6 @@
         </form>
     </section>
 
-    <!-- CATÁLOGO PUBLICADO -->
     <section class="seccion-productos">
         <h2>Implementos publicados por tu marca</h2>
         <div class="grilla-productos" id="contenedorProductos">
@@ -589,53 +450,6 @@
         </div>
     </section>
 </main>
-
-<!-- VENTANA MODAL: MIS VENTAS -->
-<div class="modal-ventas-overlay" id="modalVentas">
-    <div class="modal-ventas-card">
-        <div class="modal-ventas-header">
-            <h2>Informe de Ventas e Ingresos</h2>
-            <button class="btn-cerrar-x" onclick="cerrarModalVentas()">×</button>
-        </div>
-
-        <div class="metricas-rapidas">
-            <div class="metrica-card">
-                <span>Ingresos acumulados</span>
-                <strong id="totalIngresosVentas">$ 0</strong>
-            </div>
-            <div class="metrica-card">
-                <span>Unidades vendidas</span>
-                <strong id="totalUnidadesVentas">0</strong>
-            </div>
-            <div class="metrica-card">
-                <span>Pedidos registrados</span>
-                <strong id="totalPedidosVentas">0</strong>
-            </div>
-        </div>
-
-        <div class="tabla-contenedor">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Producto</th>
-                        <th>Cant.</th>
-                        <th>Total</th>
-                        <th>Cliente</th>
-                        <th>Ciudad</th>
-                        <th>Teléfono</th>
-                        <th>Método</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoVentas">
-                    <tr>
-                        <td colspan="8" style="text-align:center; padding:30px; color:#aaa;">Cargando ventas...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 <script>
     const API = "https://viga-c607.onrender.com";
@@ -653,16 +467,12 @@
         document.getElementById("menuDesplegable").classList.toggle("activo");
     }
 
-    // Cierra el menú al dar clic afuera
     window.addEventListener("click", function(e) {
         if (!document.getElementById("btnPerfilMenu").contains(e.target)) {
             document.getElementById("menuDesplegable").classList.remove("activo");
         }
     });
 
-    /* =========================================================
-       SESIÓN Y CERRAR SESIÓN (Lleva al registro)
-    ========================================================= */
     function verificarSesion() {
         const sesion = localStorage.getItem("empresaLogueada");
         if (!sesion) {
@@ -691,13 +501,9 @@
 
     function cerrarSesion() {
         localStorage.removeItem("empresaLogueada");
-        // Redirige al registro de empresa
-        window.location.href = "index.empresa.html";
+        window.location.href = "login.empresa.html";
     }
 
-    /* =========================================================
-       SUBIDA Y LISTADO DE PRODUCTOS
-    ========================================================= */
     function previsualizarFoto(event) {
         const preview = document.getElementById("preview");
         const file = event.target.files[0];
@@ -766,8 +572,6 @@
             }
 
             productos.forEach(prod => {
-                const stockVal = Number(prod.stock || 0);
-                const agotado = stockVal <= 0;
                 const img = prod.imagen_url 
                     ? (prod.imagen_url.startsWith("http") ? prod.imagen_url : `${API}${prod.imagen_url}`)
                     : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
@@ -781,9 +585,7 @@
                         <p>${prod.descripcion}</p>
                         <div class="tarjeta-meta">
                             <span class="precio-tag">${dinero(prod.precio)}</span>
-                            <span class="stock-tag ${agotado ? 'agotado' : ''}">
-                                ${agotado ? 'Agotado' : `${stockVal} unidades`}
-                            </span>
+                            <span class="stock-tag">${prod.stock || 0} unidades</span>
                         </div>
                         <button class="btn-eliminar" onclick="eliminarProducto(${prod.id})">🗑️ Eliminar</button>
                     </div>
@@ -805,66 +607,6 @@
             if (res.ok) cargarProductos();
         } catch {
             alert("No se pudo eliminar el producto.");
-        }
-    }
-
-    /* =========================================================
-       MODAL DE VENTAS (DESDE EL MENÚ)
-    ========================================================= */
-    function abrirModalVentas() {
-        document.getElementById("menuDesplegable").classList.remove("activo");
-        document.getElementById("modalVentas").classList.add("activo");
-        cargarDatosVentas();
-    }
-
-    function cerrarModalVentas() {
-        document.getElementById("modalVentas").classList.remove("activo");
-    }
-
-    async function cargarDatosVentas() {
-        const cuerpo = document.getElementById("cuerpoVentas");
-        try {
-            const res = await fetch(`${API}/empresa/${encodeURIComponent(empresa.id)}/ventas`);
-            if (!res.ok) throw new Error("Error consultando ventas.");
-
-            const ventas = await res.json();
-            cuerpo.innerHTML = "";
-
-            if (ventas.length === 0) {
-                cuerpo.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:#aaa;">No se registran compras todavía.</td></tr>`;
-                document.getElementById("totalIngresosVentas").textContent = "$ 0";
-                document.getElementById("totalUnidadesVentas").textContent = "0";
-                document.getElementById("totalPedidosVentas").textContent = "0";
-                return;
-            }
-
-            let sumaDinero = 0;
-            let sumaUnidades = 0;
-
-            ventas.forEach(v => {
-                sumaDinero += Number(v.total || 0);
-                sumaUnidades += Number(v.cantidad || 0);
-
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${v.fecha || "--"}</td>
-                    <td><strong>${v.nombre_producto}</strong></td>
-                    <td>${v.cantidad}</td>
-                    <td style="color:var(--verde); font-weight:700;">${dinero(v.total)}</td>
-                    <td>${v.cliente_nombre || "Cliente"}</td>
-                    <td>${v.cliente_ciudad || "Colombia"}</td>
-                    <td>${v.cliente_telefono || "--"}</td>
-                    <td>${v.metodo_pago || "Directo"}</td>
-                `;
-                cuerpo.appendChild(tr);
-            });
-
-            document.getElementById("totalIngresosVentas").textContent = dinero(sumaDinero);
-            document.getElementById("totalUnidadesVentas").textContent = sumaUnidades;
-            document.getElementById("totalPedidosVentas").textContent = ventas.length;
-
-        } catch (e) {
-            cuerpo.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--rojo);">Error: ${e.message}</td></tr>`;
         }
     }
 
