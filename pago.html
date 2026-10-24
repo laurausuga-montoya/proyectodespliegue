@@ -43,7 +43,6 @@
             padding: 35px 30px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
         }
 
         .logo-viga {
@@ -182,7 +181,6 @@
 <div class="contenedor-pago">
     <div class="logo-viga">VIGA</div>
 
-    <!-- PANTALLA 1: COBRO -->
     <div id="vistaCobro">
         <div class="icono-app" id="iconoApp">📱</div>
         <h2 id="tituloCobro">Acepta la solicitud de cobro</h2>
@@ -223,12 +221,11 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: ÉXITO -->
     <div class="pantalla-exito" id="vistaExito">
         <div class="animacion-check">✓</div>
         <h2>¡Pago aceptado con éxito!</h2>
         <p class="descripcion" id="mensajeExito">
-            El valor fue descontado de tu cuenta. El stock ha sido actualizado y tu pedido se encuentra en preparación.
+            El valor fue descontado de tu cuenta. El stock ha sido actualizado y tu pedido se encuentra registrado.
         </p>
         <p style="font-size: 13px; color: var(--secundario);">
             Redirigiendo a la tienda en <strong id="segundosRedireccion" style="color:var(--verde);">3</strong> segundos...
@@ -276,7 +273,6 @@
             titulo.textContent = "Notificación de cobro Nequi";
             mensaje.textContent = `Hemos enviado una solicitud de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para autorizar el cobro.`;
             textoBtn.textContent = "Aceptar débito en Nequi";
-
         } else if (pedido.metodo === "daviplata" || bancoNombre.includes("daviplata")) {
             metodo.textContent = "Daviplata";
             etiquetaCuenta.textContent = "Número Daviplata:";
@@ -285,7 +281,6 @@
             titulo.textContent = "Cobro directo Daviplata";
             mensaje.textContent = `Confirma el descuento de fondos de tu monedero Daviplata (${pedido.cuenta || pedido.telefono}) para completar el pedido.`;
             textoBtn.textContent = "Aceptar cobro en Daviplata";
-
         } else if (bancoNombre.includes("bancolombia")) {
             metodo.textContent = pedido.banco || "Bancolombia";
             etiquetaCuenta.textContent = "Cuenta Bancolombia:";
@@ -294,7 +289,6 @@
             titulo.textContent = "Autorización Bancolombia";
             mensaje.textContent = `Autoriza la transferencia inmediata desde tu cuenta ${pedido.banco} para despachar la compra.`;
             textoBtn.textContent = "Autorizar débito Bancolombia";
-
         } else if (pedido.metodo === "pse") {
             metodo.textContent = pedido.banco || "PSE";
             etiquetaCuenta.textContent = "Correo PSE:";
@@ -303,7 +297,6 @@
             titulo.textContent = "Verificación de pago PSE";
             mensaje.textContent = `Transacción respaldada por ACH Colombia. Valida el débito de tu cuenta bancaria asociada.`;
             textoBtn.textContent = "Confirmar pago PSE";
-
         } else {
             metodo.textContent = "Tarjeta Débito / Crédito";
             etiquetaCuenta.textContent = "Terminación de tarjeta:";
@@ -327,7 +320,7 @@
         const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
 
         try {
-            // Notificar al servidor en Render para reducir stock y guardar en tabla ventas
+            // Envío al backend en Render para descontar stock y guardar en la tabla ventas
             await fetch(`${API}/compras/procesar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -338,15 +331,15 @@
                         ciudad: pedido.ciudad,
                         telefono: pedido.telefono
                     },
-                    metodo_pago: pedido.banco || pedido.metodo
+                    metodo_pago: pedido.banco || pedido.metodo || "Transferencia/Tarjeta"
                 })
             });
         } catch (error) {
-            console.error("Error al procesar en servidor:", error);
+            console.error("Error al registrar venta en el backend:", error);
         }
 
         setTimeout(() => {
-            // Guardar compra en historial del cliente
+            // Historial para el usuario
             const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
             historialPrevio.push({
                 idOrden: Math.floor(100000 + Math.random() * 900000),
@@ -366,15 +359,12 @@
             });
             localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
 
-            // Cambiar a pantalla de éxito
             document.getElementById("vistaCobro").style.display = "none";
             document.getElementById("vistaExito").style.display = "block";
 
-            // Limpiar carrito
             localStorage.removeItem("viga_carrito");
             localStorage.removeItem("viga_pedido_actual");
 
-            // Cuenta regresiva y regreso a la tienda
             let segundos = 3;
             const cuentaAtras = setInterval(() => {
                 segundos--;
