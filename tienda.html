@@ -176,10 +176,13 @@
 
         .img-contenedor {
             width: 100%;
-            height: 220px;
-            background: #222;
+            height: 230px;
+            background: #181818;
             overflow: hidden;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .img-contenedor img {
@@ -362,6 +365,7 @@
             height: 65px;
             object-fit: cover;
             border-radius: 8px;
+            background: #111;
         }
 
         .item-detalles {
@@ -538,6 +542,18 @@
         });
     }
 
+    // Resuelve la URL real de la foto que subió la empresa
+    function obtenerUrlImagen(urlGuardada) {
+        if (!urlGuardada) {
+            return "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
+        }
+        if (urlGuardada.startsWith("http://") || urlGuardada.startsWith("https://")) {
+            return urlGuardada;
+        }
+        // Si viene con ruta relativa del backend (/uploads/...)
+        return `${API}${urlGuardada.startsWith("/") ? "" : "/"}${urlGuardada}`;
+    }
+
     /* =========================================================
        CARGAR PRODUCTOS DESDE EL BACKEND
     ========================================================= */
@@ -566,25 +582,26 @@
         }
 
         productos.forEach(prod => {
-            const imagenSrc = prod.imagen_url 
-                ? (prod.imagen_url.startsWith("http") ? prod.imagen_url : `${API}${prod.imagen_url}`)
-                : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
-
-            const stockDisponible = Number(prod.stock || 0);
+            const imagenSrc = obtenerUrlImagen(prod.imagen_url || prod.imagen_producto);
+            const stockDisponible = Number(prod.stock || prod.stock_producto || 0);
+            const precioProducto = Number(prod.precio || prod.precio_producto || 0);
+            const nombreProducto = prod.nombre || prod.nombre_producto || "Producto";
+            const descripcionProducto = prod.descripcion || prod.descripcion_producto || "";
+            const categoriaProducto = prod.categoria || prod.categoria_producto || "Implemento";
 
             const tarjeta = document.createElement("div");
             tarjeta.className = "tarjeta-producto";
 
             tarjeta.innerHTML = `
                 <div class="img-contenedor">
-                    <span class="categoria-tag">${prod.categoria || "Implemento"}</span>
-                    <img src="${imagenSrc}" alt="${prod.nombre}" onerror="this.src='https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80'">
+                    <span class="categoria-tag">${categoriaProducto}</span>
+                    <img src="${imagenSrc}" alt="${nombreProducto}" loading="lazy">
                 </div>
                 <div class="info-producto">
-                    <h3>${prod.nombre}</h3>
-                    <p>${prod.descripcion}</p>
+                    <h3>${nombreProducto}</h3>
+                    <p>${descripcionProducto}</p>
                     <div class="pie-tarjeta">
-                        <div class="precio">${dinero(prod.precio)}</div>
+                        <div class="precio">${dinero(precioProducto)}</div>
                         <div class="stock-disponible">${stockDisponible} disponibles</div>
                     </div>
                     <button class="btn-anadir" ${stockDisponible <= 0 ? "disabled" : ""} onclick="agregarAlCarrito(${prod.id})">
@@ -605,7 +622,10 @@
         if (!prod) return;
 
         const existente = carrito.find(item => item.id === idProducto);
-        const stockMax = Number(prod.stock || 0);
+        const stockMax = Number(prod.stock || prod.stock_producto || 0);
+        const imagenReal = obtenerUrlImagen(prod.imagen_url || prod.imagen_producto);
+        const precioReal = Number(prod.precio || prod.precio_producto || 0);
+        const nombreReal = prod.nombre || prod.nombre_producto || "Producto";
 
         if (existente) {
             if (existente.cantidad < stockMax) {
@@ -615,15 +635,11 @@
                 return;
             }
         } else {
-            const imagenSrc = prod.imagen_url 
-                ? (prod.imagen_url.startsWith("http") ? prod.imagen_url : `${API}${prod.imagen_url}`)
-                : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
-
             carrito.push({
                 id: prod.id,
-                nombre: prod.nombre,
-                precio: Number(prod.precio),
-                imagen: imagenSrc,
+                nombre: nombreReal,
+                precio: precioReal,
+                imagen: imagenReal,
                 stock: stockMax,
                 cantidad: 1
             });
@@ -726,7 +742,7 @@
         if (categoria === "Todas") {
             renderizarCatalogo(listaProductos);
         } else {
-            const filtrados = listaProductos.filter(p => p.categoria === categoria);
+            const filtrados = listaProductos.filter(p => (p.categoria || p.categoria_producto) === categoria);
             renderizarCatalogo(filtrados);
         }
     }
