@@ -285,14 +285,17 @@ app.post("/compras/procesar", function (req, res) {
         return res.status(400).json({ error: "No hay productos en la orden." });
     }
 
+    let procesados = 0;
+    const totalArticulos = articulos.length;
+
     articulos.forEach(item => {
-        // Descontar inventario sin permitir valores negativos
+        // 1. Descontar stock
         const sqlStock = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
         conexion.query(sqlStock, [item.cantidad, item.id], function (err) {
-            if (err) console.error("❌ Error al descontar stock:", err);
+            if (err) console.error("❌ Error stock:", err);
         });
 
-        // Buscar qué empresa publicó el producto y registrar la venta
+        // 2. Obtener la empresa dueña del producto
         const sqlEmpresa = "SELECT identificacion_empresa FROM productos WHERE id = ? LIMIT 1";
         conexion.query(sqlEmpresa, [item.id], function (errEmpresa, filas) {
             if (!errEmpresa && filas.length > 0) {
@@ -319,16 +322,24 @@ app.post("/compras/procesar", function (req, res) {
                     metodo_pago || "Directo"
                 ], function(errVenta) {
                     if (errVenta) console.error("❌ Error guardando venta:", errVenta);
+                    procesados++;
+                    if (procesados === totalArticulos) {
+                        return res.json({ mensaje: "Ventas guardadas y stock actualizado con éxito." });
+                    }
                 });
+            } else {
+                procesados++;
+                if (procesados === totalArticulos) {
+                    return res.json({ mensaje: "Ventas procesadas." });
+                }
             }
         });
     });
-
-    res.json({ mensaje: "Venta guardada y stock actualizado correctamente." });
 });
 
 app.get("/empresa/:id/ventas", function (req, res) {
     const idEmpresa = req.params.id;
+    // Compara identificacion_empresa para abarcar id o nit
     const sql = `
         SELECT 
             id,

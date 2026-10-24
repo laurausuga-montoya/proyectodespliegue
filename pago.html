@@ -224,7 +224,7 @@
     <div class="pantalla-exito" id="vistaExito">
         <div class="animacion-check">✓</div>
         <h2>¡Pago aceptado con éxito!</h2>
-        <p class="descripcion" id="mensajeExito">
+        <p class="descripcion">
             El valor fue descontado de tu cuenta. El stock ha sido actualizado y tu pedido se encuentra registrado.
         </p>
         <p style="font-size: 13px; color: var(--secundario);">
@@ -320,8 +320,8 @@
         const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
 
         try {
-            // Envío al backend en Render para descontar stock y guardar en la tabla ventas
-            await fetch(`${API}/compras/procesar`, {
+            // Guardar en la base de datos MySQL (Render)
+            const respuesta = await fetch(`${API}/compras/procesar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -334,47 +334,49 @@
                     metodo_pago: pedido.banco || pedido.metodo || "Transferencia/Tarjeta"
                 })
             });
+
+            if (!respuesta.ok) {
+                console.error("Respuesta del servidor no fue OK:", await respuesta.text());
+            }
         } catch (error) {
             console.error("Error al registrar venta en el backend:", error);
         }
 
-        setTimeout(() => {
-            // Historial para el usuario
-            const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
-            historialPrevio.push({
-                idOrden: Math.floor(100000 + Math.random() * 900000),
-                fecha: new Date().toLocaleDateString("es-CO", { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric', 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                }),
-                metodo: pedido.metodo,
-                banco: pedido.banco || "Tarjeta Débito / Crédito",
-                ciudad: pedido.ciudad,
-                direccion: pedido.direccion,
-                total: pedido.total,
-                articulos: carritoActual
-            });
-            localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
+        // Historial local para el comprador
+        const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+        historialPrevio.push({
+            idOrden: Math.floor(100000 + Math.random() * 900000),
+            fecha: new Date().toLocaleDateString("es-CO", { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            }),
+            metodo: pedido.metodo,
+            banco: pedido.banco || "Tarjeta Débito / Crédito",
+            ciudad: pedido.ciudad,
+            direccion: pedido.direccion,
+            total: pedido.total,
+            articulos: carritoActual
+        });
+        localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
 
-            document.getElementById("vistaCobro").style.display = "none";
-            document.getElementById("vistaExito").style.display = "block";
+        document.getElementById("vistaCobro").style.display = "none";
+        document.getElementById("vistaExito").style.display = "block";
 
-            localStorage.removeItem("viga_carrito");
-            localStorage.removeItem("viga_pedido_actual");
+        localStorage.removeItem("viga_carrito");
+        localStorage.removeItem("viga_pedido_actual");
 
-            let segundos = 3;
-            const cuentaAtras = setInterval(() => {
-                segundos--;
-                document.getElementById("segundosRedireccion").textContent = segundos;
-                if (segundos <= 0) {
-                    clearInterval(cuentaAtras);
-                    window.location.href = "tienda.html";
-                }
-            }, 1000);
-        }, 1200);
+        let segundos = 3;
+        const cuentaAtras = setInterval(() => {
+            segundos--;
+            document.getElementById("segundosRedireccion").textContent = segundos;
+            if (segundos <= 0) {
+                clearInterval(cuentaAtras);
+                window.location.href = "tienda.html";
+            }
+        }, 1000);
     }
 
     function cancelarPago() {

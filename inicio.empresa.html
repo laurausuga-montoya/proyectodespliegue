@@ -647,8 +647,6 @@
                         <img id="vistaImagen" class="previsualizacion" alt="Vista previa del producto">
                         <p class="nota">
                             Selecciona una imagen JPG, PNG o WebP de máximo 3 MB.
-                            El servidor debe guardar la imagen o proporcionar una URL
-                            para que el producto se vea en tu tienda.
                         </p>
                     </div>
 
@@ -858,22 +856,12 @@
     }
 
     async function cargarProductos() {
-        if (!empresa || !empresa.id) {
-            $("tablaProductos").innerHTML =
-                '<div class="vacio">Debes iniciar sesión con una cuenta empresarial válida.</div>';
-
-            $("recientes").innerHTML =
-                '<div class="vacio">Inicia sesión como empresa para consultar tus productos.</div>';
-
-            $("totalProductos").textContent = "—";
-            $("productosDisponibles").textContent = "—";
-            $("productosAgotados").textContent = "—";
-            return;
-        }
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
 
         try {
             const datos = await peticion(
-                "/empresa/" + encodeURIComponent(empresa.id) + "/productos"
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos"
             );
 
             productos = Array.isArray(datos) ? datos : (datos.productos || []);
@@ -1020,14 +1008,8 @@
         event.preventDefault();
         mostrarMensaje("");
 
-        if (!empresa || !empresa.id) {
-            mostrarMensaje(
-                "No hay una sesión empresarial válida. Inicia sesión como empresa.",
-                "error"
-            );
-            return;
-        }
-
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
         const id = $("productoId").value;
 
         const producto = {
@@ -1038,21 +1020,7 @@
             stock: Number($("stock").value)
         };
 
-        if (
-            !producto.nombre ||
-            !producto.categoria ||
-            !producto.descripcion ||
-            !Number.isFinite(producto.precio) ||
-            producto.precio <= 0 ||
-            !Number.isInteger(producto.stock) ||
-            producto.stock < 0
-        ) {
-            mostrarMensaje("Revisa los datos del producto.", "error");
-            return;
-        }
-
         const formulario = new FormData();
-
         Object.entries(producto).forEach(([clave, valor]) => {
             formulario.append(clave, String(valor));
         });
@@ -1066,8 +1034,7 @@
         boton.textContent = "Guardando...";
 
         try {
-            const base = "/empresa/" +
-                encodeURIComponent(empresa.id) + "/productos";
+            const base = "/empresa/" + encodeURIComponent(idEmpresa) + "/productos";
 
             await peticion(
                 id ? base + "/" + encodeURIComponent(id) : base,
@@ -1096,24 +1063,19 @@
     });
 
     async function eliminarProducto(id) {
-        if (!empresa || !empresa.id) return;
-
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
         const producto = productos.find(p => String(p.id) === String(id));
 
-        if (!confirm(
-            '¿Seguro que deseas eliminar "' +
-            (producto?.nombre || "este producto") + '"?'
-        )) return;
+        if (!confirm('¿Seguro que deseas eliminar "' + (producto?.nombre || "este producto") + '"?')) return;
 
         try {
             await peticion(
-                "/empresa/" + encodeURIComponent(empresa.id) +
-                "/productos/" + encodeURIComponent(id),
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos/" + encodeURIComponent(id),
                 { method: "DELETE" }
             );
 
             await cargarProductos();
-
         } catch (error) {
             alert(error.message);
         }
@@ -1123,13 +1085,13 @@
        CARGAR HISTORIAL DE PRODUCTOS COMPRADOS (VENTAS)
     ========================================================= */
     async function cargarVentasEmpresa() {
-        if (!empresa || !empresa.id) return;
-
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
         const contenedor = $("contenedorTablaVentas");
 
         try {
             const ventas = await peticion(
-                "/empresa/" + encodeURIComponent(empresa.id) + "/ventas"
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/ventas"
             );
 
             if (!Array.isArray(ventas) || ventas.length === 0) {
@@ -1203,14 +1165,13 @@
         if (!empresaGuardada) {
             $("tablaProductos").innerHTML =
                 '<div class="vacio">No se encontró una sesión empresarial. Inicia sesión para acceder.</div>';
-            $("recientes").innerHTML =
-                '<div class="vacio">Inicia sesión para cargar tu catálogo.</div>';
             return;
         }
 
         try {
             empresa = JSON.parse(empresaGuardada);
             if (!empresa.id && empresa.nit) empresa.id = empresa.nit;
+            if (!empresa.id && empresa.identificacion) empresa.id = empresa.identificacion;
         } catch {
             empresa = null;
         }
