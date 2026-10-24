@@ -406,10 +406,10 @@
         
         <div class="acciones-superiores">
             <button class="btn-accion-top" onclick="alternarFormularioSoporte()">
-                💬 Reportar un problema / Soporte
+                 Reportar un problema / Soporte
             </button>
             <button class="btn-accion-top btn-rojo" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
-                🗑️ Borrar Historial de Compras
+                 Borrar Historial de Compras
             </button>
         </div>
     </div>
@@ -569,7 +569,7 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">Orden #${pedido.idOrden || (1000 + idx)}</div>
-                        <div class="pedido-fecha">📅 ${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
+                        <div class="pedido-fecha"> ${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
                     </div>
                     <span class="estado-badge">✓ Pago Aprobado</span>
                 </div>
@@ -580,7 +580,7 @@
 
                 <div class="pedido-footer">
                     <div class="pedido-metodo">
-                        💳 Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
+                         Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
                     </div>
                     <div class="pedido-total">
                         Total: ${dinero(pedido.total)}
@@ -682,7 +682,7 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">${rep.asunto}</div>
-                        <div class="pedido-fecha">📅 ${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
+                        <div class="pedido-fecha"> ${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
                     </div>
                     <span class="estado-badge badge-soporte">En Revisión</span>
                 </div>
