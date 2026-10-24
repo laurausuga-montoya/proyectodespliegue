@@ -144,7 +144,6 @@
             text-decoration: underline;
         }
 
-        /* VISTA DE ÉXITO */
         .pantalla-exito {
             display: none;
         }
@@ -183,7 +182,7 @@
 <div class="contenedor-pago">
     <div class="logo-viga">VIGA</div>
 
-    <!-- PANTALLA 1: CONFIRMAR DÉBITO O APROBACIÓN -->
+    <!-- PANTALLA 1: COBRO -->
     <div id="vistaCobro">
         <div class="icono-app" id="iconoApp">📱</div>
         <h2 id="tituloCobro">Acepta la solicitud de cobro</h2>
@@ -224,12 +223,12 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: PAGO ACEPTADO Y REDIRECCIÓN -->
+    <!-- PANTALLA 2: ÉXITO -->
     <div class="pantalla-exito" id="vistaExito">
         <div class="animacion-check">✓</div>
         <h2>¡Pago aceptado con éxito!</h2>
         <p class="descripcion" id="mensajeExito">
-            El valor fue descontado correctamente de tu cuenta. Tu pedido ha sido confirmado y registrado en tu historial.
+            El valor fue descontado de tu cuenta. El stock ha sido actualizado y tu pedido se encuentra en preparación.
         </p>
         <p style="font-size: 13px; color: var(--secundario);">
             Redirigiendo a la tienda en <strong id="segundosRedireccion" style="color:var(--verde);">3</strong> segundos...
@@ -238,6 +237,7 @@
 </div>
 
 <script>
+    const API = "https://viga-c607.onrender.com";
     const pedido = JSON.parse(localStorage.getItem("viga_pedido_actual") || "null");
 
     function dinero(valor) {
@@ -274,7 +274,7 @@
             valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
             icono.textContent = "🟣";
             titulo.textContent = "Notificación de cobro Nequi";
-            mensaje.textContent = `Hemos enviado un mensaje de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para debitar el saldo disponible.`;
+            mensaje.textContent = `Hemos enviado una solicitud de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para autorizar el cobro.`;
             textoBtn.textContent = "Aceptar débito en Nequi";
 
         } else if (pedido.metodo === "daviplata" || bancoNombre.includes("daviplata")) {
@@ -305,7 +305,6 @@
             textoBtn.textContent = "Confirmar pago PSE";
 
         } else {
-            // Tarjeta de crédito o débito
             metodo.textContent = "Tarjeta Débito / Crédito";
             etiquetaCuenta.textContent = "Terminación de tarjeta:";
             valorCuenta.textContent = `•••• ${pedido.terminacion || "4242"}`;
@@ -316,7 +315,7 @@
         }
     }
 
-    function procesarDebito() {
+    async function procesarDebito() {
         const btn = document.getElementById("btnAceptarDebito");
         const texto = document.getElementById("textoBotonDebito");
         const spinner = document.getElementById("spinnerCarga");
@@ -325,11 +324,30 @@
         spinner.style.display = "block";
         btn.disabled = true;
 
-        setTimeout(() => {
-            // 1. Guardar la compra en el historial (para informes.html)
-            const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
-            const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+        const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
 
+        try {
+            // Notificar al servidor en Render para reducir stock y guardar en tabla ventas
+            await fetch(`${API}/compras/procesar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    articulos: carritoActual,
+                    cliente: {
+                        nombre: pedido.nombre,
+                        ciudad: pedido.ciudad,
+                        telefono: pedido.telefono
+                    },
+                    metodo_pago: pedido.banco || pedido.metodo
+                })
+            });
+        } catch (error) {
+            console.error("Error al procesar en servidor:", error);
+        }
+
+        setTimeout(() => {
+            // Guardar compra en historial del cliente
+            const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
             historialPrevio.push({
                 idOrden: Math.floor(100000 + Math.random() * 900000),
                 fecha: new Date().toLocaleDateString("es-CO", { 
@@ -348,15 +366,15 @@
             });
             localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
 
-            // 2. Cambiar de pantalla a éxito
+            // Cambiar a pantalla de éxito
             document.getElementById("vistaCobro").style.display = "none";
             document.getElementById("vistaExito").style.display = "block";
 
-            // 3. Limpiar carrito y pedido temporal
+            // Limpiar carrito
             localStorage.removeItem("viga_carrito");
             localStorage.removeItem("viga_pedido_actual");
 
-            // 4. Cuenta regresiva y redirección a la tienda
+            // Cuenta regresiva y regreso a la tienda
             let segundos = 3;
             const cuentaAtras = setInterval(() => {
                 segundos--;
@@ -366,7 +384,7 @@
                     window.location.href = "tienda.html";
                 }
             }, 1000);
-        }, 1500);
+        }, 1200);
     }
 
     function cancelarPago() {

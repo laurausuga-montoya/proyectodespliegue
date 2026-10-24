@@ -14,12 +14,10 @@ const PORT = process.env.PORT || 3000;
 ========================================= */
 app.use(cors());
 app.use(express.json());
-
-// Servir archivos estáticos del proyecto
 app.use(express.static(path.resolve(__dirname)));
 
 /* =========================================
-   RUTA DIRECTA PARA FORZAR EL CSS
+   RUTA DIRECTA PARA CSS
 ========================================= */
 app.get("/index.css", function (req, res) {
     res.setHeader("Content-Type", "text/css");
@@ -89,6 +87,14 @@ app.get("/checkout", function (req, res) {
 
 app.get("/pago", function (req, res) {
     res.sendFile(path.resolve(__dirname, "pago.html"));
+});
+
+app.get("/informes", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "informes.html"));
+});
+
+app.get("/informes-empresa", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "informes.empresa.html"));
 });
 
 app.get("/empresa", function (req, res) {
@@ -236,27 +242,6 @@ app.get("/empresa/:id/productos", function (req, res) {
     });
 });
 
-// Actualizar producto
-app.put("/empresa/:id_empresa/productos/:id_producto", upload.single("imagen"), function (req, res) {
-    const { id_empresa, id_producto } = req.params;
-    const { nombre, categoria, descripcion, precio, stock } = req.body;
-
-    if (req.file) {
-        const imagen_url = `/uploads/${req.file.filename}`;
-        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=?, imagen_url=? WHERE id=? AND identificacion_empresa=?`;
-        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, imagen_url, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
-            res.json({ mensaje: "Producto actualizado con éxito." });
-        });
-    } else {
-        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=? WHERE id=? AND identificacion_empresa=?`;
-        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
-            res.json({ mensaje: "Producto actualizado con éxito." });
-        });
-    }
-});
-
 // Eliminar producto
 app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     const { id_empresa, id_producto } = req.params;
@@ -268,9 +253,9 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// Tienda pública de los usuarios
+// Tienda pública de los usuarios (trae todos los productos ordenados)
 app.get("/productos", function (req, res) {
-    const sql = "SELECT * FROM productos WHERE stock > 0 ORDER BY fecha_creacion DESC";
+    const sql = "SELECT * FROM productos ORDER BY (stock > 0) DESC, fecha_creacion DESC";
 
     conexion.query(sql, function (error, resultados) {
         if (error) return res.status(500).json({ error: "Error cargando la tienda." });
@@ -279,7 +264,89 @@ app.get("/productos", function (req, res) {
 });
 
 /* =========================================
-   PERFIL Y CONFIGURACIONES (USUARIOS)
+   PROCESAMIENTO DE COMPRAS Y REPORTES DE VENTA
+========================================= */
+// Procesar compra: descuenta stock y registra en la tabla ventas
+app.post("/compras/procesar", function (req, res) {
+    const { articulos, cliente, metodo_pago } = req.body;
+
+    if (!articulos || articulos.length === 0) {
+        return res.status(400).json({ error: "No hay productos para procesar." });
+    }
+
+    articulos.forEach(item => {
+        // 1. Descontar el stock en MySQL (sin bajar de cero)
+        const sqlStock = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
+        conexion.query(sqlStock, [item.cantidad, item.id], function (err) {
+            if (err) console.error("❌ Error descontando stock del producto:", item.id, err);
+        });
+
+        // 2. Asociar a la empresa proveedora y guardar en ventas
+        const sqlInfo = "SELECT identificacion_empresa FROM productos WHERE id = ? LIMIT 1";
+        conexion.query(sqlInfo, [item.id], function (errInfo, filas) {
+            if (!errInfo && filas.length > 0) {
+                const idEmpresa = filas[0].identificacion_empresa;
+                const totalItem = Number(item.precio) * Number(item.cantidad);
+
+                const sqlVenta = `
+                    INSERT INTO ventas (
+                        id_producto, identificacion_empresa, nombre_producto, 
+                        cantidad, precio_unitario, total, 
+                        cliente_nombre, cliente_ciudad, cliente_telefono, metodo_pago
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `;
+                conexion.query(sqlVenta, [
+                    item.id,
+                    idEmpresa,
+                    item.nombre,
+                    item.cantidad,
+                    item.precio,
+                    totalItem,
+                    cliente.nombre || "Cliente VIGA",
+                    cliente.ciudad || "Colombia",
+                    cliente.telefono || "",
+                    metodo_pago || "Transferencia/Tarjeta"
+                ], function(errVenta) {
+                    if (errVenta) console.error("❌ Error guardando venta:", errVenta);
+                });
+            }
+        });
+    });
+
+    res.json({ mensaje: "Compra procesada, stock actualizado y venta guardada con éxito." });
+});
+
+// Reporte de ventas para la empresa logueada
+app.get("/empresa/:id/ventas", function (req, res) {
+    const idEmpresa = req.params.id;
+    const sql = `
+        SELECT 
+            id,
+            nombre_producto,
+            cantidad,
+            precio_unitario,
+            total,
+            cliente_nombre,
+            cliente_ciudad,
+            cliente_telefono,
+            metodo_pago,
+            DATE_FORMAT(fecha_venta, '%Y-%m-%d %H:%i') AS fecha
+        FROM ventas 
+        WHERE identificacion_empresa = ? 
+        ORDER BY fecha_venta DESC
+    `;
+
+    conexion.query(sql, [idEmpresa], function (error, resultados) {
+        if (error) {
+            console.error("❌ Error consultando ventas de la empresa:", error);
+            return res.status(500).json({ error: "Error al consultar las ventas." });
+        }
+        res.json(resultados);
+    });
+});
+
+/* =========================================
+   PERFIL Y CONFIGURACIONES
 ========================================= */
 app.get("/usuario/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;

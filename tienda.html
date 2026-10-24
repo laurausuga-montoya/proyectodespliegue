@@ -15,6 +15,7 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
+            --rojo: #ff5252;
         }
 
         * {
@@ -30,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* HEADER */
         header {
             height: 80px;
             background: var(--panel);
@@ -75,7 +75,7 @@
             border: 1px solid var(--borde);
             color: white;
             padding: 10px 18px;
-            border-radius: 0px;
+            border-radius: 9px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
@@ -95,7 +95,7 @@
             color: #111;
             font-size: 11px;
             font-weight: 700;
-            border-radius: 0%;
+            border-radius: 50%;
             width: 20px;
             height: 20px;
             display: flex;
@@ -103,7 +103,6 @@
             justify-content: center;
         }
 
-        /* CONTENIDO PRINCIPAL */
         main {
             width: 90%;
             max-width: 1300px;
@@ -139,7 +138,7 @@
             color: #ddd;
             border: 1px solid var(--borde);
             padding: 10px 20px;
-            border-radius: 0px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -162,16 +161,26 @@
         .tarjeta-producto {
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 0px;
+            border-radius: 14px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             transition: .3s;
+            position: relative;
         }
 
         .tarjeta-producto:hover {
             transform: translateY(-5px);
             border-color: var(--verde);
+        }
+
+        .tarjeta-producto.agotado {
+            opacity: 0.7;
+        }
+
+        .tarjeta-producto.agotado:hover {
+            transform: none;
+            border-color: var(--borde);
         }
 
         .img-contenedor {
@@ -201,8 +210,21 @@
             font-size: 11px;
             font-weight: 600;
             padding: 4px 10px;
-            border-radius: 0px;
+            border-radius: 6px;
             border: 1px solid rgba(55, 227, 89, 0.3);
+        }
+
+        .badge-agotado {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 82, 82, 0.9);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 1px;
         }
 
         .info-producto {
@@ -245,6 +267,11 @@
             color: #888;
         }
 
+        .stock-disponible.sin-stock {
+            color: var(--rojo);
+            font-weight: 600;
+        }
+
         .btn-anadir {
             width: 100%;
             margin-top: 15px;
@@ -252,7 +279,7 @@
             background: var(--verde);
             color: #111;
             border: none;
-            border-radius: 0px;
+            border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
             transition: .2s;
@@ -263,9 +290,10 @@
         }
 
         .btn-anadir:disabled {
-            background: #333;
-            color: #777;
+            background: #2a2a2a;
+            color: #666;
             cursor: not-allowed;
+            border: 1px solid #333;
         }
 
         .vacio {
@@ -274,11 +302,11 @@
             padding: 60px 20px;
             color: var(--secundario);
             background: var(--panel);
-            border-radius: 0px;
+            border-radius: 12px;
             border: 1px solid var(--borde);
         }
 
-        /* ================= MODAL / DRAWER CARRITO ================= */
+        /* MODAL CARRITO */
         .carrito-overlay {
             position: fixed;
             inset: 0;
@@ -332,7 +360,7 @@
             font-size: 20px;
             width: 32px;
             height: 32px;
-            border-radius: 0%;
+            border-radius: 50%;
             cursor: pointer;
         }
 
@@ -356,7 +384,7 @@
             gap: 15px;
             background: #202020;
             padding: 12px;
-            border-radius: 0px;
+            border-radius: 10px;
             border: 1px solid #292929;
         }
 
@@ -364,7 +392,7 @@
             width: 65px;
             height: 65px;
             object-fit: cover;
-            border-radius: 0px;
+            border-radius: 8px;
             background: #111;
         }
 
@@ -397,7 +425,7 @@
             color: white;
             width: 24px;
             height: 24px;
-            border-radius: 0px;
+            border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -448,7 +476,7 @@
             background: var(--verde);
             color: #111;
             border: none;
-            border-radius: 0px;
+            border-radius: 8px;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
@@ -480,6 +508,7 @@
 
     <div class="nav-derecha">
         <a href="inicio.html" class="volver">← Volver al inicio</a>
+        <a href="informes.html" class="volver" style="color:var(--verde);">📜 Mis compras</a>
         <button class="btn-carrito" id="btnAbrirCarrito">
             🛒 Carrito <span class="contador-carrito" id="contadorCarrito">0</span>
         </button>
@@ -492,7 +521,7 @@
         <p>Encuentra pesas, indumentaria y accesorios publicados por nuestras marcas aliadas.</p>
     </div>
 
-    <!-- FILTROS POR CATEGORÍA -->
+    <!-- FILTROS -->
     <div class="filtros" id="contenedorFiltros">
         <button class="filtro-btn activo" onclick="filtrarCategoria('Todas', this)">Todas</button>
         <button class="filtro-btn" onclick="filtrarCategoria('Pesas y mancuernas', this)">Pesas y mancuernas</button>
@@ -508,7 +537,7 @@
     </div>
 </main>
 
-<!-- MODAL / DRAWER LATERAL DEL CARRITO -->
+<!-- MODAL CARRITO -->
 <div class="carrito-overlay" id="carritoOverlay"></div>
 <aside class="carrito-panel" id="carritoPanel">
     <div class="carrito-header">
@@ -542,7 +571,6 @@
         });
     }
 
-    // Resuelve la URL real de la foto que subió la empresa
     function obtenerUrlImagen(urlGuardada) {
         if (!urlGuardada) {
             return "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
@@ -553,9 +581,6 @@
         return `${API}${urlGuardada.startsWith("/") ? "" : "/"}${urlGuardada}`;
     }
 
-    /* =========================================================
-       CARGAR PRODUCTOS DESDE EL BACKEND
-    ========================================================= */
     async function cargarTienda() {
         const contenedor = document.getElementById("grillaProductos");
         try {
@@ -576,7 +601,7 @@
         contenedor.innerHTML = "";
 
         if (!productos || productos.length === 0) {
-            contenedor.innerHTML = `<div class="vacio">Actualmente no hay productos disponibles en esta categoría.</div>`;
+            contenedor.innerHTML = `<div class="vacio">Actualmente no hay productos disponibles.</div>`;
             return;
         }
 
@@ -584,27 +609,28 @@
             const imagenSrc = obtenerUrlImagen(prod.imagen_url);
             const stockDisponible = Number(prod.stock || 0);
             const precioProducto = Number(prod.precio || 0);
-            const nombreProducto = prod.nombre || "Producto";
-            const descripcionProducto = prod.descripcion || "";
-            const categoriaProducto = prod.categoria || "Implemento";
+            const estaAgotado = stockDisponible <= 0;
 
             const tarjeta = document.createElement("div");
-            tarjeta.className = "tarjeta-producto";
+            tarjeta.className = `tarjeta-producto ${estaAgotado ? "agotado" : ""}`;
 
             tarjeta.innerHTML = `
                 <div class="img-contenedor">
-                    <span class="categoria-tag">${categoriaProducto}</span>
-                    <img src="${imagenSrc}" alt="${nombreProducto}" loading="lazy">
+                    <span class="categoria-tag">${prod.categoria || "Implemento"}</span>
+                    ${estaAgotado ? '<span class="badge-agotado">AGOTADO</span>' : ''}
+                    <img src="${imagenSrc}" alt="${prod.nombre}" loading="lazy">
                 </div>
                 <div class="info-producto">
-                    <h3>${nombreProducto}</h3>
-                    <p>${descripcionProducto}</p>
+                    <h3>${prod.nombre}</h3>
+                    <p>${prod.descripcion}</p>
                     <div class="pie-tarjeta">
                         <div class="precio">${dinero(precioProducto)}</div>
-                        <div class="stock-disponible">${stockDisponible} disponibles</div>
+                        <div class="stock-disponible ${estaAgotado ? 'sin-stock' : ''}">
+                            ${estaAgotado ? 'Sin existencias' : `${stockDisponible} disponibles`}
+                        </div>
                     </div>
-                    <button class="btn-anadir" ${stockDisponible <= 0 ? "disabled" : ""} onclick="agregarAlCarrito(${prod.id})">
-                        ${stockDisponible > 0 ? "Añadir al carrito" : "Agotado"}
+                    <button class="btn-anadir" ${estaAgotado ? "disabled" : ""} onclick="agregarAlCarrito(${prod.id})">
+                        ${estaAgotado ? "Agotado" : "Añadir al carrito"}
                     </button>
                 </div>
             `;
@@ -613,31 +639,31 @@
         });
     }
 
-    /* =========================================================
-       LÓGICA DEL CARRITO
-    ========================================================= */
     function agregarAlCarrito(idProducto) {
         const prod = listaProductos.find(p => p.id === idProducto);
         if (!prod) return;
 
-        const existente = carrito.find(item => item.id === idProducto);
         const stockMax = Number(prod.stock || 0);
+        if (stockMax <= 0) {
+            alert("Este producto está agotado.");
+            return;
+        }
+
+        const existente = carrito.find(item => item.id === idProducto);
         const imagenReal = obtenerUrlImagen(prod.imagen_url);
-        const precioReal = Number(prod.precio || 0);
-        const nombreReal = prod.nombre || "Producto";
 
         if (existente) {
             if (existente.cantidad < stockMax) {
                 existente.cantidad += 1;
             } else {
-                alert("Has alcanzado el límite de existencias disponibles para este producto.");
+                alert(`Solo quedan ${stockMax} unidades disponibles de este producto.`);
                 return;
             }
         } else {
             carrito.push({
                 id: prod.id,
-                nombre: nombreReal,
-                precio: precioReal,
+                nombre: prod.nombre,
+                precio: Number(prod.precio),
                 imagen: imagenReal,
                 stock: stockMax,
                 cantidad: 1
@@ -751,7 +777,6 @@
             alert("Tu carrito está vacío. Agrega al menos un producto para continuar.");
             return;
         }
-
         guardarCarrito();
         window.location.href = "checkout.html";
     }
