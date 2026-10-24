@@ -39,7 +39,7 @@
             max-width: 480px;
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 0px;
+            border-radius: 18px;
             padding: 35px 30px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -57,7 +57,7 @@
         .icono-app {
             width: 70px;
             height: 70px;
-            border-radius: 0px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -82,7 +82,7 @@
         .caja-cobro {
             background: #202020;
             border: 1px solid #2d2d2d;
-            border-radius: 0px;
+            border-radius: 12px;
             padding: 18px;
             margin-bottom: 25px;
             text-align: left;
@@ -116,12 +116,15 @@
             background: var(--verde);
             color: #111;
             border: none;
-            border-radius: 0px;
+            border-radius: 9px;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: .2s;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-accion:hover {
@@ -149,7 +152,7 @@
         .animacion-check {
             width: 70px;
             height: 70px;
-            border-radius: 0%;
+            border-radius: 50%;
             background: #1c3621;
             border: 2px solid var(--verde);
             color: var(--verde);
@@ -162,13 +165,12 @@
 
         .spinner {
             display: none;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border: 3px solid rgba(0,0,0,0.2);
             border-top-color: #111;
-            border-radius: 0%;
+            border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -199,8 +201,12 @@
                 <strong id="nombreClienteResumen">--</strong>
             </div>
             <div class="fila-cobro">
-                <span>Método:</span>
+                <span>Método / Banco:</span>
                 <strong id="metodoPagoResumen">--</strong>
+            </div>
+            <div class="fila-cobro" id="filaDetalleCuenta">
+                <span id="etiquetaDetalleCuenta">Cuenta / Celular:</span>
+                <strong id="valorDetalleCuenta">--</strong>
             </div>
             <div class="fila-cobro destacada">
                 <span>Total a debitar:</span>
@@ -214,7 +220,7 @@
         </button>
 
         <div>
-            <button class="btn-cancelar" onclick="cancelarPago()">Rechazar y volver </button>
+            <button class="btn-cancelar" onclick="cancelarPago()">Rechazar y volver al checkout</button>
         </div>
     </div>
 
@@ -223,9 +229,9 @@
         <div class="animacion-check">✓</div>
         <h2>¡Pago aceptado con éxito!</h2>
         <p class="descripcion" id="mensajeExito">
-            El valor fue descontado correctamente de tu cuenta. Tu pedido ha sido confirmado y está listo para envío.
+            El valor fue descontado correctamente de tu cuenta. Tu pedido ha sido confirmado y registrado en tu historial.
         </p>
-        <p style="font-size: 12px; color: var(--secundario);">
+        <p style="font-size: 13px; color: var(--secundario);">
             Redirigiendo a la tienda en <strong id="segundosRedireccion" style="color:var(--verde);">3</strong> segundos...
         </p>
     </div>
@@ -257,29 +263,56 @@
         const mensaje = document.getElementById("mensajeCobro");
         const textoBtn = document.getElementById("textoBotonDebito");
         const metodo = document.getElementById("metodoPagoResumen");
+        const etiquetaCuenta = document.getElementById("etiquetaDetalleCuenta");
+        const valorCuenta = document.getElementById("valorDetalleCuenta");
 
-        if (pedido.metodo === "transferencia") {
-            const banco = pedido.banco || "Nequi";
-            metodo.textContent = banco;
+        const bancoNombre = (pedido.banco || "").toLowerCase();
 
-            if (banco.toLowerCase().includes("nequi")) {
-                titulo.textContent = "Notificación de Nequi";
-                mensaje.textContent = `VIGA te ha enviado una solicitud de cobro a tu cuenta Nequi (${pedido.telefono || "registrada"}). Presiona aceptar para autorizar el débito.`;
-                textoBtn.textContent = "Aceptar cobro en Nequi";
-            } else if (banco.toLowerCase().includes("daviplata")) {
-                titulo.textContent = "Débito automático Daviplata";
-                mensaje.textContent = "Autoriza el descuento directo de tus bolsillos Daviplata para confirmar la compra.";
-                textoBtn.textContent = "Aceptar cobro en Daviplata";
-            } else {
-                titulo.textContent = `Aprobación ${banco}`;
-                mensaje.textContent = `Confirma el débito directo desde tu cuenta ${banco} para continuar.`;
-                textoBtn.textContent = `Autorizar débito ${banco}`;
-            }
+        if (pedido.metodo === "nequi" || bancoNombre.includes("nequi")) {
+            metodo.textContent = "Nequi";
+            etiquetaCuenta.textContent = "Celular Nequi:";
+            valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
+            icono.textContent = "🟣";
+            titulo.textContent = "Notificación de cobro Nequi";
+            mensaje.textContent = `Hemos enviado un mensaje de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para debitar el saldo disponible.`;
+            textoBtn.textContent = "Aceptar débito en Nequi";
+
+        } else if (pedido.metodo === "daviplata" || bancoNombre.includes("daviplata")) {
+            metodo.textContent = "Daviplata";
+            etiquetaCuenta.textContent = "Número Daviplata:";
+            valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
+            icono.textContent = "🔴";
+            titulo.textContent = "Cobro directo Daviplata";
+            mensaje.textContent = `Confirma el descuento de fondos de tu monedero Daviplata (${pedido.cuenta || pedido.telefono}) para completar el pedido.`;
+            textoBtn.textContent = "Aceptar cobro en Daviplata";
+
+        } else if (bancoNombre.includes("bancolombia")) {
+            metodo.textContent = pedido.banco || "Bancolombia";
+            etiquetaCuenta.textContent = "Cuenta Bancolombia:";
+            valorCuenta.textContent = pedido.cuenta || "--";
+            icono.textContent = "🟡";
+            titulo.textContent = "Autorización Bancolombia";
+            mensaje.textContent = `Autoriza la transferencia inmediata desde tu cuenta ${pedido.banco} para despachar la compra.`;
+            textoBtn.textContent = "Autorizar débito Bancolombia";
+
+        } else if (pedido.metodo === "pse") {
+            metodo.textContent = pedido.banco || "PSE";
+            etiquetaCuenta.textContent = "Correo PSE:";
+            valorCuenta.textContent = pedido.correoPSE || "--";
+            icono.textContent = "🏦";
+            titulo.textContent = "Verificación de pago PSE";
+            mensaje.textContent = `Transacción respaldada por ACH Colombia. Valida el débito de tu cuenta bancaria asociada.`;
+            textoBtn.textContent = "Confirmar pago PSE";
+
         } else {
+            // Tarjeta de crédito o débito
             metodo.textContent = "Tarjeta Débito / Crédito";
+            etiquetaCuenta.textContent = "Terminación de tarjeta:";
+            valorCuenta.textContent = `•••• ${pedido.terminacion || "4242"}`;
+            icono.textContent = "💳";
             titulo.textContent = "Verificación bancaria (3D Secure)";
-            mensaje.textContent = `Tu banco solicita aprobación para la tarjeta terminada en ${pedido.terminacion || "••••"}. Presiona continuar para validar la transacción.`;
-            textoBtn.textContent = "Aprobar cobro bancario";
+            mensaje.textContent = `Tu entidad financiera está procesando la solicitud para la tarjeta terminada en ${pedido.terminacion || "4242"}.`;
+            textoBtn.textContent = "Aprobar pago con tarjeta";
         }
     }
 
@@ -293,15 +326,37 @@
         btn.disabled = true;
 
         setTimeout(() => {
-            // Cambiar a vista de éxito
+            // 1. Guardar la compra en el historial (para informes.html)
+            const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+            const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+
+            historialPrevio.push({
+                idOrden: Math.floor(100000 + Math.random() * 900000),
+                fecha: new Date().toLocaleDateString("es-CO", { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }),
+                metodo: pedido.metodo,
+                banco: pedido.banco || "Tarjeta Débito / Crédito",
+                ciudad: pedido.ciudad,
+                direccion: pedido.direccion,
+                total: pedido.total,
+                articulos: carritoActual
+            });
+            localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
+
+            // 2. Cambiar de pantalla a éxito
             document.getElementById("vistaCobro").style.display = "none";
             document.getElementById("vistaExito").style.display = "block";
 
-            // Vaciar el carrito y limpiar datos de este pedido
+            // 3. Limpiar carrito y pedido temporal
             localStorage.removeItem("viga_carrito");
             localStorage.removeItem("viga_pedido_actual");
 
-            // Cuenta regresiva y volver a la tienda
+            // 4. Cuenta regresiva y redirección a la tienda
             let segundos = 3;
             const cuentaAtras = setInterval(() => {
                 segundos--;
