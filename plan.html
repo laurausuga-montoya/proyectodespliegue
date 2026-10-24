@@ -86,7 +86,7 @@
         .dato {
             background: #1b1b1b;
             padding: 18px 30px;
-            border-radius: 12px;
+            border-radius: 0px;
             text-align: center;
             border: 1px solid #292929;
             min-width: 140px;
@@ -118,7 +118,7 @@
             background: #252525;
             color: #ddd;
             padding: 12px 22px;
-            border-radius: 10px;
+            border-radius: 0px;
             cursor: pointer;
             font-size: 15px;
             font-weight: 500;
@@ -158,7 +158,7 @@
 
         .comida {
             background: #1b1b1b;
-            border-radius: 18px;
+            border-radius: 0px;
             overflow: hidden;
             border: 1px solid #292929;
             transition: .3s;
@@ -230,7 +230,7 @@
             background: #1b1b1b;
             padding: 25px;
             border-left: 4px solid #37E359;
-            border-radius: 12px;
+            border-radius: 0px;
         }
 
         .recomendacion h2 {
@@ -370,10 +370,10 @@
     <div class="dias">
         <button class="dia activo" onclick="mostrarDia('lunes', this)">Lunes</button>
         <button class="dia" onclick="mostrarDia('martes', this)">Martes</button>
-        <button class="dia" onclick="mostrarDia('miercoles', this)">Miércoles 🎁</button>
+        <button class="dia" onclick="mostrarDia('miercoles', this)">Miércoles </button>
         <button class="dia" onclick="mostrarDia('jueves', this)">Jueves</button>
         <button class="dia" onclick="mostrarDia('viernes', this)">Viernes</button>
-        <button class="dia" onclick="mostrarDia('sabado', this)">Sábado 🎁</button>
+        <button class="dia" onclick="mostrarDia('sabado', this)">Sábado </button>
         <button class="dia" onclick="mostrarDia('domingo', this)">Domingo</button>
     </div>
 
@@ -387,7 +387,7 @@
 
     <!-- RECOMENDACIÓN -->
     <div class="recomendacion">
-        <h2>💡 Recomendación VIGA</h2>
+        <h2> Recomendación VIGA</h2>
         <p id="recomendacionTexto"></p>
     </div>
 
@@ -453,7 +453,7 @@ document.getElementById("recomendacionTexto").textContent = recomendacion;
 
 // REGALOS DULCES (MIÉRCOLES Y SÁBADO)
 const regaloMiercoles = {
-    titulo: "🍫 Merienda Especial (Regalo Dulce)",
+    titulo: " Merienda Especial (Regalo Dulce)",
     hora: "4:30 PM",
     imagen: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80",
     esPremio: true,
@@ -465,7 +465,7 @@ const regaloMiercoles = {
 };
 
 const regaloSabado = {
-    titulo: "🍰 Merienda de Fin de Semana (Regalo Dulce)",
+    titulo: " Merienda de Fin de Semana (Regalo Dulce)",
     hora: "5:00 PM",
     imagen: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80",
     esPremio: true,
@@ -481,71 +481,71 @@ const planesBajar = {
     lunes: {
         nombre: "Lunes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["3 claras y 1 huevo entero revuelto", "1 rebanada de pan integral tostado", "1 porción de papaya o melón", "Café negro o té verde sin azúcar"] },
-            { titulo: "🍏 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 manzana verde con canela", "10 almendras naturales"] },
-            { titulo: "🥗 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["150g de pechuga de pollo a la plancha", "3 cucharadas de arroz integral", "Ensalada verde abundante con espinaca y pepino", "1 cucharada de aceite de oliva"] },
-            { titulo: "🥛 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["1 yogur griego natural desnatado", "1 puñado de arándanos o fresas"] },
-            { titulo: "🌙 Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de pescado blanco a la plancha", "Verduras al vapor (brócoli, zanahoria y calabacín)", "Crema ligera de calabaza sin nata"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["3 claras y 1 huevo entero revuelto", "1 rebanada de pan integral tostado", "1 porción de papaya o melón", "Café negro o té verde sin azúcar"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 manzana verde con canela", "10 almendras naturales"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["150g de pechuga de pollo a la plancha", "3 cucharadas de arroz integral", "Ensalada verde abundante con espinaca y pepino", "1 cucharada de aceite de oliva"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["1 yogur griego natural desnatado", "1 puñado de arándanos o fresas"] },
+            { titulo: " Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de pescado blanco a la plancha", "Verduras al vapor (brócoli, zanahoria y calabacín)", "Crema ligera de calabaza sin nata"] }
         ]
     },
     martes: {
         nombre: "Martes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Tortilla de espinacas y claras", "1 arepa pequeña de maíz", "1 rodaja de piña natural"] },
-            { titulo: "🍊 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["1 naranja en rodajas", "8 nueces"] },
-            { titulo: "🥩 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["140g de lomo de carne magra asada", "Media papa cocida", "Ensalada mixta (tomate, lechuga y rúcula)"] },
-            { titulo: "🥣 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=900&q=80", alimentos: ["Infusión caliente digestiva", "2 galletas de arroz inflado con queso fresco ligero"] },
-            { titulo: "🌙 Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Revuelto de champiñones con pechuga desmenuzada", "Espárragos trigueros a la plancha"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Tortilla de espinacas y claras", "1 arepa pequeña de maíz", "1 rodaja de piña natural"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["1 naranja en rodajas", "8 nueces"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["140g de lomo de carne magra asada", "Media papa cocida", "Ensalada mixta (tomate, lechuga y rúcula)"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=900&q=80", alimentos: ["Infusión caliente digestiva", "2 galletas de arroz inflado con queso fresco ligero"] },
+            { titulo: " Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Revuelto de champiñones con pechuga desmenuzada", "Espárragos trigueros a la plancha"] }
         ]
     },
     miercoles: {
         nombre: "Miércoles (Día Dulce)",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos pochados sobre rodajas de tomate", "1 rebanada de pan de centeno", "Té verde"] },
-            { titulo: "🍓 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["1 taza de fresas frescas con yogur"] },
-            { titulo: "🍗 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pavo al limón", "Quinoa cocida (4 cucharadas)", "Brócoli salteado con ajo"] },
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos pochados sobre rodajas de tomate", "1 rebanada de pan de centeno", "Té verde"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["1 taza de fresas frescas con yogur"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pavo al limón", "Quinoa cocida (4 cucharadas)", "Brócoli salteado con ajo"] },
             regaloMiercoles,
-            { titulo: "🌙 Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Sopa de verduras depurativa", "Filete de merluza con orégano y limón"] }
+            { titulo: " Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Sopa de verduras depurativa", "Filete de merluza con orégano y limón"] }
         ]
     },
     jueves: {
         nombre: "Jueves",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=80", alimentos: ["Bowl de avena en agua con semillas de chía", "3 claras cocidas", "Medio kiwi"] },
-            { titulo: "🍐 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80", alimentos: ["1 pera jugosa", "Té rojo"] },
-            { titulo: "🐟 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Salmón a la plancha (130g)", "Puré de coliflor o calabacín", "Ensalada verde con vinagreta suave"] },
-            { titulo: "🥛 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido de proteína o yogur natural con semillas de lino"] },
-            { titulo: "🌙 Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo a la parrilla cortada en tiras", "Ensalada de espinacas, champiñón crudo y pepino"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=80", alimentos: ["Bowl de avena en agua con semillas de chía", "3 claras cocidas", "Medio kiwi"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80", alimentos: ["1 pera jugosa", "Té rojo"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Salmón a la plancha (130g)", "Puré de coliflor o calabacín", "Ensalada verde con vinagreta suave"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido de proteína o yogur natural con semillas de lino"] },
+            { titulo: " Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo a la parrilla cortada en tiras", "Ensalada de espinacas, champiñón crudo y pepino"] }
         ]
     },
     viernes: {
         nombre: "Viernes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostada integral con aguacate triturado y huevo cocido", "Café solo"] },
-            { titulo: "🍏 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 rodaja de sandía o melón", "Infusión fría"] },
-            { titulo: "🍛 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo desmenuzado en salsa de tomate casera", "Lentejas estofadas con verduras (sin chorizo)", "Ensalada fresca"] },
-            { titulo: "🥛 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur desnatado", "1 puñado pequeño de pistachos"] },
-            { titulo: "🌙 Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Tortilla francesa de 2 huevos", "Crema de calabacín y puerro", "Infusión relajante de manzanilla"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostada integral con aguacate triturado y huevo cocido", "Café solo"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 rodaja de sandía o melón", "Infusión fría"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo desmenuzado en salsa de tomate casera", "Lentejas estofadas con verduras (sin chorizo)", "Ensalada fresca"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur desnatado", "1 puñado pequeño de pistachos"] },
+            { titulo: " Cena", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Tortilla francesa de 2 huevos", "Crema de calabacín y puerro", "Infusión relajante de manzanilla"] }
         ]
     },
     sabado: {
         nombre: "Sábado (Día Dulce)",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Pancakes de avena ligeros (sin azúcar)", "Fresas picadas", "Café o infusión"] },
-            { titulo: "🍊 Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["Agua fresca con limón y menta", "Un puñado de nueces"] },
-            { titulo: "🥩 Almuerzo", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne magra a la parrilla", "Papas rústicas al horno con romero", "Ensalada verde grande"] },
+            { titulo: " Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Pancakes de avena ligeros (sin azúcar)", "Fresas picadas", "Café o infusión"] },
+            { titulo: " Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["Agua fresca con limón y menta", "Un puñado de nueces"] },
+            { titulo: " Almuerzo", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne magra a la parrilla", "Papas rústicas al horno con romero", "Ensalada verde grande"] },
             regaloSabado,
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Ceviche de pescado blanco con cebolla morada y cilantro", "Hojas verdes de lechuga"] }
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Ceviche de pescado blanco con cebolla morada y cilantro", "Hojas verdes de lechuga"] }
         ]
     },
     domingo: {
         nombre: "Domingo",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos revueltos con tomate y cebolla", "1 arepa pequeña", "Café con leche vegetal sin azúcar"] },
-            { titulo: "🍏 Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 manzana roja al horno con canela"] },
-            { titulo: "🍗 Almuerzo familiar", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo asado al horno sin piel", "Arroz con verduras", "Ensalada mixta fresca"] },
-            { titulo: "🥣 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Té verde o infusión con limón", "1 yogur natural"] },
-            { titulo: "🌙 Cena ligera", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Sopa de fideos y pollo ligera", "Zanahorias cocidas y espinacas al vapor"] }
+            { titulo: " Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos revueltos con tomate y cebolla", "1 arepa pequeña", "Café con leche vegetal sin azúcar"] },
+            { titulo: " Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["1 manzana roja al horno con canela"] },
+            { titulo: " Almuerzo familiar", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo asado al horno sin piel", "Arroz con verduras", "Ensalada mixta fresca"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Té verde o infusión con limón", "1 yogur natural"] },
+            { titulo: " Cena ligera", hora: "7:30 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Sopa de fideos y pollo ligera", "Zanahorias cocidas y espinacas al vapor"] }
         ]
     }
 };
@@ -555,71 +555,71 @@ const planesSubir = {
     lunes: {
         nombre: "Lunes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Bowl de avena con leche entera, banano y miel", "3 huevos enteros y 2 tostadas integrales", "Zumo de naranja natural"] },
-            { titulo: "🥜 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de pan integral con pavo y queso", "1 puñado generoso de nueces o almendras"] },
-            { titulo: "🍗 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["200g de pechuga de pollo marinada", "1 taza colmada de arroz blanco", "Frijoles o lentejas", "Medio aguacate entero"] },
-            { titulo: "🥤 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido hipercalórico: leche, avena, banano y crema de maní"] },
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne magra a la plancha", "Puré de papa casero con mantequilla", "Ensalada templada"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["Bowl de avena con leche entera, banano y miel", "3 huevos enteros y 2 tostadas integrales", "Zumo de naranja natural"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de pan integral con pavo y queso", "1 puñado generoso de nueces o almendras"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["200g de pechuga de pollo marinada", "1 taza colmada de arroz blanco", "Frijoles o lentejas", "Medio aguacate entero"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido hipercalórico: leche, avena, banano y crema de maní"] },
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne magra a la plancha", "Puré de papa casero con mantequilla", "Ensalada templada"] }
         ]
     },
     martes: {
         nombre: "Martes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Arepa grande con queso fundido y 3 huevos revueltos", "Batido de fresa y avena"] },
-            { titulo: "🥪 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur griego con granola crujiente y miel", "1 banano"] },
-            { titulo: "🍝 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Pasta boloñesa con carne de res magra picada", "Queso parmesano rallado", "Ensalada verde con aceite de oliva"] },
-            { titulo: "🥜 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostadas con crema de cacahuate y plátano en rodajas"] },
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de salmón o atún a la plancha", "Arroz con maíz dulce", "Verduras salteadas"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Arepa grande con queso fundido y 3 huevos revueltos", "Batido de fresa y avena"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur griego con granola crujiente y miel", "1 banano"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Pasta boloñesa con carne de res magra picada", "Queso parmesano rallado", "Ensalada verde con aceite de oliva"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostadas con crema de cacahuate y plátano en rodajas"] },
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de salmón o atún a la plancha", "Arroz con maíz dulce", "Verduras salteadas"] }
         ]
     },
     miercoles: {
         nombre: "Miércoles (Día Dulce)",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Omelette de 3 huevos con jamón y espinaca", "2 rebanadas de pan tostado con mantequilla", "Café con leche"] },
-            { titulo: "🍏 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Mix de frutos secos (nueces, pasas, almendras)", "1 manzana"] },
-            { titulo: "🍛 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo al horno", "1 taza y media de arroz", "Ensalada de aguacate y tomate"] },
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Omelette de 3 huevos con jamón y espinaca", "2 rebanadas de pan tostado con mantequilla", "Café con leche"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Mix de frutos secos (nueces, pasas, almendras)", "1 manzana"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo al horno", "1 taza y media de arroz", "Ensalada de aguacate y tomate"] },
             regaloMiercoles,
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Lomo de ternera a la plancha", "Papas asadas al horno con piel", "Verduras al vapor"] }
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Lomo de ternera a la plancha", "Papas asadas al horno con piel", "Verduras al vapor"] }
         ]
     },
     jueves: {
         nombre: "Jueves",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostadas francesas con huevo, leche y miel", "Porción de papaya", "Café"] },
-            { titulo: "🍌 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de atún con mayonesa ligera", "1 vaso de zumo natural"] },
-            { titulo: "🍚 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne de res estofada con papas y zanahoria", "Arroz blanco", "Plátano maduro asado"] },
-            { titulo: "🥤 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido de avena, leche entera y fresas", "2 galletas de avena"] },
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo desmenuzado con arroz y verduras salteadas al wok"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostadas francesas con huevo, leche y miel", "Porción de papaya", "Café"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de atún con mayonesa ligera", "1 vaso de zumo natural"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Carne de res estofada con papas y zanahoria", "Arroz blanco", "Plátano maduro asado"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido de avena, leche entera y fresas", "2 galletas de avena"] },
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pollo desmenuzado con arroz y verduras salteadas al wok"] }
         ]
     },
     viernes: {
         nombre: "Viernes",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["3 huevos con arepa y queso", "1 tazón de avena cocida con canela"] },
-            { titulo: "🍊 Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur con frutos secos y semillas de calabaza"] },
-            { titulo: "🥩 Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pavo o pollo al curry", "Arroz jazmín o basmati", "Aguacate"] },
-            { titulo: "🥜 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostada integral con crema de maní y 1 banano"] },
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de pescado con papas al vapor", "Ensalada mixta completa"] }
+            { titulo: " Desayuno", hora: "7:00 AM", imagen: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80", alimentos: ["3 huevos con arepa y queso", "1 tazón de avena cocida con canela"] },
+            { titulo: " Media mañana", hora: "10:30 AM", imagen: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur con frutos secos y semillas de calabaza"] },
+            { titulo: " Almuerzo", hora: "1:00 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pavo o pollo al curry", "Arroz jazmín o basmati", "Aguacate"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=900&q=80", alimentos: ["Tostada integral con crema de maní y 1 banano"] },
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80", alimentos: ["Filete de pescado con papas al vapor", "Ensalada mixta completa"] }
         ]
     },
     sabado: {
         nombre: "Sábado (Día Dulce)",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Pancakes con huevo, avena y miel", "Café con leche", "Fruta variada"] },
-            { titulo: "🍎 Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de jamón y queso", "Zumo de naranja"] },
-            { titulo: "🍖 Almuerzo", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Churrasco o carne a la parrilla", "Papas fritas o al horno", "Arroz y ensalada"] },
+            { titulo: " Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?auto=format&fit=crop&w=900&q=80", alimentos: ["Pancakes con huevo, avena y miel", "Café con leche", "Fruta variada"] },
+            { titulo: " Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=900&q=80", alimentos: ["Sandwich de jamón y queso", "Zumo de naranja"] },
+            { titulo: " Almuerzo", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=80", alimentos: ["Churrasco o carne a la parrilla", "Papas fritas o al horno", "Arroz y ensalada"] },
             regaloSabado,
-            { titulo: "🌙 Cena", hora: "8:30 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Hamburguesa casera con carne magra, pan artesanal y verduras"] }
+            { titulo: " Cena", hora: "8:30 PM", imagen: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", alimentos: ["Hamburguesa casera con carne magra, pan artesanal y verduras"] }
         ]
     },
     domingo: {
         nombre: "Domingo",
         comidas: [
-            { titulo: "🌅 Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos rancheros con frijoles y tortillas", "Batido de frutas con avena"] },
-            { titulo: "🍓 Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur con fresas y granola"] },
-            { titulo: "🍛 Almuerzo familiar", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Sancocho o estofado tradicional con carne, pollo, papa y yuca", "Porción de arroz"] },
-            { titulo: "🥤 Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido proteico o leche con avena y chocolate negro"] },
-            { titulo: "🌙 Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo a la plancha con puré de papa y ensalada"] }
+            { titulo: " Desayuno", hora: "8:30 AM", imagen: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=80", alimentos: ["Huevos rancheros con frijoles y tortillas", "Batido de frutas con avena"] },
+            { titulo: " Media mañana", hora: "11:30 AM", imagen: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80", alimentos: ["Yogur con fresas y granola"] },
+            { titulo: " Almuerzo familiar", hora: "1:30 PM", imagen: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80", alimentos: ["Sancocho o estofado tradicional con carne, pollo, papa y yuca", "Porción de arroz"] },
+            { titulo: " Merienda", hora: "4:30 PM", imagen: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80", alimentos: ["Batido proteico o leche con avena y chocolate negro"] },
+            { titulo: " Cena", hora: "8:00 PM", imagen: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80", alimentos: ["Pechuga de pollo a la plancha con puré de papa y ensalada"] }
         ]
     }
 };
@@ -667,7 +667,7 @@ function mostrarDia(dia, boton) {
             <img src="${comida.imagen}" alt="${comida.titulo}" loading="lazy">
             <div class="contenido">
                 <h2>${comida.titulo}</h2>
-                <h3>🕒 ${comida.hora}</h3>
+                <h3> ${comida.hora}</h3>
                 <ul>
                     ${comida.alimentos.map(alimento => `<li>✓ ${alimento}</li>`).join("")}
                 </ul>
