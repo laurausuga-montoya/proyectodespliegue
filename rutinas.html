@@ -365,7 +365,6 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // 1. OBTENER ID ÚNICAMENTE DESDE LA SESIÓN DEL USUARIO LOGUEADO
     function obtenerUsuarioActivo() {
         const sesionTexto = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
         if (sesionTexto) {
@@ -394,7 +393,6 @@
             return;
         }
 
-        // Limpiar URL para que no quede ningún ?id= viejo
         if (window.location.search.includes("id=")) {
             window.history.replaceState({}, "", forzarEdicion ? "rutinas.html?editar=1" : "rutinas.html");
         }
@@ -496,9 +494,8 @@
                 throw new Error(err.error || "No se pudo guardar la información.");
             }
 
-            // Guardar con clave única por cuenta
             localStorage.setItem(`viga_rutina_${idUsuario}`, JSON.stringify(payload));
-            localStorage.removeItem("viga_rutina_datos"); // Limpiar cualquier residuo anterior
+            localStorage.removeItem("viga_rutina_datos");
 
             window.location.href = "rutina.plan.html";
 

@@ -391,7 +391,13 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
             console.error("❌ Error consultando datos físicos:", error);
-            return res.status(500).json({ error: "Error consultando la base de datos." });
+            const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
+            return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
+                if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
+                res2[0].genero = "No especificado";
+                res2[0].dias_entreno = 5;
+                res.json(res2[0]);
+            });
         }
         if (resultados.length === 0) {
             return res.status(404).json({ error: "Usuario no encontrado." });
@@ -406,9 +412,8 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const identificacion = String(req.params.identificacion || "").trim();
 
-    // VALIDACIÓN ESTRICTA: No actualizar si el identificador es inválido
     if (!identificacion || identificacion === "undefined" || identificacion === "null" || identificacion === "") {
-        return res.status(400).json({ error: "Identificación de usuario requerida y válida." });
+        return res.status(400).json({ error: "Identificación de usuario requerida." });
     }
 
     let { genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
@@ -422,7 +427,6 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         alturaFinal = Number((alturaFinal / 100).toFixed(2));
     }
 
-    // UPDATE seguro con LIMIT 1 para garantizar que solo toque al usuario solicitado
     const sql = `
         UPDATE usuarios 
         SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
@@ -445,16 +449,28 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
+                // Si la columna género aún no existe en MySQL, guardar sin ella de respaldo
+                if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('genero')) {
+                    const fallbackSql = `
+                        UPDATE usuarios 
+                        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
+                        WHERE identificacion = ?
+                        LIMIT 1
+                    `;
+                    return conexion.query(fallbackSql, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, diasFinal, identificacion], function(err2) {
+                        if (err2) return res.status(500).json({ error: err2.message });
+                        return res.json({ mensaje: "Guardado sin columna género.", dias_entreno: diasFinal });
+                    });
+                }
+
                 console.error("❌ Error en MySQL al guardar rutina:", error);
                 return res.status(500).json({ error: error.message });
             }
 
             if (resultado.affectedRows === 0) {
-                console.warn(`⚠️ No se encontró la cuenta con ID: ${identificacion}`);
                 return res.status(404).json({ error: "No se encontró el usuario en el sistema." });
             }
 
-            console.log(`✅ Rutina guardada exitosamente SOLO para el usuario ID: ${identificacion} (${diasFinal} días)`);
             res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal });
         }
     );

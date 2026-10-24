@@ -380,7 +380,6 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // OBTENER ID ÚNICAMENTE DESDE LA SESIÓN DEL USUARIO LOGUEADO
     function obtenerUsuarioActivo() {
         const sesionTexto = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
         if (sesionTexto) {
@@ -399,20 +398,17 @@
         window.location.href = "login.html";
     }
 
-    // Configurar enlace para modificar
     document.getElementById("btnModificarRespuestas").href = "rutinas.html?editar=1";
 
     let planEstructurado = [];
 
     async function cargarPlanUsuario() {
-        // Limpiar URL si traía algún residuo de ?id=
         if (window.location.search.includes("id=")) {
             window.history.replaceState({}, "", "rutina.plan.html");
         }
 
         let datos = null;
 
-        // 1. Consultar servidor con timestamp para evitar caché
         try {
             const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos?t=${Date.now()}`);
             if (res.ok) {
@@ -422,7 +418,6 @@
             console.error("Error al consultar el servidor:", e);
         }
 
-        // 2. Respaldo local exclusivo de este usuario
         if (!datos || !datos.objetivo) {
             const guardado = localStorage.getItem(`viga_rutina_${idUsuario}`);
             if (guardado) {
@@ -430,7 +425,6 @@
             }
         }
 
-        // Si no existe configuración previa para esta cuenta, redirigir al cuestionario
         if (!datos || !datos.objetivo) {
             window.location.replace("rutinas.html");
             return;
@@ -442,7 +436,6 @@
     function generarEstructuraRutina(datos) {
         const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
 
-        // LECTURA EXACTA DE DÍAS (1 A 7)
         const diasParsed = parseInt(datos.dias_entreno, 10);
         const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 5;
 
