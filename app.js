@@ -84,7 +84,7 @@ app.get("/tienda", function (req, res) {
 });
 
 app.get("/empresa", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "index.empresa.html"));
+    res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });
 
 app.get("/login-empresa", function (req, res) {
@@ -191,38 +191,25 @@ app.post("/login-empresa", function (req, res) {
 });
 
 /* =========================================
-   PRODUCTOS EN LA TABLA USUARIOS
+   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
 ========================================= */
-// Guardar un producto dentro de la tabla usuarios
+// Guardar producto nuevo
 app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
-    const nit_empresa = req.params.id;
+    const identificacion_empresa = req.params.id;
     const { nombre, categoria, descripcion, precio, stock } = req.body;
     const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-    console.log("👉 Guardando producto en tabla usuarios para empresa:", nit_empresa);
-
     const sql = `
-        INSERT INTO usuarios (
-            identificacion, nit, nombre_producto, categoria_producto, 
-            descripcion_producto, precio_producto, stock_producto, imagen_producto
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
     conexion.query(
-        sql,
-        [
-            nit_empresa,
-            nit_empresa,
-            nombre,
-            categoria,
-            descripcion,
-            Number(precio),
-            parseInt(stock) || 0,
-            imagen_url
-        ],
+        sql, 
+        [identificacion_empresa, nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, imagen_url], 
         function (error, resultado) {
             if (error) {
-                console.error("❌ Error guardando producto en usuarios:", error);
+                console.error("❌ ERROR MYSQL AL GUARDAR PRODUCTO:", error);
                 return res.status(500).json({ error: "Error al guardar el producto: " + error.message });
             }
             res.status(201).json({ mensaje: "Producto guardado con éxito.", id: resultado.insertId });
@@ -230,55 +217,52 @@ app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) 
     );
 });
 
-// Listar productos de la empresa
+// Listar productos de una empresa
 app.get("/empresa/:id/productos", function (req, res) {
-    const nit_empresa = req.params.id;
-    const sql = `
-        SELECT 
-            id,
-            nombre_producto AS nombre,
-            categoria_producto AS categoria,
-            descripcion_producto AS descripcion,
-            precio_producto AS precio,
-            stock_producto AS stock,
-            imagen_producto AS imagen_url
-        FROM usuarios 
-        WHERE (identificacion = ? OR nit = ?) AND nombre_producto IS NOT NULL
-        ORDER BY fecha_producto DESC
-    `;
+    const identificacion_empresa = req.params.id;
+    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ? ORDER BY fecha_creacion DESC";
 
-    conexion.query(sql, [nit_empresa, nit_empresa], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error al cargar los productos." });
+    conexion.query(sql, [identificacion_empresa], function (error, resultados) {
+        if (error) return res.status(500).json({ error: "Error al cargar el catálogo: " + error.message });
         res.json(resultados);
     });
 });
 
+// Actualizar producto
+app.put("/empresa/:id_empresa/productos/:id_producto", upload.single("imagen"), function (req, res) {
+    const { id_empresa, id_producto } = req.params;
+    const { nombre, categoria, descripcion, precio, stock } = req.body;
+
+    if (req.file) {
+        const imagen_url = `/uploads/${req.file.filename}`;
+        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=?, imagen_url=? WHERE id=? AND identificacion_empresa=?`;
+        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, imagen_url, id_producto, id_empresa], function (error) {
+            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
+            res.json({ mensaje: "Producto actualizado con éxito." });
+        });
+    } else {
+        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=? WHERE id=? AND identificacion_empresa=?`;
+        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, id_producto, id_empresa], function (error) {
+            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
+            res.json({ mensaje: "Producto actualizado con éxito." });
+        });
+    }
+});
+
 // Eliminar producto
 app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
-    const { id_producto } = req.params;
-    const sql = "DELETE FROM usuarios WHERE id = ? AND nombre_producto IS NOT NULL";
+    const { id_empresa, id_producto } = req.params;
+    const sql = "DELETE FROM productos WHERE id = ? AND identificacion_empresa = ?";
 
-    conexion.query(sql, [id_producto], function (error) {
-        if (error) return res.status(500).json({ error: "Error al eliminar el producto." });
+    conexion.query(sql, [id_producto, id_empresa], function (error) {
+        if (error) return res.status(500).json({ error: "Error al eliminar producto." });
         res.json({ mensaje: "Producto eliminado correctamente." });
     });
 });
 
-// Tienda pública de clientes (productos disponibles)
+// Tienda pública de los usuarios
 app.get("/productos", function (req, res) {
-    const sql = `
-        SELECT 
-            id,
-            nombre_producto AS nombre,
-            categoria_producto AS categoria,
-            descripcion_producto AS descripcion,
-            precio_producto AS precio,
-            stock_producto AS stock,
-            imagen_producto AS imagen_url
-        FROM usuarios 
-        WHERE nombre_producto IS NOT NULL AND stock_producto > 0
-        ORDER BY fecha_producto DESC
-    `;
+    const sql = "SELECT * FROM productos WHERE stock > 0 ORDER BY fecha_creacion DESC";
 
     conexion.query(sql, function (error, resultados) {
         if (error) return res.status(500).json({ error: "Error cargando la tienda." });
@@ -354,7 +338,6 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
 ========================================= */
-// Consultar datos físicos, objetivo y días
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
     const sql = `
@@ -365,17 +348,12 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     `;
 
     conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) {
-            return res.status(500).json({ error: "Error consultando los datos físicos." });
-        }
-        if (resultados.length === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado." });
-        }
+        if (error) return res.status(500).json({ error: "Error consultando los datos físicos." });
+        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
         res.json(resultados[0]);
     });
 });
 
-// Guardar o actualizar datos físicos, objetivo y días
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
     const { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
