@@ -372,7 +372,27 @@ app.get("/empresa/:id/ventas", function (req, res) {
 });
 
 /* =========================================
-   PERFIL FÍSICO Y DISCAPACIDAD (USUARIO)
+   BORRAR HISTORIAL DE VENTAS DE LA EMPRESA
+========================================= */
+app.delete("/empresa/:id/ventas", function (req, res) {
+    const idEmpresa = req.params.id;
+
+    if (!idEmpresa) {
+        return res.status(400).json({ error: "Identificación de empresa requerida." });
+    }
+
+    const sql = "DELETE FROM ventas WHERE identificacion_empresa = ?";
+    conexion.query(sql, [idEmpresa], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al borrar historial de ventas:", error);
+            return res.status(500).json({ error: "Error al borrar el historial de ventas." });
+        }
+        res.json({ mensaje: "Historial de ventas eliminado correctamente.", eliminados: resultado.affectedRows });
+    });
+});
+
+/* =========================================
+   PERFIL FÍSICO / RUTINA AISLADA POR USUARIO
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const identificacion = String(req.params.identificacion || "").trim();
@@ -465,7 +485,6 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                // Fallback si alguna columna aún no fue añadida en MySQL
                 if (error.code === 'ER_BAD_FIELD_ERROR') {
                     const sqlFallback = `
                         UPDATE usuarios 
