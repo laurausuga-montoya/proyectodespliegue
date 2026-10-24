@@ -550,7 +550,6 @@
         if (urlGuardada.startsWith("http://") || urlGuardada.startsWith("https://")) {
             return urlGuardada;
         }
-        // Si viene con ruta relativa del backend (/uploads/...)
         return `${API}${urlGuardada.startsWith("/") ? "" : "/"}${urlGuardada}`;
     }
 
@@ -582,12 +581,12 @@
         }
 
         productos.forEach(prod => {
-            const imagenSrc = obtenerUrlImagen(prod.imagen_url || prod.imagen_producto);
-            const stockDisponible = Number(prod.stock || prod.stock_producto || 0);
-            const precioProducto = Number(prod.precio || prod.precio_producto || 0);
-            const nombreProducto = prod.nombre || prod.nombre_producto || "Producto";
-            const descripcionProducto = prod.descripcion || prod.descripcion_producto || "";
-            const categoriaProducto = prod.categoria || prod.categoria_producto || "Implemento";
+            const imagenSrc = obtenerUrlImagen(prod.imagen_url);
+            const stockDisponible = Number(prod.stock || 0);
+            const precioProducto = Number(prod.precio || 0);
+            const nombreProducto = prod.nombre || "Producto";
+            const descripcionProducto = prod.descripcion || "";
+            const categoriaProducto = prod.categoria || "Implemento";
 
             const tarjeta = document.createElement("div");
             tarjeta.className = "tarjeta-producto";
@@ -622,10 +621,10 @@
         if (!prod) return;
 
         const existente = carrito.find(item => item.id === idProducto);
-        const stockMax = Number(prod.stock || prod.stock_producto || 0);
-        const imagenReal = obtenerUrlImagen(prod.imagen_url || prod.imagen_producto);
-        const precioReal = Number(prod.precio || prod.precio_producto || 0);
-        const nombreReal = prod.nombre || prod.nombre_producto || "Producto";
+        const stockMax = Number(prod.stock || 0);
+        const imagenReal = obtenerUrlImagen(prod.imagen_url);
+        const precioReal = Number(prod.precio || 0);
+        const nombreReal = prod.nombre || "Producto";
 
         if (existente) {
             if (existente.cantidad < stockMax) {
@@ -742,17 +741,19 @@
         if (categoria === "Todas") {
             renderizarCatalogo(listaProductos);
         } else {
-            const filtrados = listaProductos.filter(p => (p.categoria || p.categoria_producto) === categoria);
+            const filtrados = listaProductos.filter(p => p.categoria === categoria);
             renderizarCatalogo(filtrados);
         }
     }
 
     function procederPago() {
         if (carrito.length === 0) {
-            alert("Agrega productos al carrito primero.");
+            alert("Tu carrito está vacío. Agrega al menos un producto para continuar.");
             return;
         }
-        alert("¡Pedido registrado! Se conectará con la pasarela de pago o el proveedor.");
+
+        guardarCarrito();
+        window.location.href = "checkout.html";
     }
 
     document.addEventListener("DOMContentLoaded", cargarTienda);

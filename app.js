@@ -83,6 +83,10 @@ app.get("/tienda", function (req, res) {
     res.sendFile(path.resolve(__dirname, "tienda.html"));
 });
 
+app.get("/checkout", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "checkout.html"));
+});
+
 app.get("/empresa", function (req, res) {
     res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Finalizar Compra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="tema.js"></script>
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+        }
+
+        header {
+            height: 80px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .volver {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .volver:hover {
+            color: var(--verde);
+        }
+
+        main {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+            color: var(--verde);
+        }
+
+        .subtitulo {
+            color: var(--secundario);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 10px;
+            color: #fff;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .campo input, .campo select {
+            padding: 12px;
+            background: #252525;
+            border: 1px solid #3b3b3b;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .campo input:focus, .campo select:focus {
+            border-color: var(--verde);
+        }
+
+        .lista-articulos {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        .articulo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #282828;
+        }
+
+        .articulo img {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #222;
+        }
+
+        .art-info {
+            flex-grow: 1;
+        }
+
+        .art-info h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .art-info span {
+            color: var(--secundario);
+            font-size: 12px;
+        }
+
+        .art-precio {
+            font-weight: 600;
+            color: var(--verde);
+            font-size: 14px;
+        }
+
+        .linea-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .linea-total.destacado {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            border-top: 1px solid var(--borde);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .linea-total.destacado span:last-child {
+            color: var(--verde);
+        }
+
+        .btn-pagar {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: var(--verde);
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-pagar:hover {
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 800px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+            header { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="tienda.html" class="logo">VIGA</a>
+    <a href="tienda.html" class="volver">← Volver a la tienda</a>
+</header>
+
+<main>
+    <h1>Confirmación de Compra</h1>
+    <p class="subtitulo">Ingresa tus datos de envío para procesar el pedido.</p>
+
+    <div class="checkout-grid">
+        <!-- FORMULARIO DE ENVÍO -->
+        <section class="card">
+            <h2>Datos de envío y contacto</h2>
+            <form id="formCheckout">
+                <div class="campo">
+                    <label for="nombreCliente">Nombre completo *</label>
+                    <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
+                </div>
+                <div class="campo">
+                    <label for="telefonoCliente">Teléfono / WhatsApp *</label>
+                    <input type="tel" id="telefonoCliente" required placeholder="Ej. 3001234567">
+                </div>
+                <div class="campo">
+                    <label for="direccionCliente">Dirección de entrega *</label>
+                    <input type="text" id="direccionCliente" required placeholder="Ej. Calle 10 # 40-20, Apto 301">
+                </div>
+                <div class="campo">
+                    <label for="ciudadCliente">Ciudad *</label>
+                    <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
+                </div>
+                <div class="campo">
+                    <label for="metodoPago">Método de pago preferido</label>
+                    <select id="metodoPago">
+                        <option value="transferencia">Transferencia bancaria / Nequi / Daviplata</option>
+                        <option value="contraentrega">Pago contra entrega</option>
+                        <option value="tarjeta">Tarjeta de crédito / Débito</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-pagar">Confirmar y pagar pedido</button>
+            </form>
+        </section>
+
+        <!-- RESUMEN DEL PEDIDO -->
+        <section class="card">
+            <h2>Resumen del pedido</h2>
+            <div class="lista-articulos" id="listaArticulos">
+                <!-- Se llena con Javascript -->
+            </div>
+
+            <div class="linea-total">
+                <span>Subtotal</span>
+                <span id="subtotalTexto">$ 0</span>
+            </div>
+            <div class="linea-total">
+                <span>Envío estimado</span>
+                <span>Calculado en la entrega</span>
+            </div>
+            <div class="linea-total destacado">
+                <span>Total a pagar</span>
+                <span id="totalTexto">$ 0</span>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    const carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+
+    function dinero(valor) {
+        return Number(valor || 0).toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0
+        });
+    }
+
+    function cargarResumen() {
+        const contenedor = document.getElementById("listaArticulos");
+        const subtotalEl = document.getElementById("subtotalTexto");
+        const totalEl = document.getElementById("totalTexto");
+
+        if (carrito.length === 0) {
+            alert("No tienes productos en el carrito.");
+            window.location.href = "tienda.html";
+            return;
+        }
+
+        contenedor.innerHTML = "";
+        let suma = 0;
+
+        carrito.forEach(item => {
+            const sub = item.precio * item.cantidad;
+            suma += sub;
+
+            const div = document.createElement("div");
+            div.className = "articulo";
+            div.innerHTML = `
+                <img src="${item.imagen}" alt="${item.nombre}">
+                <div class="art-info">
+                    <h4>${item.nombre}</h4>
+                    <span>Cantidad: ${item.cantidad} × ${dinero(item.precio)}</span>
+                </div>
+                <div class="art-precio">${dinero(sub)}</div>
+            `;
+            contenedor.appendChild(div);
+        });
+
+        subtotalEl.textContent = dinero(suma);
+        totalEl.textContent = dinero(suma);
+    }
+
+    document.getElementById("formCheckout").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("¡Pedido realizado con éxito! Un asesor se contactará contigo para confirmar el envío.");
+        // Limpia el carrito tras la compra
+        localStorage.removeItem("viga_carrito");
+        window.location.href = "tienda.html";
+    });
+
+    document.addEventListener("DOMContentLoaded", cargarResumen);
+</script>
+
+</body>
+</html>
