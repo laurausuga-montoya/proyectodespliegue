@@ -352,7 +352,7 @@
                 </div>
             </div>
 
-            <p class="nota-pie">Tu información se enlazará exclusivamente con tu número de identificación de usuario.</p>
+            <p class="nota-pie">Tu información se guardará exclusivamente bajo tu cuenta.</p>
 
             <button type="submit" class="btn-generar" id="btnGenerar">Generar mi rutina</button>
             <div class="mensaje-error" id="mensajeError"></div>
@@ -365,15 +365,17 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
+    // 1. OBTENER ID ÚNICAMENTE DESDE LA SESIÓN DEL USUARIO LOGUEADO
     function obtenerUsuarioActivo() {
-        const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
-        if (!sesionUser) return null;
-        try {
-            const u = JSON.parse(sesionUser);
-            return String(u.identificacion || u.id || "");
-        } catch(e) {
-            return null;
+        const sesionTexto = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        if (sesionTexto) {
+            try {
+                const u = JSON.parse(sesionTexto);
+                const idReal = u.identificacion || u.id;
+                if (idReal) return String(idReal).trim();
+            } catch(e) {}
         }
+        return null;
     }
 
     const idUsuario = obtenerUsuarioActivo();
@@ -387,9 +389,14 @@
 
     async function verificarPerfilUsuario() {
         if (!idUsuario) {
-            alert("Inicia sesión para gestionar tu plan individual.");
+            alert("Debes iniciar sesión con tu cuenta para acceder a tus rutinas.");
             window.location.href = "login.html";
             return;
+        }
+
+        // Limpiar URL para que no quede ningún ?id= viejo
+        if (window.location.search.includes("id=")) {
+            window.history.replaceState({}, "", forzarEdicion ? "rutinas.html?editar=1" : "rutinas.html");
         }
 
         if (forzarEdicion) {
@@ -404,17 +411,17 @@
                 const datos = await res.json();
                 if (datos && datos.objetivo && (datos.dias_entreno !== undefined || datos.peso)) {
                     localStorage.setItem(`viga_rutina_${idUsuario}`, JSON.stringify(datos));
-                    window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario)}`);
+                    window.location.replace("rutina.plan.html");
                     return;
                 }
             }
         } catch (e) {
-            console.log("Servidor no disponible, comprobando almacenamiento local...");
+            console.log("Comprobando almacenamiento local...");
         }
 
         const rutinaPropia = localStorage.getItem(`viga_rutina_${idUsuario}`);
         if (rutinaPropia && !forzarEdicion) {
-            window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario)}`);
+            window.location.replace("rutina.plan.html");
             return;
         }
 
@@ -439,7 +446,9 @@
             }
             if (datos.objetivo) document.getElementById("objetivo").value = datos.objetivo;
             if (datos.lugar_entrenamiento) document.getElementById("lugar").value = datos.lugar_entrenamiento;
-            if (datos.dias_entreno !== undefined) document.getElementById("dias").value = String(datos.dias_entreno);
+            if (datos.dias_entreno !== undefined && datos.dias_entreno !== null) {
+                document.getElementById("dias").value = String(datos.dias_entreno);
+            }
             if (datos.intensidad) document.getElementById("intensidad").value = datos.intensidad;
 
             if (datos.lesion && datos.lesion !== "ninguna") {
@@ -489,9 +498,9 @@
 
             // Guardar con clave única por cuenta
             localStorage.setItem(`viga_rutina_${idUsuario}`, JSON.stringify(payload));
-            localStorage.removeItem("viga_rutina_datos"); // Limpiar residuo global anterior si existiera
+            localStorage.removeItem("viga_rutina_datos"); // Limpiar cualquier residuo anterior
 
-            window.location.href = `rutina.plan.html?id=${encodeURIComponent(idUsuario)}`;
+            window.location.href = "rutina.plan.html";
 
         } catch (error) {
             msgError.textContent = error.message;

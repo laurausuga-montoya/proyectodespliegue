@@ -372,10 +372,15 @@ app.get("/empresa/:id/ventas", function (req, res) {
 });
 
 /* =========================================
-   PERFIL FÍSICO / RUTINA DEL USUARIO
+   PERFIL FÍSICO / RUTINA AISLADA POR USUARIO
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const { identificacion } = req.params;
+    const identificacion = String(req.params.identificacion || "").trim();
+
+    if (!identificacion || identificacion === "undefined" || identificacion === "null") {
+        return res.status(400).json({ error: "Identificación de usuario inválida." });
+    }
+
     const sql = `
         SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
         FROM usuarios 
@@ -386,15 +391,12 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
             console.error("❌ Error consultando datos físicos:", error);
-            const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
-            return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
-                if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-                res2[0].dias_entreno = 5;
-                res.json(res2[0]);
-            });
+            return res.status(500).json({ error: "Error consultando la base de datos." });
         }
-        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-        
+        if (resultados.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+
         const fila = resultados[0];
         fila.dias_entreno = (fila.dias_entreno !== null && fila.dias_entreno !== undefined) ? parseInt(fila.dias_entreno, 10) : 5;
         res.json(fila);
@@ -402,7 +404,13 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 });
 
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const { identificacion } = req.params;
+    const identificacion = String(req.params.identificacion || "").trim();
+
+    // VALIDACIÓN ESTRICTA: No actualizar si el identificador es inválido
+    if (!identificacion || identificacion === "undefined" || identificacion === "null" || identificacion === "") {
+        return res.status(400).json({ error: "Identificación de usuario requerida y válida." });
+    }
+
     let { genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
 
     const generoFinal = genero ? String(genero).trim() : 'No especificado';
@@ -414,10 +422,12 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         alturaFinal = Number((alturaFinal / 100).toFixed(2));
     }
 
+    // UPDATE seguro con LIMIT 1 para garantizar que solo toque al usuario solicitado
     const sql = `
         UPDATE usuarios 
         SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
         WHERE identificacion = ?
+        LIMIT 1
     `;
 
     conexion.query(
@@ -435,20 +445,16 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                if (error.code === 'ER_BAD_FIELD_ERROR') {
-                    const sqlFallback = `
-                        UPDATE usuarios 
-                        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
-                        WHERE identificacion = ?
-                    `;
-                    return conexion.query(sqlFallback, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
-                        if (errFallback) return res.status(500).json({ error: errFallback.message });
-                        return res.json({ mensaje: "Datos guardados en modo fallback." });
-                    });
-                }
                 console.error("❌ Error en MySQL al guardar rutina:", error);
                 return res.status(500).json({ error: error.message });
             }
+
+            if (resultado.affectedRows === 0) {
+                console.warn(`⚠️ No se encontró la cuenta con ID: ${identificacion}`);
+                return res.status(404).json({ error: "No se encontró el usuario en el sistema." });
+            }
+
+            console.log(`✅ Rutina guardada exitosamente SOLO para el usuario ID: ${identificacion} (${diasFinal} días)`);
             res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal });
         }
     );
