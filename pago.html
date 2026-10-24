@@ -269,7 +269,6 @@
             metodo.textContent = "Nequi";
             etiquetaCuenta.textContent = "Celular Nequi:";
             valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
-            icono.textContent = "";
             titulo.textContent = "Notificación de cobro Nequi";
             mensaje.textContent = `Hemos enviado una solicitud de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para autorizar el cobro.`;
             textoBtn.textContent = "Aceptar débito en Nequi";
@@ -277,7 +276,6 @@
             metodo.textContent = "Daviplata";
             etiquetaCuenta.textContent = "Número Daviplata:";
             valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
-            icono.textContent = "";
             titulo.textContent = "Cobro directo Daviplata";
             mensaje.textContent = `Confirma el descuento de fondos de tu monedero Daviplata (${pedido.cuenta || pedido.telefono}) para completar el pedido.`;
             textoBtn.textContent = "Aceptar cobro en Daviplata";
@@ -285,7 +283,6 @@
             metodo.textContent = pedido.banco || "Bancolombia";
             etiquetaCuenta.textContent = "Cuenta Bancolombia:";
             valorCuenta.textContent = pedido.cuenta || "--";
-            icono.textContent = "";
             titulo.textContent = "Autorización Bancolombia";
             mensaje.textContent = `Autoriza la transferencia inmediata desde tu cuenta ${pedido.banco} para despachar la compra.`;
             textoBtn.textContent = "Autorizar débito Bancolombia";
@@ -293,7 +290,6 @@
             metodo.textContent = pedido.banco || "PSE";
             etiquetaCuenta.textContent = "Correo PSE:";
             valorCuenta.textContent = pedido.correoPSE || "--";
-            icono.textContent = "";
             titulo.textContent = "Verificación de pago PSE";
             mensaje.textContent = `Transacción respaldada por ACH Colombia. Valida el débito de tu cuenta bancaria asociada.`;
             textoBtn.textContent = "Confirmar pago PSE";
@@ -301,7 +297,6 @@
             metodo.textContent = "Tarjeta Débito / Crédito";
             etiquetaCuenta.textContent = "Terminación de tarjeta:";
             valorCuenta.textContent = `•••• ${pedido.terminacion || "4242"}`;
-            icono.textContent = "";
             titulo.textContent = "Verificación bancaria (3D Secure)";
             mensaje.textContent = `Tu entidad financiera está procesando la solicitud para la tarjeta terminada en ${pedido.terminacion || "4242"}.`;
             textoBtn.textContent = "Aprobar pago con tarjeta";
