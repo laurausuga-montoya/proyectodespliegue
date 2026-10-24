@@ -232,7 +232,6 @@
             color: white;
         }
 
-        /* PASARELAS DE PAGO */
         .seccion-pago {
             display: none;
         }
@@ -298,7 +297,7 @@
 
     <div class="checkout-grid">
 
-        <!-- PASO 1: DATOS DE ENVÍO Y SELECCIÓN DE MÉTODO -->
+        <!-- PASO 1: DATOS DE ENVÍO -->
         <section class="card" id="pasoEnvio">
             <h2>Datos de entrega</h2>
             <form id="formEnvio">
@@ -334,33 +333,33 @@
             <h2>Pago por Transferencia / Nequi</h2>
             
             <div class="info-bancaria">
-                <h3>Datos oficiales de cuenta</h3>
+                <h3>Datos oficiales de cobro</h3>
                 <p><strong>Nequi / Daviplata:</strong> 300 123 4567</p>
                 <p><strong>Bancolombia (Ahorros):</strong> 123-456789-01</p>
                 <p><strong>Titular:</strong> VIGA Deportes S.A.S</p>
-                <p><strong>Monto exacto:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
+                <p><strong>Monto total:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
             </div>
 
             <form id="formTransferencia">
                 <div class="campo">
-                    <label for="comprobanteNequi">Número de aprobación o comprobante *</label>
-                    <input type="text" id="comprobanteNequi" required placeholder="Ej. M1234567 o # de transacción">
-                </div>
-                <div class="campo">
-                    <label for="cuentaOrigen">Banco o billetera desde donde envías *</label>
+                    <label for="cuentaOrigen">Banco o billetera desde donde debitar *</label>
                     <select id="cuentaOrigen" required>
                         <option value="Nequi">Nequi</option>
                         <option value="Daviplata">Daviplata</option>
                         <option value="Bancolombia">Bancolombia</option>
-                        <option value="Otro">Otro banco</option>
+                        <option value="Otro Banco">Otro banco</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-pagar">Confirmar pago y finalizar</button>
-                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de envío</button>
+                <div class="campo">
+                    <label for="cuentaNumero">Número de cuenta o celular asociado *</label>
+                    <input type="text" id="cuentaNumero" required placeholder="Ej. 3001234567">
+                </div>
+                <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
             </form>
         </section>
 
-        <!-- PASO 2B: PASARELA DE TARJETA DE CRÉDITO / DÉBITO -->
+        <!-- PASO 2B: PASARELA DE TARJETA -->
         <section class="card seccion-pago" id="pasoTarjeta">
             <h2>Pago con Tarjeta de Crédito / Débito</h2>
 
@@ -392,8 +391,8 @@
                         <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
                     </div>
                 </div>
-                <button type="submit" class="btn-pagar">Pagar pedido</button>
-                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de envío</button>
+                <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
             </form>
         </section>
 
@@ -468,9 +467,6 @@
         document.getElementById("montoTransferencia").textContent = dinero(suma);
     }
 
-    /* =========================================================
-       CONTROL DE PASOS
-    ========================================================= */
     document.getElementById("formEnvio").addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -482,16 +478,17 @@
             metodo: document.getElementById("metodoPago").value
         };
 
-        // Ocultar paso 1
         document.getElementById("pasoEnvio").style.display = "none";
         document.getElementById("tituloPaso").textContent = "Detalles del Pago";
-        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Ingresa la información de tu cuenta para procesar el pago.";
+        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Confirma la cuenta antes de autorizar el cobro.";
 
-        // Mostrar formulario correspondiente
         if (datosEnvioGuardados.metodo === "transferencia") {
             document.getElementById("pasoTransferencia").classList.add("activa");
+            document.getElementById("cuentaNumero").value = datosEnvioGuardados.telefono;
         } else {
             document.getElementById("pasoTarjeta").classList.add("activa");
+            document.getElementById("nombreTarjeta").value = datosEnvioGuardados.nombre.toUpperCase();
+            actualizarTarjetaVisual();
         }
     });
 
@@ -514,25 +511,44 @@
     }
 
     /* =========================================================
-       CONFIRMAR PAGO
+       PASO HACIA PAGO.HTML
     ========================================================= */
     document.getElementById("formTransferencia").addEventListener("submit", (e) => {
         e.preventDefault();
-        const comprobante = document.getElementById("comprobanteNequi").value.trim();
-        alert(`¡Pago verificado con éxito!\n\nComprobante #${comprobante} recibido.\nSe enviará tu pedido a ${datosEnvioGuardados.direccion}, ${datosEnvioGuardados.ciudad}.`);
-        concluirCompra();
+        const bancoSeleccionado = document.getElementById("cuentaOrigen").value;
+        const cuentaNum = document.getElementById("cuentaNumero").value;
+
+        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+            metodo: "transferencia",
+            banco: bancoSeleccionado,
+            cuenta: cuentaNum,
+            nombre: datosEnvioGuardados.nombre,
+            telefono: datosEnvioGuardados.telefono,
+            direccion: datosEnvioGuardados.direccion,
+            ciudad: datosEnvioGuardados.ciudad,
+            total: totalPedido
+        }));
+
+        window.location.href = "pago.html";
     });
 
     document.getElementById("formTarjeta").addEventListener("submit", (e) => {
         e.preventDefault();
-        alert(`¡Pago procesado con éxito por ${dinero(totalPedido)}!\n\nTu pedido ha sido despachado a nombre de ${datosEnvioGuardados.nombre}.`);
-        concluirCompra();
-    });
+        const numero = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
+        const terminacion = numero.slice(-4) || "4242";
 
-    function concluirCompra() {
-        localStorage.removeItem("viga_carrito");
-        window.location.href = "tienda.html";
-    }
+        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+            metodo: "tarjeta",
+            terminacion: terminacion,
+            nombre: datosEnvioGuardados.nombre,
+            telefono: datosEnvioGuardados.telefono,
+            direccion: datosEnvioGuardados.direccion,
+            ciudad: datosEnvioGuardados.ciudad,
+            total: totalPedido
+        }));
+
+        window.location.href = "pago.html";
+    });
 
     document.addEventListener("DOMContentLoaded", cargarResumen);
 </script>

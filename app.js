@@ -87,6 +87,10 @@ app.get("/checkout", function (req, res) {
     res.sendFile(path.resolve(__dirname, "checkout.html"));
 });
 
+app.get("/pago", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "pago.html"));
+});
+
 app.get("/empresa", function (req, res) {
     res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });
@@ -197,7 +201,7 @@ app.post("/login-empresa", function (req, res) {
 /* =========================================
    PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
 ========================================= */
-// Guardar producto nuevo
+// Guardar producto nuevo en la tabla dedicada productos
 app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
     const identificacion_empresa = req.params.id;
     const { nombre, categoria, descripcion, precio, stock } = req.body;
