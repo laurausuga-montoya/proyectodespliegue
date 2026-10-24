@@ -165,7 +165,6 @@
             gap: 18px;
         }
 
-        /* TARJETA INTERACTIVA DE CADA EJERCICIO */
         .tarjeta-ejercicio {
             background: #171717;
             border: 1px solid #292929;
@@ -356,7 +355,7 @@
 
 </main>
 
-<!-- MODAL PARA VER TÉCNICA Y DETALLES DEL EJERCICIO -->
+<!-- MODAL EXPLICATIVO DEL EJERCICIO -->
 <div class="modal-overlay" id="modalEjercicio">
     <div class="modal-caja">
         <button class="btn-cerrar-modal" onclick="cerrarModal()">×</button>
@@ -384,13 +383,12 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // OBTENER ID DEL USUARIO ACTIVO
     function obtenerUsuarioActivo() {
         const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
         if (!sesionUser) return null;
         try {
             const u = JSON.parse(sesionUser);
-            return u.identificacion || u.id || null;
+            return String(u.identificacion || u.id || "");
         } catch(e) {
             return null;
         }
@@ -402,21 +400,30 @@
         window.location.href = "login.html";
     }
 
-    document.getElementById("btnModificarRespuestas").href = `rutinas.html?id=${encodeURIComponent(idUsuario || '')}&editar=1`;
+    // Configurar enlace para modificar
+    document.getElementById("btnModificarRespuestas").href = `rutinas.html?id=${encodeURIComponent(idUsuario)}&editar=1`;
 
     let planEstructurado = [];
 
     async function cargarPlanUsuario() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("id") !== idUsuario) {
+            window.history.replaceState({}, "", `rutina.plan.html?id=${encodeURIComponent(idUsuario)}`);
+        }
+
         let datos = null;
 
+        // 1. Consultar servidor con timestamp para evitar caché
         try {
-            const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
+            const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos?t=${Date.now()}`);
             if (res.ok) {
                 datos = await res.json();
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error("Error al consultar el servidor:", e);
+        }
 
-        // Si falló internet, leer clave propia de este usuario
+        // 2. Respaldo local exclusivo de este usuario
         if (!datos || !datos.objetivo) {
             const guardado = localStorage.getItem(`viga_rutina_${idUsuario}`);
             if (guardado) {
@@ -424,7 +431,7 @@
             }
         }
 
-        // Si el usuario aún no configuró su rutina, redirigir al formulario
+        // Si no existe configuración previa para esta cuenta, redirigir
         if (!datos || !datos.objetivo) {
             window.location.replace(`rutinas.html?id=${encodeURIComponent(idUsuario)}`);
             return;
@@ -435,10 +442,14 @@
 
     function generarEstructuraRutina(datos) {
         const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
-        document.getElementById("resumenPerfil").textContent = 
-            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días/semana | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
 
-        const numDias = parseInt(datos.dias_entreno) || 3;
+        // LECTURA EXACTA DE DÍAS (1 A 7)
+        const diasParsed = parseInt(datos.dias_entreno, 10);
+        const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 5;
+
+        document.getElementById("resumenPerfil").textContent = 
+            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo} | Frecuencia: ${numDias} días por semana | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
+
         const lesion = (datos.lesion || "").toLowerCase();
         const esRodilla = lesion.includes("rodilla");
         const esHombro = lesion.includes("hombro");
@@ -446,7 +457,7 @@
         const faltaSuperior = lesion.includes("extremidad superior");
         const faltaInferior = lesion.includes("extremidad inferior");
 
-        // BANCO CON TÉCNICA DETALLADA POR EJERCICIO
+        // BANCO CON FOTOS REALES Y DETALLE TÉCNICO
         const bloques = {
             cuerpoCompleto: {
                 titulo: "Día 1: Cuerpo Completo (Full Body)",
@@ -698,7 +709,7 @@
             }
         };
 
-        // DISTRIBUCIÓN ESTRICTA SEGÚN LOS DÍAS SELECCIONADOS POR ESTE USUARIO
+        // ESTRUCTURA EXACTA SEGÚN EL NÚMERO DE DÍAS (1 A 7)
         if (numDias === 1) {
             planEstructurado = [
                 { diaNumero: 1, ...bloques.cuerpoCompleto }
@@ -780,7 +791,6 @@
 
         let htmlEjercicios = "";
         diaData.ejercicios.forEach((ej, index) => {
-            // Se asocia el clic para abrir el modal explicativo
             htmlEjercicios += `
                 <div class="tarjeta-ejercicio" onclick='abrirModalEjercicio(${numeroDia}, ${index})'>
                     <img class="ejercicio-foto" src="${ej.foto}" alt="${ej.nombre}" loading="lazy">
@@ -812,7 +822,6 @@
         `;
     }
 
-    /* FUNCIONES DEL MODAL EXPLICATIVO */
     function abrirModalEjercicio(diaNum, index) {
         const diaData = planEstructurado.find(d => d.diaNumero === diaNum);
         if (!diaData) return;
@@ -833,7 +842,6 @@
         document.getElementById("modalEjercicio").classList.remove("activo");
     }
 
-    // Cierra al tocar fuera de la caja
     window.addEventListener("click", function(e) {
         const modal = document.getElementById("modalEjercicio");
         if (e.target === modal) {

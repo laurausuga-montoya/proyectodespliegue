@@ -373,7 +373,6 @@ app.get("/empresa/:id/ventas", function (req, res) {
 
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
-   (Con soporte completo para género, días y normalización)
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
@@ -386,15 +385,19 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
-            // Fallback en caso de que alguna columna falte en MySQL
+            console.error("❌ Error consultando datos físicos:", error);
             const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
             return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
                 if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
+                res2[0].dias_entreno = 5;
                 res.json(res2[0]);
             });
         }
         if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-        res.json(resultados[0]);
+        
+        const fila = resultados[0];
+        fila.dias_entreno = (fila.dias_entreno !== null && fila.dias_entreno !== undefined) ? parseInt(fila.dias_entreno, 10) : 5;
+        res.json(fila);
     });
 });
 
@@ -404,8 +407,8 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     const generoFinal = genero ? String(genero).trim() : 'No especificado';
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
+    const diasFinal = (dias_entreno !== null && dias_entreno !== undefined) ? parseInt(dias_entreno, 10) : 5;
 
-    // Normalizar altura: si viene en cm (ej. 175), convertir a metros (1.75) para evitar out of range
     let alturaFinal = altura ? Number(altura) : null;
     if (alturaFinal && alturaFinal > 3) {
         alturaFinal = Number((alturaFinal / 100).toFixed(2));
@@ -427,12 +430,11 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
             objetivo || null, 
             lugar_entrenamiento || null, 
             intensidad || null, 
-            dias_entreno ? parseInt(dias_entreno) : 5, 
+            diasFinal, 
             identificacion
         ], 
         function (error, resultado) {
             if (error) {
-                // Si la columna genero o dias_entreno no existiera aún en MySQL, guardar con fallback
                 if (error.code === 'ER_BAD_FIELD_ERROR') {
                     const sqlFallback = `
                         UPDATE usuarios 
@@ -441,13 +443,13 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
                     `;
                     return conexion.query(sqlFallback, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
                         if (errFallback) return res.status(500).json({ error: errFallback.message });
-                        return res.json({ mensaje: "Datos físicos guardados correctamente (sin columnas adicionales)." });
+                        return res.json({ mensaje: "Datos guardados en modo fallback." });
                     });
                 }
-                console.error("❌ Error en MySQL:", error);
+                console.error("❌ Error en MySQL al guardar rutina:", error);
                 return res.status(500).json({ error: error.message });
             }
-            res.json({ mensaje: "Datos físicos guardados correctamente." });
+            res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal });
         }
     );
 });
