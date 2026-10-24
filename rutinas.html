@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIGA | Personaliza tu rutina</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
     <style>
@@ -16,6 +17,23 @@
             --secundario: #aaa;
             --borde: #2d2d2d;
             --rojo: #ff5252;
+            --input-fondo: #252525;
+            --input-borde: #3b3b3b;
+            --card-sub: #17241a;
+            --card-sub-borde: #28442e;
+        }
+
+        /* REGLAS PARA TEMA CLARO */
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --input-fondo: #f8f8f8;
+            --input-borde: #cccccc;
+            --card-sub: #eefbee;
+            --card-sub-borde: #c4ecc9;
         }
 
         * {
@@ -29,6 +47,7 @@
             background: var(--fondo);
             color: var(--texto);
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         header {
@@ -39,6 +58,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -50,7 +70,7 @@
         }
 
         .volver {
-            color: #ddd;
+            color: var(--texto);
             text-decoration: none;
             font-size: 14px;
             transition: .2s;
@@ -71,6 +91,8 @@
             border: 1px solid var(--borde);
             border-radius: 16px;
             padding: 35px 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .bloque-seccion {
@@ -79,7 +101,7 @@
 
         .bloque-seccion h3 {
             font-size: 19px;
-            color: #fff;
+            color: var(--texto);
             margin-bottom: 6px;
         }
 
@@ -104,17 +126,18 @@
 
         .campo label {
             font-size: 13px;
-            color: #ccc;
+            color: var(--texto);
         }
 
         .campo input, .campo select {
             padding: 13px;
-            background: #252525;
-            border: 1px solid #3b3b3b;
+            background: var(--input-fondo);
+            border: 1px solid var(--input-borde);
             border-radius: 8px;
-            color: white;
+            color: var(--texto);
             outline: none;
             font-size: 14px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
         }
 
         .campo input:focus, .campo select:focus {
@@ -129,8 +152,8 @@
         }
 
         .caja-radio {
-            background: #252525;
-            border: 1px solid #383838;
+            background: var(--input-fondo);
+            border: 1px solid var(--input-borde);
             border-radius: 8px;
             padding: 14px;
             display: flex;
@@ -139,6 +162,7 @@
             cursor: pointer;
             transition: .2s;
             user-select: none;
+            color: var(--texto);
         }
 
         .caja-radio:hover {
@@ -150,10 +174,9 @@
             cursor: pointer;
         }
 
-        /* CAJA DESPLEGABLE CON DETALLES ADAPTATIVOS */
         .desplegable-adaptativo {
-            background: #17241a;
-            border: 1px solid #28442e;
+            background: var(--card-sub);
+            border: 1px solid var(--card-sub-borde);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
@@ -168,8 +191,8 @@
 
         .sub-bloque-amputacion {
             display: none;
-            background: #121914;
-            border: 1px dashed #2d5535;
+            background: var(--input-fondo);
+            border: 1px dashed var(--verde);
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
@@ -322,7 +345,6 @@
                 </div>
             </div>
 
-            <!-- 6. LESIONES, DISCAPACIDAD Y CONDICIONES ESPECÍFICAS -->
             <div class="bloque-seccion">
                 <h3>6. Lesiones, adaptaciones, prótesis y movilidad</h3>
                 <p>¿Tienes alguna condición articular, discapacidad o limitación física?</p>
@@ -338,7 +360,6 @@
                     </label>
                 </div>
 
-                <!-- FORMULARIO DETALLADO ADAPTATIVO -->
                 <div class="desplegable-adaptativo" id="cajaAdaptativa">
                     <h4>Configuración de Adaptación Biomecánica</h4>
 
@@ -346,10 +367,10 @@
                         <label for="tipoDiscapacidad">Condición principal:</label>
                         <select id="tipoDiscapacidad" onchange="actualizarCamposAmputacion()">
                             <option value="ninguna">Dolor articular común (rodilla, espalda, hombro)</option>
-                            <option value="amputacion_superior">Falta de extremidad superior (Brazo / Mano)</option>
                             <option value="amputacion_inferior">Falta de extremidad inferior (Pierna / Pie)</option>
-                            <option value="movilidad_reducida_superior">Tengo ambas extremidades superiores pero una tiene movilidad reducida</option>
-                            <option value="movilidad_reducida_inferior">Tengo ambas extremidades inferiores pero una tiene dificultad para mover</option>
+                            <option value="amputacion_superior">Falta de extremidad superior (Brazo / Mano)</option>
+                            <option value="movilidad_reducida_inferior">Tengo ambas extremidades inferiores pero una con movilidad reducida</option>
+                            <option value="movilidad_reducida_superior">Tengo ambas extremidades superiores pero una con dificultad motriz</option>
                         </select>
                     </div>
 
@@ -365,7 +386,6 @@
                         </select>
                     </div>
 
-                    <!-- SUB-BLOQUE CONDICIONAL PARA AMPUTACIÓN Y PRÓTESIS -->
                     <div class="sub-bloque-amputacion" id="subBloqueAmputacion">
                         <div class="campo">
                             <label for="nivelAmputacion">Nivel de la amputación o afección:</label>
@@ -412,6 +432,17 @@
 
 <script>
     const API = "https://viga-c607.onrender.com";
+
+    // SINCRONIZACIÓN INMEDIATA DEL TEMA (CLARO / OSCURO)
+    function sincronizarTemaActual() {
+        const temaGuardado = localStorage.getItem("vigaTema");
+        if (temaGuardado === "claro") {
+            document.body.classList.add("claro");
+        } else {
+            document.body.classList.remove("claro");
+        }
+    }
+    sincronizarTemaActual();
 
     function obtenerUsuarioActivo() {
         const sesionTexto = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
@@ -512,7 +543,6 @@
             }
             if (datos.intensidad) document.getElementById("intensidad").value = datos.intensidad;
 
-            // Datos adaptativos
             if ((datos.lesion && datos.lesion !== "ninguna") || (datos.tipo_discapacidad && datos.tipo_discapacidad !== "ninguna")) {
                 document.getElementById("radioConLesion").checked = true;
                 if (datos.tipo_discapacidad) document.getElementById("tipoDiscapacidad").value = datos.tipo_discapacidad;
@@ -585,6 +615,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTemaActual();
         alternarSeccionAdaptativa();
         verificarPerfilUsuario();
     });
