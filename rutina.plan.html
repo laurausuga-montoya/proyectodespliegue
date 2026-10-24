@@ -4,2103 +4,1044 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Mi Rutina Personalizada</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>VIGA | Mi Rutina</title>
-
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- TEMA GLOBAL -->
     <script src="tema.js"></script>
 
-
     <style>
-
         * {
-
             margin: 0;
-
             padding: 0;
-
             box-sizing: border-box;
-
             font-family: 'Poppins', sans-serif;
-
         }
-
-
-        /* =================================================
-           MODO OSCURO
-        ================================================= */
 
         body {
-
             background: #121212;
-
             color: white;
-
             min-height: 100vh;
-
         }
-
 
         header {
-
             height: 80px;
-
             background: #1b1b1b;
-
             border-bottom: 1px solid #2d2d2d;
-
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
             padding: 0 60px;
-
         }
-
 
         .logo {
-
             color: #37E359;
-
             font-size: 40px;
-
             font-weight: 700;
-
         }
-
 
         .volver {
-
             color: #ddd;
-
             text-decoration: none;
-
+            transition: .3s;
         }
-
 
         .volver:hover {
-
             color: #37E359;
-
         }
-
 
         .contenedor {
-
             width: 90%;
-
             max-width: 1200px;
-
             margin: 45px auto;
-
         }
-
 
         .titulo {
-
             text-align: center;
-
             margin-bottom: 30px;
-
         }
-
 
         .titulo h1 {
-
             color: #37E359;
-
             font-size: 40px;
-
         }
-
 
         .titulo p {
-
             color: #aaa;
-
             margin-top: 8px;
-
         }
-
 
         .informacion {
-
             background: #1b1b1b;
-
             border-radius: 15px;
-
             padding: 20px;
-
             display: flex;
-
             justify-content: center;
-
-            gap: 60px;
-
+            gap: 40px;
+            flex-wrap: wrap;
             margin-bottom: 30px;
-
         }
-
 
         .dato {
-
             text-align: center;
-
+            min-width: 120px;
         }
-
 
         .dato strong {
-
             display: block;
-
             color: #37E359;
-
-            font-size: 22px;
-
+            font-size: 20px;
         }
-
 
         .dato span {
-
             color: #aaa;
-
-            font-size: 14px;
-
+            font-size: 13px;
         }
-
 
         .dias {
-
             display: flex;
-
             justify-content: center;
-
             gap: 10px;
-
             flex-wrap: wrap;
-
             margin-bottom: 35px;
-
         }
-
 
         .dia {
-
             padding: 13px 22px;
-
             border: none;
-
             border-radius: 10px;
-
             background: #252525;
-
             color: white;
-
             cursor: pointer;
-
             font-weight: 600;
-
+            transition: .2s;
         }
-
 
         .dia:hover {
-
             background: #333;
-
         }
-
 
         .dia.activo {
-
             background: #37E359;
-
             color: #111;
-
         }
-
 
         #tituloDia {
-
             text-align: center;
-
             margin-bottom: 30px;
-
             font-size: 30px;
-
         }
-
 
         .ejercicios {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(300px, 1fr)
-                );
-
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
-
         }
-
 
         .ejercicio {
-
             background: #1b1b1b;
-
             border-radius: 18px;
-
             overflow: hidden;
-
             border: 1px solid #292929;
-
             transition: .3s;
-
+            display: flex;
+            flex-direction: column;
         }
-
 
         .ejercicio:hover {
-
             transform: translateY(-5px);
-
             border-color: #37E359;
-
         }
-
 
         .ejercicio img {
-
             width: 100%;
-
             height: 230px;
-
             object-fit: cover;
-
             display: block;
-
         }
-
 
         .contenido {
-
             padding: 25px;
-
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
-
 
         .numero {
-
             color: #37E359;
-
             font-size: 14px;
-
             font-weight: bold;
-
             margin-bottom: 5px;
-
         }
-
 
         .contenido h3 {
-
-            font-size: 23px;
-
+            font-size: 22px;
             margin-bottom: 10px;
-
         }
-
 
         .contenido p {
-
             color: #aaa;
-
-            line-height: 25px;
-
+            line-height: 24px;
             margin-bottom: 15px;
-
+            font-size: 14px;
+            flex-grow: 1;
         }
-
 
         .series {
-
             background: #252525;
-
             padding: 12px;
-
             border-radius: 8px;
-
             color: #37E359;
-
             font-weight: 600;
-
             margin-bottom: 15px;
-
+            font-size: 14px;
         }
-
 
         .boton-explicacion {
-
             width: 100%;
-
             padding: 12px;
-
             border: 1px solid #37E359;
-
             border-radius: 9px;
-
             background: transparent;
-
             color: #37E359;
-
             font-size: 15px;
-
             font-weight: 600;
-
             cursor: pointer;
-
             transition: .3s;
-
         }
-
 
         .boton-explicacion:hover {
-
             background: #37E359;
-
             color: #111;
-
         }
 
-
-        /* =================================================
-           MODAL
-        ================================================= */
-
+        /* MODAL */
         .modal {
-
             display: none;
-
             position: fixed;
-
             inset: 0;
-
             background: rgba(0, 0, 0, .85);
-
             z-index: 9999;
-
             align-items: center;
-
             justify-content: center;
-
             padding: 20px;
-
         }
-
 
         .modal.activo {
-
             display: flex;
-
         }
-
 
         .modal-contenido {
-
             width: 100%;
-
             max-width: 650px;
-
             background: #1b1b1b;
-
             border: 1px solid #37E359;
-
             border-radius: 20px;
-
             padding: 30px;
-
             position: relative;
-
             max-height: 90vh;
-
             overflow-y: auto;
-
         }
-
 
         .cerrar {
-
             position: absolute;
-
             top: 10px;
-
             right: 15px;
-
             width: 40px;
-
             height: 40px;
-
             border: none;
-
             background: #252525;
-
             color: white;
-
             border-radius: 50%;
-
             font-size: 25px;
-
             cursor: pointer;
-
             z-index: 5;
-
         }
-
 
         .cerrar:hover {
-
             background: #37E359;
-
             color: #111;
-
         }
-
 
         .modal-contenido img {
-
             width: 100%;
-
             height: 300px;
-
             object-fit: cover;
-
             border-radius: 14px;
-
             margin-bottom: 20px;
-
         }
-
 
         .modal-contenido h2 {
-
             color: #37E359;
-
-            font-size: 30px;
-
-            margin-bottom: 20px;
-
+            font-size: 28px;
+            margin-bottom: 15px;
         }
-
 
         .modal-contenido h4 {
-
             color: white;
-
-            font-size: 18px;
-
-            margin-top: 20px;
-
-            margin-bottom: 8px;
-
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 6px;
         }
-
 
         .modal-contenido p {
-
             color: #bbb;
-
-            line-height: 1.8;
-
-            font-size: 15px;
-
+            line-height: 1.7;
+            font-size: 14px;
         }
-
 
         .modal-series {
-
-            margin-top: 20px;
-
+            margin-top: 18px;
             background: #252525;
-
-            padding: 15px;
-
+            padding: 14px;
             border-radius: 10px;
-
             color: #37E359;
-
             font-weight: 600;
-
         }
-
 
         footer {
-
             text-align: center;
-
             color: #777;
-
             padding: 40px;
-
         }
 
-
-        /* =================================================
-           MODO CLARO
-        ================================================= */
-
+        /* TEMA CLARO */
         html.tema-claro body,
         body.tema-claro {
-
             background: #f5f5f5;
-
             color: #222;
-
         }
-
 
         html.tema-claro header,
         body.tema-claro header {
-
             background: #ffffff;
-
             border-bottom-color: #dddddd;
-
         }
-
 
         html.tema-claro .volver,
         body.tema-claro .volver {
-
             color: #555;
-
         }
-
 
         html.tema-claro .titulo p,
         body.tema-claro .titulo p {
-
             color: #666;
-
         }
-
 
         html.tema-claro .informacion,
         body.tema-claro .informacion {
-
             background: #ffffff;
-
         }
-
 
         html.tema-claro .dato span,
         body.tema-claro .dato span {
-
             color: #666;
-
         }
-
 
         html.tema-claro .dia,
         body.tema-claro .dia {
-
             background: #e8e8e8;
-
             color: #222;
-
         }
-
-
-        html.tema-claro .dia:hover,
-        body.tema-claro .dia:hover {
-
-            background: #dcdcdc;
-
-        }
-
 
         html.tema-claro .dia.activo,
         body.tema-claro .dia.activo {
-
             background: #37E359;
-
             color: #111;
-
         }
-
 
         html.tema-claro .ejercicio,
         body.tema-claro .ejercicio {
-
             background: #ffffff;
-
             border-color: #dddddd;
-
         }
-
 
         html.tema-claro .contenido p,
         body.tema-claro .contenido p {
-
             color: #666;
-
         }
-
 
         html.tema-claro .series,
         body.tema-claro .series {
-
             background: #eeeeee;
-
         }
-
-
-        html.tema-claro .modal,
-        body.tema-claro .modal {
-
-            background: rgba(0, 0, 0, .45);
-
-        }
-
 
         html.tema-claro .modal-contenido,
         body.tema-claro .modal-contenido {
-
             background: #ffffff;
-
         }
-
 
         html.tema-claro .cerrar,
         body.tema-claro .cerrar {
-
             background: #eeeeee;
-
             color: #222;
-
         }
-
 
         html.tema-claro .modal-contenido h4,
         body.tema-claro .modal-contenido h4 {
-
             color: #222;
-
         }
-
 
         html.tema-claro .modal-contenido p,
         body.tema-claro .modal-contenido p {
-
             color: #666;
-
         }
-
 
         html.tema-claro .modal-series,
         body.tema-claro .modal-series {
-
             background: #eeeeee;
-
         }
-
-
-        html.tema-claro footer,
-        body.tema-claro footer {
-
-            color: #666;
-
-        }
-
-
-        /* =================================================
-           RESPONSIVE
-        ================================================= */
 
         @media(max-width:600px) {
-
             header {
-
                 padding: 0 20px;
-
             }
-
-
             .logo {
-
                 font-size: 30px;
-
             }
-
-
             .informacion {
-
-                gap: 25px;
-
+                gap: 20px;
             }
-
-
-            .modal-contenido {
-
-                padding: 20px;
-
-            }
-
-
-            .modal-contenido img {
-
-                height: 220px;
-
-            }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <header>
-
-    <div class="logo">
-        VIGA
-    </div>
-
-
-    <a
-        href="inicio.html"
-        class="volver"
-    >
-        ← Volver al inicio
-    </a>
-
+    <div class="logo">VIGA</div>
+    <a href="inicio.html" class="volver">← Volver al inicio</a>
 </header>
-
-
 
 <div class="contenedor">
 
-
     <div class="titulo">
-
-        <h1>
-            Mi rutina
-        </h1>
-
-
-        <p>
-            Selecciona el día que quieres entrenar
-        </p>
-
+        <h1 id="encabezadoRutina">Mi rutina</h1>
+        <p id="subtituloRutina">Plan diseñado de acuerdo a tus metas físicas registradas.</p>
     </div>
 
-
-
-    <!-- INFORMACIÓN -->
-
+    <!-- TARJETA INFORMATIVA -->
     <div class="informacion">
-
         <div class="dato">
-
-            <strong id="peso">
-                --
-            </strong>
-
-            <span>
-                Peso
-            </span>
-
+            <strong id="peso">--</strong>
+            <span>Peso</span>
         </div>
-
-
         <div class="dato">
-
-            <strong id="estatura">
-                --
-            </strong>
-
-            <span>
-                Estatura
-            </span>
-
+            <strong id="estatura">--</strong>
+            <span>Estatura</span>
         </div>
-
-
         <div class="dato">
-
-            <strong id="tipo">
-                --
-            </strong>
-
-            <span>
-                Entrenamiento
-            </span>
-
+            <strong id="tipo">--</strong>
+            <span>Modalidad</span>
         </div>
-
+        <div class="dato">
+            <strong id="meta">--</strong>
+            <span>Objetivo</span>
+        </div>
     </div>
 
-
-
-    <!-- DÍAS -->
-
+    <!-- BOTONES DE DÍAS -->
     <div class="dias">
-
-        <button
-            class="dia activo"
-            data-dia="lunes"
-        >
-            Lunes
-        </button>
-
-
-        <button
-            class="dia"
-            data-dia="martes"
-        >
-            Martes
-        </button>
-
-
-        <button
-            class="dia"
-            data-dia="miercoles"
-        >
-            Miércoles
-        </button>
-
-
-        <button
-            class="dia"
-            data-dia="jueves"
-        >
-            Jueves
-        </button>
-
-
-        <button
-            class="dia"
-            data-dia="viernes"
-        >
-            Viernes
-        </button>
-
+        <button class="dia activo" data-dia="lunes">Lunes</button>
+        <button class="dia" data-dia="martes">Martes</button>
+        <button class="dia" data-dia="miercoles">Miércoles</button>
+        <button class="dia" data-dia="jueves">Jueves</button>
+        <button class="dia" data-dia="viernes">Viernes</button>
     </div>
 
+    <h2 id="tituloDia">Rutina del Lunes</h2>
 
-
-    <h2 id="tituloDia">
-        Rutina del lunes
-    </h2>
-
-
-
-    <div
-        id="ejercicios"
-        class="ejercicios"
-    ></div>
-
+    <div id="ejercicios" class="ejercicios"></div>
 
 </div>
-
-
 
 <footer>
-
     © 2026 VIGA · Vive saludable, entrena inteligente.
-
 </footer>
 
-
-
-<!-- =====================================================
-     MODAL
-===================================================== -->
-
-<div
-    id="modal"
-    class="modal"
->
-
+<!-- MODAL EXPLICACIÓN -->
+<div id="modal" class="modal">
     <div class="modal-contenido">
-
-
-        <button
-            id="cerrarModal"
-            class="cerrar"
-        >
-            ×
-        </button>
-
-
-        <img
-            id="modalImagen"
-            src=""
-            alt="Ejercicio"
-        >
-
-
-        <h2 id="modalTitulo">
-            Ejercicio
-        </h2>
-
-
-        <h4>
-            ¿Cómo realizarlo?
-        </h4>
-
-
-        <p id="modalExplicacion">
-        </p>
-
-
-        <h4>
-            Consejo
-        </h4>
-
-
-        <p id="modalConsejo">
-        </p>
-
-
-        <div
-            id="modalSeries"
-            class="modal-series"
-        ></div>
-
+        <button id="cerrarModal" class="cerrar">×</button>
+        <img id="modalImagen" src="" alt="Ejercicio">
+        <h2 id="modalTitulo">Ejercicio</h2>
+        <h4>¿Cómo realizarlo?</h4>
+        <p id="modalExplicacion"></p>
+        <h4>Consejo VIGA</h4>
+        <p id="modalConsejo"></p>
+        <div id="modalSeries" class="modal-series"></div>
     </div>
-
 </div>
 
-
-
 <script>
-
-
-/* =========================================================
-   DATOS DE LA URL
-========================================================= */
-
-const parametros =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const pesoUsuario =
-    parametros.get("peso");
-
-
-const estaturaUsuario =
-    parametros.get("estatura");
-
-
-const tipoUsuario =
-    parametros.get("tipo");
-
-
+const API = "https://viga-c607.onrender.com";
 
 /* =========================================================
-   MOSTRAR INFORMACIÓN
+   BANCO DE RUTINAS POR OBJETIVO
 ========================================================= */
 
-document.getElementById("peso").textContent =
-    pesoUsuario
-        ? pesoUsuario + " kg"
-        : "--";
-
-
-document.getElementById("estatura").textContent =
-    estaturaUsuario
-        ? estaturaUsuario + " m"
-        : "--";
-
-
-document.getElementById("tipo").textContent =
-    tipoUsuario === "casa"
-        ? "Casa"
-        : "Gimnasio";
-
-
-
-/* =========================================================
-   RUTINAS CASA
-========================================================= */
-
-const casa = {
-
+// 1. OBJETIVO: BAJAR DE PESO / CARDIO Y QUEMA DE GRASA
+const rutinasBajar = {
     lunes: [
-
         {
-            nombre: "Flexiones",
-            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente pecho, hombros y tríceps.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Coloca las manos en el suelo ligeramente más separadas que los hombros. Mantén el cuerpo recto desde los hombros hasta los pies. Baja el pecho de forma controlada y después empuja el suelo para regresar.",
-            consejo: "Mantén el abdomen contraído y evita que la cadera se hunda."
-        },
-
-        {
-            nombre: "Flexiones inclinadas",
+            nombre: "Burpees con salto",
             imagen: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Variante de flexión para trabajar el pecho.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Apoya las manos sobre una superficie elevada y mantén las piernas extendidas. Flexiona los brazos llevando el pecho hacia la superficie y vuelve a subir.",
-            consejo: "Mantén el cuerpo recto durante todo el ejercicio."
+            descripcion: "Ejercicio cardiovascular total para activar el metabolismo.",
+            series: "4 series × 12 repeticiones (descanso: 30s)",
+            explicacion: "Comienza de pie, desciende en sentadilla colocando las manos en el suelo, salta con las piernas hacia atrás para quedar en plancha, vuelve al frente con los pies y salta verticalmente extendiendo los brazos.",
+            consejo: "Mantén un ritmo constante y aterriza siempre con las rodillas ligeramente flexionadas."
         },
-
         {
-            nombre: "Flexiones cerradas",
-            imagen: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Enfocadas en pecho y tríceps.",
-            series: "3 series × 8 repeticiones",
-            explicacion: "Coloca las manos un poco más juntas que en una flexión tradicional. Baja manteniendo los codos cerca del cuerpo y vuelve a subir.",
-            consejo: "No abras demasiado los codos."
-        },
-
-        {
-            nombre: "Flexiones con pausa",
-            imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aumentan el control y el trabajo muscular.",
-            series: "3 series × 8 repeticiones",
-            explicacion: "Realiza una flexión normal, pero mantén una pequeña pausa cuando estés cerca del suelo antes de volver a subir.",
-            consejo: "Mantén el cuerpo alineado durante la pausa."
-        },
-
-        {
-            nombre: "Fondos en silla",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio para fortalecer principalmente los tríceps.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Apoya las manos en una silla estable detrás de ti. Flexiona los codos para bajar el cuerpo y después empuja con los brazos para subir.",
-            consejo: "Utiliza una superficie completamente estable."
-        },
-
-        {
-            nombre: "Press de pecho en suelo",
-            imagen: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajo de pecho utilizando el peso corporal.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Acuéstate boca arriba y realiza un movimiento de empuje con los brazos. Mantén los hombros apoyados y controla el movimiento.",
-            consejo: "Realiza cada repetición lentamente."
-        }
-
-    ],
-
-
-    martes: [
-
-        {
-            nombre: "Remo con mochila",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja espalda utilizando una mochila como resistencia.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Inclina ligeramente el torso, sujeta la mochila y llévala hacia el abdomen. Después baja lentamente.",
-            consejo: "Mantén la espalda estable."
-        },
-
-        {
-            nombre: "Superman",
-            imagen: "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece espalda y zona posterior.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Acuéstate boca abajo y eleva brazos y piernas ligeramente. Mantén la posición unos segundos y vuelve a bajar.",
-            consejo: "No necesitas elevar demasiado las extremidades."
-        },
-
-        {
-            nombre: "Remo unilateral",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja cada lado de la espalda por separado.",
-            series: "3 series × 10 por lado",
-            explicacion: "Apoya una mano sobre una superficie estable y lleva la resistencia hacia la cadera con el otro brazo.",
-            consejo: "Evita girar el torso."
-        },
-
-        {
-            nombre: "Curl de bíceps",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece los músculos de los brazos.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Sujeta una resistencia en cada mano. Flexiona los codos llevando las manos hacia los hombros y baja lentamente.",
-            consejo: "No balancees el cuerpo."
-        },
-
-        {
-            nombre: "Curl martillo",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja bíceps y antebrazos.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Mantén las palmas enfrentadas entre sí y flexiona los codos para llevar las manos hacia los hombros.",
-            consejo: "Mantén los codos cerca del cuerpo."
-        },
-
-        {
-            nombre: "Extensión de espalda",
-            imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece la musculatura de la espalda.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Desde una posición inclinada, extiende el torso hasta quedar alineado. Regresa lentamente.",
-            consejo: "Evita realizar movimientos bruscos."
-        }
-
-    ],
-
-
-    miercoles: [
-
-        {
-            nombre: "Sentadillas",
-            imagen: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio principal para piernas.",
-            series: "4 series × 12 repeticiones",
-            explicacion: "Separa los pies aproximadamente al ancho de los hombros. Baja la cadera de forma controlada y vuelve a subir.",
-            consejo: "Mantén las rodillas alineadas con los pies."
-        },
-
-        {
-            nombre: "Zancadas",
-            imagen: "https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan cada pierna de forma independiente.",
-            series: "3 series × 10 por pierna",
-            explicacion: "Da un paso hacia adelante, flexiona ambas rodillas y baja controladamente. Empuja con la pierna delantera para volver.",
-            consejo: "Mantén el torso erguido."
-        },
-
-        {
-            nombre: "Sentadilla con pausa",
-            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aumenta el control y la fuerza de las piernas.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Realiza una sentadilla y mantén la posición inferior durante unos segundos antes de subir.",
-            consejo: "Mantén el abdomen activo."
-        },
-
-        {
-            nombre: "Sentadilla con salto",
-            imagen: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio explosivo para piernas.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Baja en sentadilla y desde esa posición impulsa el cuerpo hacia arriba realizando un salto.",
-            consejo: "Aterriza suavemente con las rodillas flexionadas."
-        },
-
-        {
-            nombre: "Elevación de pantorrillas",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece las pantorrillas.",
-            series: "4 series × 15 repeticiones",
-            explicacion: "De pie, eleva los talones hasta quedar sobre las puntas de los pies. Baja lentamente.",
-            consejo: "Realiza el recorrido completo."
-        },
-
-        {
-            nombre: "Zancadas laterales",
+            nombre: "Mountain Climbers (Escaladores)",
             imagen: "https://images.unsplash.com/photo-1517838277536-f5f99be5014c?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan piernas en diferentes direcciones.",
-            series: "3 series × 10 por lado",
-            explicacion: "Da un paso hacia un lado y flexiona esa pierna mientras mantienes la otra extendida. Regresa al centro.",
-            consejo: "Mantén el pecho elevado."
-        }
-
-    ],
-
-
-    jueves: [
-
-        {
-            nombre: "Flexiones tipo pica",
-            imagen: "https://images.unsplash.com/photo-1598971457998-ca4ef94d770a?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan principalmente los hombros.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Coloca el cuerpo formando una V invertida. Flexiona los brazos llevando la cabeza hacia el suelo y vuelve a extenderlos.",
-            consejo: "Haz el movimiento lentamente."
+            descripcion: "Aumenta la frecuencia cardíaca y tonifica el abdomen.",
+            series: "4 series × 40 segundos",
+            explicacion: "En posición de plancha con brazos extendidos, lleva una rodilla hacia el pecho y alterna velozmente con la otra simulando una carrera contra el suelo.",
+            consejo: "No levantes la cadera demasiado; mantenla alineada con tu espalda."
         },
-
         {
-            nombre: "Elevaciones laterales",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan los músculos de los hombros.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Con una resistencia ligera, eleva los brazos hacia los lados hasta aproximadamente la altura de los hombros.",
-            consejo: "No utilices impulso."
+            nombre: "Jumping Jacks (Saltos de tijera)",
+            imagen: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Cardio de bajo impacto articular con alta quema calórica.",
+            series: "3 series × 45 segundos",
+            explicacion: "Inicia con pies juntos y brazos a los lados. Da un salto abriendo piernas al ancho de los hombros y juntando las palmas sobre la cabeza.",
+            consejo: "Apóyate sobre las puntas de los pies para reducir el impacto articular."
         },
-
         {
-            nombre: "Plancha",
-            imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece el abdomen.",
-            series: "3 series × 30 segundos",
-            explicacion: "Apoya los antebrazos y las puntas de los pies. Mantén el cuerpo recto y contrae el abdomen.",
-            consejo: "No dejes caer la cadera."
-        },
-
-        {
-            nombre: "Plancha lateral",
-            imagen: "https://images.unsplash.com/photo-1598971457998-ca4ef94d770a?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja los músculos laterales del abdomen.",
-            series: "3 series × 20 segundos por lado",
-            explicacion: "Apóyate sobre un antebrazo y un pie. Eleva la cadera y mantén el cuerpo alineado.",
-            consejo: "Mantén la cadera elevada."
-        },
-
-        {
-            nombre: "Abdominales",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalecen la zona abdominal.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Acuéstate boca arriba con las rodillas flexionadas. Eleva el torso utilizando el abdomen y baja lentamente.",
-            consejo: "No tires del cuello."
-        },
-
-        {
-            nombre: "Abdominal bicicleta",
-            imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja abdomen y oblicuos.",
-            series: "3 series × 15 por lado",
-            explicacion: "Alterna el codo hacia la rodilla contraria realizando un movimiento similar al pedaleo.",
-            consejo: "Realiza el movimiento de manera controlada."
-        }
-
-    ],
-
-
-    viernes: [
-
-        {
-            nombre: "Puente de glúteos",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente los glúteos.",
-            series: "4 series × 15 repeticiones",
-            explicacion: "Acuéstate boca arriba, flexiona las rodillas y eleva la cadera apretando los glúteos.",
-            consejo: "Haz una pausa arriba antes de bajar."
-        },
-
-        {
-            nombre: "Patada de glúteo",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio enfocado en los glúteos.",
-            series: "3 series × 12 por pierna",
-            explicacion: "Colócate a cuatro apoyos y lleva una pierna hacia atrás y arriba. Regresa lentamente.",
-            consejo: "Evita arquear demasiado la espalda."
-        },
-
-        {
-            nombre: "Sentadilla sumo",
-            imagen: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja piernas y glúteos.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Separa los pies más que el ancho de los hombros y orienta ligeramente las puntas hacia afuera. Baja y vuelve a subir.",
-            consejo: "Mantén las rodillas alineadas con los pies."
-        },
-
-        {
-            nombre: "Puente unilateral",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja cada glúteo individualmente.",
-            series: "3 series × 10 por pierna",
-            explicacion: "Realiza el puente de glúteos manteniendo una pierna elevada y alterna después.",
-            consejo: "Mantén la pelvis estable."
-        },
-
-        {
-            nombre: "Sentadilla isométrica",
-            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece piernas y glúteos.",
-            series: "3 series × 30 segundos",
-            explicacion: "Apoya la espalda contra una pared y mantén las rodillas flexionadas.",
-            consejo: "Mantén la espalda apoyada."
-        },
-
-        {
-            nombre: "Elevación de pantorrillas",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece la parte inferior de las piernas.",
-            series: "4 series × 15 repeticiones",
-            explicacion: "Eleva los talones y baja lentamente manteniendo el equilibrio.",
-            consejo: "Evita hacer rebotes."
-        }
-
-    ]
-
-};
-
-
-
-/* =========================================================
-   RUTINAS GIMNASIO
-========================================================= */
-
-const gym = {
-
-    lunes: [
-
-        {
-            nombre: "Press de banca",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio principal para desarrollar el pecho.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Acuéstate en el banco, coloca los pies firmes en el suelo y baja la barra de manera controlada hacia el pecho. Después empuja hacia arriba.",
-            consejo: "No rebotes la barra contra el pecho."
-        },
-
-        {
-            nombre: "Press inclinado",
+            nombre: "Kettlebell Swing / Balanceo con peso",
             imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente la parte superior del pecho.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Utiliza un banco inclinado y empuja la barra o las mancuernas desde el pecho hacia arriba.",
-            consejo: "Mantén los pies firmes."
-        },
-
-        {
-            nombre: "Press con mancuernas",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja el pecho de manera independiente.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Acuéstate en el banco y empuja las mancuernas hacia arriba. Baja lentamente hasta una posición cómoda.",
-            consejo: "Mantén ambas manos controladas."
-        },
-
-        {
-            nombre: "Aperturas con mancuernas",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aísla principalmente los músculos del pecho.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Con los brazos ligeramente flexionados, abre los brazos hacia los lados y vuelve a juntarlos sobre el pecho.",
-            consejo: "No estires demasiado los hombros."
-        },
-
-        {
-            nombre: "Peck Deck",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Máquina enfocada en el pecho.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Siéntate en la máquina y junta los brazos frente al cuerpo de forma controlada.",
-            consejo: "No cierres los brazos bruscamente."
-        },
-
-        {
-            nombre: "Fondos para pecho",
-            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio compuesto para pecho y tríceps.",
-            series: "3 series × 8 repeticiones",
-            explicacion: "Utiliza las barras paralelas y baja el cuerpo de forma controlada antes de empujar para volver arriba.",
-            consejo: "No desciendas más de lo que puedas controlar."
+            descripcion: "Trabaja la cadena posterior con una alta demanda metabólica.",
+            series: "4 series × 15 repeticiones",
+            explicacion: "Con pies separados y una pesa rusa o mochila, empuja la cadera hacia atrás y propúlsala hacia adelante para elevar el peso usando los glúteos.",
+            consejo: "El movimiento proviene de la bisagra de cadera, no de los brazos."
         }
-
     ],
-
-
     martes: [
-
         {
-            nombre: "Jalón al pecho",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente la espalda.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Sujeta la barra y llévala hacia la parte superior del pecho manteniendo los codos hacia abajo.",
-            consejo: "Evita balancear el cuerpo."
-        },
-
-        {
-            nombre: "Remo con barra",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio compuesto para espalda.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Inclina el torso manteniendo la espalda estable y lleva la barra hacia el abdomen.",
-            consejo: "No redondees la espalda."
-        },
-
-        {
-            nombre: "Remo sentado",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja la espalda media.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Tira del agarre hacia el abdomen juntando los omóplatos y regresa lentamente.",
-            consejo: "Mantén el torso estable."
-        },
-
-        {
-            nombre: "Remo unilateral",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja cada lado de la espalda.",
-            series: "3 series × 10 por lado",
-            explicacion: "Apoya una mano en el banco y lleva la mancuerna hacia la cadera con el otro brazo.",
-            consejo: "Evita girar el torso."
-        },
-
-        {
-            nombre: "Pullover",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja dorsales y musculatura superior.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Acuéstate en el banco y lleva la resistencia desde detrás de la cabeza hacia arriba de manera controlada.",
-            consejo: "Utiliza un peso que puedas controlar."
-        },
-
-        {
-            nombre: "Face Pull",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja espalda alta y hombros posteriores.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Tira de la cuerda hacia la cara llevando los codos hacia atrás.",
-            consejo: "Mantén el movimiento controlado."
-        }
-
-    ],
-
-
-    miercoles: [
-
-        {
-            nombre: "Prensa de piernas",
-            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente piernas y glúteos.",
-            series: "4 series × 12 repeticiones",
-            explicacion: "Coloca los pies en la plataforma, flexiona las rodillas y empuja la plataforma hasta regresar a la posición inicial.",
-            consejo: "No bloquees las rodillas."
-        },
-
-        {
-            nombre: "Extensión de piernas",
-            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja principalmente los cuádriceps.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Extiende las piernas contra la resistencia de la máquina y vuelve lentamente.",
-            consejo: "Controla especialmente el descenso."
-        },
-
-        {
-            nombre: "Curl femoral",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja la parte posterior de las piernas.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Flexiona las piernas contra la resistencia llevando los talones hacia los glúteos.",
-            consejo: "No utilices impulso."
-        },
-
-        {
-            nombre: "Sentadilla con barra",
+            nombre: "Sentadillas con salto explosivas",
             imagen: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio completo para las piernas.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Coloca la barra de manera estable, baja la cadera controladamente y vuelve a subir empujando el suelo.",
-            consejo: "Mantén una postura estable."
-        },
-
-        {
-            nombre: "Abductores",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan la parte lateral de la cadera.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Siéntate en la máquina y separa las piernas contra la resistencia.",
-            consejo: "Controla el regreso."
-        },
-
-        {
-            nombre: "Pantorrillas en máquina",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece las pantorrillas.",
+            descripcion: "Potencia el tren inferior y acelera la quema de energía.",
             series: "4 series × 15 repeticiones",
-            explicacion: "Eleva los talones contra la resistencia y desciende lentamente.",
-            consejo: "Realiza el movimiento completo."
+            explicacion: "Baja en una sentadilla estándar y asciende con un salto vertical explosivo. Amortigua y vuelve a la posición inicial inmediatamente.",
+            consejo: "Mantén el pecho erguido y las rodillas estables al caer."
+        },
+        {
+            nombre: "Zancadas alternas dinámicas",
+            imagen: "https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Trabajo continuo de piernas para mantener la frecuencia alta.",
+            series: "3 series × 12 por pierna",
+            explicacion: "Da un paso al frente hasta que ambas rodillas formen un ángulo de 90°. Regresa y alterna velozmente con la pierna opuesta.",
+            consejo: "No permitas que la rodilla delantera sobrepase la punta de tu pie."
+        },
+        {
+            nombre: "High Knees (Rodillas al pecho)",
+            imagen: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Intervalo aeróbico intenso enfocado en acelerar el metabolismo.",
+            series: "4 series × 35 segundos",
+            explicacion: "Corre en tu sitio elevando las rodillas a la altura de la cadera con braceo activo y enérgico.",
+            consejo: "Trata de mantener un ritmo sostenido de inicio a fin."
         }
-
     ],
-
-
-    jueves: [
-
+    miercoles: [
         {
-            nombre: "Press militar",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio principal para hombros.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Desde la altura de los hombros, empuja las mancuernas hacia arriba y regresa lentamente.",
-            consejo: "Mantén el abdomen firme."
-        },
-
-        {
-            nombre: "Elevaciones laterales",
+            nombre: "Remo metabólico continuo",
             imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan la parte lateral de los hombros.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Eleva las mancuernas hacia los lados hasta aproximadamente la altura de los hombros.",
-            consejo: "No uses demasiado peso."
+            descripcion: "Tonifica la espalda con repeticiones continuas sin descanso largo.",
+            series: "4 series × 15 repeticiones",
+            explicacion: "Inclina el torso a 45 grados y jala el peso hacia el ombligo juntando los omóplatos.",
+            consejo: "Mantén la zona lumbar firme y sin curvarse."
         },
-
         {
-            nombre: "Elevaciones frontales",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan la parte frontal de los hombros.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Eleva una o ambas mancuernas hacia el frente hasta aproximadamente la altura de los hombros.",
-            consejo: "Mantén el movimiento controlado."
-        },
-
-        {
-            nombre: "Pájaros",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajan los hombros posteriores.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Inclina ligeramente el torso y abre los brazos hacia los lados manteniendo los codos ligeramente flexionados.",
-            consejo: "Utiliza una resistencia moderada."
-        },
-
-        {
-            nombre: "Press Arnold",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Variante para trabajar los hombros.",
-            series: "3 series × 10 repeticiones",
-            explicacion: "Comienza con las manos frente al rostro y gira las palmas mientras elevas las mancuernas.",
-            consejo: "Controla la rotación."
-        },
-
-        {
-            nombre: "Face Pull",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja hombros posteriores y espalda alta.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Lleva la cuerda hacia el rostro manteniendo los codos elevados.",
-            consejo: "No utilices impulso."
-        }
-
-    ],
-
-
-    viernes: [
-
-        {
-            nombre: "Curl de bíceps",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece los bíceps.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Flexiona los codos llevando las mancuernas hacia los hombros y baja lentamente.",
-            consejo: "Evita balancear el cuerpo."
-        },
-
-        {
-            nombre: "Curl martillo",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja bíceps y antebrazos.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Mantén las palmas enfrentadas y flexiona los codos para elevar las mancuernas.",
-            consejo: "Mantén los codos cerca del torso."
-        },
-
-        {
-            nombre: "Extensión de tríceps",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece los tríceps.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Extiende los brazos contra la resistencia manteniendo los codos controlados.",
-            consejo: "Evita mover excesivamente los hombros."
-        },
-
-        {
-            nombre: "Tríceps en polea",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio de aislamiento para tríceps.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Sujeta la polea y empuja hacia abajo hasta extender los brazos. Regresa lentamente.",
-            consejo: "Mantén los codos cerca del cuerpo."
-        },
-
-        {
-            nombre: "Crunch en máquina",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabaja la musculatura abdominal.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Flexiona el torso hacia adelante utilizando principalmente el abdomen.",
-            consejo: "No hagas movimientos bruscos."
-        },
-
-        {
-            nombre: "Plancha",
+            nombre: "Plancha con toques de hombro",
             imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece el abdomen y mejora la estabilidad.",
-            series: "3 series × 30 segundos",
-            explicacion: "Apoya los antebrazos y las puntas de los pies. Mantén el cuerpo completamente alineado.",
-            consejo: "Mantén el abdomen contraído."
+            descripcion: "Core y hombros bajo demanda metabólica.",
+            series: "3 series × 20 toques totales",
+            explicacion: "En posición de plancha alta, levanta una mano y toca el hombro opuesto sin mover la cadera de lado a lado.",
+            consejo: "Separa los pies para ganar mayor equilibrio y control."
+        },
+        {
+            nombre: "Sombras de boxeo / Golpeos rápidos",
+            imagen: "https://images.unsplash.com/photo-1517838277536-f5f99be5014c?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Cardio continuo para el torso superior y hombros.",
+            series: "4 series × 1 minuto",
+            explicacion: "Lanza combinaciones de jabs y cruces manteniendo una guardia atlética y girando ligeramente el torso.",
+            consejo: "Respira al soltar cada golpe para regular el ritmo cardíaco."
         }
-
+    ],
+    jueves: [
+        {
+            nombre: "Salto a la cuerda (o salto simulado)",
+            imagen: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Uno de los ejercicios más efectivos para quemar grasa.",
+            series: "5 series × 1 minuto",
+            explicacion: "Salta sobre la cuerda manteniendo los codos pegados a los costados y girando las muñecas de forma continua.",
+            consejo: "Saltos pequeños y controlados protegen mejor los tobillos."
+        },
+        {
+            nombre: "Paso de patinador (Skater Jumps)",
+            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Salto lateral dinámico que estimula glúteos y resistencia.",
+            series: "3 series × 20 saltos totales",
+            explicacion: "Salta lateralmente hacia un lado cruzando la pierna opuesta por detrás, como un patinador de velocidad.",
+            consejo: "Amortigua cada salto con una flexión de cadera y rodilla."
+        },
+        {
+            nombre: "Abdominales en V / Crunch invertido",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Tonificación directa de la pared abdominal.",
+            series: "3 series × 15 repeticiones",
+            explicacion: "Acuéstate boca arriba y eleva piernas y torso al mismo tiempo intentando tocar los tobillos.",
+            consejo: "Controla la bajada para maximizar el tiempo bajo tensión."
+        }
+    ],
+    viernes: [
+        {
+            nombre: "Circuito HIIT Final",
+            imagen: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Vaciado de glucógeno y gasto calórico prolongado.",
+            series: "4 vueltas: 30s trabajo / 15s descanso",
+            explicacion: "Realiza en secuencia burpees, sentadillas con salto y plancha dinámica sin descansos intermedios.",
+            consejo: "Da el máximo esfuerzo en los 30 segundos de actividad."
+        },
+        {
+            nombre: "Plancha isométrica final",
+            imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Cierre de fuerza y resistencia isométrica para el core.",
+            series: "3 series × 45 segundos",
+            explicacion: "Apoya los antebrazos, aprieta los glúteos y mantén la columna totalmente recta sin que caiga la cadera.",
+            consejo: "Mantén una respiración profunda y constante."
+        }
     ]
-
 };
 
+// 2. OBJETIVO: SUBIR DE PESO / GANAR MASA MUSCULAR (HIPERTROFIA Y FUERZA)
+const rutinasSubir = {
+    lunes: [
+        {
+            nombre: "Press de banca con barra o mancuernas",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Constructor masivo del pectoral y tríceps.",
+            series: "4 series × 8-10 repeticiones (descanso: 90s)",
+            explicacion: "Acostado en el banco, desciende la carga de forma controlada hasta rozar la parte media del pecho y empuja con potencia.",
+            consejo: "Aprieta las escápulas hacia atrás para proteger los hombros."
+        },
+        {
+            nombre: "Press inclinado con mancuernas",
+            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Focalizado en la porción clavicular (pecho superior).",
+            series: "4 series × 10 repeticiones",
+            explicacion: "En banco inclinado a 30°, empuja las mancuernas verticalmente y desciende sintiendo el estiramiento muscular.",
+            consejo: "Baja en 2 o 3 segundos para aumentar la hipertrofia."
+        },
+        {
+            nombre: "Fondos en paralelas o banco con peso",
+            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Excelente constructor de tríceps y pecho inferior.",
+            series: "3 series × 8-12 repeticiones",
+            explicacion: "Baja el cuerpo inclinando ligeramente el torso hacia el frente hasta que los codos queden a 90 grados y empuja con fuerza.",
+            consejo: "Evita movimientos bruscos en el punto más bajo."
+        }
+    ],
+    martes: [
+        {
+            nombre: "Peso muerto convencional",
+            imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Ejercicio rey para ganar fuerza en toda la cadena posterior.",
+            series: "4 series × 6-8 repeticiones (descanso: 2 min)",
+            explicacion: "Con la barra pegada a las espinillas, eleva la carga empujando el suelo con las piernas y bloqueando la cadera con los glúteos arriba.",
+            consejo: "La espalda nunca debe redondearse; mantén el pecho orgulloso."
+        },
+        {
+            nombre: "Remo pesado con barra o mancuerna",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Genera densidad y grosor en toda la espalda.",
+            series: "4 series × 8-10 repeticiones",
+            explicacion: "Con la espalda paralela o a 45 grados del suelo, tira de la barra hacia la cadera concentrando la fuerza en los dorsales.",
+            consejo: "Inicia el tirón con los codos, no con las manos."
+        },
+        {
+            nombre: "Curl de bíceps con barra Z",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Aislamiento directo para el crecimiento de los brazos.",
+            series: "3 series × 10-12 repeticiones",
+            explicacion: "Flexiona los brazos levantando la barra hacia el pecho sin balancear el torso ni despegar los codos.",
+            consejo: "Evita usar la inercia del cuerpo para levantar el peso."
+        }
+    ],
+    miercoles: [
+        {
+            nombre: "Sentadilla trasera pesada",
+            imagen: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Constructor primordial de masa muscular en cuádriceps y glúteos.",
+            series: "4 series × 8 repeticiones (descanso: 2 min)",
+            explicacion: "Desciende de forma profunda manteniendo el torso estable y rompiendo el paralelo antes de subir con potencia.",
+            consejo: "Empuja apoyándote en todo el pie, repartiendo el peso homogéneamente."
+        },
+        {
+            nombre: "Prensa de piernas con carga progresiva",
+            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Añade volumen masivo a los cuádriceps con seguridad para la espalda.",
+            series: "4 series × 10-12 repeticiones",
+            explicacion: "Flexiona las rodillas hacia el pecho sin despegar la zona lumbar del respaldo y empuja la plataforma de vuelta.",
+            consejo: "Nunca bloquees las rodillas al llegar arriba."
+        },
+        {
+            nombre: "Curl femoral tumbado o sentado",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Aislamiento para los isquiosurales.",
+            series: "3 series × 10-12 repeticiones",
+            explicacion: "Flexiona las rodillas contrayendo los isquiotibiales con fuerza y aguanta 1 segundo la contracción.",
+            consejo: "Baja la carga de forma lenta y controlada."
+        }
+    ],
+    jueves: [
+        {
+            nombre: "Press militar overhead (Hombros)",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Construye unos hombros amplios y fuertes.",
+            series: "4 series × 8 repeticiones",
+            explicacion: "De pie o sentado, empuja la barra o mancuernas desde los hombros hacia arriba de la cabeza.",
+            consejo: "Aprieta el abdomen y los glúteos para no arquear la columna."
+        },
+        {
+            nombre: "Elevaciones laterales con sobrecarga progresiva",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Aísla la cabeza lateral del deltoides para dar aspecto de V.",
+            series: "4 series × 12-15 repeticiones",
+            explicacion: "Eleva las mancuernas hacia los lados hasta la altura paralela de los hombros.",
+            consejo: "Mantén una ligera flexión en los codos."
+        },
+        {
+            nombre: "Press francés para tríceps",
+            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Estimula la cabeza larga del tríceps.",
+            series: "3 series × 10-12 repeticiones",
+            explicacion: "Acostado, flexiona los codos llevando la barra hacia la frente y extiéndelos nuevamente.",
+            consejo: "Mantén los codos apuntando siempre al techo."
+        }
+    ],
+    viernes: [
+        {
+            nombre: "Sentadilla búlgara con mancuernas",
+            imagen: "https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Desarrollo unilateral de glúteo y cuádriceps.",
+            series: "3 series × 8-10 por pierna",
+            explicacion: "Apoya el empeine trasero en un banco y desciende con la pierna frontal hasta los 90°.",
+            consejo: "El 80% de la fuerza debe salir de la pierna delantera."
+        },
+        {
+            nombre: "Hip Thrust (Empuje de cadera)",
+            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
+            descripcion: "El ejercicio más eficaz para hipertrofia de glúteos.",
+            series: "4 series × 10 repeticiones",
+            explicacion: "Apoya la parte alta de la espalda en un banco, coloca la barra sobre la pelvis y eleva la cadera con los glúteos.",
+            consejo: "Haz una pausa de 2 segundos en la posición de máxima contracción."
+        }
+    ]
+};
 
+// 3. OBJETIVO: DEFINIR / MANTENER (TONIFICACIÓN, CALIDAD MUSCULAR Y BALANCE)
+const rutinasDefinir = {
+    lunes: [
+        {
+            nombre: "Press de banca con mancuernas en tempo",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Mantiene la musculatura y optimiza el gasto calórico.",
+            series: "4 series × 12 repeticiones (descanso: 60s)",
+            explicacion: "Baja las mancuernas de manera pausada y controlada, empuja concentrando el trabajo en el pecho.",
+            consejo: "Mantén la tensión continua durante todo el recorrido."
+        },
+        {
+            nombre: "Flexiones con palmada o pausa",
+            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Densidad y tono muscular usando tu propio peso corporal.",
+            series: "3 series × 12-15 repeticiones",
+            explicacion: "Desciende hasta rozar el suelo, aguanta un instante abajo y empuja con fuerza para subir.",
+            consejo: "No dejes caer el abdomen ni la cadera."
+        },
+        {
+            nombre: "Extensiones de tríceps en polea",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Definición y tono para la parte trasera de los brazos.",
+            series: "3 series × 15 repeticiones",
+            explicacion: "Empuja la cuerda o barra hacia abajo separándola en el punto final.",
+            consejo: "Inmoviliza los codos al costado del cuerpo."
+        }
+    ],
+    martes: [
+        {
+            nombre: "Dominadas o Jalón al pecho",
+            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Define la espalda y da simetría al torso.",
+            series: "4 series × 10-12 repeticiones",
+            explicacion: "Tira de la barra hacia la parte superior del pecho juntando las escápulas y controlando la vuelta.",
+            consejo: "Evita balancear el torso."
+        },
+        {
+            nombre: "Remo en máquina o polea baja",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Trabajo continuo de densidad para la espalda media.",
+            series: "3 series × 12-15 repeticiones",
+            explicacion: "Tira del agarre hacia el abdomen y regresa sintiendo el estiramiento dorsal.",
+            consejo: "Mantén el pecho levantado durante el tirón."
+        },
+        {
+            nombre: "Curl martillo cruzado",
+            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Tonifica bíceps y braquial anterior.",
+            series: "3 series × 12 repeticiones por lado",
+            explicacion: "Con las palmas hacia adentro, sube la mancuerna en dirección hacia el pecho opuesto.",
+            consejo: "Movimiento controlado sin balanceo."
+        }
+    ],
+    miercoles: [
+        {
+            nombre: "Zancadas dinámicas con peso ligero",
+            imagen: "https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Tonificación general y equilibrio para todo el tren inferior.",
+            series: "4 series × 12 por pierna",
+            explicacion: "Avanza paso a paso descendiendo controladamente la rodilla trasera hacia el suelo.",
+            consejo: "Mantén el tronco totalmente recto."
+        },
+        {
+            nombre: "Prensa en superserie con sentadillas al aire",
+            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Tensión muscular sostenida para estimular la tonificación.",
+            series: "3 series × 15 de prensa + 15 sentadillas",
+            explicacion: "Termina la serie en prensa y pasa sin pausa a hacer 15 sentadillas usando tu propio peso.",
+            consejo: "Regula la respiración en todo momento."
+        },
+        {
+            nombre: "Elevaciones de gemelos continuas",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Moldea la parte inferior de las piernas.",
+            series: "4 series × 20 repeticiones",
+            explicacion: "Eleva los talones con una pausa de 1 segundo arriba y desciende lento.",
+            consejo: "Evita el rebote."
+        }
+    ],
+    jueves: [
+        {
+            nombre: "Press de hombros Arnold",
+            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Trabajo completo para todas las caras del hombro.",
+            series: "3 series × 12 repeticiones",
+            explicacion: "Comienza con las mancuernas frente a la barbilla, gira los brazos hacia afuera y empuja arriba.",
+            consejo: "Realiza el giro de manera suave y sincronizada."
+        },
+        {
+            nombre: "Face Pull con cuerda",
+            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Postura, salud articular y deltoides posterior.",
+            series: "3 series × 15 repeticiones",
+            explicacion: "Tira de la cuerda hacia los ojos abriendo los codos al final del movimiento.",
+            consejo: "Concéntrate en la contracción de la espalda alta."
+        },
+        {
+            nombre: "Circuito de abdomen y plancha",
+            imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Marcación y firmeza del core.",
+            series: "3 series: 15 crunches + 30s de plancha",
+            explicacion: "Haz los encogimientos abdominales y colócate de inmediato en plancha estática.",
+            consejo: "Mantén el ombligo hacia adentro."
+        }
+    ],
+    viernes: [
+        {
+            nombre: "Puente de glúteos unilateral + Abductores",
+            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Focalizado en glúteos y tonificación posterior.",
+            series: "3 series × 12 repeticiones",
+            explicacion: "Eleva la pelvis a una sola pierna y aprieta el glúteo en el punto más alto.",
+            consejo: "No arquees la zona lumbar, la fuerza sale de la cadera."
+        },
+        {
+            nombre: "Cardio final en intervalos",
+            imagen: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80",
+            descripcion: "Cierre activo para mantener un porcentaje de grasa óptimo.",
+            series: "15 minutos de intervalos suaves y medios",
+            explicacion: "Trota o salta la cuerda durante 1 minuto rápido por 1 minuto de recuperación.",
+            consejo: "Enfócate en la regularidad del ritmo cardíaco."
+        }
+    ]
+};
 
 /* =========================================================
-   ELEMENTOS
+   ELEMENTOS Y VARIABLES DEL DOM
 ========================================================= */
+const contenedorEjercicios = document.getElementById("ejercicios");
+const tituloDia = document.getElementById("tituloDia");
+const botonesDias = document.querySelectorAll(".dia");
+const modal = document.getElementById("modal");
+const cerrarModal = document.getElementById("cerrarModal");
+const modalImagen = document.getElementById("modalImagen");
+const modalTitulo = document.getElementById("modalTitulo");
+const modalExplicacion = document.getElementById("modalExplicacion");
+const modalConsejo = document.getElementById("modalConsejo");
+const modalSeries = document.getElementById("modalSeries");
 
-const contenedorEjercicios =
-    document.getElementById("ejercicios");
-
-
-const tituloDia =
-    document.getElementById("tituloDia");
-
-
-const botonesDias =
-    document.querySelectorAll(".dia");
-
-
-const modal =
-    document.getElementById("modal");
-
-
-const cerrarModal =
-    document.getElementById("cerrarModal");
-
-
-const modalImagen =
-    document.getElementById("modalImagen");
-
-
-const modalTitulo =
-    document.getElementById("modalTitulo");
-
-
-const modalExplicacion =
-    document.getElementById("modalExplicacion");
-
-
-const modalConsejo =
-    document.getElementById("modalConsejo");
-
-
-const modalSeries =
-    document.getElementById("modalSeries");
-
-
-
-/* =========================================================
-   NOMBRES DE DÍAS
-========================================================= */
+let rutinaActual = rutinasDefinir;
+let diaSeleccionado = "lunes";
 
 const nombresDias = {
-
     lunes: "Lunes",
-
     martes: "Martes",
-
     miercoles: "Miércoles",
-
     jueves: "Jueves",
-
     viernes: "Viernes"
-
 };
 
-
-
 /* =========================================================
-   MOSTRAR EXPLICACIÓN
+   CARGAR DATOS DEL USUARIO (BASE DE DATOS Y URL)
 ========================================================= */
+async function inicializarRutina() {
+    const sesionUsuario = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+    let usuario = null;
 
-function mostrarExplicacion(ejercicio) {
+    if (sesionUsuario) {
+        try {
+            usuario = JSON.parse(sesionUsuario);
+        } catch (e) {
+            usuario = null;
+        }
+    }
 
-    modalImagen.src =
-        ejercicio.imagen;
+    const parametros = new URLSearchParams(window.location.search);
+    let peso = parametros.get("peso") || parametros.get("actual");
+    let estatura = parametros.get("estatura");
+    let tipo = parametros.get("tipo");
+    let objetivo = parametros.get("objetivo");
 
-    modalImagen.alt =
-        ejercicio.nombre;
+    // Si el usuario tiene sesión, buscar datos oficiales en MySQL
+    if (usuario && usuario.identificacion) {
+        try {
+            const res = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`);
+            if (res.ok) {
+                const datosBD = await res.json();
+                if (datosBD.peso) peso = datosBD.peso;
+                if (datosBD.altura) estatura = datosBD.altura;
+                if (datosBD.lugar_entrenamiento) tipo = datosBD.lugar_entrenamiento;
+                if (datosBD.objetivo) objetivo = datosBD.objetivo;
+            }
+        } catch (error) {
+            console.error("No se pudo cargar desde MySQL, usando parámetros locales:", error);
+        }
+    }
 
-    modalTitulo.textContent =
-        ejercicio.nombre;
+    // Mostrar datos en pantalla
+    document.getElementById("peso").textContent = peso ? `${peso} kg` : "--";
+    document.getElementById("estatura").textContent = estatura ? `${estatura} m` : "--";
+    document.getElementById("tipo").textContent = tipo === "gimnasio" ? "Gimnasio" : "En Casa";
 
-    modalExplicacion.textContent =
-        ejercicio.explicacion;
+    // Mapear y seleccionar la rutina adecuada
+    const metaTexto = document.getElementById("meta");
+    const tituloPrincipal = document.getElementById("encabezadoRutina");
 
-    modalConsejo.textContent =
-        ejercicio.consejo;
+    if (objetivo === "bajar_peso" || objetivo === "bajar") {
+        rutinaActual = rutinasBajar;
+        metaTexto.textContent = "Bajar de peso";
+        tituloPrincipal.textContent = "Rutina Metabólica & Quema de Grasa";
+    } else if (objetivo === "subir_peso" || objetivo === "subir") {
+        rutinaActual = rutinasSubir;
+        metaTexto.textContent = "Ganar masa";
+        tituloPrincipal.textContent = "Rutina de Fuerza & Hipertrofia";
+    } else {
+        rutinaActual = rutinasDefinir;
+        metaTexto.textContent = "Definir / Tono";
+        tituloPrincipal.textContent = "Rutina de Definición & Calidad Muscular";
+    }
 
-    modalSeries.textContent =
-        ejercicio.series;
-
-    modal.classList.add(
-        "activo"
-    );
-
-    document.body.style.overflow =
-        "hidden";
-
+    mostrarRutina(diaSeleccionado);
 }
 
+/* =========================================================
+   RENDERIZAR RUTINA DEL DÍA
+========================================================= */
+function mostrarRutina(dia) {
+    diaSeleccionado = dia;
 
+    botonesDias.forEach(b => b.classList.remove("activo"));
+    const botonActivo = document.querySelector(`.dia[data-dia="${dia}"]`);
+    if (botonActivo) botonActivo.classList.add("activo");
+
+    tituloDia.textContent = `Rutina del ${nombresDias[dia]}`;
+
+    const listaEjercicios = rutinaActual[dia] || [];
+    contenedorEjercicios.innerHTML = "";
+
+    if (listaEjercicios.length === 0) {
+        contenedorEjercicios.innerHTML = `
+            <p style="color:#aaa; text-align:center; grid-column:1/-1;">
+                Día de descanso activo o recuperación.
+            </p>
+        `;
+        return;
+    }
+
+    listaEjercicios.forEach((ejercicio, indice) => {
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "ejercicio";
+
+        tarjeta.innerHTML = `
+            <img src="${ejercicio.imagen}" alt="${ejercicio.nombre}" loading="lazy">
+            <div class="contenido">
+                <div class="numero">EJERCICIO ${indice + 1}</div>
+                <h3>${ejercicio.nombre}</h3>
+                <p>${ejercicio.descripcion}</p>
+                <div class="series">${ejercicio.series}</div>
+                <button class="boton-explicacion">Ver explicación</button>
+            </div>
+        `;
+
+        tarjeta.querySelector(".boton-explicacion").addEventListener("click", () => {
+            mostrarExplicacion(ejercicio);
+        });
+
+        contenedorEjercicios.appendChild(tarjeta);
+    });
+}
 
 /* =========================================================
-   CERRAR MODAL
+   MODAL DE EXPLICACIÓN
 ========================================================= */
+function mostrarExplicacion(ejercicio) {
+    modalImagen.src = ejercicio.imagen;
+    modalImagen.alt = ejercicio.nombre;
+    modalTitulo.textContent = ejercicio.nombre;
+    modalExplicacion.textContent = ejercicio.explicacion;
+    modalConsejo.textContent = ejercicio.consejo;
+    modalSeries.textContent = ejercicio.series;
+
+    modal.classList.add("activo");
+    document.body.style.overflow = "hidden";
+}
 
 function cerrarExplicacion() {
-
-    modal.classList.remove(
-        "activo"
-    );
-
-    document.body.style.overflow =
-        "";
-
+    modal.classList.remove("activo");
+    document.body.style.overflow = "";
 }
 
-
-cerrarModal.addEventListener(
-    "click",
-    cerrarExplicacion
-);
-
-
-modal.addEventListener(
-    "click",
-    function (event) {
-
-        if (
-            event.target === modal
-        ) {
-
-            cerrarExplicacion();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "Escape"
-        ) {
-
-            cerrarExplicacion();
-
-        }
-
-    }
-);
-
-
-
-/* =========================================================
-   MOSTRAR RUTINA
-========================================================= */
-
-function mostrarRutina(dia) {
-
-
-    botonesDias.forEach(
-        function (boton) {
-
-            boton.classList.remove(
-                "activo"
-            );
-
-        }
-    );
-
-
-    const botonSeleccionado =
-        document.querySelector(
-            `.dia[data-dia="${dia}"]`
-        );
-
-
-    if (botonSeleccionado) {
-
-        botonSeleccionado.classList.add(
-            "activo"
-        );
-
-    }
-
-
-    tituloDia.textContent =
-        "Rutina del " +
-        nombresDias[dia];
-
-
-    let ejercicios;
-
-
-    if (
-        tipoUsuario === "casa"
-    ) {
-
-        ejercicios =
-            casa[dia];
-
-    }
-
-    else {
-
-        ejercicios =
-            gym[dia];
-
-    }
-
-
-    contenedorEjercicios.innerHTML =
-        "";
-
-
-    if (
-        !ejercicios ||
-        ejercicios.length === 0
-    ) {
-
-        contenedorEjercicios.innerHTML =
-
-            `
-            <p style="
-                color:#aaa;
-                text-align:center;
-                grid-column:1/-1;
-            ">
-                No hay ejercicios disponibles.
-            </p>
-            `;
-
-        return;
-
-    }
-
-
-    ejercicios.forEach(
-        function (
-            ejercicio,
-            indice
-        ) {
-
-
-            const tarjeta =
-                document.createElement(
-                    "div"
-                );
-
-
-            tarjeta.className =
-                "ejercicio";
-
-
-            /* IMAGEN */
-
-            const imagen =
-                document.createElement(
-                    "img"
-                );
-
-
-            imagen.src =
-                ejercicio.imagen;
-
-
-            imagen.alt =
-                ejercicio.nombre;
-
-
-            /* CONTENIDO */
-
-            const contenido =
-                document.createElement(
-                    "div"
-                );
-
-
-            contenido.className =
-                "contenido";
-
-
-            /* NÚMERO */
-
-            const numero =
-                document.createElement(
-                    "div"
-                );
-
-
-            numero.className =
-                "numero";
-
-
-            numero.textContent =
-                "EJERCICIO " +
-                (indice + 1);
-
-
-            /* NOMBRE */
-
-            const nombre =
-                document.createElement(
-                    "h3"
-                );
-
-
-            nombre.textContent =
-                ejercicio.nombre;
-
-
-            /* DESCRIPCIÓN */
-
-            const descripcion =
-                document.createElement(
-                    "p"
-                );
-
-
-            descripcion.textContent =
-                ejercicio.descripcion;
-
-
-            /* SERIES */
-
-            const series =
-                document.createElement(
-                    "div"
-                );
-
-
-            series.className =
-                "series";
-
-
-            series.textContent =
-                ejercicio.series;
-
-
-            /* BOTÓN */
-
-            const botonExplicacion =
-                document.createElement(
-                    "button"
-                );
-
-
-            botonExplicacion.className =
-                "boton-explicacion";
-
-
-            botonExplicacion.textContent =
-                "Ver explicación";
-
-
-            botonExplicacion.addEventListener(
-                "click",
-                function () {
-
-                    mostrarExplicacion(
-                        ejercicio
-                    );
-
-                }
-            );
-
-
-            /* AGREGAR */
-
-            contenido.appendChild(
-                numero
-            );
-
-
-            contenido.appendChild(
-                nombre
-            );
-
-
-            contenido.appendChild(
-                descripcion
-            );
-
-
-            contenido.appendChild(
-                series
-            );
-
-
-            contenido.appendChild(
-                botonExplicacion
-            );
-
-
-            tarjeta.appendChild(
-                imagen
-            );
-
-
-            tarjeta.appendChild(
-                contenido
-            );
-
-
-            contenedorEjercicios.appendChild(
-                tarjeta
-            );
-
-        }
-    );
-
-}
-
-
-
-/* =========================================================
-   BOTONES DÍAS
-========================================================= */
-
-botonesDias.forEach(
-    function (boton) {
-
-        boton.addEventListener(
-            "click",
-            function () {
-
-                const dia =
-                    boton.dataset.dia;
-
-                mostrarRutina(
-                    dia
-                );
-
-            }
-        );
-
-    }
-);
-
-
-
-/* =========================================================
-   MOSTRAR LUNES
-========================================================= */
-
-mostrarRutina(
-    "lunes"
-);
-
+cerrarModal.addEventListener("click", cerrarExplicacion);
+
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) cerrarExplicacion();
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") cerrarExplicacion();
+});
+
+botonesDias.forEach(boton => {
+    boton.addEventListener("click", () => {
+        mostrarRutina(boton.dataset.dia);
+    });
+});
+
+// Arrancar proceso
+inicializarRutina();
 </script>
 
-
 </body>
-
 </html>
