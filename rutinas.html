@@ -62,7 +62,7 @@
 
         main {
             width: 90%;
-            max-width: 800px;
+            max-width: 820px;
             margin: 40px auto;
         }
 
@@ -150,31 +150,29 @@
             cursor: pointer;
         }
 
-        .desplegable-lesion {
-            background: #18231b;
+        /* CAJA DESPLEGABLE CON DETALLES ADAPTATIVOS */
+        .desplegable-adaptativo {
+            background: #17241a;
             border: 1px solid #28442e;
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 15px;
             display: none;
         }
 
-        .desplegable-lesion label {
-            font-size: 13px;
-            color: #ddd;
-            margin-bottom: 6px;
-            display: block;
+        .desplegable-adaptativo h4 {
+            color: var(--verde);
+            font-size: 15px;
+            margin-bottom: 15px;
         }
 
-        .desplegable-lesion select {
-            width: 100%;
-            padding: 12px;
-            background: #111;
-            border: 1px solid #2d5535;
-            border-radius: 6px;
-            color: white;
-            font-size: 14px;
-            outline: none;
+        .sub-bloque-amputacion {
+            display: none;
+            background: #121914;
+            border: 1px dashed #2d5535;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
         }
 
         .nota-pie {
@@ -245,7 +243,7 @@
 
             <div class="bloque-seccion">
                 <h3>1. Perfil y medidas físicas</h3>
-                <p>Datos individuales para estructurar tu entrenamiento.</p>
+                <p>Datos individuales para calibrar tus cargas.</p>
 
                 <div class="campo">
                     <label for="genero">Género *</label>
@@ -274,23 +272,23 @@
                 <p>¿Qué meta fitness deseas priorizar en tu plan?</p>
                 <div class="campo">
                     <select id="objetivo" required>
-                        <option value="Aumento de masa muscular">Aumento de masa muscular</option>
-                        <option value="Pérdida de grasa">Pérdida de grasa</option>
+                        <option value="Aumento de masa muscular">Aumento de masa muscular (Hipertrofia)</option>
+                        <option value="Pérdida de grasa">Pérdida de grasa y definición</option>
                         <option value="Fuerza y potencia">Fuerza y potencia</option>
-                        <option value="Resistencia">Resistencia</option>
-                        <option value="Salud y movilidad">Salud y movilidad</option>
+                        <option value="Resistencia">Resistencia cardiovascular</option>
+                        <option value="Salud y movilidad">Salud, postura y movilidad</option>
                     </select>
                 </div>
             </div>
 
             <div class="bloque-seccion">
                 <h3>3. Lugar y equipamiento disponible</h3>
-                <p>Adaptado al entorno donde tú entrenas.</p>
+                <p>Adaptado al entorno real donde entrenas.</p>
                 <div class="campo">
                     <select id="lugar" required>
-                        <option value="Gimnasio">Gimnasio</option>
-                        <option value="Casa con implementos">Casa con implementos</option>
-                        <option value="Casa sin implementos">Casa sin implementos</option>
+                        <option value="Gimnasio">Gimnasio (Máquinas y peso libre)</option>
+                        <option value="Casa con implementos">Casa con mancuernas / bandas</option>
+                        <option value="Casa sin implementos">Casa sin implementos (Peso corporal)</option>
                         <option value="Parque / Barras">Parque / Barras</option>
                     </select>
                 </div>
@@ -298,12 +296,12 @@
 
             <div class="bloque-seccion">
                 <h3>4. Días de entrenamiento</h3>
-                <p>Escoge cuántos días vas a entrenar tú semanalmente:</p>
+                <p>Escoge cuántos días vas a entrenar semanalmente:</p>
                 <div class="campo">
                     <select id="dias" required>
-                        <option value="1">1 día por semana (Cuerpo completo)</option>
-                        <option value="2">2 días por semana (Tren superior / Tren inferior)</option>
-                        <option value="3">3 días por semana (Superior / Inferior / Cardio y Core)</option>
+                        <option value="1">1 día por semana</option>
+                        <option value="2">2 días por semana</option>
+                        <option value="3">3 días por semana</option>
                         <option value="4">4 días por semana</option>
                         <option value="5" selected>5 días por semana</option>
                         <option value="6">6 días por semana</option>
@@ -314,7 +312,7 @@
 
             <div class="bloque-seccion">
                 <h3>5. Nivel de experiencia</h3>
-                <p>Define la intensidad de tus descansos y series.</p>
+                <p>Define la intensidad y volumen del plan.</p>
                 <div class="campo">
                     <select id="intensidad" required>
                         <option value="Principiante">Principiante</option>
@@ -324,31 +322,81 @@
                 </div>
             </div>
 
+            <!-- 6. LESIONES, DISCAPACIDAD Y CONDICIONES ESPECÍFICAS -->
             <div class="bloque-seccion">
-                <h3>6. Lesiones, adaptaciones o falta de extremidades</h3>
-                <p>¿Tienes alguna condición articular o física personal?</p>
+                <h3>6. Lesiones, adaptaciones, prótesis y movilidad</h3>
+                <p>¿Tienes alguna condición articular, discapacidad o limitación física?</p>
 
                 <div class="opciones-lesion">
                     <label class="caja-radio">
-                        <input type="radio" name="opcionLesion" id="radioSinLesion" value="no" checked onchange="alternarLesion()">
-                        <span>Sin lesiones</span>
+                        <input type="radio" name="opcionLesion" id="radioSinLesion" value="no" checked onchange="alternarSeccionAdaptativa()">
+                        <span>Sin limitaciones</span>
                     </label>
                     <label class="caja-radio">
-                        <input type="radio" name="opcionLesion" id="radioConLesion" value="si" onchange="alternarLesion()">
-                        <span>Presento lesiones / adaptaciones</span>
+                        <input type="radio" name="opcionLesion" id="radioConLesion" value="si" onchange="alternarSeccionAdaptativa()">
+                        <span>Presento lesión / condición / amputación</span>
                     </label>
                 </div>
 
-                <div class="desplegable-lesion" id="cajaSeleccionLesion">
-                    <label for="selectZonaLesion">Condición o extremidad a cuidar:</label>
-                    <select id="selectZonaLesion">
-                        <option value="Rodilla">Dolor / Lesión de rodilla</option>
-                        <option value="Hombro">Molestia en hombro / Manguito rotador</option>
-                        <option value="Espalda">Dolor lumbar / Hernia de espalda</option>
-                        <option value="Muñeca">Molestia en muñeca / Codo</option>
-                        <option value="Falta de extremidad superior">Falta de extremidad superior (Brazo / Mano)</option>
-                        <option value="Falta de extremidad inferior">Falta de extremidad inferior (Pierna / Pie)</option>
-                    </select>
+                <!-- FORMULARIO DETALLADO ADAPTATIVO -->
+                <div class="desplegable-adaptativo" id="cajaAdaptativa">
+                    <h4>Configuración de Adaptación Biomecánica</h4>
+
+                    <div class="campo">
+                        <label for="tipoDiscapacidad">Condición principal:</label>
+                        <select id="tipoDiscapacidad" onchange="actualizarCamposAmputacion()">
+                            <option value="ninguna">Dolor articular común (rodilla, espalda, hombro)</option>
+                            <option value="amputacion_superior">Falta de extremidad superior (Brazo / Mano)</option>
+                            <option value="amputacion_inferior">Falta de extremidad inferior (Pierna / Pie)</option>
+                            <option value="movilidad_reducida_superior">Tengo ambas extremidades superiores pero una tiene movilidad reducida</option>
+                            <option value="movilidad_reducida_inferior">Tengo ambas extremidades inferiores pero una tiene dificultad para mover</option>
+                        </select>
+                    </div>
+
+                    <div class="campo" id="campoLesionArticular">
+                        <label for="selectZonaLesion">Zona articular con molestia:</label>
+                        <select id="selectZonaLesion">
+                            <option value="ninguna">Sin molestias articulares</option>
+                            <option value="Rodilla">Dolor / Lesión de rodilla</option>
+                            <option value="Hombro">Molestia en hombro / Manguito rotador</option>
+                            <option value="Espalda">Dolor lumbar / Hernia discal</option>
+                            <option value="Muñeca">Molestia en muñeca / Codo</option>
+                            <option value="Tobillo">Esguince / Inestabilidad de tobillo</option>
+                        </select>
+                    </div>
+
+                    <!-- SUB-BLOQUE CONDICIONAL PARA AMPUTACIÓN Y PRÓTESIS -->
+                    <div class="sub-bloque-amputacion" id="subBloqueAmputacion">
+                        <div class="campo">
+                            <label for="nivelAmputacion">Nivel de la amputación o afección:</label>
+                            <select id="nivelAmputacion">
+                                <option value="bajo_rodilla">Bajo rodilla (Transtibial)</option>
+                                <option value="sobre_rodilla">Sobre rodilla (Transfemoral)</option>
+                                <option value="pie_tobillo">Pie o tobillo</option>
+                                <option value="bajo_codo">Bajo codo (Transradial)</option>
+                                <option value="sobre_codo">Sobre codo (Transhumeral)</option>
+                                <option value="mano_muneca">Mano o dedos</option>
+                                <option value="otro">Desarticulación o condición congénita</option>
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="usaProtesis">¿Cuentas con prótesis para el entrenamiento?</label>
+                            <select id="usaProtesis">
+                                <option value="si">Sí, utilizo prótesis activa para entrenar</option>
+                                <option value="no" selected>No utilizo prótesis (Entreno sin ella)</option>
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="detalleMovilidad">Capacidad motriz y rango:</label>
+                            <select id="detalleMovilidad">
+                                <option value="fuerza_parcial">Movilidad parcial pero con menor fuerza</option>
+                                <option value="apoyo_nulo">Sin apoyo o movimiento en esa zona</option>
+                                <option value="sensibilidad_reducida">Movilidad normal con rigidez o molestia leve</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -381,9 +429,24 @@
     const params = new URLSearchParams(window.location.search);
     const forzarEdicion = params.get("editar") === "1";
 
-    function alternarLesion() {
-        const tieneLesion = document.getElementById("radioConLesion").checked;
-        document.getElementById("cajaSeleccionLesion").style.display = tieneLesion ? "block" : "none";
+    function alternarSeccionAdaptativa() {
+        const activo = document.getElementById("radioConLesion").checked;
+        document.getElementById("cajaAdaptativa").style.display = activo ? "block" : "none";
+        actualizarCamposAmputacion();
+    }
+
+    function actualizarCamposAmputacion() {
+        const tipo = document.getElementById("tipoDiscapacidad").value;
+        const sub = document.getElementById("subBloqueAmputacion");
+        const articular = document.getElementById("campoLesionArticular");
+
+        if (tipo.includes("amputacion") || tipo.includes("movilidad_reducida")) {
+            sub.style.display = "block";
+            articular.style.display = "none";
+        } else {
+            sub.style.display = "none";
+            articular.style.display = "block";
+        }
     }
 
     async function verificarPerfilUsuario() {
@@ -449,10 +512,15 @@
             }
             if (datos.intensidad) document.getElementById("intensidad").value = datos.intensidad;
 
-            if (datos.lesion && datos.lesion !== "ninguna") {
+            // Datos adaptativos
+            if ((datos.lesion && datos.lesion !== "ninguna") || (datos.tipo_discapacidad && datos.tipo_discapacidad !== "ninguna")) {
                 document.getElementById("radioConLesion").checked = true;
-                document.getElementById("selectZonaLesion").value = datos.lesion;
-                alternarLesion();
+                if (datos.tipo_discapacidad) document.getElementById("tipoDiscapacidad").value = datos.tipo_discapacidad;
+                if (datos.lesion) document.getElementById("selectZonaLesion").value = datos.lesion;
+                if (datos.nivel_amputacion) document.getElementById("nivelAmputacion").value = datos.nivel_amputacion;
+                if (datos.usa_protesis) document.getElementById("usaProtesis").value = datos.usa_protesis;
+                if (datos.detalle_movilidad) document.getElementById("detalleMovilidad").value = datos.detalle_movilidad;
+                alternarSeccionAdaptativa();
             }
         } catch (e) {}
     }
@@ -465,10 +533,15 @@
         msgError.style.display = "none";
 
         btn.disabled = true;
-        btn.textContent = "Guardando tu plan...";
+        btn.textContent = "Guardando tu plan adaptado...";
 
-        const tieneLesion = document.getElementById("radioConLesion").checked;
-        const valorLesion = tieneLesion ? document.getElementById("selectZonaLesion").value : "ninguna";
+        const tieneAdaptacion = document.getElementById("radioConLesion").checked;
+        const tipoDiscapacidad = tieneAdaptacion ? document.getElementById("tipoDiscapacidad").value : "ninguna";
+        const valorLesion = (tieneAdaptacion && tipoDiscapacidad === "ninguna") ? document.getElementById("selectZonaLesion").value : "ninguna";
+        
+        const nivelAmputacion = tieneAdaptacion ? document.getElementById("nivelAmputacion").value : "ninguno";
+        const usaProtesis = tieneAdaptacion ? document.getElementById("usaProtesis").value : "no";
+        const detalleMovilidad = tieneAdaptacion ? document.getElementById("detalleMovilidad").value : "normal";
         const diasSeleccionados = parseInt(document.getElementById("dias").value, 10);
 
         const payload = {
@@ -479,7 +552,11 @@
             lugar_entrenamiento: document.getElementById("lugar").value,
             dias_entreno: diasSeleccionados,
             intensidad: document.getElementById("intensidad").value,
-            lesion: valorLesion
+            lesion: valorLesion,
+            tipo_discapacidad: tipoDiscapacidad,
+            nivel_amputacion: nivelAmputacion,
+            usa_protesis: usaProtesis,
+            detalle_movilidad: detalleMovilidad
         };
 
         try {
@@ -508,7 +585,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-        alternarLesion();
+        alternarSeccionAdaptativa();
         verificarPerfilUsuario();
     });
 </script>

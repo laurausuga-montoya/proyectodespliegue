@@ -372,7 +372,7 @@ app.get("/empresa/:id/ventas", function (req, res) {
 });
 
 /* =========================================
-   PERFIL FÍSICO / RUTINA AISLADA POR USUARIO
+   PERFIL FÍSICO Y DISCAPACIDAD (USUARIO)
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const identificacion = String(req.params.identificacion || "").trim();
@@ -382,7 +382,8 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     }
 
     const sql = `
-        SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
+        SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno,
+               tipo_discapacidad, nivel_amputacion, usa_protesis, detalle_movilidad
         FROM usuarios 
         WHERE identificacion = ? 
         LIMIT 1
@@ -391,11 +392,13 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
             console.error("❌ Error consultando datos físicos:", error);
-            const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
+            const fallbackSql = `SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno FROM usuarios WHERE identificacion = ? LIMIT 1`;
             return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
                 if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-                res2[0].genero = "No especificado";
-                res2[0].dias_entreno = 5;
+                res2[0].tipo_discapacidad = 'ninguna';
+                res2[0].nivel_amputacion = 'ninguno';
+                res2[0].usa_protesis = 'no';
+                res2[0].detalle_movilidad = 'normal';
                 res.json(res2[0]);
             });
         }
@@ -416,11 +419,19 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         return res.status(400).json({ error: "Identificación de usuario requerida." });
     }
 
-    let { genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
+    let { 
+        genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno,
+        tipo_discapacidad, nivel_amputacion, usa_protesis, detalle_movilidad 
+    } = req.body;
 
     const generoFinal = genero ? String(genero).trim() : 'No especificado';
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
     const diasFinal = (dias_entreno !== null && dias_entreno !== undefined) ? parseInt(dias_entreno, 10) : 5;
+
+    const tipoDiscapacidadFinal = tipo_discapacidad ? String(tipo_discapacidad).trim() : 'ninguna';
+    const nivelAmputacionFinal = nivel_amputacion ? String(nivel_amputacion).trim() : 'ninguno';
+    const usaProtesisFinal = usa_protesis ? String(usa_protesis).trim() : 'no';
+    const detalleMovilidadFinal = detalle_movilidad ? String(detalle_movilidad).trim() : 'normal';
 
     let alturaFinal = altura ? Number(altura) : null;
     if (alturaFinal && alturaFinal > 3) {
@@ -429,7 +440,8 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     const sql = `
         UPDATE usuarios 
-        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
+        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?,
+            tipo_discapacidad = ?, nivel_amputacion = ?, usa_protesis = ?, detalle_movilidad = ?
         WHERE identificacion = ?
         LIMIT 1
     `;
@@ -444,22 +456,26 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
             objetivo || null, 
             lugar_entrenamiento || null, 
             intensidad || null, 
-            diasFinal, 
+            diasFinal,
+            tipoDiscapacidadFinal,
+            nivelAmputacionFinal,
+            usaProtesisFinal,
+            detalleMovilidadFinal,
             identificacion
         ], 
         function (error, resultado) {
             if (error) {
-                // Si la columna género aún no existe en MySQL, guardar sin ella de respaldo
-                if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('genero')) {
-                    const fallbackSql = `
+                // Fallback si alguna columna aún no fue añadida en MySQL
+                if (error.code === 'ER_BAD_FIELD_ERROR') {
+                    const sqlFallback = `
                         UPDATE usuarios 
-                        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
+                        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
                         WHERE identificacion = ?
                         LIMIT 1
                     `;
-                    return conexion.query(fallbackSql, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, diasFinal, identificacion], function(err2) {
+                    return conexion.query(sqlFallback, [generoFinal, peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, diasFinal, identificacion], function(err2) {
                         if (err2) return res.status(500).json({ error: err2.message });
-                        return res.json({ mensaje: "Guardado sin columna género.", dias_entreno: diasFinal });
+                        return res.json({ mensaje: "Guardado en modo compatibilidad.", dias_entreno: diasFinal });
                     });
                 }
 
