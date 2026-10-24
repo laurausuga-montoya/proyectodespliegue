@@ -121,7 +121,6 @@
             border-color: var(--verde);
         }
 
-        /* OPCIONES DE LESIÓN */
         .opciones-lesion {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -215,7 +214,7 @@
             display: none;
         }
 
-        /* VISTA DE RUTINA GENERADA */
+        /* RUTINA GENERADA */
         .vista-rutina-generada {
             display: none;
         }
@@ -264,7 +263,6 @@
 
 <main>
 
-    <!-- FORMULARIO DE PERSONALIZACIÓN -->
     <div class="tarjeta-formulario" id="contenedorFormulario">
         <form id="formRutinas">
 
@@ -288,11 +286,11 @@
                 <p>¿Qué meta fitness deseas priorizar en tu plan?</p>
                 <div class="campo">
                     <select id="objetivo" required>
-                        <option value="Aumento de masa muscular (Hipertrofia)">Aumento de masa muscular (Hipertrofia)</option>
-                        <option value="Pérdida de grasa y definición">Pérdida de grasa y definición</option>
-                        <option value="Fuerza máxima y potencia">Fuerza máxima y potencia</option>
-                        <option value="Resistencia y acondicionamiento">Resistencia y acondicionamiento</option>
-                        <option value="Salud y movilidad general">Salud y movilidad general</option>
+                        <option value="Aumento de masa muscular">Aumento de masa muscular</option>
+                        <option value="Pérdida de grasa">Pérdida de grasa</option>
+                        <option value="Fuerza y potencia">Fuerza y potencia</option>
+                        <option value="Resistencia">Resistencia</option>
+                        <option value="Salud y movilidad">Salud y movilidad</option>
                     </select>
                 </div>
             </div>
@@ -302,23 +300,26 @@
                 <p>Diseñaremos los ejercicios de acuerdo al entorno donde entrenes.</p>
                 <div class="campo">
                     <select id="lugar" required>
-                        <option value="Gimnasio comercial (Pesas y máquinas completas)">Gimnasio comercial (Pesas y máquinas completas)</option>
-                        <option value="Casa con mancuernas y bandas">Casa con mancuernas y bandas</option>
-                        <option value="Casa únicamente con peso corporal (Calistenia)">Casa únicamente con peso corporal (Calistenia)</option>
-                        <option value="Parque de calistenia / Barras">Parque de calistenia / Barras</option>
+                        <option value="Gimnasio">Gimnasio</option>
+                        <option value="Casa con implementos">Casa con implementos</option>
+                        <option value="Casa sin implementos">Casa sin implementos</option>
+                        <option value="Parque / Barras">Parque / Barras</option>
                     </select>
                 </div>
             </div>
 
+            <!-- 4. DIAS LIMPIOS SIN PULL / ALTA FRECUENCIA -->
             <div class="bloque-seccion">
-                <h3>4. Frecuencia semanal</h3>
+                <h3>4. Días de entrenamiento</h3>
                 <p>¿Cuántos días a la semana dispones para entrenar?</p>
                 <div class="campo">
                     <select id="dias" required>
-                        <option value="3">3 días por semana (Cuerpo completo / Full Body)</option>
-                        <option value="4">4 días por semana (Torso / Pierna)</option>
-                        <option value="5" selected>5 días por semana (Push / Pull / Leg)</option>
-                        <option value="6">6 días por semana (Frecuencia alta)</option>
+                        <option value="2">2 días por semana</option>
+                        <option value="3">3 días por semana</option>
+                        <option value="4">4 días por semana</option>
+                        <option value="5" selected>5 días por semana</option>
+                        <option value="6">6 días por semana</option>
+                        <option value="7">Todos los días</option>
                     </select>
                 </div>
             </div>
@@ -328,9 +329,9 @@
                 <p>Selecciona tu nivel para definir las series y tiempos de descanso.</p>
                 <div class="campo">
                     <select id="intensidad" required>
-                        <option value="Principiante">Principiante (Menos de 6 meses constantes)</option>
-                        <option value="Intermedio" selected>Intermedio (6 meses a 2 años)</option>
-                        <option value="Avanzado">Avanzado (Más de 2 años continuos)</option>
+                        <option value="Principiante">Principiante</option>
+                        <option value="Intermedio" selected>Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
                     </select>
                 </div>
             </div>
@@ -353,12 +354,12 @@
                 <div class="desplegable-lesion" id="cajaSeleccionLesion">
                     <label for="selectZonaLesion">Zona a cuidar:</label>
                     <select id="selectZonaLesion">
-                        <option value="Dolor / Lesión de rodilla">Dolor / Lesión de rodilla</option>
-                        <option value="Molestia en hombro / Manguito rotador">Molestia en hombro / Manguito rotador</option>
-                        <option value="Dolor lumbar o hernia de espalda">Dolor lumbar o hernia de espalda</option>
-                        <option value="Molestia en muñeca o antebrazo">Molestia en muñeca o antebrazo</option>
-                        <option value="Tendinitis en codo">Tendinitis en codo</option>
-                        <option value="Esguince o debilidad de tobillo">Esguince o debilidad de tobillo</option>
+                        <option value="Rodilla">Dolor / Lesión de rodilla</option>
+                        <option value="Hombro">Molestia en hombro</option>
+                        <option value="Espalda">Dolor lumbar / Espalda</option>
+                        <option value="Muñeca">Molestia en muñeca</option>
+                        <option value="Codo">Molestia en codo</option>
+                        <option value="Tobillo">Molestia en tobillo</option>
                     </select>
                 </div>
             </div>
@@ -371,7 +372,6 @@
         </form>
     </div>
 
-    <!-- VISTA DE RUTINA GENERADA -->
     <div class="vista-rutina-generada" id="contenedorRutina">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
             <div>
@@ -389,7 +389,6 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // Obtener ID de usuario desde la URL (?id=...) o desde localStorage
     const params = new URLSearchParams(window.location.search);
     let idUsuario = params.get("id");
 
@@ -423,13 +422,13 @@
             if (datos.dias_entreno) document.getElementById("dias").value = datos.dias_entreno;
             if (datos.intensidad) document.getElementById("intensidad").value = datos.intensidad;
 
-            if (datos.lesion && datos.lesion !== "ninguna" && datos.lesion !== "Sin lesiones") {
+            if (datos.lesion && datos.lesion !== "ninguna") {
                 document.getElementById("radioConLesion").checked = true;
                 document.getElementById("selectZonaLesion").value = datos.lesion;
                 alternarLesion();
             }
         } catch (e) {
-            console.log("No hay datos previos cargados.");
+            console.log("Sin datos previos.");
         }
     }
 
@@ -466,11 +465,10 @@
 
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({}));
-                    throw new Error(err.error || "No se pudo guardar la información en la base de datos.");
+                    throw new Error(err.error || "No se pudo guardar la información.");
                 }
             }
 
-            // Mostrar rutina adaptada
             mostrarRutinaAdaptada(payload);
 
         } catch (error) {
@@ -488,46 +486,84 @@
 
         const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
         document.getElementById("resumenPerfilTexto").textContent = 
-            `Plan: ${datos.objetivo} | ${datos.dias_entreno} días/sem | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
+            `Plan: ${datos.objetivo} | ${datos.dias_entreno} días a la semana | Cuidado articular: ${tieneLesion ? datos.lesion : 'Ninguno'}`;
 
         const contenedorDias = document.getElementById("listaDiasRutina");
         contenedorDias.innerHTML = "";
 
-        const esRodilla = datos.lesion.includes("rodilla");
-        const esHombro = datos.lesion.includes("hombro");
-        const esEspalda = datos.lesion.includes("espalda") || datos.lesion.includes("lumbar");
+        const esRodilla = datos.lesion.toLowerCase().includes("rodilla");
+        const esHombro = datos.lesion.toLowerCase().includes("hombro");
+        const esEspalda = datos.lesion.toLowerCase().includes("espalda");
 
-        const rutinaDias = [
+        const numDias = datos.dias_entreno || 3;
+
+        const bancoEjercicios = [
             {
                 dia: "Día 1: Empuje (Pecho, Hombro y Tríceps)",
                 ejercicios: [
-                    { nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
-                    { nombre: esHombro ? "Elevaciones laterales en polea baja (rango controlado)" : "Press militar con mancuernas", series: "3 series × 12 reps" },
-                    { nombre: "Fondos en paralelas o flexiones asistidas", series: "3 series × 10 reps" },
-                    { nombre: "Extensiones de tríceps en polea alta", series: "4 series × 12 reps" }
+                    { nombre: esHombro ? "Press banca mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
+                    { nombre: esHombro ? "Elevaciones laterales controladas" : "Press militar con mancuernas", series: "3 series × 12 reps" },
+                    { nombre: "Aperturas en máquina pec-deck", series: "3 series × 12 reps" },
+                    { nombre: "Extensiones de tríceps en polea", series: "4 series × 12 reps" }
                 ]
             },
             {
                 dia: "Día 2: Tracción (Espalda, Bíceps y Core)",
                 ejercicios: [
-                    { nombre: esEspalda ? "Jalón al pecho en polea alta con apoyo" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
-                    { nombre: esEspalda ? "Remo en máquina con pecho apoyado" : "Remo con barra", series: "3 series × 10-12 reps" },
-                    { nombre: "Curl de bíceps en banco inclinado", series: "3 series × 12 reps" },
-                    { nombre: esEspalda ? "Plancha frontal isométrica (espalda neutra)" : "Elevaciones de piernas suspendido", series: "3 series × 40 segs" }
+                    { nombre: esEspalda ? "Jalón al pecho asistido" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
+                    { nombre: esEspalda ? "Remo con pecho apoyado" : "Remo con barra", series: "3 series × 10-12 reps" },
+                    { nombre: "Curl de bíceps con mancuernas", series: "3 series × 12 reps" },
+                    { nombre: esEspalda ? "Plancha abdominal isométrica" : "Elevaciones de piernas", series: "3 series × 40 segs" }
                 ]
             },
             {
-                dia: "Día 3: Pierna y Movilidad",
+                dia: "Día 3: Tren inferior (Pierna y Pantorrilla)",
                 ejercicios: [
-                    { nombre: esRodilla ? "Prensa a 90° con tempo controlado (sin bloqueo)" : "Sentadilla con barra trasera", series: "4 series × 8-10 reps" },
-                    { nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
-                    { nombre: "Curl femoral tumbado o sentado", series: "3 series × 12 reps" },
-                    { nombre: "Elevación de talones para gemelo", series: "4 series × 15 reps" }
+                    { nombre: esRodilla ? "Prensa a 90° sin bloqueo" : "Sentadilla profunda", series: "4 series × 8-10 reps" },
+                    { nombre: esRodilla ? "Puente de glúteo en banco" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
+                    { nombre: "Curl femoral en máquina", series: "3 series × 12 reps" },
+                    { nombre: "Elevación de talones", series: "4 series × 15 reps" }
+                ]
+            },
+            {
+                dia: "Día 4: Torso Completo",
+                ejercicios: [
+                    { nombre: "Press inclinado con mancuernas", series: "4 series × 10 reps" },
+                    { nombre: "Remo unilateral con mancuerna", series: "3 series × 12 reps" },
+                    { nombre: "Elevaciones laterales para hombro", series: "3 series × 15 reps" },
+                    { nombre: "Fondos entre bancos", series: "3 series × 12 reps" }
+                ]
+            },
+            {
+                dia: "Día 5: Pierna enfocada y Core",
+                ejercicios: [
+                    { nombre: esRodilla ? "Peso muerto rumano suave" : "Peso muerto convencional", series: "4 series × 10 reps" },
+                    { nombre: "Prensa inclinada", series: "4 series × 12 reps" },
+                    { nombre: "Abductores en máquina", series: "3 series × 15 reps" },
+                    { nombre: "Rueda abdominal o plancha", series: "3 series × 45 segs" }
+                ]
+            },
+            {
+                dia: "Día 6: Acondicionamiento y Brazos",
+                ejercicios: [
+                    { nombre: "Superserie: Curl de bíceps + Press francés", series: "4 series × 12 reps" },
+                    { nombre: "Remo al mentón suave", series: "3 series × 12 reps" },
+                    { nombre: "Cardio hiit / Trote suave", series: "20 minutos" }
+                ]
+            },
+            {
+                dia: "Día 7: Movilidad activa y Recuperación",
+                ejercicios: [
+                    { nombre: "Caminata ligera / Senderismo", series: "30-45 minutos" },
+                    { nombre: "Estiramientos dinámicos cuerpo completo", series: "15 minutos" },
+                    { nombre: "Respiración diafragmática y movilidad lumbar", series: "10 minutos" }
                 ]
             }
         ];
 
-        rutinaDias.forEach(d => {
+        const diasFinales = bancoEjercicios.slice(0, numDias);
+
+        diasFinales.forEach(d => {
             const div = document.createElement("div");
             div.className = "tarjeta-dia";
             let listaEj = "";

@@ -369,6 +369,7 @@ app.get("/empresa/:id/ventas", function (req, res) {
 
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
+   (Con protección para cuando no exista 'dias_entreno')
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
@@ -380,18 +381,23 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     `;
 
     conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error consultando los datos físicos." });
+        if (error) {
+            // Si la columna dias_entreno aún no está creada, consultar sin ella
+            const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
+            return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
+                if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
+                res.json(res2[0]);
+            });
+        }
         if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
         res.json(resultados[0]);
     });
 });
 
-// Guardar datos físicos y lesión
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
     let { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
 
-    // Normalizar lesión: si no hay o está vacía, se asigna 'ninguna'
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
 
     const sql = `
@@ -414,8 +420,20 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                console.error("❌ Error al guardar datos físicos en MySQL:", error);
-                return res.status(500).json({ error: "No se pudieron guardar los datos: " + error.message });
+                // Si la columna dias_entreno aún no existe en MySQL, guardar los demás campos sin romper el proceso
+                if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('dias_entreno')) {
+                    const sqlFallback = `
+                        UPDATE usuarios 
+                        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
+                        WHERE identificacion = ?
+                    `;
+                    return conexion.query(sqlFallback, [peso, altura, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
+                        if (errFallback) return res.status(500).json({ error: errFallback.message });
+                        return res.json({ mensaje: "Datos guardados correctamente." });
+                    });
+                }
+                console.error("❌ Error en MySQL:", error);
+                return res.status(500).json({ error: error.message });
             }
             res.json({ mensaje: "Datos físicos guardados correctamente." });
         }
