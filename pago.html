@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Confirmación de Pago</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>VIGA | Confirmación de Cobro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
@@ -16,8 +16,7 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
-            --input-fondo: #252525;
-            --input-borde: #383838;
+            --info-bg: #222222;
         }
 
         body.claro {
@@ -26,8 +25,7 @@
             --texto: #111111;
             --secundario: #666666;
             --borde: #dddddd;
-            --input-fondo: #f9f9f9;
-            --input-borde: #cccccc;
+            --info-bg: #f7f7f7;
         }
 
         * {
@@ -54,7 +52,6 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -67,90 +64,142 @@
 
         main {
             width: 90%;
-            max-width: 580px;
+            max-width: 560px;
             margin: 40px auto;
         }
 
-        .caja-pago {
+        .tarjeta-pago {
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            transition: background 0.3s, border-color 0.3s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .caja-pago h2 {
-            font-size: 20px;
+        .tarjeta-pago h2 {
+            font-size: 22px;
             color: var(--verde);
             margin-bottom: 8px;
         }
 
-        .caja-pago p {
+        .sub-txt {
             font-size: 13px;
             color: var(--secundario);
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
-        .metodos {
+        .aviso-descuento {
+            background: var(--info-bg);
+            border-left: 4px solid var(--verde);
+            padding: 16px;
+            margin-bottom: 22px;
+            border-radius: 4px;
+        }
+
+        .aviso-descuento p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--texto);
+        }
+
+        .resumen-filas {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-top: 1px solid var(--borde);
+            border-bottom: 1px solid var(--borde);
+            padding: 16px 0;
+        }
+
+        .fila-dato {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .fila-dato.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--verde);
+            padding-top: 6px;
+        }
+
+        .acciones {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 22px;
         }
 
-        .opcion-metodo {
-            background: var(--input-fondo);
-            border: 1px solid var(--input-borde);
-            border-radius: 10px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .opcion-metodo:hover {
-            border-color: var(--verde);
-        }
-
-        .opcion-metodo input {
-            accent-color: var(--verde);
-        }
-
-        .resumen-total {
-            background: var(--fondo);
-            border: 1px solid var(--borde);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 22px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .btn-finalizar {
+        .btn-aceptar {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             background: var(--verde);
             color: #111;
             font-weight: 700;
             font-size: 15px;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
             transition: .2s;
         }
 
-        .btn-finalizar:hover {
+        .btn-aceptar:hover {
             filter: brightness(1.1);
         }
 
-        .btn-finalizar:disabled {
-            opacity: .6;
+        .btn-aceptar:disabled {
+            opacity: 0.6;
             cursor: wait;
+        }
+
+        .btn-volver {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--secundario);
+            border: 1px solid var(--borde);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-volver:hover {
+            color: var(--texto);
+            border-color: #666;
+        }
+
+        /* PANTALLA ÉXITO */
+        .pantalla-exito {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .icono-check {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(55, 227, 89, 0.15);
+            border: 2px solid var(--verde);
+            color: var(--verde);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px auto;
+        }
+
+        .pantalla-exito h2 {
+            font-size: 24px;
+            color: var(--texto);
+            margin-bottom: 8px;
+        }
+
+        .pantalla-exito p {
+            font-size: 14px;
+            color: var(--secundario);
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -158,37 +207,63 @@
 
 <header>
     <a href="inicio.html" class="logo">VIGA</a>
-    <a href="checkout.html" style="color:var(--texto); text-decoration:none; font-size:14px;">← Volver</a>
 </header>
 
 <main>
-    <div class="caja-pago">
-        <h2>Pasarela de Pago Segura</h2>
-        <p>Selecciona el medio con el que deseas completar tu pedido.</p>
+    <div class="tarjeta-pago">
+        
+        <!-- BLOQUE DE AUTORIZACIÓN / CONFIRMACIÓN -->
+        <div id="bloqueConfirmacion">
+            <h2>Autorización de Débito</h2>
+            <p class="sub-txt">Por favor confirma la transacción con tu medio de pago seleccionado.</p>
 
-        <div class="metodos">
-            <label class="opcion-metodo">
-                <input type="radio" name="metodoPago" value="Tarjeta de Crédito / Débito" checked>
-                <span>💳 Tarjeta de Crédito / Débito</span>
-            </label>
-            <label class="opcion-metodo">
-                <input type="radio" name="metodoPago" value="Transferencia PSE / Bancolombia">
-                <span>📱 PSE / Transferencia Bancolombia</span>
-            </label>
-            <label class="opcion-metodo">
-                <input type="radio" name="metodoPago" value="Pago Contra Entrega">
-                <span>📦 Contra Entrega (Efectivo al recibir)</span>
-            </label>
+            <div class="aviso-descuento">
+                <p>
+                    Se procederá a descontar el monto total de tu cuenta <strong><span id="txtMetodoPago">Nequi</span></strong> y se descontarán automáticamente las unidades adquiridas del inventario oficial de la tienda.
+                </p>
+            </div>
+
+            <div class="resumen-filas">
+                <div class="fila-dato">
+                    <span>Cliente:</span>
+                    <strong id="txtNombreCliente">--</strong>
+                </div>
+                <div class="fila-dato">
+                    <span>Ciudad de entrega:</span>
+                    <span id="txtCiudadCliente">--</span>
+                </div>
+                <div class="fila-dato">
+                    <span>Artículos a recibir:</span>
+                    <span id="txtCantidadItems">0</span>
+                </div>
+                <div class="fila-dato total">
+                    <span>Total a descontar:</span>
+                    <span id="txtTotalDescontar">$0</span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button class="btn-aceptar" id="btnAceptarDebito" onclick="procesarPago()">
+                    Aceptar y descontar
+                </button>
+                <button class="btn-volver" onclick="volverCheckout()">
+                    Volver al Checkout
+                </button>
+            </div>
         </div>
 
-        <div class="resumen-total">
-            <span>Monto Total:</span>
-            <span style="color:var(--verde);" id="montoTotalTxt">$0</span>
+        <!-- BLOQUE DE PEDIDO ACEPTADO -->
+        <div id="bloqueExito" class="pantalla-exito">
+            <div class="icono-check">✓</div>
+            <h2>¡Pago Aceptado con Éxito!</h2>
+            <p>
+                El dinero ha sido debitado correctamente de tu cuenta y las unidades han quedado reservadas para tu entrega.
+            </p>
+            <button class="btn-aceptar" onclick="irATienda()">
+                Volver a la Tienda
+            </button>
         </div>
 
-        <button class="btn-finalizar" id="btnConfirmarPago" onclick="procesarCompra()">
-            Confirmar y Finalizar Pedido
-        </button>
     </div>
 </main>
 
@@ -204,27 +279,31 @@
 
     const orden = JSON.parse(localStorage.getItem("viga_orden_temporal") || "null");
 
-    function calcularTotal() {
+    function cargarDatos() {
         if (!orden || !orden.articulos || orden.articulos.length === 0) {
             window.location.replace("tienda.html");
             return;
         }
 
         const total = orden.articulos.reduce((acc, i) => acc + (i.precio * i.cantidad), 0);
-        document.getElementById("montoTotalTxt").textContent = `$${total.toLocaleString('es-CO')}`;
+        const cantArticulos = orden.articulos.reduce((acc, i) => acc + i.cantidad, 0);
+
+        document.getElementById("txtMetodoPago").textContent = orden.metodo_pago || "Nequi";
+        document.getElementById("txtNombreCliente").textContent = orden.cliente.nombre || "Cliente VIGA";
+        document.getElementById("txtCiudadCliente").textContent = orden.cliente.ciudad || "Colombia";
+        document.getElementById("txtCantidadItems").textContent = `${cantArticulos} unidad(es)`;
+        document.getElementById("txtTotalDescontar").textContent = `$${total.toLocaleString('es-CO')}`;
     }
 
-    async function procesarCompra() {
-        const btn = document.getElementById("btnConfirmarPago");
+    async function procesarPago() {
+        const btn = document.getElementById("btnAceptarDebito");
         btn.disabled = true;
-        btn.textContent = "Procesando orden y descontando inventario...";
-
-        const metodoSeleccionado = document.querySelector('input[name="metodoPago"]:checked').value;
+        btn.textContent = "Procesando débito...";
 
         const payload = {
             articulos: orden.articulos,
             cliente: orden.cliente,
-            metodo_pago: metodoSeleccionado
+            metodo_pago: orden.metodo_pago || "Nequi"
         };
 
         try {
@@ -234,25 +313,34 @@
                 body: JSON.stringify(payload)
             });
 
-            if (!res.ok) throw new Error("Error procesando la compra en el servidor");
+            if (!res.ok) throw new Error("No se pudo procesar la compra.");
 
-            // Limpiar carrito tras compra exitosa
+            // Limpiar carritos de la sesión
             localStorage.removeItem("viga_carrito");
             localStorage.removeItem("viga_orden_temporal");
 
-            alert("¡Compra procesada con éxito! El inventario ha sido actualizado.");
-            window.location.replace("tienda.html");
+            // Mostrar vista de éxito
+            document.getElementById("bloqueConfirmacion").style.display = "none";
+            document.getElementById("bloqueExito").style.display = "block";
 
-        } catch (e) {
-            alert("No se pudo completar el pedido. Intenta nuevamente.");
+        } catch (error) {
+            alert("Ocurrió un error al procesar el débito. Intenta de nuevo.");
             btn.disabled = false;
-            btn.textContent = "Confirmar y Finalizar Pedido";
+            btn.textContent = "Aceptar y descontar";
         }
+    }
+
+    function volverCheckout() {
+        window.location.href = "checkout.html";
+    }
+
+    function irATienda() {
+        window.location.href = "tienda.html";
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         sincronizarTema();
-        calcularTotal();
+        cargarDatos();
     });
 </script>
 

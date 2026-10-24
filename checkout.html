@@ -1,810 +1,455 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Finalizar Compra</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>VIGA | Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
     <style>
-        :root {
-            --fondo: #121212;
-            --panel: #1b1b1b;
-            --verde: #37E359;
-            --texto: #f4f4f4;
-            --secundario: #aaa;
-            --borde: #2d2d2d;
-            --campo-bg: #252525;
-            --campo-borde: #3b3b3b;
-            --info-bg: #202020;
-            --articulo-borde: #282828;
-        }
-
-        /* REGLAS PARA TEMA CLARO */
-        body.claro {
-            --fondo: #f4f4f4;
-            --panel: #ffffff;
-            --texto: #111111;
-            --secundario: #666666;
-            --borde: #dddddd;
-            --campo-bg: #f8f8f8;
-            --campo-borde: #cccccc;
-            --info-bg: #f0f0f0;
-            --articulo-borde: #e4e4e4;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background: var(--fondo);
-            color: var(--texto);
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(rgba(10, 10, 10, 0.93), rgba(10, 10, 10, 0.97));
+            color: white;
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
         }
 
         header {
-            height: 80px;
-            background: var(--panel);
-            border-bottom: 1px solid var(--borde);
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 50px;
+            padding: 0 35px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: #111;
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        .logo {
-            color: var(--verde);
-            font-size: 34px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-decoration: none;
         }
 
         .volver {
-            color: var(--texto);
+            color: white;
             text-decoration: none;
-            font-size: 14px;
-            transition: .2s;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
         .volver:hover {
-            color: var(--verde);
+            color: #37e359;
+            transform: translateX(-3px);
         }
 
-        main {
-            width: 90%;
-            max-width: 1100px;
-            margin: 40px auto;
-        }
-
-        h1 {
+        .logo {
             font-size: 30px;
-            margin-bottom: 8px;
-            color: var(--verde);
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #37e359;
+        }
+
+        .espacio {
+            width: 30px;
+        }
+
+        .contenedor {
+            width: 90%;
+            max-width: 1000px;
+            margin: 45px auto;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #37e359;
         }
 
         .subtitulo {
-            color: var(--secundario);
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 35px;
             font-size: 14px;
-            margin-bottom: 30px;
         }
 
-        .checkout-grid {
+        .grid-checkout {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 25px;
         }
 
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--borde);
-            border-radius: 0px;
+        .tarjeta {
+            background: #181818;
+            border: 1px solid rgba(255,255,255,0.08);
             padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            transition: background 0.3s, border-color 0.3s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
         }
 
-        .card h2 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--borde);
-            padding-bottom: 10px;
-            color: var(--texto);
-        }
-
-        .campo {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .tarjeta h2 {
+            font-size: 19px;
             margin-bottom: 15px;
-        }
-
-        .fila-campos {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .campo label {
-            font-size: 13px;
-            color: var(--texto);
-        }
-
-        .campo input, .campo select {
-            padding: 12px;
-            background: var(--campo-bg);
-            border: 1px solid var(--campo-borde);
-            border-radius: 0px;
-            color: var(--texto);
-            outline: none;
-            font-size: 14px;
-            transition: background 0.3s, border-color 0.3s, color 0.3s;
-        }
-
-        .campo input:focus, .campo select:focus {
-            border-color: var(--verde);
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 10px;
         }
 
         .lista-articulos {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 320px;
+            margin-bottom: 15px;
+            max-height: 300px;
             overflow-y: auto;
-            margin-bottom: 20px;
-            padding-right: 5px;
         }
 
-        .articulo {
+        .item-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #101010;
+            border: 1px solid #282828;
+            padding: 12px 16px;
+        }
+
+        .item-info h4 {
+            font-size: 15px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .item-info span {
+            font-size: 13px;
+            color: #37e359;
+            font-weight: 600;
+        }
+
+        .item-controles {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--articulo-borde);
-        }
-
-        .articulo img {
-            width: 55px;
-            height: 55px;
-            object-fit: cover;
-            border-radius: 0px;
-            background: #222;
-        }
-
-        .art-info {
-            flex-grow: 1;
-        }
-
-        .art-info h4 {
-            font-size: 14px;
-            margin-bottom: 3px;
-            color: var(--texto);
-        }
-
-        .art-info span {
-            color: var(--secundario);
-            font-size: 12px;
-        }
-
-        .art-precio {
-            font-weight: 600;
-            color: var(--verde);
-            font-size: 14px;
-        }
-
-        .art-controles {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 6px;
         }
 
         .btn-qty {
-            background: var(--campo-bg);
-            border: 1px solid var(--campo-borde);
-            color: var(--texto);
-            width: 24px;
-            height: 24px;
+            background: #252525;
+            border: 1px solid #383838;
+            color: white;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            transition: 0.2s;
         }
 
         .btn-qty:hover {
-            border-color: var(--verde);
-            color: var(--verde);
+            border-color: #37e359;
+            color: #37e359;
         }
 
-        .btn-eliminar-item {
+        .btn-del {
             background: transparent;
             border: none;
             color: #ff5252;
             cursor: pointer;
-            font-size: 13px;
-            margin-left: 6px;
+            font-size: 14px;
         }
 
-        .linea-total {
+        .campo {
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 7px;
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        .campo input, .campo select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #333;
+            background: #101010;
+            color: white;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .campo input:focus, .campo select:focus {
+            border-color: #37e359;
+        }
+
+        .total-box {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: var(--secundario);
-        }
-
-        .linea-total.destacado {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--texto);
-            border-top: 1px solid var(--borde);
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-
-        .linea-total.destacado span:last-child {
-            color: var(--verde);
-        }
-
-        .btn-pagar {
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            background: var(--verde);
-            color: #111;
-            border: none;
-            border-radius: 0px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-pagar:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-secundario {
-            width: 100%;
-            margin-top: 10px;
-            padding: 12px;
-            background: transparent;
-            color: var(--secundario);
-            border: 1px solid var(--borde);
-            border-radius: 0px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-secundario:hover {
-            border-color: #666;
-            color: var(--texto);
-        }
-
-        .tarjeta-grafica {
-            background: linear-gradient(135deg, #1c2b1f, #111);
-            border: 1px solid var(--verde);
-            border-radius: 0px;
-            padding: 22px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .tarjeta-grafica .chip {
-            width: 42px;
-            height: 30px;
-            background: #d4af37;
-            border-radius: 0px;
-        }
-
-        .tarjeta-grafica .numero-vista {
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .info-app-box {
-            background: var(--info-bg);
-            border: 1px solid var(--borde);
-            border-radius: 0px;
-            padding: 15px;
-            margin-bottom: 18px;
-            display: flex;
             align-items: center;
-            gap: 12px;
+            margin: 25px 0 20px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
         }
 
-        .info-app-box p {
-            font-size: 13px;
-            color: var(--secundario);
-            line-height: 1.5;
+        .total-valor {
+            color: #37e359;
+            font-size: 22px;
         }
 
-        @media (max-width: 800px) {
-            .checkout-grid { grid-template-columns: 1fr; }
+        .boton-pagar {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: #37e359;
+            color: #071009;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .boton-pagar:hover:not(:disabled) {
+            background: #2fd04f;
+            transform: scale(1.01);
+        }
+
+        .boton-pagar:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* TEMA CLARO */
+        body.claro {
+            background: #f3f3f3;
+            color: #111;
+        }
+
+        body.claro header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.claro .volver,
+        body.claro .tarjeta h2,
+        body.claro .item-info h4 {
+            color: #111;
+        }
+
+        body.claro .subtitulo {
+            color: #666;
+        }
+
+        body.claro .tarjeta {
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        body.claro .item-fila {
+            background: #f9f9f9;
+            border-color: #e0e0e0;
+        }
+
+        body.claro .btn-qty {
+            background: #ececec;
+            border-color: #d0d0d0;
+            color: #111;
+        }
+
+        body.claro .campo label {
+            color: #333;
+        }
+
+        body.claro .campo input, body.claro .campo select {
+            background: #f7f7f7;
+            color: #111;
+            border-color: #ddd;
+        }
+
+        body.claro .total-box {
+            border-color: #eee;
+            color: #111;
+        }
+
+        @media (max-width: 750px) {
             header { padding: 0 20px; }
+            .grid-checkout { grid-template-columns: 1fr; }
+            .contenedor { width: 92%; margin-top: 30px; }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <a href="tienda.html" class="logo">VIGA</a>
-    <a href="tienda.html" class="volver">← Volver a la tienda</a>
-</header>
+    <header>
+        <a href="tienda.html" class="volver">←</a>
+        <div class="logo">VIGA</div>
+        <div class="espacio"></div>
+    </header>
 
-<main>
-    <h1 id="tituloPaso">Confirmación de Pedido</h1>
-    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa tus datos para la entrega.</p>
+    <main class="contenedor">
+        <h1 class="titulo">Confirmación de Pedido</h1>
+        <p class="subtitulo">Ingresa tus datos y selecciona tu medio de pago</p>
 
-    <div class="checkout-grid">
+        <div class="grid-checkout">
+            <!-- FORMULARIO DE ENVÍO Y MÉTODO -->
+            <div class="tarjeta">
+                <h2>Datos de Entrega y Pago</h2>
+                <form id="formularioCheckout">
+                    <div class="campo">
+                        <label for="clienteNombre">Nombre completo *</label>
+                        <input type="text" id="clienteNombre" placeholder="Ej. Carlos Martínez" required>
+                    </div>
 
-        <div id="columnaIzquierda">
+                    <div class="campo">
+                        <label for="clienteTelefono">Teléfono / WhatsApp *</label>
+                        <input type="tel" id="clienteTelefono" placeholder="Ej. 3001234567" required>
+                    </div>
 
-            <!-- PASO 1: DATOS DE ENVÍO -->
-            <section class="card" id="pasoEnvio">
-                <h2>Datos de entrega</h2>
-                <form id="formEnvio">
                     <div class="campo">
-                        <label for="nombreCliente">Nombre completo *</label>
-                        <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
+                        <label for="clienteDireccion">Dirección de entrega *</label>
+                        <input type="text" id="clienteDireccion" placeholder="Ej. Calle 10 # 40-20, Apto 301" required>
                     </div>
+
                     <div class="campo">
-                        <label for="telefonoCliente">Teléfono / WhatsApp *</label>
-                        <input type="tel" id="telefonoCliente" required placeholder="Ej. 3001234567">
+                        <label for="clienteCiudad">Ciudad *</label>
+                        <input type="text" id="clienteCiudad" placeholder="Ej. Medellín, Bogotá, Cali" required>
                     </div>
-                    <div class="campo">
-                        <label for="direccionCliente">Dirección de entrega *</label>
-                        <input type="text" id="direccionCliente" required placeholder="Ej. Calle 10 # 40-20, Apto 301">
-                    </div>
-                    <div class="campo">
-                        <label for="ciudadCliente">Ciudad *</label>
-                        <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
-                    </div>
+
                     <div class="campo">
                         <label for="metodoPago">Selecciona tu método de pago *</label>
                         <select id="metodoPago" required>
-                            <option value="tarjeta">Tarjeta de crédito / Débito</option>
-                            <option value="nequi">Nequi</option>
-                            <option value="daviplata">Daviplata</option>
-                            <option value="bancolombia">Cuenta Bancolombia</option>
-                            <option value="pse">PSE (Débito bancario con CVV)</option>
+                            <option value="Nequi" selected>Nequi</option>
+                            <option value="Daviplata">Daviplata</option>
+                            <option value="Bancolombia">Cuenta Bancolombia</option>
+                            <option value="Tarjeta">Tarjeta Débito / Crédito</option>
+                            <option value="PSE">PSE</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-pagar">Continuar a ingresar datos de pago</button>
+
+                    <button type="submit" class="boton-pagar" id="btnContinuarPago">
+                        Continuar al Pago →
+                    </button>
                 </form>
-            </section>
+            </div>
 
-            <!-- PASO 2A: TARJETA -->
-            <section class="card" id="pasoTarjeta" style="display: none;">
-                <h2>Datos de tu Tarjeta</h2>
+            <!-- RESUMEN DEL CARRITO -->
+            <div class="tarjeta">
+                <h2>Resumen del Carrito</h2>
+                <div class="lista-articulos" id="contenedorArticulos"></div>
 
-                <div class="tarjeta-grafica">
-                    <div class="chip"></div>
-                    <div class="numero-vista" id="vistaNumeroTarjeta">•••• •••• •••• ••••</div>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
-                        <span id="vistaNombreTarjeta">TITULAR</span>
-                        <span id="vistaFechaTarjeta">MM/AA</span>
-                    </div>
+                <div class="total-box">
+                    <span>Total a Pagar:</span>
+                    <span class="total-valor" id="totalPagar">$0</span>
                 </div>
-
-                <form id="formTarjeta">
-                    <div class="campo">
-                        <label for="numeroTarjeta">Número de la tarjeta *</label>
-                        <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="1234 5678 9012 3456" oninput="actualizarTarjetaVisual()">
-                    </div>
-                    <div class="campo">
-                        <label for="nombreTarjeta">Nombre del titular *</label>
-                        <input type="text" id="nombreTarjeta" required placeholder="Como figura en la tarjeta" oninput="actualizarTarjetaVisual()">
-                    </div>
-                    <div class="fila-campos">
-                        <div class="campo">
-                            <label for="expiracionTarjeta">Expiración (MM/AA) *</label>
-                            <input type="text" id="expiracionTarjeta" maxlength="5" required placeholder="12/28" oninput="actualizarTarjetaVisual()">
-                        </div>
-                        <div class="campo">
-                            <label for="cvvTarjeta">Código CVV / CVC *</label>
-                            <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-                </form>
-            </section>
-
-            <!-- PASO 2B: NEQUI -->
-            <section class="card" id="pasoNequi" style="display: none;">
-                <h2>Datos de tu cuenta Nequi</h2>
-                <div class="info-app-box">
-                    <p>Ingresa tu número Nequi. Te solicitaremos la autorización de débito en la pantalla de cobro.</p>
-                </div>
-                <form id="formNequi">
-                    <div class="campo">
-                        <label for="numeroNequi">Número de celular Nequi *</label>
-                        <input type="tel" id="numeroNequi" maxlength="10" required placeholder="Ej. 3001234567">
-                    </div>
-                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-                </form>
-            </section>
-
-            <!-- PASO 2C: DAVIPLATA -->
-            <section class="card" id="pasoDaviplata" style="display: none;">
-                <h2>Datos de tu cuenta Daviplata</h2>
-                <div class="info-app-box">
-                    <p>Ingresa el número de tu Daviplata y documento de identidad.</p>
-                </div>
-                <form id="formDaviplata">
-                    <div class="campo">
-                        <label for="numeroDaviplata">Número de Daviplata (Celular) *</label>
-                        <input type="tel" id="numeroDaviplata" maxlength="10" required placeholder="Ej. 3101234567">
-                    </div>
-                    <div class="campo">
-                        <label for="documentoDaviplata">Número de documento *</label>
-                        <input type="text" id="documentoDaviplata" required placeholder="Ej. 1020304050">
-                    </div>
-                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-                </form>
-            </section>
-
-            <!-- PASO 2D: BANCOLOMBIA -->
-            <section class="card" id="pasoBancolombia" style="display: none;">
-                <h2>Datos de tu cuenta Bancolombia</h2>
-                <div class="info-app-box">
-                    <p>Ingresa el número de tu cuenta Bancolombia para autorizar el débito.</p>
-                </div>
-                <form id="formBancolombia">
-                    <div class="campo">
-                        <label for="tipoCuentaBancolombia">Tipo de cuenta *</label>
-                        <select id="tipoCuentaBancolombia" required>
-                            <option value="Ahorros">Cuenta de Ahorros</option>
-                            <option value="Corriente">Cuenta Corriente</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label for="numeroCuentaBancolombia">Número de cuenta Bancolombia *</label>
-                        <input type="text" id="numeroCuentaBancolombia" required placeholder="Ej. 123-456789-01">
-                    </div>
-                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-                </form>
-            </section>
-
-            <!-- PASO 2E: PSE -->
-            <section class="card" id="pasoPSE" style="display: none;">
-                <h2>Pago por PSE (Con código de seguridad / CVV)</h2>
-                <div class="info-app-box">
-                    <p>Ingresa tu entidad bancaria, correo registrado y tu código de seguridad CVV.</p>
-                </div>
-                <form id="formPSE">
-                    <div class="campo">
-                        <label for="bancoPSE">Selecciona tu banco *</label>
-                        <select id="bancoPSE" required>
-                            <option value="Banco de Bogotá">Banco de Bogotá</option>
-                            <option value="Banco Davivienda">Banco Davivienda</option>
-                            <option value="Banco BBVA">Banco BBVA</option>
-                            <option value="Banco de Occidente">Banco de Occidente</option>
-                            <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
-                            <option value="Banco Itaú">Banco Itaú</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label for="correoPSE">Correo registrado en PSE *</label>
-                        <input type="email" id="correoPSE" required placeholder="ejemplo@correo.com">
-                    </div>
-                    <div class="campo">
-                        <label for="cvvPSE">Código de seguridad / CVV de la cuenta *</label>
-                        <input type="password" id="cvvPSE" maxlength="4" required placeholder="Ej. 123">
-                    </div>
-                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-                </form>
-            </section>
-
+            </div>
         </div>
+    </main>
 
-        <!-- RESUMEN DEL PEDIDO -->
-        <section class="card">
-            <h2>Resumen del pedido</h2>
-            <div class="lista-articulos" id="listaArticulos"></div>
-
-            <div class="linea-total">
-                <span>Subtotal</span>
-                <span id="subtotalTexto">$ 0</span>
-            </div>
-            <div class="linea-total">
-                <span>Envío estimado</span>
-                <span style="color:var(--verde);">Gratis</span>
-            </div>
-            <div class="linea-total destacado">
-                <span>Total a pagar</span>
-                <span id="totalTexto">$ 0</span>
-            </div>
-        </section>
-    </div>
-</main>
-
-<script>
-    const API = "https://viga-c607.onrender.com";
-
-    // SINCRONIZAR TEMA CLARO/OSCURO
-    function sincronizarTema() {
-        const tema = localStorage.getItem("vigaTema");
-        if (tema === "claro") {
-            document.body.classList.add("claro");
-        } else {
-            document.body.classList.remove("claro");
+    <script>
+        function sincronizarTema() {
+            const tema = localStorage.getItem("vigaTema");
+            if (tema === "claro") document.body.classList.add("claro");
+            else document.body.classList.remove("claro");
         }
-    }
-    sincronizarTema();
+        sincronizarTema();
 
-    let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
-    let datosEnvioGuardados = null;
-    let totalPedido = 0;
+        let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
 
-    function dinero(valor) {
-        return Number(valor || 0).toLocaleString("es-CO", {
-            style: "currency",
-            currency: "COP",
-            maximumFractionDigits: 0
-        });
-    }
+        function renderizarCarrito() {
+            const contenedor = document.getElementById("contenedorArticulos");
+            contenedor.innerHTML = "";
 
-    function cargarResumen() {
-        const contenedor = document.getElementById("listaArticulos");
-        const subtotalEl = document.getElementById("subtotalTexto");
-        const totalEl = document.getElementById("totalTexto");
-
-        if (carrito.length === 0) {
-            contenedor.innerHTML = `<p style="color:var(--secundario); padding:20px 0; text-align:center;">No tienes productos en el carrito.</p>`;
-            subtotalEl.textContent = dinero(0);
-            totalEl.textContent = dinero(0);
-            return;
-        }
-
-        contenedor.innerHTML = "";
-        let suma = 0;
-
-        carrito.forEach((item, index) => {
-            const sub = item.precio * item.cantidad;
-            suma += sub;
-
-            // Soporte para item.imagen o item.imagen_url
-            let imagenSrc = item.imagen || item.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
-            if (imagenSrc.startsWith("/uploads")) {
-                imagenSrc = API + imagenSrc;
+            if (carrito.length === 0) {
+                contenedor.innerHTML = `<p style="color:#888; text-align:center; padding:30px 0;">Tu carrito está vacío.</p>`;
+                document.getElementById("totalPagar").textContent = "$0";
+                document.getElementById("btnContinuarPago").disabled = true;
+                return;
             }
 
-            const div = document.createElement("div");
-            div.className = "articulo";
-            div.innerHTML = `
-                <img src="${imagenSrc}" alt="${item.nombre}">
-                <div class="art-info">
-                    <h4>${item.nombre}</h4>
-                    <span>${dinero(item.precio)} c/u</span>
-                    <div class="art-controles">
-                        <button type="button" class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
-                        <span style="font-size:13px; font-weight:600; color:var(--texto);">${item.cantidad}</span>
-                        <button type="button" class="btn-qty" onclick="cambiarCantidad(${index}, 1)">+</button>
-                        <button type="button" class="btn-eliminar-item" onclick="eliminarArticulo(${index})">✕</button>
+            let total = 0;
+
+            carrito.forEach((item, index) => {
+                const subtotal = item.precio * item.cantidad;
+                total += subtotal;
+
+                const div = document.createElement("div");
+                div.className = "item-fila";
+                div.innerHTML = `
+                    <div class="item-info">
+                        <h4>${item.nombre}</h4>
+                        <span>$${Number(item.precio).toLocaleString('es-CO')}</span>
                     </div>
-                </div>
-                <div class="art-precio">${dinero(sub)}</div>
-            `;
-            contenedor.appendChild(div);
-        });
+                    <div class="item-controles">
+                        <button type="button" class="btn-qty" onclick="ajustarCantidad(${index}, -1)">-</button>
+                        <span style="font-weight:600; font-size:14px;">${item.cantidad}</span>
+                        <button type="button" class="btn-qty" onclick="ajustarCantidad(${index}, 1)">+</button>
+                        <button type="button" class="btn-del" onclick="removerArticulo(${index})">✕</button>
+                    </div>
+                `;
+                contenedor.appendChild(div);
+            });
 
-        totalPedido = suma;
-        subtotalEl.textContent = dinero(suma);
-        totalEl.textContent = dinero(suma);
-    }
-
-    function cambiarCantidad(idx, cambio) {
-        const item = carrito[idx];
-        const stockMax = parseInt(item.stock, 10);
-
-        if (cambio > 0 && item.cantidad >= stockMax) {
-            return;
+            document.getElementById("totalPagar").textContent = `$${total.toLocaleString('es-CO')}`;
+            document.getElementById("btnContinuarPago").disabled = false;
         }
 
-        item.cantidad += cambio;
+        function ajustarCantidad(indice, cambio) {
+            const stockMaximo = parseInt(carrito[indice].stock, 10);
+            if (cambio > 0 && carrito[indice].cantidad >= stockMaximo) return;
 
-        if (item.cantidad <= 0) {
-            carrito.splice(idx, 1);
+            carrito[indice].cantidad += cambio;
+            if (carrito[indice].cantidad <= 0) carrito.splice(indice, 1);
+
+            localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+            renderizarCarrito();
         }
 
-        localStorage.setItem("viga_carrito", JSON.stringify(carrito));
-        cargarResumen();
-    }
-
-    function eliminarArticulo(idx) {
-        carrito.splice(idx, 1);
-        localStorage.setItem("viga_carrito", JSON.stringify(carrito));
-        cargarResumen();
-    }
-
-    function ocultarTodosLosPasos() {
-        document.getElementById("pasoTarjeta").style.display = "none";
-        document.getElementById("pasoNequi").style.display = "none";
-        document.getElementById("pasoDaviplata").style.display = "none";
-        document.getElementById("pasoBancolombia").style.display = "none";
-        document.getElementById("pasoPSE").style.display = "none";
-    }
-
-    document.getElementById("formEnvio").addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        if (carrito.length === 0) {
-            alert("Tu carrito está vacío. Agrega productos en la tienda.");
-            window.location.href = "tienda.html";
-            return;
+        function removerArticulo(indice) {
+            carrito.splice(indice, 1);
+            localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+            renderizarCarrito();
         }
 
-        datosEnvioGuardados = {
-            nombre: document.getElementById("nombreCliente").value.trim(),
-            telefono: document.getElementById("telefonoCliente").value.trim(),
-            direccion: document.getElementById("direccionCliente").value.trim(),
-            ciudad: document.getElementById("ciudadCliente").value.trim(),
-            metodo: document.getElementById("metodoPago").value
-        };
+        document.getElementById("formularioCheckout").addEventListener("submit", function(e) {
+            e.preventDefault();
+            if (carrito.length === 0) return;
 
-        document.getElementById("pasoEnvio").style.display = "none";
-        document.getElementById("tituloPaso").textContent = "Información del Pago";
-        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Completa los datos de tu cuenta.";
+            const pedido = {
+                articulos: carrito,
+                cliente: {
+                    nombre: document.getElementById("clienteNombre").value.trim(),
+                    telefono: document.getElementById("clienteTelefono").value.trim(),
+                    direccion: document.getElementById("clienteDireccion").value.trim(),
+                    ciudad: document.getElementById("clienteCiudad").value.trim()
+                },
+                metodo_pago: document.getElementById("metodoPago").value
+            };
 
-        ocultarTodosLosPasos();
-
-        if (datosEnvioGuardados.metodo === "tarjeta") {
-            document.getElementById("pasoTarjeta").style.display = "block";
-            document.getElementById("nombreTarjeta").value = datosEnvioGuardados.nombre.toUpperCase();
-            actualizarTarjetaVisual();
-        } else if (datosEnvioGuardados.metodo === "nequi") {
-            document.getElementById("pasoNequi").style.display = "block";
-            document.getElementById("numeroNequi").value = datosEnvioGuardados.telefono;
-        } else if (datosEnvioGuardados.metodo === "daviplata") {
-            document.getElementById("pasoDaviplata").style.display = "block";
-            document.getElementById("numeroDaviplata").value = datosEnvioGuardados.telefono;
-        } else if (datosEnvioGuardados.metodo === "bancolombia") {
-            document.getElementById("pasoBancolombia").style.display = "block";
-        } else if (datosEnvioGuardados.metodo === "pse") {
-            document.getElementById("pasoPSE").style.display = "block";
-        }
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    function regresarAEnvio() {
-        ocultarTodosLosPasos();
-        document.getElementById("pasoEnvio").style.display = "block";
-        document.getElementById("tituloPaso").textContent = "Confirmación de Pedido";
-        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa tus datos para la entrega.";
-    }
-
-    function actualizarTarjetaVisual() {
-        const num = document.getElementById("numeroTarjeta").value;
-        const nom = document.getElementById("nombreTarjeta").value;
-        const exp = document.getElementById("expiracionTarjeta").value;
-
-        document.getElementById("vistaNumeroTarjeta").textContent = num || "•••• •••• •••• ••••";
-        document.getElementById("vistaNombreTarjeta").textContent = (nom || "TITULAR").toUpperCase();
-        document.getElementById("vistaFechaTarjeta").textContent = exp || "MM/AA";
-    }
-
-    function guardarYRedirigirPago(objetoPedido) {
-        // Guarda en los dos nombres para compatibilidad total con cualquier versión de pago.html
-        localStorage.setItem("viga_pedido_actual", JSON.stringify(objetoPedido));
-        localStorage.setItem("viga_orden_temporal", JSON.stringify({
-            articulos: carrito,
-            cliente: {
-                nombre: objetoPedido.nombre,
-                ciudad: objetoPedido.ciudad,
-                telefono: objetoPedido.telefono,
-                direccion: objetoPedido.direccion
-            },
-            metodo_pago: objetoPedido.banco || objetoPedido.metodo
-        }));
-        window.location.href = "pago.html";
-    }
-
-    // Formularios del Paso 2
-    document.getElementById("formTarjeta").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const num = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
-        guardarYRedirigirPago({
-            metodo: "tarjeta",
-            banco: "Tarjeta Débito / Crédito",
-            terminacion: num.slice(-4) || "4242",
-            cvv: document.getElementById("cvvTarjeta").value,
-            nombre: datosEnvioGuardados.nombre,
-            telefono: datosEnvioGuardados.telefono,
-            direccion: datosEnvioGuardados.direccion,
-            ciudad: datosEnvioGuardados.ciudad,
-            total: totalPedido
+            localStorage.setItem("viga_orden_temporal", JSON.stringify(pedido));
+            window.location.href = "pago.html";
         });
-    });
 
-    document.getElementById("formNequi").addEventListener("submit", function(e) {
-        e.preventDefault();
-        guardarYRedirigirPago({
-            metodo: "nequi",
-            banco: "Nequi",
-            cuenta: document.getElementById("numeroNequi").value.trim(),
-            nombre: datosEnvioGuardados.nombre,
-            telefono: datosEnvioGuardados.telefono,
-            direccion: datosEnvioGuardados.direccion,
-            ciudad: datosEnvioGuardados.ciudad,
-            total: totalPedido
+        document.addEventListener("DOMContentLoaded", () => {
+            sincronizarTema();
+            renderizarCarrito();
         });
-    });
-
-    document.getElementById("formDaviplata").addEventListener("submit", function(e) {
-        e.preventDefault();
-        guardarYRedirigirPago({
-            metodo: "daviplata",
-            banco: "Daviplata",
-            cuenta: document.getElementById("numeroDaviplata").value.trim(),
-            documento: document.getElementById("documentoDaviplata").value.trim(),
-            nombre: datosEnvioGuardados.nombre,
-            telefono: datosEnvioGuardados.telefono,
-            direccion: datosEnvioGuardados.direccion,
-            ciudad: datosEnvioGuardados.ciudad,
-            total: totalPedido
-        });
-    });
-
-    document.getElementById("formBancolombia").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const tipo = document.getElementById("tipoCuentaBancolombia").value;
-        guardarYRedirigirPago({
-            metodo: "bancolombia",
-            banco: `Bancolombia (${tipo})`,
-            cuenta: document.getElementById("numeroCuentaBancolombia").value.trim(),
-            nombre: datosEnvioGuardados.nombre,
-            telefono: datosEnvioGuardados.telefono,
-            direccion: datosEnvioGuardados.direccion,
-            ciudad: datosEnvioGuardados.ciudad,
-            total: totalPedido
-        });
-    });
-
-    document.getElementById("formPSE").addEventListener("submit", function(e) {
-        e.preventDefault();
-        guardarYRedirigirPago({
-            metodo: "pse",
-            banco: `PSE - ${document.getElementById("bancoPSE").value}`,
-            correoPSE: document.getElementById("correoPSE").value.trim(),
-            cvv: document.getElementById("cvvPSE").value.trim(),
-            nombre: datosEnvioGuardados.nombre,
-            telefono: datosEnvioGuardados.telefono,
-            direccion: datosEnvioGuardados.direccion,
-            ciudad: datosEnvioGuardados.ciudad,
-            total: totalPedido
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        sincronizarTema();
-        cargarResumen();
-    });
-</script>
-
+    </script>
 </body>
 </html>
