@@ -38,6 +38,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
@@ -73,21 +76,16 @@
 
         main {
             width: 90%;
-            max-width: 850px;
-            margin: 40px auto;
+            max-width: 900px;
+            margin: 35px auto;
         }
 
         .cabecera-plan {
             background: var(--panel);
             border: 1px solid var(--borde);
             border-radius: 16px;
-            padding: 25px 30px;
+            padding: 22px 25px;
             margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
         .cabecera-plan h1 {
@@ -101,41 +99,124 @@
             color: var(--secundario);
         }
 
-        .tarjeta-dia {
+        /* BARRA DE BOTONES / DÍAS SEPARADOS */
+        .selector-dias {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            scrollbar-width: thin;
+        }
+
+        .btn-dia {
+            background: #1f1f1f;
+            border: 1px solid var(--borde);
+            color: #bbb;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: .2s;
+        }
+
+        .btn-dia:hover {
+            color: white;
+            border-color: #555;
+        }
+
+        .btn-dia.activo {
+            background: var(--verde);
+            color: #111;
+            border-color: var(--verde);
+        }
+
+        /* CONTENEDOR DEL DÍA ACTIVO */
+        .tarjeta-dia-activa {
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 25px;
         }
 
-        .tarjeta-dia h3 {
-            color: var(--verde);
-            font-size: 17px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #282828;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .ejercicio-fila {
+        .dia-encabezado {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #222;
-            font-size: 14px;
+            border-bottom: 1px solid #282828;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .ejercicio-fila:last-child {
-            border-bottom: none;
-        }
-
-        .series-tag {
+        .dia-encabezado h2 {
             color: var(--verde);
-            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .dia-encabezado span {
+            color: var(--secundario);
             font-size: 13px;
+        }
+
+        .grilla-ejercicios {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        /* TARJETA DE EJERCICIO CON FOTO */
+        .tarjeta-ejercicio {
+            background: #171717;
+            border: 1px solid #292929;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 12px;
+            transition: .2s;
+        }
+
+        .tarjeta-ejercicio:hover {
+            border-color: #3b3b3b;
+        }
+
+        .ejercicio-foto {
+            width: 140px;
+            height: 105px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #222;
+            flex-shrink: 0;
+        }
+
+        .ejercicio-info {
+            flex-grow: 1;
+        }
+
+        .ejercicio-info h4 {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .ejercicio-info p {
+            font-size: 12px;
+            color: var(--secundario);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .series-badge {
+            display: inline-block;
+            background: #233827;
+            color: var(--verde);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
 
         .vacio {
@@ -149,7 +230,14 @@
 
         @media (max-width: 650px) {
             header { padding: 0 20px; }
-            .cabecera-plan { padding: 20px; }
+            .tarjeta-ejercicio {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .ejercicio-foto {
+                width: 100%;
+                height: 170px;
+            }
         }
     </style>
 </head>
@@ -166,14 +254,16 @@
 <main>
 
     <div class="cabecera-plan">
-        <div>
-            <h1>Tu Rutina de Entrenamiento</h1>
-            <p id="resumenPerfil">Cargando la estructura de tu plan...</p>
-        </div>
+        <h1>Tu Rutina de Entrenamiento</h1>
+        <p id="resumenPerfil">Cargando la estructura personalizada...</p>
     </div>
 
-    <div id="contenedorDiasRutina">
-        <div class="vacio">Estructurando los ejercicios...</div>
+    <!-- BOTONES PARA NAVEGAR DÍA A DÍA -->
+    <div class="selector-dias" id="contenedorBotonesDias"></div>
+
+    <!-- ZONA DONDE APARECE EL DÍA SELECCIONADO -->
+    <div id="vistaDiaSeleccionado">
+        <div class="vacio">Cargando ejercicios...</div>
     </div>
 
 </main>
@@ -194,13 +284,13 @@
         }
     }
 
-    // Configurar enlace para modificar respuestas
     document.getElementById("btnModificarRespuestas").href = `rutinas.html?id=${encodeURIComponent(idUsuario || '')}&editar=1`;
+
+    let planEstructurado = [];
 
     async function cargarPlan() {
         let datos = null;
 
-        // Intentar obtener del servidor
         if (idUsuario) {
             try {
                 const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
@@ -210,7 +300,6 @@
             } catch(e) {}
         }
 
-        // Respaldo desde localStorage si falló el servidor
         if (!datos || !datos.objetivo) {
             const guardado = localStorage.getItem("viga_rutina_datos");
             if (guardado) {
@@ -219,109 +308,330 @@
         }
 
         if (!datos || !datos.objetivo) {
-            // Si no tiene datos, lo enviamos al formulario
             window.location.replace(`rutinas.html?id=${encodeURIComponent(idUsuario || '')}`);
             return;
         }
 
-        renderizarRutina(datos);
+        generarEstructuraRutina(datos);
     }
 
-    function renderizarRutina(datos) {
+    function generarEstructuraRutina(datos) {
         const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
         document.getElementById("resumenPerfil").textContent = 
-            `Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días a la semana | Cuidado: ${tieneLesion ? datos.lesion : 'Ninguno'}`;
-
-        const contenedor = document.getElementById("contenedorDiasRutina");
-        contenedor.innerHTML = "";
-
-        const esRodilla = (datos.lesion || "").toLowerCase().includes("rodilla");
-        const esHombro = (datos.lesion || "").toLowerCase().includes("hombro");
-        const esEspalda = (datos.lesion || "").toLowerCase().includes("espalda");
+            `Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días/semana | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
 
         const numDias = parseInt(datos.dias_entreno) || 3;
+        const lesion = (datos.lesion || "").toLowerCase();
+        const esRodilla = lesion.includes("rodilla");
+        const esHombro = lesion.includes("hombro");
+        const esEspalda = lesion.includes("espalda");
+        const faltaSuperior = lesion.includes("extremidad superior");
+        const faltaInferior = lesion.includes("extremidad inferior");
 
-        const bancoEjercicios = [
-            {
-                dia: "Día 1: Empuje (Pecho, Hombro y Tríceps)",
+        // BANCO DE BLOQUES CON FOTOS REALES
+        const bloques = {
+            cuerpoCompleto: {
+                titulo: "Cuerpo Completo (Full Body)",
+                descripcion: "Entrenamiento balanceado que activa todos los grupos musculares mayores en una sola sesión.",
                 ejercicios: [
-                    { nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
-                    { nombre: esHombro ? "Elevaciones laterales controladas" : "Press militar con mancuernas", series: "3 series × 12 reps" },
-                    { nombre: "Aperturas en polea o máquina pec-deck", series: "3 series × 12 reps" },
-                    { nombre: "Extensiones de tríceps en polea", series: "4 series × 12 reps" }
+                    {
+                        nombre: esRodilla ? "Prensa a 90° con tempo controlado" : (faltaInferior ? "Extensiones unilaterales en máquina" : "Sentadilla con mancuernas o barra"),
+                        series: "4 series × 8-10 reps",
+                        foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+                        nota: "Enfócate en la profundidad controlada sin despegar los talones."
+                    },
+                    {
+                        nombre: esHombro || faltaSuperior ? "Pec-Deck en máquina (aislamiento)" : "Press de banca plano con mancuernas",
+                        series: "4 series × 8-10 reps",
+                        foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+                        nota: "Mantén retracción escapular y codos a 45 grados."
+                    },
+                    {
+                        nombre: esEspalda ? "Jalón al pecho con agarre neutro" : "Jalón al pecho en polea alta",
+                        series: "4 series × 10 reps",
+                        foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
+                        nota: "Lleva la barra hacia la parte alta del esternón sin balancear el torso."
+                    },
+                    {
+                        nombre: esRodilla ? "Puente de glúteo en suelo o banco" : "Peso muerto rumano con mancuernas",
+                        series: "3 series × 10-12 reps",
+                        foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+                        nota: "Bisagra de cadera manteniendo la columna neutra."
+                    },
+                    {
+                        nombre: esHombro ? "Elevaciones laterales ligeras" : "Press militar con mancuernas sentado",
+                        series: "3 series × 12 reps",
+                        foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+                        nota: "Empuja verticalmente sin arquear la zona lumbar."
+                    },
+                    {
+                        nombre: "Plancha frontal isométrica",
+                        series: "3 series × 45 segundos",
+                        foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
+                        nota: "Aprieta glúteos y abdomen manteniendo el cuerpo en línea recta."
+                    },
+                    {
+                        nombre: "Cardio en elíptica o caminata inclinada",
+                        series: "12 a 15 minutos continuos",
+                        foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
+                        nota: "Ritmo constante a zona 2 para finalizar la sesión."
+                    }
                 ]
             },
-            {
-                dia: "Día 2: Tracción (Espalda, Bíceps y Core)",
+            trenSuperior: {
+                titulo: "Tren Superior (Torso y Brazos)",
+                descripcion: "Énfasis completo en pecho, espalda, hombros y brazos.",
                 ejercicios: [
-                    { nombre: esEspalda ? "Jalón al pecho con agarre cerrado neutro" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
-                    { nombre: esEspalda ? "Remo con apoyo en el pecho" : "Remo con barra", series: "3 series × 10-12 reps" },
-                    { nombre: "Curl de bíceps con mancuernas", series: "3 series × 12 reps" },
-                    { nombre: esEspalda ? "Plancha frontal isométrica" : "Elevaciones de piernas suspendido", series: "3 series × 40 segs" }
+                    {
+                        nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano",
+                        series: "4 series × 8-10 reps",
+                        foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+                        nota: "Controla la fase excéntrica en 2 segundos."
+                    },
+                    {
+                        nombre: esEspalda ? "Remo en máquina con pecho apoyado" : "Remo con barra o mancuerna",
+                        series: "4 series × 10 reps",
+                        foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
+                        nota: "Tira llevando los codos hacia las caderas."
+                    },
+                    {
+                        nombre: esHombro ? "Elevaciones laterales en polea" : "Press militar con mancuernas",
+                        series: "3 series × 12 reps",
+                        foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+                        nota: "Rango fluido sin impulsos del cuerpo."
+                    },
+                    {
+                        nombre: "Jalón al pecho en polea alta",
+                        series: "4 series × 10-12 reps",
+                        foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+                        nota: "Extiende completamente los dorsales en la parte alta."
+                    },
+                    {
+                        nombre: "Aperturas en poleas o máquina pec-deck",
+                        series: "3 series × 12-15 reps",
+                        foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+                        nota: "Apertura amplia sintiendo el estiramiento en pectorales."
+                    },
+                    {
+                        nombre: "Curl de bíceps en banco inclinado",
+                        series: "3 series × 12 reps",
+                        foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+                        nota: "Aísla el bíceps sin mover los codos hacia adelante."
+                    },
+                    {
+                        nombre: "Extensiones de tríceps en polea alta",
+                        series: "3 series × 12-15 reps",
+                        foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+                        nota: "Bloquea los codos a los lados del torso."
+                    }
                 ]
             },
-            {
-                dia: "Día 3: Tren inferior (Pierna y Pantorrilla)",
+            trenInferior: {
+                titulo: "Tren Inferior (Pierna y Glúteos)",
+                descripcion: "Fuerza, volumen y estabilidad en cuádriceps, femorales y pantorrillas.",
                 ejercicios: [
-                    { nombre: esRodilla ? "Prensa a 90° sin bloqueo articular" : "Sentadilla profunda con barra", series: "4 series × 8-10 reps" },
-                    { nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
-                    { nombre: "Curl femoral en máquina", series: "3 series × 12 reps" },
-                    { nombre: "Elevación de talones para gemelo", series: "4 series × 15 reps" }
+                    {
+                        nombre: esRodilla ? "Prensa a 90° sin bloqueo articular" : (faltaInferior ? "Extensiones adaptadas en máquina" : "Sentadilla con barra trasera"),
+                        series: "4 series × 8-10 reps",
+                        foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+                        nota: "Baja controlado manteniendo el core rígido."
+                    },
+                    {
+                        nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas o estocadas caminando",
+                        series: "4 series × 10-12 reps",
+                        foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+                        nota: "Empuja con el talón para activar glúteos y femorales."
+                    },
+                    {
+                        nombre: "Curl femoral tumbado o sentado",
+                        series: "4 series × 12 reps",
+                        foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+                        nota: "Controla el retorno del peso para máxima tensión."
+                    },
+                    {
+                        nombre: esRodilla ? "Extensiones de cuádriceps rango medio" : "Prensa inclinada 45°",
+                        series: "3 series × 12 reps",
+                        foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+                        nota: "Pies al ancho de los hombros."
+                    },
+                    {
+                        nombre: "Abductores en máquina",
+                        series: "3 series × 15 reps",
+                        foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
+                        nota: "Pausa de un segundo en máxima apertura."
+                    },
+                    {
+                        nombre: "Elevación de talones para gemelo",
+                        series: "4 series × 15-20 reps",
+                        foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+                        nota: "Estira bien abajo y contrae fuerte arriba."
+                    },
+                    {
+                        nombre: "Elevaciones de piernas en colchoneta o banco",
+                        series: "3 series × 15 reps",
+                        foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
+                        nota: "No arquees la zona lumbar al bajar las piernas."
+                    }
                 ]
             },
-            {
-                dia: "Día 4: Torso Completo y Estabilidad",
+            cardioCore: {
+                titulo: "Cardio, Abdomen y Movilidad",
+                descripcion: "Acondicionamiento cardiovascular, fortalecimiento de la zona media y recuperación activa.",
                 ejercicios: [
-                    { nombre: "Press inclinado con mancuernas", series: "4 series × 10 reps" },
-                    { nombre: "Remo unilateral con mancuerna", series: "3 series × 12 reps" },
-                    { nombre: "Elevaciones laterales para hombro", series: "3 series × 15 reps" },
-                    { nombre: "Fondos entre bancos o paralelas", series: "3 series × 12 reps" }
-                ]
-            },
-            {
-                dia: "Día 5: Pierna enfocada y Core",
-                ejercicios: [
-                    { nombre: esRodilla ? "Peso muerto rumano suave" : "Peso muerto convencional", series: "4 series × 10 reps" },
-                    { nombre: "Prensa inclinada", series: "4 series × 12 reps" },
-                    { nombre: "Abductores en máquina", series: "3 series × 15 reps" },
-                    { nombre: "Rueda abdominal o plancha", series: "3 series × 45 segs" }
-                ]
-            },
-            {
-                dia: "Día 6: Acondicionamiento y Brazos",
-                ejercicios: [
-                    { nombre: "Superserie: Curl de bíceps + Press francés", series: "4 series × 12 reps" },
-                    { nombre: "Remo al mentón con polea", series: "3 series × 12 reps" },
-                    { nombre: "Cardio hiit / Trote suave", series: "20 minutos" }
-                ]
-            },
-            {
-                dia: "Día 7: Movilidad y Recuperación Activa",
-                ejercicios: [
-                    { nombre: "Caminata ligera al aire libre", series: "30-45 minutos" },
-                    { nombre: "Estiramientos dinámicos cuerpo completo", series: "15 minutos" },
-                    { nombre: "Movilidad de cadera y descompresión lumbar", series: "10 minutos" }
+                    {
+                        nombre: "Cardio Hiit o Intervalos en Elíptica/Cinta",
+                        series: "20 minutos (1 min intenso x 1 min suave)",
+                        foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
+                        nota: "Eleva las pulsaciones controlando la respiración."
+                    },
+                    {
+                        nombre: "Plancha frontal isométrica",
+                        series: "4 series × 45 segundos",
+                        foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
+                        nota: "Core totalmente bloqueado y glúteos activos."
+                    },
+                    {
+                        nombre: "Crunch abdominal en polea alta o suelo",
+                        series: "3 series × 15 reps",
+                        foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+                        nota: "Flexiona el tronco sin tirar del cuello."
+                    },
+                    {
+                        nombre: "Giros rusos (Russian Twists)",
+                        series: "3 series × 20 giros totales",
+                        foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+                        nota: "Activa los oblicuos con un disco o mancuerna liviana."
+                    },
+                    {
+                        nombre: "Elevación de rodillas suspendido o en banco",
+                        series: "3 series × 12-15 reps",
+                        foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
+                        nota: "Lleva las rodillas al pecho sin balanceo."
+                    },
+                    {
+                        nombre: "Caminadora con inclinación constante",
+                        series: "15 minutos a paso ligero",
+                        foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
+                        nota: "Quema calórica de bajo impacto articular."
+                    },
+                    {
+                        nombre: "Sesión de movilidad articular y estiramiento",
+                        series: "10 minutos completos",
+                        foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+                        nota: "Relaja caderas, isquiotibiales y hombros."
+                    }
                 ]
             }
-        ];
+        };
 
-        const diasAMostrar = bancoEjercicios.slice(0, numDias);
+        // DISTRIBUCIÓN SEGÚN EL NÚMERO DE DÍAS SELECCIONADO
+        if (numDias === 1) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.cuerpoCompleto }
+            ];
+        } else if (numDias === 2) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior },
+                { diaNumero: 2, ...bloques.trenInferior }
+            ];
+        } else if (numDias === 3) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior },
+                { diaNumero: 2, ...bloques.trenInferior },
+                { diaNumero: 3, ...bloques.cardioCore }
+            ];
+        } else if (numDias === 4) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Torso (Fuerza)" },
+                { diaNumero: 2, ...bloques.trenInferior, titulo: "Día 2: Pierna (Fuerza)" },
+                { diaNumero: 3, ...bloques.trenSuperior, titulo: "Día 3: Torso (Volumen)" },
+                { diaNumero: 4, ...bloques.trenInferior, titulo: "Día 4: Pierna y Core (Volumen)" }
+            ];
+        } else if (numDias === 5) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Empuje (Pecho, Hombro, Tríceps)" },
+                { diaNumero: 2, ...bloques.trenSuperior, titulo: "Día 2: Tracción (Espalda, Bíceps)" },
+                { diaNumero: 3, ...bloques.trenInferior, titulo: "Día 3: Pierna Completa" },
+                { diaNumero: 4, ...bloques.trenSuperior, titulo: "Día 4: Torso Completo" },
+                { diaNumero: 5, ...bloques.cardioCore, titulo: "Día 5: Pierna Enfoque y Core" }
+            ];
+        } else if (numDias === 6) {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Empuje 1" },
+                { diaNumero: 2, ...bloques.trenSuperior, titulo: "Día 2: Tirón 1" },
+                { diaNumero: 3, ...bloques.trenInferior, titulo: "Día 3: Pierna 1" },
+                { diaNumero: 4, ...bloques.trenSuperior, titulo: "Día 4: Empuje 2" },
+                { diaNumero: 5, ...bloques.trenSuperior, titulo: "Día 5: Tirón 2" },
+                { diaNumero: 6, ...bloques.trenInferior, titulo: "Día 6: Pierna 2" }
+            ];
+        } else {
+            planEstructurado = [
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Empuje 1" },
+                { diaNumero: 2, ...bloques.trenSuperior, titulo: "Día 2: Tirón 1" },
+                { diaNumero: 3, ...bloques.trenInferior, titulo: "Día 3: Pierna 1" },
+                { diaNumero: 4, ...bloques.trenSuperior, titulo: "Día 4: Empuje 2" },
+                { diaNumero: 5, ...bloques.trenSuperior, titulo: "Día 5: Tirón 2" },
+                { diaNumero: 6, ...bloques.trenInferior, titulo: "Día 6: Pierna 2" },
+                { diaNumero: 7, ...bloques.cardioCore, titulo: "Día 7: Movilidad y Recuperación Activa" }
+            ];
+        }
 
-        diasAMostrar.forEach(d => {
-            const div = document.createElement("div");
-            div.className = "tarjeta-dia";
-            let filas = "";
-            d.ejercicios.forEach(ej => {
-                filas += `
-                    <div class="ejercicio-fila">
-                        <span><strong>${ej.nombre}</strong></span>
-                        <span class="series-tag">${ej.series}</span>
-                    </div>
-                `;
-            });
-            div.innerHTML = `<h3><span>${d.dia}</span></h3>${filas}`;
-            contenedor.appendChild(div);
+        renderizarBotonesDias();
+        verDia(1); // Carga el primer día de inicio
+    }
+
+    function renderizarBotonesDias() {
+        const contenedor = document.getElementById("contenedorBotonesDias");
+        contenedor.innerHTML = "";
+
+        planEstructurado.forEach(d => {
+            const btn = document.createElement("button");
+            btn.className = `btn-dia ${d.diaNumero === 1 ? 'activo' : ''}`;
+            btn.textContent = `Día ${d.diaNumero}`;
+            btn.id = `btnDia-${d.diaNumero}`;
+            btn.onclick = () => verDia(d.diaNumero);
+            contenedor.appendChild(btn);
         });
+    }
+
+    function verDia(numeroDia) {
+        document.querySelectorAll(".btn-dia").forEach(b => b.classList.remove("activo"));
+        const btnActivo = document.getElementById(`btnDia-${numeroDia}`);
+        if (btnActivo) btnActivo.classList.add("activo");
+
+        const diaData = planEstructurado.find(d => d.diaNumero === numeroDia);
+        if (!diaData) return;
+
+        const contenedorVista = document.getElementById("vistaDiaSeleccionado");
+
+        let htmlEjercicios = "";
+        diaData.ejercicios.forEach(ej => {
+            htmlEjercicios += `
+                <div class="tarjeta-ejercicio">
+                    <img class="ejercicio-foto" src="${ej.foto}" alt="${ej.nombre}" loading="lazy">
+                    <div class="ejercicio-info">
+                        <h4>${ej.nombre}</h4>
+                        <p>${ej.nota}</p>
+                        <span class="series-badge">${ej.series}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        contenedorVista.innerHTML = `
+            <div class="tarjeta-dia-activa">
+                <div class="dia-encabezado">
+                    <div>
+                        <h2>${diaData.titulo}</h2>
+                        <span style="font-size:13px; color:var(--secundario);">${diaData.descripcion}</span>
+                    </div>
+                    <span style="color:var(--verde); font-weight:700;">${diaData.ejercicios.length} ejercicios</span>
+                </div>
+                <div class="grilla-ejercicios">
+                    ${htmlEjercicios}
+                </div>
+            </div>
+        `;
     }
 
     document.addEventListener("DOMContentLoaded", cargarPlan);

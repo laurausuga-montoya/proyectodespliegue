@@ -236,18 +236,28 @@
 
 <main>
 
-    <!-- PANTALLA DE CARGA MIENTRAS COMPRUEBA SI YA EXISTE RUTINA -->
     <div id="cargandoComprobacion" class="cargando-pantalla">
         <p>Verificando tu plan de entrenamiento...</p>
     </div>
 
-    <!-- FORMULARIO DE PERSONALIZACIÓN -->
     <div class="tarjeta-formulario" id="contenedorFormulario" style="display: none;">
         <form id="formRutinas">
 
+            <!-- 1. GÉNERO Y MEDIDAS -->
             <div class="bloque-seccion">
-                <h3>1. Medidas físicas</h3>
-                <p>Ingresa tu peso y estatura actuales para calibrar el volumen de carga.</p>
+                <h3>1. Perfil y medidas físicas</h3>
+                <p>Datos biométricos básicos para calibrar tu plan.</p>
+
+                <div class="campo">
+                    <label for="genero">Género *</label>
+                    <select id="genero" required>
+                        <option value="">Selecciona tu género</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro / Prefiero no decir</option>
+                    </select>
+                </div>
+
                 <div class="fila-doble">
                     <div class="campo">
                         <label for="peso">Peso actual (kg) *</label>
@@ -260,6 +270,7 @@
                 </div>
             </div>
 
+            <!-- 2. OBJETIVO -->
             <div class="bloque-seccion">
                 <h3>2. Objetivo principal</h3>
                 <p>¿Qué meta fitness deseas priorizar en tu plan?</p>
@@ -274,6 +285,7 @@
                 </div>
             </div>
 
+            <!-- 3. LUGAR -->
             <div class="bloque-seccion">
                 <h3>3. Lugar y equipamiento disponible</h3>
                 <p>Diseñaremos los ejercicios de acuerdo al entorno donde entrenes.</p>
@@ -287,21 +299,24 @@
                 </div>
             </div>
 
+            <!-- 4. DÍAS LIMPIOS -->
             <div class="bloque-seccion">
                 <h3>4. Días de entrenamiento</h3>
                 <p>¿Cuántos días a la semana dispones para entrenar?</p>
                 <div class="campo">
                     <select id="dias" required>
-                        <option value="2">2 días por semana</option>
-                        <option value="3">3 días por semana</option>
+                        <option value="1">1 día por semana (Cuerpo completo)</option>
+                        <option value="2">2 días por semana (Tren superior / Tren inferior)</option>
+                        <option value="3">3 días por semana (Superior / Inferior / Cardio y Core)</option>
                         <option value="4">4 días por semana</option>
                         <option value="5" selected>5 días por semana</option>
                         <option value="6">6 días por semana</option>
-                        <option value="7">Todos los días</option>
+                        <option value="7">7 días por semana</option>
                     </select>
                 </div>
             </div>
 
+            <!-- 5. NIVEL -->
             <div class="bloque-seccion">
                 <h3>5. Nivel de experiencia</h3>
                 <p>Selecciona tu nivel para definir las series y tiempos de descanso.</p>
@@ -314,9 +329,10 @@
                 </div>
             </div>
 
+            <!-- 6. LESIONES O CONDICIONES -->
             <div class="bloque-seccion">
-                <h3>6. Lesiones o adaptaciones</h3>
-                <p>¿Tienes alguna condición articular o física que debamos tener en cuenta?</p>
+                <h3>6. Lesiones, adaptaciones o falta de extremidades</h3>
+                <p>¿Tienes alguna condición articular, física o falta de extremidad a tener en cuenta?</p>
 
                 <div class="opciones-lesion">
                     <label class="caja-radio">
@@ -325,19 +341,19 @@
                     </label>
                     <label class="caja-radio">
                         <input type="radio" name="opcionLesion" id="radioConLesion" value="si" onchange="alternarLesion()">
-                        <span>Presento lesiones</span>
+                        <span>Presento lesiones / adaptaciones</span>
                     </label>
                 </div>
 
                 <div class="desplegable-lesion" id="cajaSeleccionLesion">
-                    <label for="selectZonaLesion">Zona a cuidar:</label>
+                    <label for="selectZonaLesion">Condición o extremidad a cuidar:</label>
                     <select id="selectZonaLesion">
                         <option value="Rodilla">Dolor / Lesión de rodilla</option>
-                        <option value="Hombro">Molestia en hombro</option>
-                        <option value="Espalda">Dolor lumbar / Espalda</option>
-                        <option value="Muñeca">Molestia en muñeca</option>
-                        <option value="Codo">Molestia en codo</option>
-                        <option value="Tobillo">Molestia en tobillo</option>
+                        <option value="Hombro">Molestia en hombro / Manguito rotador</option>
+                        <option value="Espalda">Dolor lumbar / Hernia de espalda</option>
+                        <option value="Muñeca">Molestia en muñeca / Codo</option>
+                        <option value="Falta de extremidad superior">Falta de extremidad superior (Brazo / Mano)</option>
+                        <option value="Falta de extremidad inferior">Falta de extremidad inferior (Pierna / Pie)</option>
                     </select>
                 </div>
             </div>
@@ -355,10 +371,9 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // 1. Obtener ID de usuario desde URL o localStorage
     const params = new URLSearchParams(window.location.search);
     let idUsuario = params.get("id");
-    const forzarEdicion = params.get("editar") === "1"; // Permite editar si viene con ?editar=1
+    const forzarEdicion = params.get("editar") === "1";
 
     if (!idUsuario) {
         const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
@@ -375,14 +390,12 @@
         document.getElementById("cajaSeleccionLesion").style.display = tieneLesion ? "block" : "none";
     }
 
-    // 2. Comprobar si el usuario YA completó el formulario anteriormente
     async function verificarEstadoRutina() {
         if (!idUsuario) {
             mostrarFormulario();
             return;
         }
 
-        // Si el usuario pidió explícitamente editar, mostramos el formulario con sus datos
         if (forzarEdicion) {
             await cargarDatosFormulario();
             mostrarFormulario();
@@ -393,18 +406,14 @@
             const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
             if (res.ok) {
                 const datos = await res.json();
-                // Si ya tiene objetivo y días registrados, redirige directamente a rutina.plan.html
                 if (datos && datos.objetivo && (datos.dias_entreno || datos.peso)) {
                     localStorage.setItem("viga_rutina_datos", JSON.stringify(datos));
                     window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario)}`);
                     return;
                 }
             }
-        } catch (e) {
-            console.log("No hay rutina previa en servidor, revisando almacenamiento local...");
-        }
+        } catch (e) {}
 
-        // Respaldo en localStorage
         const rutinaLocal = localStorage.getItem("viga_rutina_datos");
         if (rutinaLocal && !forzarEdicion) {
             window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario || '')}`);
@@ -427,7 +436,6 @@
             const datos = await res.json();
             if (datos.peso) document.getElementById("peso").value = datos.peso;
             if (datos.altura) {
-                // Si está en metros (ej. 1.75), convertirlo visualmente a cm (175)
                 document.getElementById("altura").value = datos.altura < 3 ? Math.round(datos.altura * 100) : datos.altura;
             }
             if (datos.objetivo) document.getElementById("objetivo").value = datos.objetivo;
@@ -443,7 +451,6 @@
         } catch (e) {}
     }
 
-    // 3. Enviar cuestionario y redirigir a rutina.plan.html
     document.getElementById("formRutinas").addEventListener("submit", async function(e) {
         e.preventDefault();
 
@@ -458,6 +465,7 @@
         const valorLesion = tieneLesion ? document.getElementById("selectZonaLesion").value : "ninguna";
 
         const payload = {
+            genero: document.getElementById("genero").value,
             peso: Number(document.getElementById("peso").value),
             altura: Number(document.getElementById("altura").value),
             objetivo: document.getElementById("objetivo").value,
@@ -481,10 +489,7 @@
                 }
             }
 
-            // Guardamos localmente para acceso instantáneo
             localStorage.setItem("viga_rutina_datos", JSON.stringify(payload));
-
-            // Redirección directa a rutina.plan.html con el id del usuario
             window.location.href = `rutina.plan.html?id=${encodeURIComponent(idUsuario || '')}`;
 
         } catch (error) {

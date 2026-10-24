@@ -373,11 +373,12 @@ app.get("/empresa/:id/ventas", function (req, res) {
 
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
+   (Con soporte completo para género, días y normalización)
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
     const sql = `
-        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
+        SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
         FROM usuarios 
         WHERE identificacion = ? 
         LIMIT 1
@@ -385,6 +386,7 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
+            // Fallback en caso de que alguna columna falte en MySQL
             const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
             return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
                 if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
@@ -398,11 +400,12 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
-    let { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
+    let { genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
 
+    const generoFinal = genero ? String(genero).trim() : 'No especificado';
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
 
-    // Normalizar altura: si viene en centímetros (ej. 175), convertir a metros (1.75) para evitar out of range
+    // Normalizar altura: si viene en cm (ej. 175), convertir a metros (1.75) para evitar out of range
     let alturaFinal = altura ? Number(altura) : null;
     if (alturaFinal && alturaFinal > 3) {
         alturaFinal = Number((alturaFinal / 100).toFixed(2));
@@ -410,13 +413,14 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     const sql = `
         UPDATE usuarios 
-        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
+        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
         WHERE identificacion = ?
     `;
 
     conexion.query(
         sql, 
         [
+            generoFinal,
             peso || null, 
             alturaFinal, 
             lesionFinal, 
@@ -428,8 +432,8 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                // Respaldo por si la columna dias_entreno aún no existe en MySQL
-                if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('dias_entreno')) {
+                // Si la columna genero o dias_entreno no existiera aún en MySQL, guardar con fallback
+                if (error.code === 'ER_BAD_FIELD_ERROR') {
                     const sqlFallback = `
                         UPDATE usuarios 
                         SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
@@ -437,7 +441,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
                     `;
                     return conexion.query(sqlFallback, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
                         if (errFallback) return res.status(500).json({ error: errFallback.message });
-                        return res.json({ mensaje: "Datos físicos guardados correctamente." });
+                        return res.json({ mensaje: "Datos físicos guardados correctamente (sin columnas adicionales)." });
                     });
                 }
                 console.error("❌ Error en MySQL:", error);
