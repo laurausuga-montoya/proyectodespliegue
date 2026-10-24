@@ -123,6 +123,7 @@
             border-radius: 8px;
             color: white;
             outline: none;
+            font-size: 14px;
         }
 
         .campo input:focus, .campo select:focus {
@@ -232,16 +233,35 @@
             color: white;
         }
 
-        .seccion-pago {
-            display: none;
+        /* TARJETA INTERACTIVA */
+        .tarjeta-grafica {
+            background: linear-gradient(135deg, #1c2b1f, #111);
+            border: 1px solid var(--verde);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(55, 227, 89, 0.1);
         }
 
-        .seccion-pago.activa {
-            display: block;
+        .tarjeta-grafica .chip {
+            width: 42px;
+            height: 30px;
+            background: #d4af37;
+            border-radius: 5px;
+        }
+
+        .tarjeta-grafica .numero-vista {
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: #fff;
+            font-weight: 600;
         }
 
         .info-bancaria {
-            background: #222;
+            background: #202020;
             border: 1px dashed var(--verde);
             border-radius: 10px;
             padding: 18px;
@@ -251,31 +271,13 @@
         .info-bancaria h3 {
             color: var(--verde);
             font-size: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .info-bancaria p {
             font-size: 13px;
             color: #ddd;
             line-height: 1.7;
-        }
-
-        .tarjeta-grafica {
-            background: linear-gradient(135deg, #1f2e22, #111);
-            border: 1px solid var(--verde);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .tarjeta-grafica .chip {
-            width: 40px;
-            height: 28px;
-            background: #d4af37;
-            border-radius: 5px;
         }
 
         @media (max-width: 800px) {
@@ -293,110 +295,114 @@
 
 <main>
     <h1 id="tituloPaso">Confirmación de Pedido</h1>
-    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa los datos para coordinar tu entrega.</p>
+    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa los datos para la entrega.</p>
 
     <div class="checkout-grid">
 
-        <!-- PASO 1: DATOS DE ENVÍO -->
-        <section class="card" id="pasoEnvio">
-            <h2>Datos de entrega</h2>
-            <form id="formEnvio">
-                <div class="campo">
-                    <label for="nombreCliente">Nombre completo *</label>
-                    <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
-                </div>
-                <div class="campo">
-                    <label for="telefonoCliente">Teléfono / WhatsApp *</label>
-                    <input type="tel" id="telefonoCliente" required placeholder="Ej. 3001234567">
-                </div>
-                <div class="campo">
-                    <label for="direccionCliente">Dirección de entrega *</label>
-                    <input type="text" id="direccionCliente" required placeholder="Ej. Calle 10 # 40-20, Apto 301">
-                </div>
-                <div class="campo">
-                    <label for="ciudadCliente">Ciudad *</label>
-                    <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
-                </div>
-                <div class="campo">
-                    <label for="metodoPago">Selecciona tu método de pago *</label>
-                    <select id="metodoPago" required>
-                        <option value="transferencia">Transferencia bancaria / Nequi / Daviplata</option>
-                        <option value="tarjeta">Tarjeta de crédito / Débito</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-pagar">Continuar al pago →</button>
-            </form>
-        </section>
+        <!-- CONTENEDOR IZQUIERDO DINÁMICO -->
+        <div id="columnaIzquierda">
 
-        <!-- PASO 2A: PASARELA DE TRANSFERENCIA / NEQUI / DAVIPLATA -->
-        <section class="card seccion-pago" id="pasoTransferencia">
-            <h2>Pago por Transferencia / Nequi</h2>
-            
-            <div class="info-bancaria">
-                <h3>Datos oficiales de cobro</h3>
-                <p><strong>Nequi / Daviplata:</strong> 300 123 4567</p>
-                <p><strong>Bancolombia (Ahorros):</strong> 123-456789-01</p>
-                <p><strong>Titular:</strong> VIGA Deportes S.A.S</p>
-                <p><strong>Monto total:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
-            </div>
-
-            <form id="formTransferencia">
-                <div class="campo">
-                    <label for="cuentaOrigen">Banco o billetera desde donde debitar *</label>
-                    <select id="cuentaOrigen" required>
-                        <option value="Nequi">Nequi</option>
-                        <option value="Daviplata">Daviplata</option>
-                        <option value="Bancolombia">Bancolombia</option>
-                        <option value="Otro Banco">Otro banco</option>
-                    </select>
-                </div>
-                <div class="campo">
-                    <label for="cuentaNumero">Número de cuenta o celular asociado *</label>
-                    <input type="text" id="cuentaNumero" required placeholder="Ej. 3001234567">
-                </div>
-                <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-            </form>
-        </section>
-
-        <!-- PASO 2B: PASARELA DE TARJETA -->
-        <section class="card seccion-pago" id="pasoTarjeta">
-            <h2>Pago con Tarjeta de Crédito / Débito</h2>
-
-            <div class="tarjeta-grafica">
-                <div class="chip"></div>
-                <div style="font-size: 16px; letter-spacing: 2px;" id="vistaNumeroTarjeta">•••• •••• •••• ••••</div>
-                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
-                    <span id="vistaNombreTarjeta">TITULAR DE LA TARJETA</span>
-                    <span id="vistaFechaTarjeta">MM/AA</span>
-                </div>
-            </div>
-
-            <form id="formTarjeta">
-                <div class="campo">
-                    <label for="numeroTarjeta">Número de la tarjeta *</label>
-                    <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="4500 0000 0000 0000" oninput="actualizarTarjetaVisual()">
-                </div>
-                <div class="campo">
-                    <label for="nombreTarjeta">Nombre impreso en la tarjeta *</label>
-                    <input type="text" id="nombreTarjeta" required placeholder="Como aparece en el plástico" oninput="actualizarTarjetaVisual()">
-                </div>
-                <div class="fila-campos">
+            <!-- PASO 1: DATOS DE ENVÍO -->
+            <section class="card" id="pasoEnvio">
+                <h2>Datos de entrega</h2>
+                <form id="formEnvio">
                     <div class="campo">
-                        <label for="expiracionTarjeta">Expiración (MM/AA) *</label>
-                        <input type="text" id="expiracionTarjeta" maxlength="5" required placeholder="MM/AA" oninput="actualizarTarjetaVisual()">
+                        <label for="nombreCliente">Nombre completo *</label>
+                        <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
                     </div>
                     <div class="campo">
-                        <label for="cvvTarjeta">CVV / CVC *</label>
-                        <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
+                        <label for="telefonoCliente">Teléfono / WhatsApp *</label>
+                        <input type="tel" id="telefonoCliente" required placeholder="Ej. 3001234567">
+                    </div>
+                    <div class="campo">
+                        <label for="direccionCliente">Dirección de entrega *</label>
+                        <input type="text" id="direccionCliente" required placeholder="Ej. Calle 10 # 40-20, Apto 301">
+                    </div>
+                    <div class="campo">
+                        <label for="ciudadCliente">Ciudad *</label>
+                        <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
+                    </div>
+                    <div class="campo">
+                        <label for="metodoPago">Selecciona tu método de pago *</label>
+                        <select id="metodoPago" required>
+                            <option value="tarjeta">Tarjeta de crédito / Débito</option>
+                            <option value="transferencia">Transferencia bancaria / Nequi / Daviplata</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-pagar">Continuar a ingresar datos de pago →</button>
+                </form>
+            </section>
+
+            <!-- PASO 2: FORMULARIO PARA TARJETA DE CRÉDITO / DÉBITO -->
+            <section class="card" id="pasoTarjeta" style="display: none;">
+                <h2>Ingresa los datos de tu Tarjeta</h2>
+
+                <div class="tarjeta-grafica">
+                    <div class="chip"></div>
+                    <div class="numero-vista" id="vistaNumeroTarjeta">•••• •••• •••• ••••</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
+                        <span id="vistaNombreTarjeta">TITULAR DE LA TARJETA</span>
+                        <span id="vistaFechaTarjeta">MM/AA</span>
                     </div>
                 </div>
-                <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
-                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
-            </form>
-        </section>
 
-        <!-- RESUMEN DEL PEDIDO -->
+                <form id="formTarjeta">
+                    <div class="campo">
+                        <label for="numeroTarjeta">Número de la tarjeta *</label>
+                        <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="1234 5678 9012 3456" oninput="actualizarTarjetaVisual()">
+                    </div>
+                    <div class="campo">
+                        <label for="nombreTarjeta">Nombre impreso en la tarjeta *</label>
+                        <input type="text" id="nombreTarjeta" required placeholder="Ej. CARLOS MARTINEZ" oninput="actualizarTarjetaVisual()">
+                    </div>
+                    <div class="fila-campos">
+                        <div class="campo">
+                            <label for="expiracionTarjeta">Expiración (MM/AA) *</label>
+                            <input type="text" id="expiracionTarjeta" maxlength="5" required placeholder="12/28" oninput="actualizarTarjetaVisual()">
+                        </div>
+                        <div class="campo">
+                            <label for="cvvTarjeta">Código CVV / CVC *</label>
+                            <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
+                </form>
+            </section>
+
+            <!-- PASO 2: FORMULARIO PARA NEQUI / TRANSFERENCIA -->
+            <section class="card" id="pasoTransferencia" style="display: none;">
+                <h2>Datos de cuenta para cobro</h2>
+                
+                <div class="info-bancaria">
+                    <h3>Cuentas oficiales VIGA</h3>
+                    <p><strong>Nequi / Daviplata:</strong> 300 123 4567</p>
+                    <p><strong>Bancolombia:</strong> 123-456789-01</p>
+                    <p><strong>Total exacto a pagar:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
+                </div>
+
+                <form id="formTransferencia">
+                    <div class="campo">
+                        <label for="cuentaOrigen">Banco o billetera desde donde debitar *</label>
+                        <select id="cuentaOrigen" required>
+                            <option value="Nequi">Nequi</option>
+                            <option value="Daviplata">Daviplata</option>
+                            <option value="Bancolombia">Bancolombia</option>
+                            <option value="Otro Banco">Otro banco</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="cuentaNumero">Número de celular o cuenta asociada *</label>
+                        <input type="text" id="cuentaNumero" required placeholder="Ej. 3001234567">
+                    </div>
+                    <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
+                    <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de entrega</button>
+                </form>
+            </section>
+
+        </div>
+
+        <!-- RESUMEN DERECHO DEL PEDIDO -->
         <section class="card">
             <h2>Resumen del pedido</h2>
             <div class="lista-articulos" id="listaArticulos"></div>
@@ -467,7 +473,10 @@
         document.getElementById("montoTransferencia").textContent = dinero(suma);
     }
 
-    document.getElementById("formEnvio").addEventListener("submit", (e) => {
+    /* =========================================================
+       PASO 1 -> PASO 2
+    ========================================================= */
+    document.getElementById("formEnvio").addEventListener("submit", function(e) {
         e.preventDefault();
 
         datosEnvioGuardados = {
@@ -478,26 +487,33 @@
             metodo: document.getElementById("metodoPago").value
         };
 
+        // Ocultar sección de envío
         document.getElementById("pasoEnvio").style.display = "none";
-        document.getElementById("tituloPaso").textContent = "Detalles del Pago";
-        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Confirma la cuenta antes de autorizar el cobro.";
+        document.getElementById("tituloPaso").textContent = "Información del Pago";
+        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Ingresa los datos solicitados.";
 
-        if (datosEnvioGuardados.metodo === "transferencia") {
-            document.getElementById("pasoTransferencia").classList.add("activa");
-            document.getElementById("cuentaNumero").value = datosEnvioGuardados.telefono;
-        } else {
-            document.getElementById("pasoTarjeta").classList.add("activa");
+        // Mostrar el formulario correspondiente
+        if (datosEnvioGuardados.metodo === "tarjeta") {
+            document.getElementById("pasoTarjeta").style.display = "block";
+            document.getElementById("pasoTransferencia").style.display = "none";
             document.getElementById("nombreTarjeta").value = datosEnvioGuardados.nombre.toUpperCase();
             actualizarTarjetaVisual();
+        } else {
+            document.getElementById("pasoTransferencia").style.display = "block";
+            document.getElementById("pasoTarjeta").style.display = "none";
+            document.getElementById("cuentaNumero").value = datosEnvioGuardados.telefono;
         }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     function regresarAEnvio() {
-        document.getElementById("pasoTransferencia").classList.remove("activa");
-        document.getElementById("pasoTarjeta").classList.remove("activa");
+        document.getElementById("pasoTarjeta").style.display = "none";
+        document.getElementById("pasoTransferencia").style.display = "none";
         document.getElementById("pasoEnvio").style.display = "block";
+
         document.getElementById("tituloPaso").textContent = "Confirmación de Pedido";
-        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa los datos para coordinar tu entrega.";
+        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa los datos para la entrega.";
     }
 
     function actualizarTarjetaVisual() {
@@ -511,17 +527,19 @@
     }
 
     /* =========================================================
-       PASO HACIA PAGO.HTML
+       PASO 2 -> IR A PAGO.HTML
     ========================================================= */
-    document.getElementById("formTransferencia").addEventListener("submit", (e) => {
+    document.getElementById("formTarjeta").addEventListener("submit", function(e) {
         e.preventDefault();
-        const bancoSeleccionado = document.getElementById("cuentaOrigen").value;
-        const cuentaNum = document.getElementById("cuentaNumero").value;
 
+        const numTarjeta = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
+        const ultimosDigitos = numTarjeta.slice(-4) || "4242";
+
+        // Guardamos los datos para que pago.html los lea
         localStorage.setItem("viga_pedido_actual", JSON.stringify({
-            metodo: "transferencia",
-            banco: bancoSeleccionado,
-            cuenta: cuentaNum,
+            metodo: "tarjeta",
+            terminacion: ultimosDigitos,
+            titular: document.getElementById("nombreTarjeta").value.trim(),
             nombre: datosEnvioGuardados.nombre,
             telefono: datosEnvioGuardados.telefono,
             direccion: datosEnvioGuardados.direccion,
@@ -532,14 +550,17 @@
         window.location.href = "pago.html";
     });
 
-    document.getElementById("formTarjeta").addEventListener("submit", (e) => {
+    document.getElementById("formTransferencia").addEventListener("submit", function(e) {
         e.preventDefault();
-        const numero = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
-        const terminacion = numero.slice(-4) || "4242";
 
+        const banco = document.getElementById("cuentaOrigen").value;
+        const cuenta = document.getElementById("cuentaNumero").value.trim();
+
+        // Guardamos los datos para que pago.html los lea
         localStorage.setItem("viga_pedido_actual", JSON.stringify({
-            metodo: "tarjeta",
-            terminacion: terminacion,
+            metodo: "transferencia",
+            banco: banco,
+            cuenta: cuenta,
             nombre: datosEnvioGuardados.nombre,
             telefono: datosEnvioGuardados.telefono,
             direccion: datosEnvioGuardados.direccion,
