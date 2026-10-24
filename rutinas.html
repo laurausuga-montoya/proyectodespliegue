@@ -182,6 +182,11 @@
             background: #2bc94b;
         }
 
+        .boton:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
         .error {
             color: #ff9292;
             font-size: 13px;
@@ -230,14 +235,13 @@
     <h1>Personaliza tu rutina</h1>
 
     <p class="descripcion">
-        Cuéntanos tus características y preferencias para preparar
-        un plan de entrenamiento más adecuado para ti.
+        Cuéntanos tus características y objetivos para configurar tu plan de entrenamiento. Solo deberás completar este formulario una vez.
     </p>
 
     <form id="formRutina" class="contenedor">
 
         <section class="seccion">
-            <h2>1. Tus datos</h2>
+            <h2>1. Tus datos físicos</h2>
 
             <div class="fila">
                 <div class="campo">
@@ -269,7 +273,21 @@
         </section>
 
         <section class="seccion">
-            <h2>2. Lugar de entrenamiento</h2>
+            <h2>2. ¿Cuál es tu objetivo?</h2>
+
+            <div class="campo">
+                <label for="objetivo">Selecciona la meta de tu entrenamiento</label>
+                <select id="objetivo" required>
+                    <option value="">Selecciona tu objetivo</option>
+                    <option value="subir_peso">Subir de peso / Ganancia muscular</option>
+                    <option value="definir">Definir / Tonificar</option>
+                    <option value="bajar_peso">Bajar de peso / Pérdida de grasa</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>3. Lugar de entrenamiento</h2>
 
             <div class="opciones">
                 <label class="opcion">
@@ -285,11 +303,10 @@
         </section>
 
         <section class="seccion">
-            <h2>3. Intensidad de entrenamiento</h2>
+            <h2>4. Intensidad de entrenamiento</h2>
 
             <div class="campo">
-                <label for="intensidad">Selecciona tu nivel</label>
-
+                <label for="intensidad">Selecciona tu nivel de condición</label>
                 <select id="intensidad" required>
                     <option value="">Seleccionar intensidad</option>
                     <option value="principiante">Principiante</option>
@@ -300,125 +317,44 @@
         </section>
 
         <section class="seccion">
-            <h2>4. ¿Qué parte del cuerpo deseas entrenar?</h2>
-
-            <div class="campo">
-                <label for="parte">Grupo muscular</label>
-
-                <select id="parte" required>
-                    <option value="">Seleccionar grupo muscular</option>
-                    <option value="piernas">Piernas</option>
-                    <option value="gluteos">Glúteos</option>
-                    <option value="abdomen">Abdomen</option>
-                    <option value="pantorrillas">Pantorrillas</option>
-                    <option value="hombros">Hombros</option>
-                    <option value="pecho">Pecho</option>
-                    <option value="biceps">Bíceps</option>
-                    <option value="espalda">Espalda</option>
-                    <option value="dorsales">Dorsales</option>
-                </select>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>5. Adaptaciones para tu entrenamiento</h2>
+            <h2>5. Lesiones o adaptaciones</h2>
 
             <p class="ayuda" style="margin-bottom: 14px;">
-                ¿Tienes alguna discapacidad o necesitas que adaptemos
-                los ejercicios a tus capacidades? Responder es opcional.
+                ¿Tienes alguna lesión, dolor articular o requieres ejercicios adaptados?
             </p>
 
             <div class="opciones">
                 <label class="opcion">
-                    <input
-                        type="radio"
-                        name="discapacidad"
-                        value="no"
-                        checked
-                    >
-                    <span>No necesito adaptaciones</span>
+                    <input type="radio" name="discapacidad" value="no" checked>
+                    <span>Sin lesiones ni adaptaciones</span>
                 </label>
 
                 <label class="opcion">
-                    <input
-                        type="radio"
-                        name="discapacidad"
-                        value="si"
-                    >
-                    <span>Sí, necesito adaptaciones</span>
-                </label>
-
-                <label class="opcion">
-                    <input
-                        type="radio"
-                        name="discapacidad"
-                        value="prefiero_no_responder"
-                    >
-                    <span>Prefiero no responder</span>
+                    <input type="radio" name="discapacidad" value="si">
+                    <span>Presento lesiones / adaptaciones</span>
                 </label>
             </div>
 
             <div id="opcionesDiscapacidad" class="discapacidad">
-
                 <div class="campo">
-                    <label for="adaptacion">¿Qué adaptación necesitas?</label>
-
-                    <select id="adaptacion">
-                        <option value="">Selecciona una opción</option>
-                        <option value="movilidad_reducida">
-                            Movilidad reducida o uso de silla de ruedas
-                        </option>
-                        <option value="piernas_rodillas">
-                            Limitaciones en piernas o rodillas
-                        </option>
-                        <option value="brazos_manos">
-                            Limitaciones en brazos o manos
-                        </option>
-                        <option value="equilibrio">
-                            Dificultades de equilibrio o coordinación
-                        </option>
-                        <option value="visual">
-                            Discapacidad visual
-                        </option>
-                        <option value="auditiva">
-                            Discapacidad auditiva
-                        </option>
-                        <option value="otra">
-                            Otra adaptación
-                        </option>
+                    <label for="lesion">Describe tu lesión o zona a cuidar</label>
+                    <select id="lesion">
+                        <option value="ninguna">Sin lesión específica</option>
+                        <option value="rodilla">Dolor / Lesión de rodilla</option>
+                        <option value="hombro">Dolor / Lesión en hombros</option>
+                        <option value="espalda_lumbar">Dolor lumbar o de espalda</option>
+                        <option value="movilidad_reducida">Movilidad reducida</option>
+                        <option value="otra">Otra condición</option>
                     </select>
                 </div>
-
-                <div class="campo">
-                    <label for="apoyo">¿Necesitas algún apoyo adicional?</label>
-
-                    <select id="apoyo">
-                        <option value="ninguno">Ninguno</option>
-                        <option value="silla_ruedas">Silla de ruedas</option>
-                        <option value="baston_caminador">Bastón o caminador</option>
-                        <option value="acompanamiento">
-                            Supervisión o acompañamiento
-                        </option>
-                        <option value="otro">Otro apoyo</option>
-                    </select>
-                </div>
-
-                <p class="ayuda">
-                    Selecciona la opción que mejor describa la adaptación
-                    que necesitas. La recomendación debe considerar tus
-                    capacidades funcionales y no solo esta categoría.
-                </p>
             </div>
         </section>
 
         <div class="nota">
-            VIGA utilizará tus respuestas para orientar las recomendaciones.
-            Si tienes restricciones médicas o dudas sobre qué movimientos
-            puedes realizar, consulta con un profesional cualificado antes
-            de comenzar.
+            Tus datos se guardarán en tu perfil de VIGA para calcular y mantener siempre actualizados tus planes de entrenamiento.
         </div>
 
-        <button type="submit" class="boton">
+        <button type="submit" id="btnEnviar" class="boton">
             Generar mi rutina
         </button>
 
@@ -428,92 +364,128 @@
 </main>
 
 <script>
+    const API = "https://viga-c607.onrender.com";
+
+    // 1. Validar sesión del usuario
+    const sesionUsuario = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+    let usuario = null;
+
+    if (sesionUsuario) {
+        try {
+            usuario = JSON.parse(sesionUsuario);
+        } catch (e) {
+            usuario = null;
+        }
+    }
+
+    if (!usuario || !usuario.identificacion) {
+        alert("Debes iniciar sesión para configurar tu rutina.");
+        window.location.href = "login.html";
+    }
+
     const formulario = document.getElementById("formRutina");
-    const opcionesDiscapacidad =
-        document.getElementById("opcionesDiscapacidad");
+    const opcionesDiscapacidad = document.getElementById("opcionesDiscapacidad");
+    const radiosDiscapacidad = document.querySelectorAll('input[name="discapacidad"]');
+    const selectLesion = document.getElementById("lesion");
+    const errorMsg = document.getElementById("error");
+    const btnEnviar = document.getElementById("btnEnviar");
 
-    const radiosDiscapacidad =
-        document.querySelectorAll('input[name="discapacidad"]');
+    // 2. Comprobar si el usuario ya tiene los datos registrados en la base de datos
+    async function verificarDatosPrevios() {
+        try {
+            const res = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`);
+            if (res.ok) {
+                const datos = await res.json();
+                // Si ya tiene peso, altura y objetivo guardados, pasa directo al plan
+                if (datos.peso && datos.altura && datos.objetivo) {
+                    window.location.href = `rutina.plan.html?objetivo=${encodeURIComponent(datos.objetivo)}&intensidad=${encodeURIComponent(datos.intensidad || 'principiante')}&tipo=${encodeURIComponent(datos.lugar_entrenamiento || 'casa')}`;
+                }
+            }
+        } catch (err) {
+            console.error("No se pudo validar información previa:", err);
+        }
+    }
 
-    const adaptacion = document.getElementById("adaptacion");
+    verificarDatosPrevios();
 
     function actualizarDiscapacidad() {
-        const seleccion = document.querySelector(
-            'input[name="discapacidad"]:checked'
-        );
-
-        const necesitaAdaptacion =
-            seleccion && seleccion.value === "si";
-
-        opcionesDiscapacidad.classList.toggle(
-            "visible",
-            Boolean(necesitaAdaptacion)
-        );
-
-        adaptacion.required = Boolean(necesitaAdaptacion);
+        const seleccion = document.querySelector('input[name="discapacidad"]:checked');
+        const activa = seleccion && seleccion.value === "si";
+        opcionesDiscapacidad.classList.toggle("visible", Boolean(activa));
     }
 
     radiosDiscapacidad.forEach(radio => {
         radio.addEventListener("change", actualizarDiscapacidad);
     });
 
-    actualizarDiscapacidad();
-
-    formulario.addEventListener("submit", function(event) {
+    // 3. Guardar en Base de Datos y Redirigir
+    formulario.addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const peso = Number(document.getElementById("peso").value);
         const estatura = Number(document.getElementById("estatura").value);
+        const objetivo = document.getElementById("objetivo").value;
+        const intensidad = document.getElementById("intensidad").value;
 
-        const tipoSeleccionado = document.querySelector(
-            'input[name="tipo"]:checked'
-        );
+        const tipoSeleccionado = document.querySelector('input[name="tipo"]:checked');
+        const tieneLesion = document.querySelector('input[name="discapacidad"]:checked').value === "si";
+        const lesion = tieneLesion ? selectLesion.value : "ninguna";
 
-        const discapacidadSeleccionada = document.querySelector(
-            'input[name="discapacidad"]:checked'
-        );
-
-        const error = document.getElementById("error");
-        error.textContent = "";
+        errorMsg.textContent = "";
 
         if (peso < 1 || peso > 500) {
-            error.textContent = "Ingresa un peso entre 1 y 500 kg.";
+            errorMsg.textContent = "Ingresa un peso válido.";
             return;
         }
 
         if (estatura < 0.50 || estatura > 2.50) {
-            error.textContent = "Ingresa una estatura entre 0.50 y 2.50 m.";
+            errorMsg.textContent = "Ingresa una estatura válida (ej: 1.70).";
             return;
         }
 
-        if (!tipoSeleccionado || !discapacidadSeleccionada) {
-            error.textContent = "Completa las opciones obligatorias.";
+        if (!objetivo) {
+            errorMsg.textContent = "Selecciona tu objetivo de entrenamiento.";
             return;
         }
 
-        const necesitaAdaptacion =
-            discapacidadSeleccionada.value === "si";
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = "Guardando tu perfil...";
 
-        if (necesitaAdaptacion && !adaptacion.value) {
-            error.textContent = "Selecciona el tipo de adaptación.";
-            return;
+        try {
+            const respuesta = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    peso: peso,
+                    altura: estatura,
+                    lesion: lesion,
+                    objetivo: objetivo,
+                    lugar_entrenamiento: tipoSeleccionado ? tipoSeleccionado.value : "casa",
+                    intensidad: intensidad
+                })
+            });
+
+            if (!respuesta.ok) {
+                throw new Error("No se pudo guardar la información en la base de datos.");
+            }
+
+            // Redirigir a la vista del plan de rutina con sus parámetros
+            const parametros = new URLSearchParams({
+                peso: peso,
+                estatura: estatura,
+                objetivo: objetivo,
+                tipo: tipoSeleccionado ? tipoSeleccionado.value : "casa",
+                intensidad: intensidad,
+                lesion: lesion
+            });
+
+            window.location.href = "rutina.plan.html?" + parametros.toString();
+
+        } catch (err) {
+            errorMsg.textContent = err.message || "Ocurrió un error al procesar los datos.";
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = "Generar mi rutina";
         }
-
-        const parametros = new URLSearchParams({
-            peso: peso,
-            estatura: estatura,
-            tipo: tipoSeleccionado.value,
-            intensidad: document.getElementById("intensidad").value,
-            parte: document.getElementById("parte").value,
-            discapacidad: discapacidadSeleccionada.value,
-            adaptacion: necesitaAdaptacion ? adaptacion.value : "",
-            apoyo: necesitaAdaptacion
-                ? document.getElementById("apoyo").value
-                : ""
-        });
-
-        window.location.href =
-            "rutina.plan.html?" + parametros.toString();
     });
 </script>
 

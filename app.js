@@ -323,6 +323,54 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
 });
 
 /* =========================================
+   PERFIL FÍSICO / RUTINA DEL USUARIO
+========================================= */
+// Consultar datos físicos existentes
+app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
+    const { identificacion } = req.params;
+    const sql = `
+        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad 
+        FROM usuarios 
+        WHERE identificacion = ? 
+        LIMIT 1
+    `;
+
+    conexion.query(sql, [identificacion], function (error, resultados) {
+        if (error) {
+            return res.status(500).json({ error: "Error consultando los datos físicos." });
+        }
+        if (resultados.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+        res.json(resultados[0]);
+    });
+});
+
+// Guardar o actualizar datos físicos
+app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
+    const { identificacion } = req.params;
+    const { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad } = req.body;
+
+    const sql = `
+        UPDATE usuarios 
+        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
+        WHERE identificacion = ?
+    `;
+
+    conexion.query(
+        sql, 
+        [peso, altura, lesion || 'ninguna', objetivo, lugar_entrenamiento, intensidad, identificacion], 
+        function (error, resultado) {
+            if (error) {
+                console.error("Error guardando datos físicos:", error);
+                return res.status(500).json({ error: "No se pudieron guardar los datos." });
+            }
+            res.json({ mensaje: "Datos físicos guardados correctamente." });
+        }
+    );
+});
+
+/* =========================================
    INICIAR SERVIDOR
 ========================================= */
 app.listen(PORT, function () {
