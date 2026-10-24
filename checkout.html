@@ -306,23 +306,23 @@
                 <h2>Datos de entrega</h2>
                 <form id="formEnvio">
                     <div class="campo">
-                        <label for="nombreCliente">Nombre completo *</label>
+                        <label for="nombreCliente">Nombre completo </label>
                         <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
                     </div>
                     <div class="campo">
-                        <label for="telefonoCliente">Teléfono / WhatsApp *</label>
+                        <label for="telefonoCliente">Teléfono / WhatsApp </label>
                         <input type="tel" id="telefonoCliente" required placeholder="Ej. 3001234567">
                     </div>
                     <div class="campo">
-                        <label for="direccionCliente">Dirección de entrega *</label>
+                        <label for="direccionCliente">Dirección de entrega </label>
                         <input type="text" id="direccionCliente" required placeholder="Ej. Calle 10 # 40-20, Apto 301">
                     </div>
                     <div class="campo">
-                        <label for="ciudadCliente">Ciudad *</label>
+                        <label for="ciudadCliente">Ciudad </label>
                         <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
                     </div>
                     <div class="campo">
-                        <label for="metodoPago">Selecciona tu método de pago *</label>
+                        <label for="metodoPago">Selecciona tu método de pago </label>
                         <select id="metodoPago" required>
                             <option value="tarjeta">Tarjeta de crédito / Débito</option>
                             <option value="nequi">Nequi</option>
@@ -350,20 +350,20 @@
 
                 <form id="formTarjeta">
                     <div class="campo">
-                        <label for="numeroTarjeta">Número de la tarjeta *</label>
+                        <label for="numeroTarjeta">Número de la tarjeta </label>
                         <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="1234 5678 9012 3456" oninput="actualizarTarjetaVisual()">
                     </div>
                     <div class="campo">
-                        <label for="nombreTarjeta">Nombre del titular *</label>
+                        <label for="nombreTarjeta">Nombre del titular </label>
                         <input type="text" id="nombreTarjeta" required placeholder="Como figura en la tarjeta" oninput="actualizarTarjetaVisual()">
                     </div>
                     <div class="fila-campos">
                         <div class="campo">
-                            <label for="expiracionTarjeta">Expiración (MM/AA) *</label>
+                            <label for="expiracionTarjeta">Expiración (MM/AA) </label>
                             <input type="text" id="expiracionTarjeta" maxlength="5" required placeholder="12/28" oninput="actualizarTarjetaVisual()">
                         </div>
                         <div class="campo">
-                            <label for="cvvTarjeta">Código CVV / CVC *</label>
+                            <label for="cvvTarjeta">Código CVV / CVC </label>
                             <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
                         </div>
                     </div>
@@ -381,7 +381,7 @@
                 </div>
                 <form id="formNequi">
                     <div class="campo">
-                        <label for="numeroNequi">Número de cuenta Nequi (Celular) *</label>
+                        <label for="numeroNequi">Número de cuenta Nequi (Celular) </label>
                         <input type="tel" id="numeroNequi" maxlength="10" required placeholder="Ej. 3001234567">
                     </div>
                     <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
@@ -398,11 +398,11 @@
                 </div>
                 <form id="formDaviplata">
                     <div class="campo">
-                        <label for="numeroDaviplata">Número de Daviplata (Celular) *</label>
+                        <label for="numeroDaviplata">Número de Daviplata (Celular) </label>
                         <input type="tel" id="numeroDaviplata" maxlength="10" required placeholder="Ej. 3101234567">
                     </div>
                     <div class="campo">
-                        <label for="documentoDaviplata">Número de Cédula o Documento *</label>
+                        <label for="documentoDaviplata">Número de Cédula o Documento </label>
                         <input type="text" id="documentoDaviplata" required placeholder="Ej. 1020304050">
                     </div>
                     <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
@@ -419,14 +419,14 @@
                 </div>
                 <form id="formBancolombia">
                     <div class="campo">
-                        <label for="tipoCuentaBancolombia">Tipo de cuenta *</label>
+                        <label for="tipoCuentaBancolombia">Tipo de cuenta </label>
                         <select id="tipoCuentaBancolombia" required>
                             <option value="Ahorros">Cuenta de Ahorros</option>
                             <option value="Corriente">Cuenta Corriente</option>
                         </select>
                     </div>
                     <div class="campo">
-                        <label for="numeroCuentaBancolombia">Número de cuenta Bancolombia *</label>
+                        <label for="numeroCuentaBancolombia">Número de cuenta Bancolombia </label>
                         <input type="text" id="numeroCuentaBancolombia" required placeholder="Ej. 123-456789-01">
                     </div>
                     <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
@@ -443,7 +443,7 @@
                 </div>
                 <form id="formPSE">
                     <div class="campo">
-                        <label for="bancoPSE">Selecciona tu banco *</label>
+                        <label for="bancoPSE">Selecciona tu banco </label>
                         <select id="bancoPSE" required>
                             <option value="Banco de Bogotá">Banco de Bogotá</option>
                             <option value="Banco Davivienda">Banco Davivienda</option>
@@ -454,11 +454,11 @@
                         </select>
                     </div>
                     <div class="campo">
-                        <label for="correoPSE">Correo registrado en PSE *</label>
+                        <label for="correoPSE">Correo registrado en PSE </label>
                         <input type="email" id="correoPSE" required placeholder="ejemplo@correo.com">
                     </div>
                     <div class="campo">
-                        <label for="cvvPSE">Código de seguridad / CVV de la cuenta *</label>
+                        <label for="cvvPSE">Código de seguridad / CVV de la cuenta </label>
                         <input type="password" id="cvvPSE" maxlength="4" required placeholder="Ej. 123">
                     </div>
                     <button type="submit" class="btn-pagar">Ir a autorizar cobro →</button>
