@@ -93,6 +93,10 @@ app.get("/informes", function (req, res) {
     res.sendFile(path.resolve(__dirname, "informes.html"));
 });
 
+app.get("/rutinas", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "rutinas.html"));
+});
+
 app.get("/empresa", function (req, res) {
     res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });
@@ -289,13 +293,11 @@ app.post("/compras/procesar", function (req, res) {
     const totalArticulos = articulos.length;
 
     articulos.forEach(item => {
-        // 1. Descontar stock
         const sqlStock = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
         conexion.query(sqlStock, [item.cantidad, item.id], function (err) {
             if (err) console.error("❌ Error stock:", err);
         });
 
-        // 2. Obtener la empresa dueña del producto
         const sqlEmpresa = "SELECT identificacion_empresa FROM productos WHERE id = ? LIMIT 1";
         conexion.query(sqlEmpresa, [item.id], function (errEmpresa, filas) {
             if (!errEmpresa && filas.length > 0) {
@@ -339,7 +341,6 @@ app.post("/compras/procesar", function (req, res) {
 
 app.get("/empresa/:id/ventas", function (req, res) {
     const idEmpresa = req.params.id;
-    // Compara identificacion_empresa para abarcar id o nit
     const sql = `
         SELECT 
             id,
@@ -364,6 +365,61 @@ app.get("/empresa/:id/ventas", function (req, res) {
         }
         res.json(resultados);
     });
+});
+
+/* =========================================
+   PERFIL FÍSICO / RUTINA DEL USUARIO
+========================================= */
+app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
+    const { identificacion } = req.params;
+    const sql = `
+        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
+        FROM usuarios 
+        WHERE identificacion = ? 
+        LIMIT 1
+    `;
+
+    conexion.query(sql, [identificacion], function (error, resultados) {
+        if (error) return res.status(500).json({ error: "Error consultando los datos físicos." });
+        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
+        res.json(resultados[0]);
+    });
+});
+
+// Guardar datos físicos y lesión
+app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
+    const { identificacion } = req.params;
+    let { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
+
+    // Normalizar lesión: si no hay o está vacía, se asigna 'ninguna'
+    const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
+
+    const sql = `
+        UPDATE usuarios 
+        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
+        WHERE identificacion = ?
+    `;
+
+    conexion.query(
+        sql, 
+        [
+            peso || null, 
+            altura || null, 
+            lesionFinal, 
+            objetivo || null, 
+            lugar_entrenamiento || null, 
+            intensidad || null, 
+            dias_entreno ? parseInt(dias_entreno) : 5, 
+            identificacion
+        ], 
+        function (error, resultado) {
+            if (error) {
+                console.error("❌ Error al guardar datos físicos en MySQL:", error);
+                return res.status(500).json({ error: "No se pudieron guardar los datos: " + error.message });
+            }
+            res.json({ mensaje: "Datos físicos guardados correctamente." });
+        }
+    );
 });
 
 /* =========================================
@@ -429,57 +485,6 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
             res.json({ mensaje: "Contraseña cambiada correctamente." });
         });
     });
-});
-
-/* =========================================
-   PERFIL FÍSICO / RUTINA DEL USUARIO
-========================================= */
-app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const { identificacion } = req.params;
-    const sql = `
-        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
-        FROM usuarios 
-        WHERE identificacion = ? 
-        LIMIT 1
-    `;
-
-    conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error consultando los datos físicos." });
-        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-        res.json(resultados[0]);
-    });
-});
-
-app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const { identificacion } = req.params;
-    const { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
-
-    const sql = `
-        UPDATE usuarios 
-        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
-        WHERE identificacion = ?
-    `;
-
-    conexion.query(
-        sql, 
-        [
-            peso, 
-            altura, 
-            lesion || 'ninguna', 
-            objetivo, 
-            lugar_entrenamiento, 
-            intensidad, 
-            dias_entreno ? parseInt(dias_entreno) : 5, 
-            identificacion
-        ], 
-        function (error, resultado) {
-            if (error) {
-                console.error("Error guardando datos físicos:", error);
-                return res.status(500).json({ error: "No se pudieron guardar los datos." });
-            }
-            res.json({ mensaje: "Datos físicos guardados correctamente." });
-        }
-    );
 });
 
 /* =========================================

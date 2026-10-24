@@ -5,32 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIGA | Personaliza tu rutina</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="tema.js"></script>
 
     <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+            --rojo: #ff5252;
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #121212;
-            color: #f5f5f5;
+            background: var(--fondo);
+            color: var(--texto);
             min-height: 100vh;
         }
 
         header {
-            background: #1b1b1b;
-            padding: 20px 6%;
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #292929;
+            justify-content: space-between;
+            padding: 0 40px;
         }
 
         .logo {
-            color: #37E359;
+            color: var(--verde);
             font-size: 28px;
             font-weight: 700;
             letter-spacing: 2px;
@@ -38,187 +50,211 @@
         }
 
         .volver {
-            color: #37E359;
+            color: #ddd;
             text-decoration: none;
             font-size: 14px;
+            transition: .2s;
+        }
+
+        .volver:hover {
+            color: var(--verde);
         }
 
         main {
-            width: 92%;
-            max-width: 850px;
-            margin: 35px auto;
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
         }
 
-        h1 {
-            font-size: 30px;
-            margin-bottom: 8px;
+        .tarjeta-formulario {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 16px;
+            padding: 35px 40px;
         }
 
-        .descripcion {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 25px;
-            line-height: 1.7;
+        .bloque-seccion {
+            margin-bottom: 30px;
         }
 
-        .contenedor {
-            background: #1b1b1b;
-            padding: 28px;
-            border-radius: 0px;
-            border: 1px solid #303030;
+        .bloque-seccion h3 {
+            font-size: 19px;
+            color: #fff;
+            margin-bottom: 6px;
         }
 
-        .seccion {
-            margin-bottom: 25px;
+        .bloque-seccion p {
+            font-size: 13px;
+            color: var(--secundario);
+            margin-bottom: 15px;
         }
 
-        h2 {
-            font-size: 18px;
-            margin-bottom: 16px;
-            color: #ffffff;
-        }
-
-        .fila {
+        .fila-doble {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            gap: 20px;
         }
 
         .campo {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 17px;
+            margin-bottom: 15px;
         }
 
-        label {
+        .campo label {
             font-size: 13px;
-            color: #ddd;
+            color: #ccc;
         }
 
-        input,
-        select {
-            width: 100%;
+        .campo input, .campo select {
             padding: 13px;
-            background: #121212;
-            border: 1px solid #393939;
-            border-radius: 0px;
-            color: #fff;
-            font-family: inherit;
+            background: #252525;
+            border: 1px solid #3b3b3b;
+            border-radius: 8px;
+            color: white;
+            outline: none;
             font-size: 14px;
         }
 
-        input:focus,
-        select:focus {
-            outline: 1px solid #37E359;
-            border-color: #37E359;
+        .campo input:focus, .campo select:focus {
+            border-color: var(--verde);
         }
 
-        .opciones {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
+        /* OPCIONES DE LESIÓN */
+        .opciones-lesion {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .opcion {
-            flex: 1;
-            min-width: 140px;
+        .caja-radio {
+            background: #252525;
+            border: 1px solid #383838;
+            border-radius: 8px;
+            padding: 14px;
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #252525;
-            padding: 14px;
-            border: 1px solid #393939;
-            border-radius: 0px;
+            cursor: pointer;
+            transition: .2s;
+            user-select: none;
+        }
+
+        .caja-radio:hover {
+            border-color: #555;
+        }
+
+        .caja-radio input[type="radio"] {
+            accent-color: var(--verde);
             cursor: pointer;
         }
 
-        .opcion input {
-            width: auto;
-            accent-color: #37E359;
-        }
-
-        .opcion span {
-            font-size: 13px;
-        }
-
-        .ayuda {
-            font-size: 12px;
-            line-height: 1.7;
-            color: #aaa;
-            margin-top: 8px;
-        }
-
-        .discapacidad {
+        .desplegable-lesion {
+            background: #18231b;
+            border: 1px solid #28442e;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
             display: none;
-            background: #202820;
-            border: 1px solid #315a38;
-            border-radius: 0px;
-            padding: 18px;
-            margin-top: 18px;
         }
 
-        .discapacidad.visible {
+        .desplegable-lesion label {
+            font-size: 13px;
+            color: #ddd;
+            margin-bottom: 6px;
             display: block;
         }
 
-        .boton {
+        .desplegable-lesion select {
             width: 100%;
-            background: #37E359;
-            color: #101810;
-            padding: 14px;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #2d5535;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .nota-pie {
+            font-size: 12px;
+            color: var(--secundario);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .btn-generar {
+            width: 100%;
+            padding: 16px;
+            background: var(--verde);
+            color: #111;
             border: none;
-            border-radius: 0px;
-            font-family: inherit;
-            font-size: 15px;
+            border-radius: 8px;
             font-weight: 700;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: .2s;
         }
 
-        .boton:hover {
-            background: #2bc94b;
+        .btn-generar:hover {
+            filter: brightness(1.1);
         }
 
-        .boton:disabled {
-            opacity: 0.6;
+        .btn-generar:disabled {
+            opacity: .6;
             cursor: wait;
         }
 
-        .error {
-            color: #ff9292;
-            font-size: 13px;
-            margin-top: 12px;
+        .mensaje-error {
+            color: var(--rojo);
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
         }
 
-        .nota {
-            background: #252525;
-            border-radius: 0px;
-            padding: 14px;
-            color: #bbb;
-            font-size: 12px;
-            line-height: 1.7;
-            margin-bottom: 22px;
+        /* VISTA DE RUTINA GENERADA */
+        .vista-rutina-generada {
+            display: none;
         }
 
-        @media (max-width: 600px) {
-            .fila {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            .contenedor {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 24px;
-            }
-            header {
-                padding: 17px 5%;
-            }
+        .tarjeta-dia {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .tarjeta-dia h4 {
+            color: var(--verde);
+            font-size: 17px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #292929;
+            padding-bottom: 8px;
+        }
+
+        .ejercicio-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 14px;
+        }
+
+        .ejercicio-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 650px) {
+            .fila-doble, .opciones-lesion { grid-template-columns: 1fr; }
+            header { padding: 0 20px; }
+            .tarjeta-formulario { padding: 25px 20px; }
         }
     </style>
 </head>
-
 <body>
 
 <header>
@@ -227,243 +263,297 @@
 </header>
 
 <main>
-    <h1>Personaliza tu rutina</h1>
-    <p class="descripcion">
-        Define tu condición física, objetivo y disponibilidad semanal. Solo te pediremos estos datos una sola vez.
-    </p>
 
-    <form id="formRutina" class="contenedor">
+    <!-- FORMULARIO DE PERSONALIZACIÓN -->
+    <div class="tarjeta-formulario" id="contenedorFormulario">
+        <form id="formRutinas">
 
-        <section class="seccion">
-            <h2>1. Datos físicos</h2>
-            <div class="fila">
-                <div class="campo">
-                    <label for="peso">Peso en kilogramos (kg)</label>
-                    <input type="number" id="peso" min="1" max="500" step="0.1" placeholder="Ejemplo: 70" required>
+            <div class="bloque-seccion">
+                <h3>1. Medidas físicas</h3>
+                <p>Ingresa tu peso y estatura actuales para calibrar el volumen de carga.</p>
+                <div class="fila-doble">
+                    <div class="campo">
+                        <label for="peso">Peso actual (kg) *</label>
+                        <input type="number" id="peso" step="0.1" min="30" max="250" placeholder="Ej. 72" required>
+                    </div>
+                    <div class="campo">
+                        <label for="altura">Estatura (cm) *</label>
+                        <input type="number" id="altura" min="100" max="230" placeholder="Ej. 175" required>
+                    </div>
                 </div>
+            </div>
+
+            <div class="bloque-seccion">
+                <h3>2. Objetivo principal</h3>
+                <p>¿Qué meta fitness deseas priorizar en tu plan?</p>
                 <div class="campo">
-                    <label for="estatura">Estatura en metros (m)</label>
-                    <input type="number" id="estatura" min="0.50" max="2.50" step="0.01" placeholder="Ejemplo: 1.70" required>
-                </div>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>2. Objetivo principal</h2>
-            <div class="campo">
-                <label for="objetivo">¿Qué meta buscas alcanzar?</label>
-                <select id="objetivo" required>
-                    <option value="">Selecciona tu objetivo</option>
-                    <option value="subir_peso">Subir de peso / Ganancia muscular</option>
-                    <option value="definir">Definir / Tonificar</option>
-                    <option value="bajar_peso">Bajar de peso / Pérdida de grasa</option>
-                </select>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>3. Disponibilidad semanal</h2>
-            <div class="campo">
-                <label for="diasEntreno">¿Cuántos días a la semana vas a entrenar? (Máximo 7)</label>
-                <select id="diasEntreno" required>
-                    <option value="">Selecciona los días</option>
-                    <option value="2">2 días a la semana</option>
-                    <option value="3">3 días a la semana</option>
-                    <option value="4">4 días a la semana</option>
-                    <option value="5">5 días a la semana</option>
-                    <option value="6">6 días a la semana</option>
-                    <option value="7">7 días a la semana</option>
-                </select>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>4. Lugar de entrenamiento</h2>
-            <div class="opciones">
-                <label class="opcion">
-                    <input type="radio" name="tipo" value="casa" required>
-                    <span>Entrenar en casa</span>
-                </label>
-                <label class="opcion">
-                    <input type="radio" name="tipo" value="gimnasio">
-                    <span>Entrenar en gimnasio</span>
-                </label>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>5. Nivel de condición física</h2>
-            <div class="campo">
-                <label for="intensidad">Selecciona tu intensidad inicial</label>
-                <select id="intensidad" required>
-                    <option value="">Seleccionar nivel</option>
-                    <option value="principiante">Principiante</option>
-                    <option value="intermedio">Intermedio</option>
-                    <option value="avanzado">Avanzado</option>
-                </select>
-            </div>
-        </section>
-
-        <section class="seccion">
-            <h2>6. Lesiones o adaptaciones</h2>
-            <p class="ayuda" style="margin-bottom: 14px;">
-                ¿Tienes alguna condición articular o física que debamos tener en cuenta?
-            </p>
-            <div class="opciones">
-                <label class="opcion">
-                    <input type="radio" name="discapacidad" value="no" checked>
-                    <span>Sin lesiones</span>
-                </label>
-                <label class="opcion">
-                    <input type="radio" name="discapacidad" value="si">
-                    <span>Presento lesiones</span>
-                </label>
-            </div>
-
-            <div id="opcionesDiscapacidad" class="discapacidad">
-                <div class="campo">
-                    <label for="lesion">Zona a cuidar</label>
-                    <select id="lesion">
-                        <option value="ninguna">Sin lesión específica</option>
-                        <option value="rodilla">Dolor / Lesión de rodilla</option>
-                        <option value="hombro">Dolor / Lesión en hombros</option>
-                        <option value="espalda_lumbar">Dolor lumbar o de espalda</option>
-                        <option value="movilidad_reducida">Movilidad reducida</option>
-                        <option value="otra">Otra condición</option>
+                    <select id="objetivo" required>
+                        <option value="Aumento de masa muscular (Hipertrofia)">Aumento de masa muscular (Hipertrofia)</option>
+                        <option value="Pérdida de grasa y definición">Pérdida de grasa y definición</option>
+                        <option value="Fuerza máxima y potencia">Fuerza máxima y potencia</option>
+                        <option value="Resistencia y acondicionamiento">Resistencia y acondicionamiento</option>
+                        <option value="Salud y movilidad general">Salud y movilidad general</option>
                     </select>
                 </div>
             </div>
-        </section>
 
-        <div class="nota">
-            Tus datos se guardarán automáticamente en tu cuenta para estructurar tus rutinas personalizadas.
+            <div class="bloque-seccion">
+                <h3>3. Lugar y equipamiento disponible</h3>
+                <p>Diseñaremos los ejercicios de acuerdo al entorno donde entrenes.</p>
+                <div class="campo">
+                    <select id="lugar" required>
+                        <option value="Gimnasio comercial (Pesas y máquinas completas)">Gimnasio comercial (Pesas y máquinas completas)</option>
+                        <option value="Casa con mancuernas y bandas">Casa con mancuernas y bandas</option>
+                        <option value="Casa únicamente con peso corporal (Calistenia)">Casa únicamente con peso corporal (Calistenia)</option>
+                        <option value="Parque de calistenia / Barras">Parque de calistenia / Barras</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bloque-seccion">
+                <h3>4. Frecuencia semanal</h3>
+                <p>¿Cuántos días a la semana dispones para entrenar?</p>
+                <div class="campo">
+                    <select id="dias" required>
+                        <option value="3">3 días por semana (Cuerpo completo / Full Body)</option>
+                        <option value="4">4 días por semana (Torso / Pierna)</option>
+                        <option value="5" selected>5 días por semana (Push / Pull / Leg)</option>
+                        <option value="6">6 días por semana (Frecuencia alta)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bloque-seccion">
+                <h3>5. Nivel de experiencia</h3>
+                <p>Selecciona tu nivel para definir las series y tiempos de descanso.</p>
+                <div class="campo">
+                    <select id="intensidad" required>
+                        <option value="Principiante">Principiante (Menos de 6 meses constantes)</option>
+                        <option value="Intermedio" selected>Intermedio (6 meses a 2 años)</option>
+                        <option value="Avanzado">Avanzado (Más de 2 años continuos)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bloque-seccion">
+                <h3>6. Lesiones o adaptaciones</h3>
+                <p>¿Tienes alguna condición articular o física que debamos tener en cuenta?</p>
+
+                <div class="opciones-lesion">
+                    <label class="caja-radio">
+                        <input type="radio" name="opcionLesion" id="radioSinLesion" value="no" checked onchange="alternarLesion()">
+                        <span>Sin lesiones</span>
+                    </label>
+                    <label class="caja-radio">
+                        <input type="radio" name="opcionLesion" id="radioConLesion" value="si" onchange="alternarLesion()">
+                        <span>Presento lesiones</span>
+                    </label>
+                </div>
+
+                <div class="desplegable-lesion" id="cajaSeleccionLesion">
+                    <label for="selectZonaLesion">Zona a cuidar:</label>
+                    <select id="selectZonaLesion">
+                        <option value="Dolor / Lesión de rodilla">Dolor / Lesión de rodilla</option>
+                        <option value="Molestia en hombro / Manguito rotador">Molestia en hombro / Manguito rotador</option>
+                        <option value="Dolor lumbar o hernia de espalda">Dolor lumbar o hernia de espalda</option>
+                        <option value="Molestia en muñeca o antebrazo">Molestia en muñeca o antebrazo</option>
+                        <option value="Tendinitis en codo">Tendinitis en codo</option>
+                        <option value="Esguince o debilidad de tobillo">Esguince o debilidad de tobillo</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="nota-pie">Tus datos se guardarán automáticamente en tu cuenta para estructurar tus rutinas personalizadas.</p>
+
+            <button type="submit" class="btn-generar" id="btnGenerar">Generar mi rutina</button>
+            <div class="mensaje-error" id="mensajeError"></div>
+
+        </form>
+    </div>
+
+    <!-- VISTA DE RUTINA GENERADA -->
+    <div class="vista-rutina-generada" id="contenedorRutina">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+            <div>
+                <h1 style="color:var(--verde); font-size:26px;">Tu Rutina Personalizada</h1>
+                <p id="resumenPerfilTexto" style="color:var(--secundario); font-size:14px;"></p>
+            </div>
+            <button class="volver" style="background:#252525; padding:10px 16px; border-radius:8px; border:1px solid #333;" onclick="reconfigurar()">⚙️ Modificar datos</button>
         </div>
 
-        <button type="submit" id="btnEnviar" class="boton">
-            Generar mi rutina
-        </button>
+        <div id="listaDiasRutina"></div>
+    </div>
 
-        <p id="error" class="error"></p>
-    </form>
 </main>
 
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    const sesionUsuario = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
-    let usuario = null;
+    // Obtener ID de usuario desde la URL (?id=...) o desde localStorage
+    const params = new URLSearchParams(window.location.search);
+    let idUsuario = params.get("id");
 
-    if (sesionUsuario) {
-        try {
-            usuario = JSON.parse(sesionUsuario);
-        } catch (e) {
-            usuario = null;
+    if (!idUsuario) {
+        const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        if (sesionUser) {
+            try {
+                const u = JSON.parse(sesionUser);
+                idUsuario = u.identificacion || u.id;
+            } catch(e) {}
         }
     }
 
-    if (!usuario || !usuario.identificacion) {
-        alert("Debes iniciar sesión para configurar tu rutina.");
-        window.location.href = "login.html";
+    function alternarLesion() {
+        const tieneLesion = document.getElementById("radioConLesion").checked;
+        document.getElementById("cajaSeleccionLesion").style.display = tieneLesion ? "block" : "none";
     }
 
-    const formulario = document.getElementById("formRutina");
-    const opcionesDiscapacidad = document.getElementById("opcionesDiscapacidad");
-    const radiosDiscapacidad = document.querySelectorAll('input[name="discapacidad"]');
-    const selectLesion = document.getElementById("lesion");
-    const errorMsg = document.getElementById("error");
-    const btnEnviar = document.getElementById("btnEnviar");
+    async function cargarDatosPrevios() {
+        if (!idUsuario) return;
 
-    // Si ya tiene todo en la base de datos, entra directamente a su rutina
-    async function verificarDatosPrevios() {
         try {
-            const res = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`);
-            if (res.ok) {
-                const datos = await res.json();
-                if (datos.peso && datos.altura && datos.objetivo && datos.dias_entreno) {
-                    window.location.href = `rutina.plan.html?objetivo=${encodeURIComponent(datos.objetivo)}&dias=${encodeURIComponent(datos.dias_entreno)}&tipo=${encodeURIComponent(datos.lugar_entrenamiento || 'casa')}`;
+            const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
+            if (!res.ok) return;
+
+            const datos = await res.json();
+            if (datos.peso) document.getElementById("peso").value = datos.peso;
+            if (datos.altura) document.getElementById("altura").value = datos.altura;
+            if (datos.objetivo) document.getElementById("objetivo").value = datos.objetivo;
+            if (datos.lugar_entrenamiento) document.getElementById("lugar").value = datos.lugar_entrenamiento;
+            if (datos.dias_entreno) document.getElementById("dias").value = datos.dias_entreno;
+            if (datos.intensidad) document.getElementById("intensidad").value = datos.intensidad;
+
+            if (datos.lesion && datos.lesion !== "ninguna" && datos.lesion !== "Sin lesiones") {
+                document.getElementById("radioConLesion").checked = true;
+                document.getElementById("selectZonaLesion").value = datos.lesion;
+                alternarLesion();
+            }
+        } catch (e) {
+            console.log("No hay datos previos cargados.");
+        }
+    }
+
+    document.getElementById("formRutinas").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const btn = document.getElementById("btnGenerar");
+        const msgError = document.getElementById("mensajeError");
+        msgError.style.display = "none";
+
+        btn.disabled = true;
+        btn.textContent = "Guardando y estructurando...";
+
+        const tieneLesion = document.getElementById("radioConLesion").checked;
+        const valorLesion = tieneLesion ? document.getElementById("selectZonaLesion").value : "ninguna";
+
+        const payload = {
+            peso: Number(document.getElementById("peso").value),
+            altura: Number(document.getElementById("altura").value),
+            objetivo: document.getElementById("objetivo").value,
+            lugar_entrenamiento: document.getElementById("lugar").value,
+            dias_entreno: parseInt(document.getElementById("dias").value),
+            intensidad: document.getElementById("intensidad").value,
+            lesion: valorLesion
+        };
+
+        try {
+            if (idUsuario) {
+                const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || "No se pudo guardar la información en la base de datos.");
                 }
             }
-        } catch (err) {
-            console.error("No se pudo conectar a la base de datos:", err);
+
+            // Mostrar rutina adaptada
+            mostrarRutinaAdaptada(payload);
+
+        } catch (error) {
+            msgError.textContent = error.message;
+            msgError.style.display = "block";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Generar mi rutina";
         }
-    }
+    });
 
-    verificarDatosPrevios();
+    function mostrarRutinaAdaptada(datos) {
+        document.getElementById("contenedorFormulario").style.display = "none";
+        document.getElementById("contenedorRutina").style.display = "block";
 
-    function actualizarDiscapacidad() {
-        const seleccion = document.querySelector('input[name="discapacidad"]:checked');
-        opcionesDiscapacidad.classList.toggle("visible", seleccion && seleccion.value === "si");
-    }
+        const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
+        document.getElementById("resumenPerfilTexto").textContent = 
+            `Plan: ${datos.objetivo} | ${datos.dias_entreno} días/sem | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
 
-    radiosDiscapacidad.forEach(radio => radio.addEventListener("change", actualizarDiscapacidad));
+        const contenedorDias = document.getElementById("listaDiasRutina");
+        contenedorDias.innerHTML = "";
 
-    formulario.addEventListener("submit", async function(event) {
-        event.preventDefault();
+        const esRodilla = datos.lesion.includes("rodilla");
+        const esHombro = datos.lesion.includes("hombro");
+        const esEspalda = datos.lesion.includes("espalda") || datos.lesion.includes("lumbar");
 
-        const peso = Number(document.getElementById("peso").value);
-        const estatura = Number(document.getElementById("estatura").value);
-        const objetivo = document.getElementById("objetivo").value;
-        const diasEntreno = document.getElementById("diasEntreno").value;
-        const intensidad = document.getElementById("intensidad").value;
-        const tipoSeleccionado = document.querySelector('input[name="tipo"]:checked');
-        const tieneLesion = document.querySelector('input[name="discapacidad"]:checked').value === "si";
-        const lesion = tieneLesion ? selectLesion.value : "ninguna";
-
-        errorMsg.textContent = "";
-
-        if (peso < 1 || peso > 500) {
-            errorMsg.textContent = "Ingresa un peso válido entre 1 y 500 kg.";
-            return;
-        }
-
-        if (estatura < 0.50 || estatura > 2.50) {
-            errorMsg.textContent = "Ingresa una estatura válida entre 0.50 y 2.50 m.";
-            return;
-        }
-
-        if (!objetivo || !diasEntreno) {
-            errorMsg.textContent = "Por favor selecciona el objetivo y los días de entrenamiento.";
-            return;
-        }
-
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = "Guardando en tu cuenta...";
-
-        try {
-            const respuesta = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    peso: peso,
-                    altura: estatura,
-                    lesion: lesion,
-                    objetivo: objetivo,
-                    lugar_entrenamiento: tipoSeleccionado ? tipoSeleccionado.value : "casa",
-                    intensidad: intensidad,
-                    dias_entreno: diasEntreno
-                })
-            });
-
-            if (!respuesta.ok) {
-                throw new Error("No se pudo guardar la información en la base de datos.");
+        const rutinaDias = [
+            {
+                dia: "Día 1: Empuje (Pecho, Hombro y Tríceps)",
+                ejercicios: [
+                    { nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
+                    { nombre: esHombro ? "Elevaciones laterales en polea baja (rango controlado)" : "Press militar con mancuernas", series: "3 series × 12 reps" },
+                    { nombre: "Fondos en paralelas o flexiones asistidas", series: "3 series × 10 reps" },
+                    { nombre: "Extensiones de tríceps en polea alta", series: "4 series × 12 reps" }
+                ]
+            },
+            {
+                dia: "Día 2: Tracción (Espalda, Bíceps y Core)",
+                ejercicios: [
+                    { nombre: esEspalda ? "Jalón al pecho en polea alta con apoyo" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
+                    { nombre: esEspalda ? "Remo en máquina con pecho apoyado" : "Remo con barra", series: "3 series × 10-12 reps" },
+                    { nombre: "Curl de bíceps en banco inclinado", series: "3 series × 12 reps" },
+                    { nombre: esEspalda ? "Plancha frontal isométrica (espalda neutra)" : "Elevaciones de piernas suspendido", series: "3 series × 40 segs" }
+                ]
+            },
+            {
+                dia: "Día 3: Pierna y Movilidad",
+                ejercicios: [
+                    { nombre: esRodilla ? "Prensa a 90° con tempo controlado (sin bloqueo)" : "Sentadilla con barra trasera", series: "4 series × 8-10 reps" },
+                    { nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
+                    { nombre: "Curl femoral tumbado o sentado", series: "3 series × 12 reps" },
+                    { nombre: "Elevación de talones para gemelo", series: "4 series × 15 reps" }
+                ]
             }
+        ];
 
-            const parametros = new URLSearchParams({
-                peso: peso,
-                estatura: estatura,
-                objetivo: objetivo,
-                dias: diasEntreno,
-                tipo: tipoSeleccionado ? tipoSeleccionado.value : "casa",
-                intensidad: intensidad
+        rutinaDias.forEach(d => {
+            const div = document.createElement("div");
+            div.className = "tarjeta-dia";
+            let listaEj = "";
+            d.ejercicios.forEach(ej => {
+                listaEj += `
+                    <div class="ejercicio-item">
+                        <span><strong>${ej.nombre}</strong></span>
+                        <span style="color:var(--verde);">${ej.series}</span>
+                    </div>
+                `;
             });
+            div.innerHTML = `<h4>${d.dia}</h4>${listaEj}`;
+            contenedorDias.appendChild(div);
+        });
 
-            window.location.href = "rutina.plan.html?" + parametros.toString();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-        } catch (err) {
-            errorMsg.textContent = err.message || "Error al procesar la información.";
-            btnEnviar.disabled = false;
-            btnEnviar.textContent = "Generar mi rutina";
-        }
+    function reconfigurar() {
+        document.getElementById("contenedorRutina").style.display = "none";
+        document.getElementById("contenedorFormulario").style.display = "block";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        alternarLesion();
+        cargarDatosPrevios();
     });
 </script>
 
