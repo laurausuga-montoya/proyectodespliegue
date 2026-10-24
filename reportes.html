@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Informes y Ventas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>VIGA | Historial de Compras</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
@@ -16,11 +18,7 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
-            --tarjeta-fondo: #181818;
-            --tabla-cabecera: #222222;
-            --fila-hover: #1e1e1e;
             --rojo: #ff5252;
-            --rojo-hover: #e04444;
         }
 
         /* REGLAS PARA TEMA CLARO */
@@ -30,9 +28,6 @@
             --texto: #111111;
             --secundario: #666666;
             --borde: #dddddd;
-            --tarjeta-fondo: #ffffff;
-            --tabla-cabecera: #ececec;
-            --fila-hover: #f9f9f9;
         }
 
         * {
@@ -50,23 +45,20 @@
         }
 
         header {
-            height: 75px;
+            height: 80px;
             background: var(--panel);
             border-bottom: 1px solid var(--borde);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 0 60px;
             transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
-            color: var(--verde);
-            font-size: 28px;
+            font-size: 34px;
             font-weight: 700;
+            color: var(--verde);
             letter-spacing: 2px;
             text-decoration: none;
         }
@@ -74,52 +66,47 @@
         .volver {
             color: var(--texto);
             text-decoration: none;
-            font-size: 14px;
             transition: .2s;
+            font-size: 14px;
         }
 
         .volver:hover {
             color: var(--verde);
         }
 
-        main {
+        .contenedor {
             width: 90%;
             max-width: 1100px;
-            margin: 35px auto;
+            margin: 45px auto;
         }
 
-        .cabecera-informes {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
+        .titulo {
+            margin-bottom: 35px;
+            text-align: center;
+            position: relative;
         }
 
-        .cabecera-informes h1 {
-            font-size: 28px;
+        .titulo h1 {
+            font-size: 36px;
             color: var(--verde);
+            margin-bottom: 8px;
         }
 
-        .cabecera-informes p {
-            font-size: 13px;
+        .titulo p {
             color: var(--secundario);
-            margin-top: 4px;
+            font-size: 15px;
         }
 
         .btn-borrar-historial {
+            margin-top: 15px;
             background: transparent;
             color: var(--rojo);
             border: 1px solid var(--rojo);
-            padding: 10px 18px;
+            padding: 8px 18px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: .2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: 0.2s;
         }
 
         .btn-borrar-historial:hover {
@@ -127,137 +114,231 @@
             color: white;
         }
 
-        .metricas-grid {
+        /* RESUMEN RÁPIDO */
+        .metricas {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
-        .tarjeta-metrica {
-            background: var(--tarjeta-fondo);
+        .metrica-card {
+            background: var(--panel);
             border: 1px solid var(--borde);
-            padding: 22px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border-radius: 0px;
+            padding: 20px;
+            text-align: center;
             transition: background 0.3s, border-color 0.3s;
         }
 
-        .tarjeta-metrica span {
+        .metrica-card span {
+            font-size: 13px;
+            color: var(--secundario);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .metrica-card strong {
+            font-size: 26px;
+            color: var(--verde);
+        }
+
+        /* LISTA DE PEDIDOS */
+        .pedidos-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .pedido-card {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            padding: 25px;
+            transition: .3s;
+        }
+
+        .pedido-card:hover {
+            border-color: #3b3b3b;
+            transform: translateY(-2px);
+        }
+
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pedido-id {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--texto);
+        }
+
+        .pedido-fecha {
             font-size: 13px;
             color: var(--secundario);
         }
 
-        .tarjeta-metrica h3 {
-            font-size: 26px;
+        .estado-badge {
+            display: inline-block;
+            background: rgba(55, 227, 89, 0.15);
             color: var(--verde);
-            margin-top: 8px;
-            font-weight: 700;
-        }
-
-        .tabla-contenedor {
-            background: var(--tarjeta-fondo);
-            border: 1px solid var(--borde);
-            overflow-x: auto;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        th {
-            background: var(--tabla-cabecera);
-            color: var(--texto);
-            padding: 15px;
+            padding: 5px 12px;
+            border-radius: 0px;
+            font-size: 12px;
             font-weight: 600;
-            border-bottom: 1px solid var(--borde);
+            border: 1px solid rgba(55, 227, 89, 0.3);
         }
 
-        td {
-            padding: 14px 15px;
-            border-bottom: 1px solid var(--borde);
+        .pedido-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .item-fila {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-fila img {
+            width: 50px;
+            height: 50px;
+            border-radius: 0px;
+            object-fit: cover;
+            background: #222;
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-info h4 {
+            font-size: 14px;
+            color: var(--texto);
+            margin-bottom: 3px;
+        }
+
+        .item-info span {
+            font-size: 12px;
+            color: var(--secundario);
+        }
+
+        .item-precio {
+            font-weight: 600;
+            font-size: 14px;
             color: var(--texto);
         }
 
-        tr:hover td {
-            background: var(--fila-hover);
+        .pedido-footer {
+            border-top: 1px solid var(--borde);
+            padding-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pedido-metodo {
+            font-size: 13px;
+            color: var(--secundario);
+        }
+
+        .pedido-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--verde);
         }
 
         .vacio {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
+            background: var(--panel);
+            border-radius: 0px;
+            border: 1px solid var(--borde);
             color: var(--secundario);
         }
 
-        @media (max-width: 650px) {
+        .btn-ir-tienda {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            border-radius: 0px;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .btn-ir-tienda:hover {
+            filter: brightness(1.1);
+        }
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 40px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 700px) {
             header { padding: 0 20px; }
-            .cabecera-informes { flex-direction: column; align-items: flex-start; }
-            .btn-borrar-historial { width: 100%; justify-content: center; }
+            .metricas { grid-template-columns: 1fr; }
         }
     </style>
 </head>
+
 <body>
 
 <header>
-    <a href="inicio.empresa.html" class="logo">VIGA</a>
-    <a href="inicio.empresa.html" class="volver">← Volver al Panel</a>
+    <a href="tienda.html" class="logo">VIGA</a>
+    <a href="tienda.html" class="volver">← Volver a la tienda</a>
 </header>
 
-<main>
-    <div class="cabecera-informes">
-        <div>
-            <h1>Reporte de Ventas</h1>
-            <p>Registro cronológico y rendimiento comercial de tu empresa.</p>
-        </div>
-        <button class="btn-borrar-historial" onclick="confirmarBorradoHistorial()">
-            🗑️ Borrar Historial de Ventas
+<div class="contenedor">
+
+    <div class="titulo">
+        <h1>Historial de Compras</h1>
+        <p>Revisa el detalle de tus pedidos, compras aprobadas e implementos adquiridos.</p>
+        <button class="btn-borrar-historial" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
+            🗑️ Borrar Historial de Compras
         </button>
     </div>
 
-    <div class="metricas-grid">
-        <div class="tarjeta-metrica">
-            <span>Ingresos Totales</span>
-            <h3 id="txtIngresosTotales">$0</h3>
+    <!-- MÉTRICAS RÁPIDAS -->
+    <div class="metricas">
+        <div class="metrica-card">
+            <span>Total de compras realizadas</span>
+            <strong id="contadorCompras">0</strong>
         </div>
-        <div class="tarjeta-metrica">
-            <span>Órdenes Registradas</span>
-            <h3 id="txtOrdenesTotales">0</h3>
-        </div>
-        <div class="tarjeta-metrica">
-            <span>Unidades Despachadas</span>
-            <h3 id="txtUnidadesTotales">0</h3>
+        <div class="metrica-card">
+            <span>Inversión total en implementos</span>
+            <strong id="montoTotalInvertido">$ 0</strong>
         </div>
     </div>
 
-    <div class="tabla-contenedor">
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Producto</th>
-                    <th>Cant.</th>
-                    <th>Total</th>
-                    <th>Cliente</th>
-                    <th>Ciudad</th>
-                    <th>Método</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpoTablaVentas">
-                <tr>
-                    <td colspan="7" class="vacio">Cargando registros...</td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- LISTA DE PEDIDOS -->
+    <div class="pedidos-lista" id="contenedorHistorial">
+        <!-- Renderizado dinámico -->
     </div>
-</main>
+
+</div>
+
+<footer>
+    © 2026 VIGA · Vive saludable, entrena inteligente.
+</footer>
 
 <script>
-    const API = "https://viga-c607.onrender.com";
-
     function sincronizarTema() {
         const tema = localStorage.getItem("vigaTema");
         if (tema === "claro") {
@@ -268,99 +349,96 @@
     }
     sincronizarTema();
 
-    function obtenerIdEmpresa() {
-        const params = new URLSearchParams(window.location.search);
-        const idURL = params.get("id");
-        if (idURL) return idURL;
-
-        const empresaGuardada = localStorage.getItem("empresa");
-        if (empresaGuardada) {
-            try {
-                const emp = JSON.parse(empresaGuardada);
-                return emp.id || emp.nit || emp.identificacion;
-            } catch (e) {}
-        }
-        return null;
+    function dinero(valor) {
+        return Number(valor || 0).toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0
+        });
     }
 
-    const idEmpresa = obtenerIdEmpresa();
+    function cargarHistorial() {
+        const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+        const contenedor = document.getElementById("contenedorHistorial");
+        const contador = document.getElementById("contadorCompras");
+        const totalInvertido = document.getElementById("montoTotalInvertido");
+        const btnBorrar = document.getElementById("btnBorrarHistorial");
 
-    async function cargarHistorial() {
-        if (!idEmpresa) {
-            alert("No se identificó la sesión de la empresa.");
-            window.location.href = "login.empresa.html";
+        contador.textContent = historial.length;
+
+        if (historial.length === 0) {
+            btnBorrar.style.display = "none";
+            contenedor.innerHTML = `
+                <div class="vacio">
+                    <h2>Aún no has realizado compras</h2>
+                    <p style="margin-top: 8px;">Explora la tienda oficial y adquiere tus implementos deportivos.</p>
+                    <a href="tienda.html" class="btn-ir-tienda">Ir a la tienda</a>
+                </div>
+            `;
+            totalInvertido.textContent = "$ 0";
             return;
         }
 
-        try {
-            const res = await fetch(`${API}/empresa/${encodeURIComponent(idEmpresa)}/ventas?t=${Date.now()}`);
-            if (!res.ok) throw new Error("No se pudo cargar el reporte.");
+        btnBorrar.style.display = "inline-block";
+        let sumaGlobal = 0;
+        contenedor.innerHTML = "";
 
-            const ventas = await res.json();
-            renderizarReporte(ventas);
+        historial.slice().reverse().forEach((pedido, idx) => {
+            sumaGlobal += Number(pedido.total || 0);
 
-        } catch (error) {
-            document.getElementById("cuerpoTablaVentas").innerHTML = `
-                <tr><td colspan="7" class="vacio" style="color:var(--rojo);">Error al conectar con la base de datos.</td></tr>
+            const card = document.createElement("div");
+            card.className = "pedido-card";
+
+            const productosHtml = (pedido.articulos || []).map(art => {
+                const imgUrl = art.imagen || art.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
+                return `
+                    <div class="item-fila">
+                        <img src="${imgUrl}" alt="${art.nombre}" onerror="this.src='https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80'">
+                        <div class="item-info">
+                            <h4>${art.nombre}</h4>
+                            <span>Cantidad: ${art.cantidad} unidad(es)</span>
+                        </div>
+                        <div class="item-precio">${dinero(art.precio * art.cantidad)}</div>
+                    </div>
+                `;
+            }).join("");
+
+            card.innerHTML = `
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">Orden #${pedido.idOrden || (1000 + idx)}</div>
+                        <div class="pedido-fecha">📅 ${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
+                    </div>
+                    <span class="estado-badge">✓ Pago Aprobado</span>
+                </div>
+
+                <div class="pedido-items">
+                    ${productosHtml || "<p style='color:var(--secundario); font-size:13px;'>Implementos deportivos adquiridos</p>"}
+                </div>
+
+                <div class="pedido-footer">
+                    <div class="pedido-metodo">
+                        💳 Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
+                    </div>
+                    <div class="pedido-total">
+                        Total: ${dinero(pedido.total)}
+                    </div>
+                </div>
             `;
-        }
-    }
 
-    function renderizarReporte(ventas) {
-        const tbody = document.getElementById("cuerpoTablaVentas");
-        tbody.innerHTML = "";
-
-        if (!ventas || ventas.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="vacio">No hay ventas registradas aún.</td></tr>`;
-            document.getElementById("txtIngresosTotales").textContent = "$0";
-            document.getElementById("txtOrdenesTotales").textContent = "0";
-            document.getElementById("txtUnidadesTotales").textContent = "0";
-            return;
-        }
-
-        let ingresos = 0;
-        let unidades = 0;
-
-        ventas.forEach(v => {
-            ingresos += Number(v.total || 0);
-            unidades += parseInt(v.cantidad || 0, 10);
-
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${v.fecha || 'Reciente'}</td>
-                <td><strong>${v.nombre_producto}</strong></td>
-                <td>${v.cantidad}</td>
-                <td style="color:var(--verde); font-weight:600;">$${Number(v.total).toLocaleString('es-CO')}</td>
-                <td>${v.cliente_nombre || 'Cliente'}</td>
-                <td>${v.cliente_ciudad || 'Colombia'}</td>
-                <td>${v.metodo_pago || 'Directo'}</td>
-            `;
-            tbody.appendChild(tr);
+            contenedor.appendChild(card);
         });
 
-        document.getElementById("txtIngresosTotales").textContent = `$${ingresos.toLocaleString('es-CO')}`;
-        document.getElementById("txtOrdenesTotales").textContent = ventas.length;
-        document.getElementById("txtUnidadesTotales").textContent = unidades;
+        totalInvertido.textContent = dinero(sumaGlobal);
     }
 
-    async function confirmarBorradoHistorial() {
-        if (!confirm("¿Estás seguro de que deseas vaciar todo el historial de ventas? Esta acción es irreversible.")) {
+    function borrarHistorialCompras() {
+        if (!confirm("¿Deseas vaciar todo tu historial de compras realizadas?")) {
             return;
         }
 
-        try {
-            const res = await fetch(`${API}/empresa/${encodeURIComponent(idEmpresa)}/ventas`, {
-                method: "DELETE"
-            });
-
-            if (!res.ok) throw new Error("No se pudo eliminar el historial.");
-
-            alert("Historial de ventas vaciado con éxito.");
-            cargarHistorial();
-
-        } catch (error) {
-            alert("Ocurrió un error al intentar borrar el historial.");
-        }
+        localStorage.removeItem("viga_historial_compras");
+        cargarHistorial();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
