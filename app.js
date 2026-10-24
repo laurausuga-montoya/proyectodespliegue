@@ -373,6 +373,6 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 /* =========================================
    INICIAR SERVIDOR
 ========================================= */
-app.listen(PORT, function () {
-    console.log(`🚀 Servidor VIGA funcionando en http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", function () {
+    console.log(`🚀 Servidor VIGA funcionando en el puerto ${PORT}`);
 });
