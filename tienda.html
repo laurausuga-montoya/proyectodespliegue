@@ -19,6 +19,8 @@
             --card-fondo: #181818;
             --badge-fondo: #233827;
             --badge-texto: #37E359;
+            --btn-disabled-bg: #2b2b2b;
+            --btn-disabled-color: #777;
         }
 
         body.claro {
@@ -30,6 +32,8 @@
             --card-fondo: #ffffff;
             --badge-fondo: #daf5de;
             --badge-texto: #12822a;
+            --btn-disabled-bg: #e0e0e0;
+            --btn-disabled-color: #999;
         }
 
         * {
@@ -120,11 +124,6 @@
             border-radius: 16px;
             padding: 25px 30px;
             margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.06);
             transition: background 0.3s, border-color 0.3s;
         }
@@ -217,8 +216,14 @@
         }
 
         .stock-txt {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--secundario);
+            font-weight: 500;
+        }
+
+        .stock-txt.agotado-txt {
+            color: #ff5252;
+            font-weight: 600;
         }
 
         .btn-comprar {
@@ -231,16 +236,21 @@
             border-radius: 8px;
             cursor: pointer;
             transition: .2s;
+            font-size: 14px;
         }
 
-        .btn-comprar:hover {
+        .btn-comprar:hover:not(:disabled) {
             filter: brightness(1.1);
         }
 
-        .btn-agotado {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
+        /* ESTADO AGOTADO */
+        .btn-comprar:disabled,
+        .btn-comprar.btn-agotado {
+            background: var(--btn-disabled-bg) !important;
+            color: var(--btn-disabled-color) !important;
+            cursor: not-allowed !important;
+            filter: none !important;
+            border: 1px solid var(--borde);
         }
 
         @media (max-width: 650px) {
@@ -285,6 +295,7 @@
     sincronizarTema();
 
     let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+    let listaProductosServidor = [];
 
     function actualizarContador() {
         const total = carrito.reduce((acc, item) => acc + item.cantidad, 0);
@@ -295,69 +306,110 @@
         try {
             const res = await fetch(`${API}/productos?t=${Date.now()}`);
             if (!res.ok) throw new Error("No se pudo cargar la tienda");
-            const prods = await res.json();
+            listaProductosServidor = await res.json();
 
-            const grilla = document.getElementById("grillaProductos");
-            grilla.innerHTML = "";
-
-            if (!prods || prods.length === 0) {
-                grilla.innerHTML = `<p style="grid-column:1/-1; color:var(--secundario); text-align:center; padding:50px;">No hay productos disponibles por ahora.</p>`;
-                return;
-            }
-
-            prods.forEach(p => {
-                const stockValido = p.stock > 0;
-                const imagen = p.imagen_url ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
-
-                const card = document.createElement("div");
-                card.className = "tarjeta-prod";
-                card.innerHTML = `
-                    <img class="img-prod" src="${imagen}" alt="${p.nombre}">
-                    <div class="info-prod">
-                        <span class="categoria-tag">${p.categoria || 'Accesorio'}</span>
-                        <h3 class="nombre-prod">${p.nombre}</h3>
-                        <p class="desc-prod">${p.descripcion || 'Producto oficial de entrenamiento VIGA.'}</p>
-                        <div class="precio-stock">
-                            <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
-                            <span class="stock-txt">${stockValido ? `Stock: ${p.stock}` : 'Agotado'}</span>
-                        </div>
-                        <button class="btn-comprar ${!stockValido ? 'btn-agotado' : ''}" 
-                                onclick='agregarAlCarrito(${JSON.stringify(p)})' 
-                                ${!stockValido ? 'disabled' : ''}>
-                            ${stockValido ? 'Agregar al Carrito' : 'Sin Unidades'}
-                        </button>
-                    </div>
-                `;
-                grilla.appendChild(card);
-            });
+            renderizarProductos();
 
         } catch (e) {
             document.getElementById("grillaProductos").innerHTML = `<p style="grid-column:1/-1; color:#ff5252; text-align:center;">Error al conectar con la tienda.</p>`;
         }
     }
 
-    function agregarAlCarrito(producto) {
-        const itemExistente = carrito.find(x => x.id === producto.id);
-        if (itemExistente) {
-            if (itemExistente.cantidad < producto.stock) {
-                itemExistente.cantidad += 1;
-            } else {
-                alert("Has alcanzado el stock máximo disponible para este artículo.");
-                return;
-            }
-        } else {
-            carrito.push({
-                id: producto.id,
-                nombre: producto.nombre,
-                precio: Number(producto.precio),
-                cantidad: 1,
-                stock: producto.stock,
-                imagen_url: producto.imagen_url
-            });
+    function renderizarProductos() {
+        const grilla = document.getElementById("grillaProductos");
+        grilla.innerHTML = "";
+
+        if (!listaProductosServidor || listaProductosServidor.length === 0) {
+            grilla.innerHTML = `<p style="grid-column:1/-1; color:var(--secundario); text-align:center; padding:50px;">No hay productos disponibles por ahora.</p>`;
+            return;
         }
 
-        localStorage.setItem("viga_carrito", JSON.stringify(carrito));
-        actualizarContador();
+        listaProductosServidor.forEach(p => {
+            const stockOriginal = parseInt(p.stock, 10) || 0;
+            const itemEnCarrito = carrito.find(x => x.id === p.id);
+            const unidadesEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+            const unidadesRestantes = Math.max(0, stockOriginal - unidadesEnCarrito);
+            const hayStock = unidadesRestantes > 0;
+
+            const imagen = p.imagen_url 
+                ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
+                : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
+
+            const card = document.createElement("div");
+            card.className = "tarjeta-prod";
+            card.innerHTML = `
+                <img class="img-prod" src="${imagen}" alt="${p.nombre}">
+                <div class="info-prod">
+                    <span class="categoria-tag">${p.categoria || 'Accesorio'}</span>
+                    <h3 class="nombre-prod">${p.nombre}</h3>
+                    <p class="desc-prod">${p.descripcion || 'Producto oficial de entrenamiento VIGA.'}</p>
+                    <div class="precio-stock">
+                        <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
+                        <span class="stock-txt ${!hayStock ? 'agotado-txt' : ''}" id="stockTxt-${p.id}">
+                            ${hayStock ? `Stock: ${unidadesRestantes}` : 'Agotado'}
+                        </span>
+                    </div>
+                    <button id="btnProd-${p.id}" 
+                            class="btn-comprar ${!hayStock ? 'btn-agotado' : ''}" 
+                            onclick='agregarAlCarrito(${p.id})' 
+                            ${!hayStock ? 'disabled' : ''}>
+                        ${hayStock ? 'Agregar al Carrito' : 'Agotado'}
+                    </button>
+                </div>
+            `;
+            grilla.appendChild(card);
+        });
+    }
+
+    function agregarAlCarrito(idProducto) {
+        const producto = listaProductosServidor.find(p => p.id === idProducto);
+        if (!producto) return;
+
+        const stockOriginal = parseInt(producto.stock, 10) || 0;
+        let itemExistente = carrito.find(x => x.id === idProducto);
+        const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
+
+        // Si aún quedan unidades por tomar
+        if (cantidadActual < stockOriginal) {
+            if (itemExistente) {
+                itemExistente.cantidad += 1;
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: Number(producto.precio),
+                    cantidad: 1,
+                    stock: stockOriginal,
+                    imagen_url: producto.imagen_url
+                });
+            }
+
+            localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+            actualizarContador();
+
+            // Calcular las unidades que quedan disponibles
+            const nuevasRestantes = stockOriginal - (cantidadActual + 1);
+            const btn = document.getElementById(`btnProd-${idProducto}`);
+            const stockTxt = document.getElementById(`stockTxt-${idProducto}`);
+
+            if (nuevasRestantes <= 0) {
+                // Se agotaron todas las unidades: deshabilitar botón y cambiar a Agotado
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add("btn-agotado");
+                    btn.textContent = "Agotado";
+                }
+                if (stockTxt) {
+                    stockTxt.textContent = "Agotado";
+                    stockTxt.classList.add("agotado-txt");
+                }
+            } else {
+                // Aún quedan unidades
+                if (stockTxt) {
+                    stockTxt.textContent = `Stock: ${nuevasRestantes}`;
+                }
+            }
+        }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
