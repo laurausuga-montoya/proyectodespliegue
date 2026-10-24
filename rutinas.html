@@ -214,37 +214,10 @@
             display: none;
         }
 
-        /* RUTINA GENERADA */
-        .vista-rutina-generada {
-            display: none;
-        }
-
-        .tarjeta-dia {
-            background: var(--panel);
-            border: 1px solid var(--borde);
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 20px;
-        }
-
-        .tarjeta-dia h4 {
-            color: var(--verde);
-            font-size: 17px;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #292929;
-            padding-bottom: 8px;
-        }
-
-        .ejercicio-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #222;
-            font-size: 14px;
-        }
-
-        .ejercicio-item:last-child {
-            border-bottom: none;
+        .cargando-pantalla {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secundario);
         }
 
         @media (max-width: 650px) {
@@ -263,7 +236,13 @@
 
 <main>
 
-    <div class="tarjeta-formulario" id="contenedorFormulario">
+    <!-- PANTALLA DE CARGA MIENTRAS COMPRUEBA SI YA EXISTE RUTINA -->
+    <div id="cargandoComprobacion" class="cargando-pantalla">
+        <p>Verificando tu plan de entrenamiento...</p>
+    </div>
+
+    <!-- FORMULARIO DE PERSONALIZACIÓN -->
+    <div class="tarjeta-formulario" id="contenedorFormulario" style="display: none;">
         <form id="formRutinas">
 
             <div class="bloque-seccion">
@@ -308,7 +287,6 @@
                 </div>
             </div>
 
-            <!-- 4. DIAS LIMPIOS SIN PULL / ALTA FRECUENCIA -->
             <div class="bloque-seccion">
                 <h3>4. Días de entrenamiento</h3>
                 <p>¿Cuántos días a la semana dispones para entrenar?</p>
@@ -372,25 +350,15 @@
         </form>
     </div>
 
-    <div class="vista-rutina-generada" id="contenedorRutina">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
-            <div>
-                <h1 style="color:var(--verde); font-size:26px;">Tu Rutina Personalizada</h1>
-                <p id="resumenPerfilTexto" style="color:var(--secundario); font-size:14px;"></p>
-            </div>
-            <button class="volver" style="background:#252525; padding:10px 16px; border-radius:8px; border:1px solid #333;" onclick="reconfigurar()">⚙️ Modificar datos</button>
-        </div>
-
-        <div id="listaDiasRutina"></div>
-    </div>
-
 </main>
 
 <script>
     const API = "https://viga-c607.onrender.com";
 
+    // 1. Obtener ID de usuario desde URL o localStorage
     const params = new URLSearchParams(window.location.search);
     let idUsuario = params.get("id");
+    const forzarEdicion = params.get("editar") === "1"; // Permite editar si viene con ?editar=1
 
     if (!idUsuario) {
         const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
@@ -407,16 +375,61 @@
         document.getElementById("cajaSeleccionLesion").style.display = tieneLesion ? "block" : "none";
     }
 
-    async function cargarDatosPrevios() {
-        if (!idUsuario) return;
+    // 2. Comprobar si el usuario YA completó el formulario anteriormente
+    async function verificarEstadoRutina() {
+        if (!idUsuario) {
+            mostrarFormulario();
+            return;
+        }
 
+        // Si el usuario pidió explícitamente editar, mostramos el formulario con sus datos
+        if (forzarEdicion) {
+            await cargarDatosFormulario();
+            mostrarFormulario();
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
+            if (res.ok) {
+                const datos = await res.json();
+                // Si ya tiene objetivo y días registrados, redirige directamente a rutina.plan.html
+                if (datos && datos.objetivo && (datos.dias_entreno || datos.peso)) {
+                    localStorage.setItem("viga_rutina_datos", JSON.stringify(datos));
+                    window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario)}`);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.log("No hay rutina previa en servidor, revisando almacenamiento local...");
+        }
+
+        // Respaldo en localStorage
+        const rutinaLocal = localStorage.getItem("viga_rutina_datos");
+        if (rutinaLocal && !forzarEdicion) {
+            window.location.replace(`rutina.plan.html?id=${encodeURIComponent(idUsuario || '')}`);
+            return;
+        }
+
+        mostrarFormulario();
+    }
+
+    function mostrarFormulario() {
+        document.getElementById("cargandoComprobacion").style.display = "none";
+        document.getElementById("contenedorFormulario").style.display = "block";
+    }
+
+    async function cargarDatosFormulario() {
         try {
             const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
             if (!res.ok) return;
 
             const datos = await res.json();
             if (datos.peso) document.getElementById("peso").value = datos.peso;
-            if (datos.altura) document.getElementById("altura").value = datos.altura;
+            if (datos.altura) {
+                // Si está en metros (ej. 1.75), convertirlo visualmente a cm (175)
+                document.getElementById("altura").value = datos.altura < 3 ? Math.round(datos.altura * 100) : datos.altura;
+            }
             if (datos.objetivo) document.getElementById("objetivo").value = datos.objetivo;
             if (datos.lugar_entrenamiento) document.getElementById("lugar").value = datos.lugar_entrenamiento;
             if (datos.dias_entreno) document.getElementById("dias").value = datos.dias_entreno;
@@ -427,11 +440,10 @@
                 document.getElementById("selectZonaLesion").value = datos.lesion;
                 alternarLesion();
             }
-        } catch (e) {
-            console.log("Sin datos previos.");
-        }
+        } catch (e) {}
     }
 
+    // 3. Enviar cuestionario y redirigir a rutina.plan.html
     document.getElementById("formRutinas").addEventListener("submit", async function(e) {
         e.preventDefault();
 
@@ -440,7 +452,7 @@
         msgError.style.display = "none";
 
         btn.disabled = true;
-        btn.textContent = "Guardando y estructurando...";
+        btn.textContent = "Guardando y estructurando tu plan...";
 
         const tieneLesion = document.getElementById("radioConLesion").checked;
         const valorLesion = tieneLesion ? document.getElementById("selectZonaLesion").value : "ninguna";
@@ -469,127 +481,23 @@
                 }
             }
 
-            mostrarRutinaAdaptada(payload);
+            // Guardamos localmente para acceso instantáneo
+            localStorage.setItem("viga_rutina_datos", JSON.stringify(payload));
+
+            // Redirección directa a rutina.plan.html con el id del usuario
+            window.location.href = `rutina.plan.html?id=${encodeURIComponent(idUsuario || '')}`;
 
         } catch (error) {
             msgError.textContent = error.message;
             msgError.style.display = "block";
-        } finally {
             btn.disabled = false;
             btn.textContent = "Generar mi rutina";
         }
     });
 
-    function mostrarRutinaAdaptada(datos) {
-        document.getElementById("contenedorFormulario").style.display = "none";
-        document.getElementById("contenedorRutina").style.display = "block";
-
-        const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
-        document.getElementById("resumenPerfilTexto").textContent = 
-            `Plan: ${datos.objetivo} | ${datos.dias_entreno} días a la semana | Cuidado articular: ${tieneLesion ? datos.lesion : 'Ninguno'}`;
-
-        const contenedorDias = document.getElementById("listaDiasRutina");
-        contenedorDias.innerHTML = "";
-
-        const esRodilla = datos.lesion.toLowerCase().includes("rodilla");
-        const esHombro = datos.lesion.toLowerCase().includes("hombro");
-        const esEspalda = datos.lesion.toLowerCase().includes("espalda");
-
-        const numDias = datos.dias_entreno || 3;
-
-        const bancoEjercicios = [
-            {
-                dia: "Día 1: Empuje (Pecho, Hombro y Tríceps)",
-                ejercicios: [
-                    { nombre: esHombro ? "Press banca mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
-                    { nombre: esHombro ? "Elevaciones laterales controladas" : "Press militar con mancuernas", series: "3 series × 12 reps" },
-                    { nombre: "Aperturas en máquina pec-deck", series: "3 series × 12 reps" },
-                    { nombre: "Extensiones de tríceps en polea", series: "4 series × 12 reps" }
-                ]
-            },
-            {
-                dia: "Día 2: Tracción (Espalda, Bíceps y Core)",
-                ejercicios: [
-                    { nombre: esEspalda ? "Jalón al pecho asistido" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
-                    { nombre: esEspalda ? "Remo con pecho apoyado" : "Remo con barra", series: "3 series × 10-12 reps" },
-                    { nombre: "Curl de bíceps con mancuernas", series: "3 series × 12 reps" },
-                    { nombre: esEspalda ? "Plancha abdominal isométrica" : "Elevaciones de piernas", series: "3 series × 40 segs" }
-                ]
-            },
-            {
-                dia: "Día 3: Tren inferior (Pierna y Pantorrilla)",
-                ejercicios: [
-                    { nombre: esRodilla ? "Prensa a 90° sin bloqueo" : "Sentadilla profunda", series: "4 series × 8-10 reps" },
-                    { nombre: esRodilla ? "Puente de glúteo en banco" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
-                    { nombre: "Curl femoral en máquina", series: "3 series × 12 reps" },
-                    { nombre: "Elevación de talones", series: "4 series × 15 reps" }
-                ]
-            },
-            {
-                dia: "Día 4: Torso Completo",
-                ejercicios: [
-                    { nombre: "Press inclinado con mancuernas", series: "4 series × 10 reps" },
-                    { nombre: "Remo unilateral con mancuerna", series: "3 series × 12 reps" },
-                    { nombre: "Elevaciones laterales para hombro", series: "3 series × 15 reps" },
-                    { nombre: "Fondos entre bancos", series: "3 series × 12 reps" }
-                ]
-            },
-            {
-                dia: "Día 5: Pierna enfocada y Core",
-                ejercicios: [
-                    { nombre: esRodilla ? "Peso muerto rumano suave" : "Peso muerto convencional", series: "4 series × 10 reps" },
-                    { nombre: "Prensa inclinada", series: "4 series × 12 reps" },
-                    { nombre: "Abductores en máquina", series: "3 series × 15 reps" },
-                    { nombre: "Rueda abdominal o plancha", series: "3 series × 45 segs" }
-                ]
-            },
-            {
-                dia: "Día 6: Acondicionamiento y Brazos",
-                ejercicios: [
-                    { nombre: "Superserie: Curl de bíceps + Press francés", series: "4 series × 12 reps" },
-                    { nombre: "Remo al mentón suave", series: "3 series × 12 reps" },
-                    { nombre: "Cardio hiit / Trote suave", series: "20 minutos" }
-                ]
-            },
-            {
-                dia: "Día 7: Movilidad activa y Recuperación",
-                ejercicios: [
-                    { nombre: "Caminata ligera / Senderismo", series: "30-45 minutos" },
-                    { nombre: "Estiramientos dinámicos cuerpo completo", series: "15 minutos" },
-                    { nombre: "Respiración diafragmática y movilidad lumbar", series: "10 minutos" }
-                ]
-            }
-        ];
-
-        const diasFinales = bancoEjercicios.slice(0, numDias);
-
-        diasFinales.forEach(d => {
-            const div = document.createElement("div");
-            div.className = "tarjeta-dia";
-            let listaEj = "";
-            d.ejercicios.forEach(ej => {
-                listaEj += `
-                    <div class="ejercicio-item">
-                        <span><strong>${ej.nombre}</strong></span>
-                        <span style="color:var(--verde);">${ej.series}</span>
-                    </div>
-                `;
-            });
-            div.innerHTML = `<h4>${d.dia}</h4>${listaEj}`;
-            contenedorDias.appendChild(div);
-        });
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function reconfigurar() {
-        document.getElementById("contenedorRutina").style.display = "none";
-        document.getElementById("contenedorFormulario").style.display = "block";
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
         alternarLesion();
-        cargarDatosPrevios();
+        verificarEstadoRutina();
     });
 </script>
 

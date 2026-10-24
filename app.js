@@ -97,6 +97,10 @@ app.get("/rutinas", function (req, res) {
     res.sendFile(path.resolve(__dirname, "rutinas.html"));
 });
 
+app.get("/rutina-plan", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "rutina.plan.html"));
+});
+
 app.get("/empresa", function (req, res) {
     res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });
@@ -369,7 +373,6 @@ app.get("/empresa/:id/ventas", function (req, res) {
 
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
-   (Con normalización de altura y protección para 'dias_entreno')
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
@@ -425,7 +428,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                // Respaldo por si la columna dias_entreno aún no ha sido agregada a la tabla
+                // Respaldo por si la columna dias_entreno aún no existe en MySQL
                 if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('dias_entreno')) {
                     const sqlFallback = `
                         UPDATE usuarios 

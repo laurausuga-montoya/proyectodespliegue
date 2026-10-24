@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Mi Rutina</title>
+    <title>VIGA | Tu Plan de Entrenamiento</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="tema.js"></script>
 
     <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,1195 +25,306 @@
         }
 
         body {
-            background: #121212;
-            color: white;
+            background: var(--fondo);
+            color: var(--texto);
             min-height: 100vh;
         }
 
         header {
-            height: 80px;
-            background: #1b1b1b;
-            border-bottom: 1px solid #2d2d2d;
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 60px;
+            padding: 0 40px;
         }
 
         .logo {
-            color: #37E359;
-            font-size: 40px;
+            color: var(--verde);
+            font-size: 28px;
             font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
         }
 
-        .volver {
+        .header-acciones {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-header {
             color: #ddd;
             text-decoration: none;
-            transition: .3s;
-        }
-
-        .volver:hover {
-            color: #37E359;
-        }
-
-        .contenedor {
-            width: 90%;
-            max-width: 1200px;
-            margin: 45px auto;
-        }
-
-        .titulo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .titulo h1 {
-            color: #37E359;
-            font-size: 38px;
-        }
-
-        .titulo p {
-            color: #aaa;
-            margin-top: 8px;
-        }
-
-        .informacion {
-            background: #1b1b1b;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .dato {
-            text-align: center;
-            min-width: 110px;
-        }
-
-        .dato strong {
-            display: block;
-            color: #37E359;
-            font-size: 20px;
-        }
-
-        .dato span {
-            color: #aaa;
             font-size: 13px;
-        }
-
-        .dias {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 35px;
-        }
-
-        .dia {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
             background: #252525;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #3b3b3b;
             transition: .2s;
+            cursor: pointer;
         }
 
-        .dia:hover {
-            background: #333;
+        .btn-header:hover {
+            color: var(--verde);
+            border-color: var(--verde);
         }
 
-        .dia.activo {
-            background: #37E359;
-            color: #111;
+        main {
+            width: 90%;
+            max-width: 850px;
+            margin: 40px auto;
         }
 
-        #tituloDia {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-
-        .ejercicios {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .ejercicio {
-            background: #1b1b1b;
-            border-radius: 18px;
-            overflow: hidden;
-            border: 1px solid #292929;
-            transition: .3s;
+        .cabecera-plan {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .ejercicio:hover {
-            transform: translateY(-5px);
-            border-color: #37E359;
-        }
-
-        .ejercicio img {
-            width: 100%;
-            height: 230px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .contenido {
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .numero {
-            color: #37E359;
-            font-size: 14px;
-            font-weight: bold;
+        .cabecera-plan h1 {
+            color: var(--verde);
+            font-size: 24px;
             margin-bottom: 5px;
         }
 
-        .contenido h3 {
-            font-size: 21px;
-            margin-bottom: 10px;
+        .cabecera-plan p {
+            font-size: 13px;
+            color: var(--secundario);
         }
 
-        .contenido p {
-            color: #aaa;
-            line-height: 24px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            flex-grow: 1;
-        }
-
-        .series {
-            background: #252525;
-            padding: 12px;
-            border-radius: 8px;
-            color: #37E359;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .boton-explicacion {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #37E359;
-            border-radius: 9px;
-            background: transparent;
-            color: #37E359;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .boton-explicacion:hover {
-            background: #37E359;
-            color: #111;
-        }
-
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .85);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.activo {
-            display: flex;
-        }
-
-        .modal-contenido {
-            width: 100%;
-            max-width: 650px;
-            background: #1b1b1b;
-            border: 1px solid #37E359;
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .cerrar {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: #252525;
-            color: white;
-            border-radius: 50%;
-            font-size: 25px;
-            cursor: pointer;
-            z-index: 5;
-        }
-
-        .cerrar:hover {
-            background: #37E359;
-            color: #111;
-        }
-
-        .modal-contenido img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
+        .tarjeta-dia {
+            background: var(--panel);
+            border: 1px solid var(--borde);
             border-radius: 14px;
+            padding: 22px;
             margin-bottom: 20px;
         }
 
-        .modal-contenido h2 {
-            color: #37E359;
-            font-size: 28px;
+        .tarjeta-dia h3 {
+            color: var(--verde);
+            font-size: 17px;
             margin-bottom: 15px;
+            border-bottom: 1px solid #282828;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .modal-contenido h4 {
-            color: white;
-            font-size: 16px;
-            margin-top: 15px;
-            margin-bottom: 6px;
-        }
-
-        .modal-contenido p {
-            color: #bbb;
-            line-height: 1.7;
+        .ejercicio-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
             font-size: 14px;
         }
 
-        .modal-series {
-            margin-top: 18px;
-            background: #252525;
-            padding: 14px;
-            border-radius: 10px;
-            color: #37E359;
+        .ejercicio-fila:last-child {
+            border-bottom: none;
+        }
+
+        .series-tag {
+            color: var(--verde);
             font-weight: 600;
+            font-size: 13px;
         }
 
-        footer {
+        .vacio {
             text-align: center;
-            color: #777;
-            padding: 40px;
+            padding: 50px 20px;
+            background: var(--panel);
+            border-radius: 14px;
+            border: 1px solid var(--borde);
+            color: var(--secundario);
         }
 
-        @media(max-width:600px) {
+        @media (max-width: 650px) {
             header { padding: 0 20px; }
-            .logo { font-size: 30px; }
-            .informacion { gap: 15px; }
+            .cabecera-plan { padding: 20px; }
         }
     </style>
 </head>
-
 <body>
 
 <header>
-    <div class="logo">VIGA</div>
-    <a href="inicio.html" class="volver">← Volver al inicio</a>
+    <a href="inicio.html" class="logo">VIGA</a>
+    <div class="header-acciones">
+        <a id="btnModificarRespuestas" class="btn-header">⚙️ Modificar respuestas</a>
+        <a href="inicio.html" class="btn-header">← Inicio</a>
+    </div>
 </header>
 
-<div class="contenedor">
-    <div class="titulo">
-        <h1 id="encabezadoRutina">Mi rutina personalizada</h1>
-        <p id="subtituloRutina">Plan distribuido tácticamente según tus días de entrenamiento.</p>
-    </div>
+<main>
 
-    <div class="informacion">
-        <div class="dato">
-            <strong id="peso">--</strong>
-            <span>Peso</span>
-        </div>
-        <div class="dato">
-            <strong id="estatura">--</strong>
-            <span>Estatura</span>
-        </div>
-        <div class="dato">
-            <strong id="tipo">--</strong>
-            <span>Modalidad</span>
-        </div>
-        <div class="dato">
-            <strong id="diasTexto">--</strong>
-            <span>Frecuencia</span>
-        </div>
-        <div class="dato">
-            <strong id="meta">--</strong>
-            <span>Objetivo</span>
+    <div class="cabecera-plan">
+        <div>
+            <h1>Tu Rutina de Entrenamiento</h1>
+            <p id="resumenPerfil">Cargando la estructura de tu plan...</p>
         </div>
     </div>
 
-    <!-- BOTONES DINÁMICOS DE DÍAS -->
-    <div class="dias" id="contenedorBotonesDias"></div>
-
-    <h2 id="tituloDia">Rutina</h2>
-
-    <div id="ejercicios" class="ejercicios"></div>
-</div>
-
-<footer>
-    © 2026 VIGA · Vive saludable, entrena inteligente.
-</footer>
-
-<!-- MODAL EXPLICACIÓN -->
-<div id="modal" class="modal">
-    <div class="modal-contenido">
-        <button id="cerrarModal" class="cerrar">×</button>
-        <img id="modalImagen" src="" alt="Ejercicio">
-        <h2 id="modalTitulo">Ejercicio</h2>
-        <h4>¿Cómo realizarlo?</h4>
-        <p id="modalExplicacion"></p>
-        <h4>Consejo VIGA</h4>
-        <p id="modalConsejo"></p>
-        <div id="modalSeries" class="modal-series"></div>
+    <div id="contenedorDiasRutina">
+        <div class="vacio">Estructurando los ejercicios...</div>
     </div>
-</div>
+
+</main>
 
 <script>
-const API = "https://viga-c607.onrender.com";
+    const API = "https://viga-c607.onrender.com";
 
-/* =========================================================
-   BANCO MAESTRO DE EJERCICIOS ORGANIZADOS POR GRUPOS
-========================================================= */
-const DB_EJERCICIOS = {
-    pecho: [
-        {
-            nombre: "Press de banca plano",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Ejercicio base para construir masa y fuerza en el pectoral medio e inferior.",
-            series: "4 series × 8-10 repeticiones",
-            explicacion: "Acostado sobre el banco, baja la carga de forma controlada hasta rozar la línea media del pecho y empuja con potencia.",
-            consejo: "Mantén los pies firmes y las escápulas retraídas."
-        },
-        {
-            nombre: "Press inclinado con mancuernas",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Enfocado en la porción clavicular (pecho superior).",
-            series: "3 series × 10-12 repeticiones",
-            explicacion: "En banco inclinado a 30°, empuja las mancuernas hacia arriba sin chocar entre sí en la parte superior.",
-            consejo: "Controla la fase excéntrica (bajada) en 2 a 3 segundos."
-        },
-        {
-            nombre: "Flexiones de pecho profundas",
-            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Tensión muscular continua usando el peso corporal.",
-            series: "3 series × 12-15 repeticiones",
-            explicacion: "Baja con el cuerpo en línea recta hasta que el pecho casi toque el suelo y empuja activamente.",
-            consejo: "Evita que la cadera se descuelgue."
-        }
-    ],
-    espalda: [
-        {
-            nombre: "Jalón al pecho / Dominadas",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Desarrolla amplitud dorsal y postura.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Tira de la barra hacia la clavícula juntando las escápulas. Regresa extendiendo completamente los brazos.",
-            consejo: "Inicia el tirón desde los codos, no balancees el cuerpo."
-        },
-        {
-            nombre: "Remo pesado con barra o mancuerna",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Añade densidad y grosor a la parte media de la espalda.",
-            series: "4 series × 8-10 repeticiones",
-            explicacion: "Inclina el torso a 45 grados y lleva el peso directo a la cadera contrayendo los dorsales.",
-            consejo: "Mantén el abdomen firme para proteger la zona lumbar."
-        },
-        {
-            nombre: "Remo unilateral en banco",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Trabajo unilateral para balancear ambos lados de la espalda.",
-            series: "3 series × 10 por brazo",
-            explicacion: "Apoya rodilla y mano en el banco, jala la mancuerna hacia tu cadera sin rotar la espalda.",
-            consejo: "Haz una pausa de 1 segundo arriba."
-        }
-    ],
-    pierna_cuadriceps: [
-        {
-            nombre: "Sentadilla libre profunda",
-            imagen: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=900&q=80",
-            descripcion: "El ejercicio más completo para tren inferior.",
-            series: "4 series × 8-10 repeticiones",
-            explicacion: "Baja la cadera rompiendo el paralelo de las rodillas y empuja el suelo de vuelta con firmeza.",
-            consejo: "Mantén el pecho erguido y las rodillas apuntando en la dirección de las puntas de los pies."
-        },
-        {
-            nombre: "Prensa de piernas a 45°",
-            imagen: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Sobrecarga directa sobre cuádriceps sin fatigar la columna.",
-            series: "4 series × 10-12 repeticiones",
-            explicacion: "Flexiona las rodillas hacia el pecho de forma controlada y empuja sin bloquear las articulaciones.",
-            consejo: "Nunca despegues los glúteos del asiento."
-        },
-        {
-            nombre: "Zancadas dinámicas",
-            imagen: "https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fuerza unilateral y estabilidad pélvica.",
-            series: "3 series × 12 por pierna",
-            explicacion: "Da pasos largos hacia el frente flexionando ambas rodillas a 90 grados.",
-            consejo: "No golpees la rodilla trasera contra el suelo."
-        }
-    ],
-    pierna_gluteo_isquios: [
-        {
-            nombre: "Hip Thrust con barra",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Mayor activación y desarrollo del glúteo mayor.",
-            series: "4 series × 10-12 repeticiones",
-            explicacion: "Apoya la parte alta de la espalda, eleva la pelvis contrayendo los glúteos y mantén 2 segundos arriba.",
-            consejo: "Mira hacia adelante con la barbilla cerca del pecho."
-        },
-        {
-            nombre: "Peso muerto rumano",
-            imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Estiramiento y fuerza para isquiosurales y glúteos.",
-            series: "4 series × 10 repeticiones",
-            explicacion: "Con ligera flexión de rodillas, empuja la cadera hacia atrás bajando la carga pegada a las piernas.",
-            consejo: "El movimiento es una bisagra de cadera; no agaches la espalda."
-        },
-        {
-            nombre: "Curl femoral en máquina",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aislamiento de la parte trasera del muslo.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Flexiona las piernas contrayendo con fuerza los isquios y desciende lentamente.",
-            consejo: "Evita dar tirones con la espalda baja."
-        }
-    ],
-    pantorrillas: [
-        {
-            nombre: "Elevación de talones de pie",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece el gastrocnemio y los gemelos.",
-            series: "4 series × 15-20 repeticiones",
-            explicacion: "Eleva los talones hasta quedar en puntillas, pausa un segundo arriba y baja despacio.",
-            consejo: "Evita el rebote rápido al final del rango."
-        }
-    ],
-    hombros: [
-        {
-            nombre: "Press militar overhead",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Constructor primordial para deltoides y fuerza vertical.",
-            series: "4 series × 8-10 repeticiones",
-            explicacion: "Empuja las mancuernas o barra verticalmente sobre tu cabeza bloqueando los brazos sin hiperextender.",
-            consejo: "Aprieta el abdomen para estabilizar la columna."
-        },
-        {
-            nombre: "Elevaciones laterales",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aísla la cabeza lateral para dar volumen y forma a los hombros.",
-            series: "4 series × 12-15 repeticiones",
-            explicacion: "Eleva las mancuernas hacia los costados con codos ligeramente doblados.",
-            consejo: "No uses un peso excesivo que te obligue a balancearte."
-        },
-        {
-            nombre: "Face Pull con cuerda",
-            imagen: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Deltoides posterior, manguito rotador y salud postural.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Jala la cuerda hacia la frente separando las manos al final.",
-            consejo: "Mantén los codos altos durante todo el jalón."
-        }
-    ],
-    biceps: [
-        {
-            nombre: "Curl de bíceps con barra",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Constructor masivo para brazos.",
-            series: "3 series × 10-12 repeticiones",
-            explicacion: "Flexiona los codos subiendo la barra hacia el pecho manteniendo los codos pegados al cuerpo.",
-            consejo: "No balancees el tronco al subir la carga."
-        },
-        {
-            nombre: "Curl martillo con mancuernas",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Estimula el braquial y el antebrazo para mayor grosor.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Con las palmas mirándose entre sí, sube las mancuernas controladamente.",
-            consejo: "Aprieta en el punto más alto."
-        }
-    ],
-    triceps: [
-        {
-            nombre: "Extensión de tríceps en polea",
-            imagen: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Aislamiento directo y definición del tríceps.",
-            series: "3 series × 12 repeticiones",
-            explicacion: "Empuja la barra o cuerda hacia abajo bloqueando los codos pegados a los costados.",
-            consejo: "Evita que los codos se muevan hacia adelante y atrás."
-        },
-        {
-            nombre: "Fondos en banco o paralelas",
-            imagen: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fuerza funcional de empuje.",
-            series: "3 series × 10-12 repeticiones",
-            explicacion: "Desciende flexionando los codos a 90 grados y empuja con potencia.",
-            consejo: "Mantén el cuerpo cerca del banco para evitar estrés en el hombro."
-        }
-    ],
-    cardio_abdomen: [
-        {
-            nombre: "Burpees explosivos",
-            imagen: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Acelera las pulsaciones y dispara el gasto calórico.",
-            series: "4 series × 12 repeticiones",
-            explicacion: "Agáchate, salta a plancha, vuelve al frente y da un salto vertical.",
-            consejo: "Mantén un ritmo regular sin pausas prolongadas."
-        },
-        {
-            nombre: "Mountain Climbers (Escaladores)",
-            imagen: "https://images.unsplash.com/photo-1517838277536-f5f99be5014c?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Cardio y resistencia para toda la zona abdominal.",
-            series: "4 series × 40 segundos",
-            explicacion: "En posición de plancha alta, lleva las rodillas alternadas al pecho a velocidad.",
-            consejo: "No dejes caer la cadera."
-        },
-        {
-            nombre: "Plancha frontal estática",
-            imagen: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fuerza isométrica profunda del core.",
-            series: "3 series × 45 segundos",
-            explicacion: "Apóyate sobre los antebrazos manteniendo el cuerpo en línea horizontal.",
-            consejo: "Aprieta glúteos y mete el ombligo."
-        },
-        {
-            nombre: "Salto de cuerda continuo",
-            imagen: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Cardio de bajo impacto articular y alta quema energética.",
-            series: "4 series × 1 minuto",
-            explicacion: "Salta coordinadamente sobre la cuerda impulsándote con los tobillos.",
-            consejo: "Saltos rasantes sin despegarte mucho del suelo."
-        },
-        {
-            nombre: "Crunches abdominales",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Tonificación directa del recto abdominal.",
-            series: "3 series × 15 repeticiones",
-            explicacion: "Flexiona el torso acercando las costillas hacia la pelvis sin tirar del cuello.",
-            consejo: "Exhala el aire al subir."
-        },
-        {
-            nombre: "Plancha lateral",
-            imagen: "https://images.unsplash.com/photo-1598971457998-ca4ef94d770a?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Fortalece los oblicuos y estabiliza la columna.",
-            series: "3 series × 30s por lado",
-            explicacion: "Apóyate sobre un antebrazo y el lateral de los pies manteniendo la pelvis elevada.",
-            consejo: "Alinea cuello, tronco y piernas."
-        }
-    ],
-    recuperacion: [
-        {
-            nombre: "Flujo de Yoga y Movilidad",
-            imagen: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Apertura de cadera, extensión de columna y bienestar.",
-            series: "15 minutos continuos",
-            explicacion: "Transiciona suavemente entre postura del perro boca abajo, cobra y niño.",
-            consejo: "Respira profundamente por la nariz."
-        },
-        {
-            nombre: "Estiramiento de cadena posterior",
-            imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Libera tensión en isquios, gemelos y zona lumbar.",
-            series: "3 rondas de 40 segundos",
-            explicacion: "Sentado en el suelo, flexiona el torso hacia las puntas de los pies con suavidad.",
-            consejo: "No des rebotes bruscos."
-        },
-        {
-            nombre: "Caminata de recuperación activa",
-            imagen: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Mejora el flujo sanguíneo y relaja el sistema nervioso.",
-            series: "30 minutos a paso regular",
-            explicacion: "Pasea al aire libre manteniendo una postura erguida y respiración calma.",
-            consejo: "Aprovecha para desconectar mentalmente."
-        },
-        {
-            nombre: "Descompresión lumbar y glúteos",
-            imagen: "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Alivia la rigidez acumulada de la semana.",
-            series: "3 series de 45 segundos",
-            explicacion: "Acuéstate boca arriba y abraza tus rodillas suavemente contra el pecho.",
-            consejo: "Relaja los hombros contra el suelo."
-        },
-        {
-            nombre: "Movilidad articular de hombros y cuello",
-            imagen: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Libera puntos de tensión acumulados.",
-            series: "10 minutos guiados",
-            explicacion: "Realiza rotaciones controladas de hombros y flexiones laterales de cuello.",
-            consejo: "Movimientos lentos y conscientes."
-        },
-        {
-            nombre: "Respiración diafragmática profunda",
-            imagen: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80",
-            descripcion: "Activa el sistema parasimpático para acelerar la recuperación.",
-            series: "5 a 10 minutos al final",
-            explicacion: "Inhala inflando el abdomen en 4 segundos, retén 4 y exhala en 6 segundos.",
-            consejo: "Cierra los ojos en un ambiente silencioso."
-        }
-    ]
-};
+    const params = new URLSearchParams(window.location.search);
+    let idUsuario = params.get("id");
 
-/* =========================================================
-   COMPOSICIÓN DINÁMICA DE RUTINAS SEGÚN DÍAS
-========================================================= */
-function generarRutinaPorDias(dias) {
-    const r = {};
-
-    // 1 DÍA: CUERPO COMPLETO (7 ejercicios)
-    if (dias === 1) {
-        r["dia1"] = {
-            titulo: "Cuerpo Completo (Full Body)",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.cardio_abdomen[2]
-            ]
-        };
-        return r;
-    }
-
-    // 2 DÍAS: DÍA 1 TREN SUPERIOR (7 ejercicios: 2 pecho, 2 espalda, 1 hombro, 1 bíceps, 1 tríceps)
-    //         DÍA 2 TREN INFERIOR Y CORE (6-7 ejercicios: 2 cuádriceps, 2 glúteo/isquio, 1 pantorrilla, 1-2 core)
-    if (dias === 2) {
-        r["dia1"] = {
-            titulo: "Día 1: Tren Superior",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.pecho[1],
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.espalda[1],
-                DB_EJERCICIOS.hombros[1],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.triceps[0]
-            ]
-        };
-        r["dia2"] = {
-            titulo: "Día 2: Tren Inferior y Core",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_cuadriceps[1],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[2],
-                DB_EJERCICIOS.cardio_abdomen[4]
-            ]
-        };
-        return r;
-    }
-
-    // 3 DÍAS: DÍA 1 SUPERIOR, DÍA 2 CARDIO Y CORE, DÍA 3 INFERIOR
-    if (dias === 3) {
-        r["dia1"] = {
-            titulo: "Día 1: Tren Superior Completo",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.pecho[1],
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.espalda[1],
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.triceps[0]
-            ]
-        };
-        r["dia2"] = {
-            titulo: "Día 2: Cardio y Abdomen",
-            ejercicios: [
-                DB_EJERCICIOS.cardio_abdomen[0],
-                DB_EJERCICIOS.cardio_abdomen[1],
-                DB_EJERCICIOS.cardio_abdomen[2],
-                DB_EJERCICIOS.cardio_abdomen[3],
-                DB_EJERCICIOS.cardio_abdomen[4],
-                DB_EJERCICIOS.cardio_abdomen[5]
-            ]
-        };
-        r["dia3"] = {
-            titulo: "Día 3: Tren Inferior Completo",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_cuadriceps[1],
-                DB_EJERCICIOS.pierna_cuadriceps[2],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pierna_gluteo_isquios[2],
-                DB_EJERCICIOS.pantorrillas[0]
-            ]
-        };
-        return r;
-    }
-
-    // 4 DÍAS: Torso, Pierna, Hombro/Core/Cardio, Full Pierna
-    if (dias === 4) {
-        r["dia1"] = {
-            titulo: "Día 1: Torso (Pecho y Espalda)",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.pecho[1],
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.espalda[1],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.triceps[0],
-                DB_EJERCICIOS.cardio_abdomen[2]
-            ]
-        };
-        r["dia2"] = {
-            titulo: "Día 2: Pierna (Foco Cuádriceps y Pantorrilla)",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_cuadriceps[1],
-                DB_EJERCICIOS.pierna_cuadriceps[2],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[4]
-            ]
-        };
-        r["dia3"] = {
-            titulo: "Día 3: Hombros, Brazos y Cardio",
-            ejercicios: [
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.hombros[1],
-                DB_EJERCICIOS.hombros[2],
-                DB_EJERCICIOS.biceps[1],
-                DB_EJERCICIOS.triceps[1],
-                DB_EJERCICIOS.cardio_abdomen[0],
-                DB_EJERCICIOS.cardio_abdomen[1]
-            ]
-        };
-        r["dia4"] = {
-            titulo: "Día 4: Pierna (Foco Glúteos e Isquios)",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pierna_gluteo_isquios[2],
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[5]
-            ]
-        };
-        return r;
-    }
-
-    // 5 DÍAS
-    if (dias === 5) {
-        r["dia1"] = {
-            titulo: "Lunes: Pierna y Glúteos",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pierna_cuadriceps[2],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[2]
-            ]
-        };
-        r["dia2"] = {
-            titulo: "Martes: Espalda y Bíceps",
-            ejercicios: [
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.espalda[1],
-                DB_EJERCICIOS.espalda[2],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.biceps[1],
-                DB_EJERCICIOS.cardio_abdomen[1]
-            ]
-        };
-        r["dia3"] = {
-            titulo: "Miércoles: Pecho y Tríceps",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.pecho[1],
-                DB_EJERCICIOS.pecho[2],
-                DB_EJERCICIOS.triceps[0],
-                DB_EJERCICIOS.triceps[1],
-                DB_EJERCICIOS.cardio_abdomen[4]
-            ]
-        };
-        r["dia4"] = {
-            titulo: "Jueves: Pierna Completa",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_cuadriceps[1],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[2],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[0]
-            ]
-        };
-        r["dia5"] = {
-            titulo: "Viernes: Hombros, Abdomen y Cardio",
-            ejercicios: [
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.hombros[1],
-                DB_EJERCICIOS.hombros[2],
-                DB_EJERCICIOS.cardio_abdomen[1],
-                DB_EJERCICIOS.cardio_abdomen[2],
-                DB_EJERCICIOS.cardio_abdomen[3],
-                DB_EJERCICIOS.cardio_abdomen[5]
-            ]
-        };
-        return r;
-    }
-
-    // 6 DÍAS: PUSH / PULL / LEGS x2
-    if (dias === 6) {
-        r["dia1"] = {
-            titulo: "Lunes: Pierna y Glúteos",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[0],
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pierna_cuadriceps[1],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[2]
-            ]
-        };
-        r["dia2"] = {
-            titulo: "Martes: Espalda y Bíceps",
-            ejercicios: [
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.espalda[1],
-                DB_EJERCICIOS.espalda[2],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.biceps[1],
-                DB_EJERCICIOS.cardio_abdomen[1]
-            ]
-        };
-        r["dia3"] = {
-            titulo: "Miércoles: Pecho, Hombro y Tríceps",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[0],
-                DB_EJERCICIOS.pecho[1],
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.hombros[1],
-                DB_EJERCICIOS.triceps[0],
-                DB_EJERCICIOS.triceps[1],
-                DB_EJERCICIOS.cardio_abdomen[4]
-            ]
-        };
-        r["dia4"] = {
-            titulo: "Jueves: Pierna Completa e Isquios",
-            ejercicios: [
-                DB_EJERCICIOS.pierna_gluteo_isquios[1],
-                DB_EJERCICIOS.pierna_gluteo_isquios[2],
-                DB_EJERCICIOS.pierna_cuadriceps[0],
-                DB_EJERCICIOS.pierna_cuadriceps[2],
-                DB_EJERCICIOS.pantorrillas[0],
-                DB_EJERCICIOS.cardio_abdomen[5]
-            ]
-        };
-        r["dia5"] = {
-            titulo: "Viernes: Torso Completo",
-            ejercicios: [
-                DB_EJERCICIOS.pecho[2],
-                DB_EJERCICIOS.espalda[0],
-                DB_EJERCICIOS.hombros[2],
-                DB_EJERCICIOS.biceps[0],
-                DB_EJERCICIOS.triceps[0],
-                DB_EJERCICIOS.cardio_abdomen[2]
-            ]
-        };
-        r["dia6"] = {
-            titulo: "Sábado: Hombros, Cardio y Abdomen",
-            ejercicios: [
-                DB_EJERCICIOS.hombros[0],
-                DB_EJERCICIOS.hombros[1],
-                DB_EJERCICIOS.cardio_abdomen[0],
-                DB_EJERCICIOS.cardio_abdomen[1],
-                DB_EJERCICIOS.cardio_abdomen[2],
-                DB_EJERCICIOS.cardio_abdomen[3],
-                DB_EJERCICIOS.cardio_abdomen[4]
-            ]
-        };
-        return r;
-    }
-
-    // 7 DÍAS EXACTOS SEGÚN TU SOLICITUD
-    // Lunes: Pierna y Glúteos
-    // Martes: Espalda y Bíceps
-    // Miércoles: Cardio y Abdomen
-    // Jueves: Pecho, Hombro y Tríceps
-    // Viernes: Pierna Completa
-    // Sábado: Cuerpo Completo / Hombros y Core
-    // Domingo: Ejercicios tranquilos (Yoga, movilidad, caminata)
-    r["dia1"] = {
-        titulo: "Lunes: Pierna y Glúteos",
-        ejercicios: [
-            DB_EJERCICIOS.pierna_cuadriceps[0],
-            DB_EJERCICIOS.pierna_gluteo_isquios[0],
-            DB_EJERCICIOS.pierna_gluteo_isquios[1],
-            DB_EJERCICIOS.pierna_cuadriceps[1],
-            DB_EJERCICIOS.pierna_cuadriceps[2],
-            DB_EJERCICIOS.pantorrillas[0],
-            DB_EJERCICIOS.cardio_abdomen[2]
-        ]
-    };
-    r["dia2"] = {
-        titulo: "Martes: Espalda y Bíceps",
-        ejercicios: [
-            DB_EJERCICIOS.espalda[0],
-            DB_EJERCICIOS.espalda[1],
-            DB_EJERCICIOS.espalda[2],
-            DB_EJERCICIOS.biceps[0],
-            DB_EJERCICIOS.biceps[1],
-            DB_EJERCICIOS.cardio_abdomen[1],
-            DB_EJERCICIOS.cardio_abdomen[4]
-        ]
-    };
-    r["dia3"] = {
-        titulo: "Miércoles: Cardio y Abdomen",
-        ejercicios: [
-            DB_EJERCICIOS.cardio_abdomen[0],
-            DB_EJERCICIOS.cardio_abdomen[1],
-            DB_EJERCICIOS.cardio_abdomen[2],
-            DB_EJERCICIOS.cardio_abdomen[3],
-            DB_EJERCICIOS.cardio_abdomen[4],
-            DB_EJERCICIOS.cardio_abdomen[5]
-        ]
-    };
-    r["dia4"] = {
-        titulo: "Jueves: Pecho, Hombro y Tríceps",
-        ejercicios: [
-            DB_EJERCICIOS.pecho[0],
-            DB_EJERCICIOS.pecho[1],
-            DB_EJERCICIOS.hombros[0],
-            DB_EJERCICIOS.hombros[1],
-            DB_EJERCICIOS.triceps[0],
-            DB_EJERCICIOS.triceps[1],
-            DB_EJERCICIOS.pecho[2]
-        ]
-    };
-    r["dia5"] = {
-        titulo: "Viernes: Pierna Completa",
-        ejercicios: [
-            DB_EJERCICIOS.pierna_cuadriceps[0],
-            DB_EJERCICIOS.pierna_cuadriceps[1],
-            DB_EJERCICIOS.pierna_gluteo_isquios[0],
-            DB_EJERCICIOS.pierna_gluteo_isquios[1],
-            DB_EJERCICIOS.pierna_gluteo_isquios[2],
-            DB_EJERCICIOS.pantorrillas[0],
-            DB_EJERCICIOS.cardio_abdomen[2]
-        ]
-    };
-    r["dia6"] = {
-        titulo: "Sábado: Cuerpo Completo & Hombros",
-        ejercicios: [
-            DB_EJERCICIOS.hombros[0],
-            DB_EJERCICIOS.hombros[1],
-            DB_EJERCICIOS.pecho[0],
-            DB_EJERCICIOS.espalda[0],
-            DB_EJERCICIOS.pierna_cuadriceps[2],
-            DB_EJERCICIOS.cardio_abdomen[0],
-            DB_EJERCICIOS.cardio_abdomen[5]
-        ]
-    };
-    r["dia7"] = {
-        titulo: "Domingo: Movilidad, Yoga y Recuperación",
-        ejercicios: [
-            DB_EJERCICIOS.recuperacion[0],
-            DB_EJERCICIOS.recuperacion[1],
-            DB_EJERCICIOS.recuperacion[2],
-            DB_EJERCICIOS.recuperacion[3],
-            DB_EJERCICIOS.recuperacion[4],
-            DB_EJERCICIOS.recuperacion[5]
-        ]
-    };
-
-    return r;
-}
-
-/* =========================================================
-   ELEMENTOS Y ESTADO GLOBAL
-========================================================= */
-const contenedorEjercicios = document.getElementById("ejercicios");
-const tituloDia = document.getElementById("tituloDia");
-const contenedorBotonesDias = document.getElementById("contenedorBotonesDias");
-
-const modal = document.getElementById("modal");
-const cerrarModal = document.getElementById("cerrarModal");
-const modalImagen = document.getElementById("modalImagen");
-const modalTitulo = document.getElementById("modalTitulo");
-const modalExplicacion = document.getElementById("modalExplicacion");
-const modalConsejo = document.getElementById("modalConsejo");
-const modalSeries = document.getElementById("modalSeries");
-
-let planGenerado = {};
-
-/* =========================================================
-   INICIALIZAR Y CARGAR DATOS
-========================================================= */
-async function inicializarRutina() {
-    const sesionUsuario = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
-    let usuario = null;
-
-    if (sesionUsuario) {
-        try {
-            usuario = JSON.parse(sesionUsuario);
-        } catch (e) {
-            usuario = null;
+    if (!idUsuario) {
+        const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        if (sesionUser) {
+            try {
+                const u = JSON.parse(sesionUser);
+                idUsuario = u.identificacion || u.id;
+            } catch(e) {}
         }
     }
 
-    const parametros = new URLSearchParams(window.location.search);
-    let peso = parametros.get("peso") || parametros.get("actual");
-    let estatura = parametros.get("estatura");
-    let tipo = parametros.get("tipo");
-    let objetivo = parametros.get("objetivo");
-    let diasURL = parametros.get("dias");
+    // Configurar enlace para modificar respuestas
+    document.getElementById("btnModificarRespuestas").href = `rutinas.html?id=${encodeURIComponent(idUsuario || '')}&editar=1`;
 
-    let diasFinales = diasURL ? parseInt(diasURL) : 2;
+    async function cargarPlan() {
+        let datos = null;
 
-    // Consultar MySQL si existe sesión
-    if (usuario && usuario.identificacion) {
-        try {
-            const res = await fetch(`${API}/usuario/${usuario.identificacion}/datos-fisicos`);
-            if (res.ok) {
-                const datosBD = await res.json();
-                if (datosBD.peso) peso = datosBD.peso;
-                if (datosBD.altura) estatura = datosBD.altura;
-                if (datosBD.lugar_entrenamiento) tipo = datosBD.lugar_entrenamiento;
-                if (datosBD.objetivo) objetivo = datosBD.objetivo;
-                if (datosBD.dias_entreno) diasFinales = parseInt(datosBD.dias_entreno);
+        // Intentar obtener del servidor
+        if (idUsuario) {
+            try {
+                const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
+                if (res.ok) {
+                    datos = await res.json();
+                }
+            } catch(e) {}
+        }
+
+        // Respaldo desde localStorage si falló el servidor
+        if (!datos || !datos.objetivo) {
+            const guardado = localStorage.getItem("viga_rutina_datos");
+            if (guardado) {
+                try { datos = JSON.parse(guardado); } catch(e) {}
             }
-        } catch (error) {
-            console.error("Error consultando MySQL:", error);
-        }
-    }
-
-    diasFinales = Math.min(Math.max(diasFinales || 2, 1), 7);
-
-    document.getElementById("peso").textContent = peso ? `${peso} kg` : "--";
-    document.getElementById("estatura").textContent = estatura ? `${estatura} m` : "--";
-    document.getElementById("tipo").textContent = tipo === "gimnasio" ? "Gimnasio" : "En Casa";
-    document.getElementById("diasTexto").textContent = `${diasFinales} ${diasFinales === 1 ? 'día' : 'días'}`;
-
-    const metaTexto = document.getElementById("meta");
-    const tituloPrincipal = document.getElementById("encabezadoRutina");
-
-    if (objetivo === "bajar_peso" || objetivo === "bajar") {
-        metaTexto.textContent = "Bajar de peso";
-        tituloPrincipal.textContent = "Rutina Metabólica & Quema de Grasa";
-    } else if (objetivo === "subir_peso" || objetivo === "subir") {
-        metaTexto.textContent = "Ganar masa";
-        tituloPrincipal.textContent = "Rutina de Fuerza & Hipertrofia";
-    } else {
-        metaTexto.textContent = "Definir / Tono";
-        tituloPrincipal.textContent = "Rutina de Definición & Calidad Muscular";
-    }
-
-    // Generar la rutina exacta para esta cantidad de días
-    planGenerado = generarRutinaPorDias(diasFinales);
-
-    // Dibujar los botones
-    renderizarBotonesDias(planGenerado);
-}
-
-/* =========================================================
-   DIBUJAR BOTONES DE LOS DÍAS GENERADOS
-========================================================= */
-function renderizarBotonesDias(plan) {
-    contenedorBotonesDias.innerHTML = "";
-    const clavesDias = Object.keys(plan);
-
-    clavesDias.forEach((clave, indice) => {
-        const diaData = plan[clave];
-        const btn = document.createElement("button");
-        btn.className = `dia ${indice === 0 ? "activo" : ""}`;
-        btn.dataset.clave = clave;
-        
-        // Etiqueta corta para el botón
-        let etiquetaBoton = `Día ${indice + 1}`;
-        if (diaData.titulo.includes(":")) {
-            etiquetaBoton = diaData.titulo.split(":")[0];
         }
 
-        btn.textContent = etiquetaBoton;
-        btn.addEventListener("click", () => mostrarDia(clave));
-        contenedorBotonesDias.appendChild(btn);
-    });
+        if (!datos || !datos.objetivo) {
+            // Si no tiene datos, lo enviamos al formulario
+            window.location.replace(`rutinas.html?id=${encodeURIComponent(idUsuario || '')}`);
+            return;
+        }
 
-    if (clavesDias.length > 0) {
-        mostrarDia(clavesDias[0]);
+        renderizarRutina(datos);
     }
-}
 
-/* =========================================================
-   MOSTRAR EJERCICIOS DEL DÍA SELECCIONADO
-========================================================= */
-function mostrarDia(clave) {
-    document.querySelectorAll(".dia").forEach(btn => {
-        btn.classList.toggle("activo", btn.dataset.clave === clave);
-    });
+    function renderizarRutina(datos) {
+        const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
+        document.getElementById("resumenPerfil").textContent = 
+            `Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días a la semana | Cuidado: ${tieneLesion ? datos.lesion : 'Ninguno'}`;
 
-    const infoDia = planGenerado[clave];
-    if (!infoDia) return;
+        const contenedor = document.getElementById("contenedorDiasRutina");
+        contenedor.innerHTML = "";
 
-    tituloDia.textContent = infoDia.titulo;
-    contenedorEjercicios.innerHTML = "";
+        const esRodilla = (datos.lesion || "").toLowerCase().includes("rodilla");
+        const esHombro = (datos.lesion || "").toLowerCase().includes("hombro");
+        const esEspalda = (datos.lesion || "").toLowerCase().includes("espalda");
 
-    infoDia.ejercicios.forEach((ejercicio, index) => {
-        const card = document.createElement("div");
-        card.className = "ejercicio";
-        card.innerHTML = `
-            <img src="${ejercicio.imagen}" alt="${ejercicio.nombre}" loading="lazy">
-            <div class="contenido">
-                <div class="numero">EJERCICIO ${index + 1}</div>
-                <h3>${ejercicio.nombre}</h3>
-                <p>${ejercicio.descripcion}</p>
-                <div class="series">${ejercicio.series}</div>
-                <button class="boton-explicacion">Ver explicación</button>
-            </div>
-        `;
+        const numDias = parseInt(datos.dias_entreno) || 3;
 
-        card.querySelector(".boton-explicacion").addEventListener("click", () => {
-            mostrarExplicacion(ejercicio);
+        const bancoEjercicios = [
+            {
+                dia: "Día 1: Empuje (Pecho, Hombro y Tríceps)",
+                ejercicios: [
+                    { nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano", series: "4 series × 8-10 reps" },
+                    { nombre: esHombro ? "Elevaciones laterales controladas" : "Press militar con mancuernas", series: "3 series × 12 reps" },
+                    { nombre: "Aperturas en polea o máquina pec-deck", series: "3 series × 12 reps" },
+                    { nombre: "Extensiones de tríceps en polea", series: "4 series × 12 reps" }
+                ]
+            },
+            {
+                dia: "Día 2: Tracción (Espalda, Bíceps y Core)",
+                ejercicios: [
+                    { nombre: esEspalda ? "Jalón al pecho con agarre cerrado neutro" : "Dominadas o jalón al pecho", series: "4 series × 10 reps" },
+                    { nombre: esEspalda ? "Remo con apoyo en el pecho" : "Remo con barra", series: "3 series × 10-12 reps" },
+                    { nombre: "Curl de bíceps con mancuernas", series: "3 series × 12 reps" },
+                    { nombre: esEspalda ? "Plancha frontal isométrica" : "Elevaciones de piernas suspendido", series: "3 series × 40 segs" }
+                ]
+            },
+            {
+                dia: "Día 3: Tren inferior (Pierna y Pantorrilla)",
+                ejercicios: [
+                    { nombre: esRodilla ? "Prensa a 90° sin bloqueo articular" : "Sentadilla profunda con barra", series: "4 series × 8-10 reps" },
+                    { nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas con mancuernas", series: "4 series × 12 reps" },
+                    { nombre: "Curl femoral en máquina", series: "3 series × 12 reps" },
+                    { nombre: "Elevación de talones para gemelo", series: "4 series × 15 reps" }
+                ]
+            },
+            {
+                dia: "Día 4: Torso Completo y Estabilidad",
+                ejercicios: [
+                    { nombre: "Press inclinado con mancuernas", series: "4 series × 10 reps" },
+                    { nombre: "Remo unilateral con mancuerna", series: "3 series × 12 reps" },
+                    { nombre: "Elevaciones laterales para hombro", series: "3 series × 15 reps" },
+                    { nombre: "Fondos entre bancos o paralelas", series: "3 series × 12 reps" }
+                ]
+            },
+            {
+                dia: "Día 5: Pierna enfocada y Core",
+                ejercicios: [
+                    { nombre: esRodilla ? "Peso muerto rumano suave" : "Peso muerto convencional", series: "4 series × 10 reps" },
+                    { nombre: "Prensa inclinada", series: "4 series × 12 reps" },
+                    { nombre: "Abductores en máquina", series: "3 series × 15 reps" },
+                    { nombre: "Rueda abdominal o plancha", series: "3 series × 45 segs" }
+                ]
+            },
+            {
+                dia: "Día 6: Acondicionamiento y Brazos",
+                ejercicios: [
+                    { nombre: "Superserie: Curl de bíceps + Press francés", series: "4 series × 12 reps" },
+                    { nombre: "Remo al mentón con polea", series: "3 series × 12 reps" },
+                    { nombre: "Cardio hiit / Trote suave", series: "20 minutos" }
+                ]
+            },
+            {
+                dia: "Día 7: Movilidad y Recuperación Activa",
+                ejercicios: [
+                    { nombre: "Caminata ligera al aire libre", series: "30-45 minutos" },
+                    { nombre: "Estiramientos dinámicos cuerpo completo", series: "15 minutos" },
+                    { nombre: "Movilidad de cadera y descompresión lumbar", series: "10 minutos" }
+                ]
+            }
+        ];
+
+        const diasAMostrar = bancoEjercicios.slice(0, numDias);
+
+        diasAMostrar.forEach(d => {
+            const div = document.createElement("div");
+            div.className = "tarjeta-dia";
+            let filas = "";
+            d.ejercicios.forEach(ej => {
+                filas += `
+                    <div class="ejercicio-fila">
+                        <span><strong>${ej.nombre}</strong></span>
+                        <span class="series-tag">${ej.series}</span>
+                    </div>
+                `;
+            });
+            div.innerHTML = `<h3><span>${d.dia}</span></h3>${filas}`;
+            contenedor.appendChild(div);
         });
+    }
 
-        contenedorEjercicios.appendChild(card);
-    });
-}
-
-/* =========================================================
-   MODAL DE EXPLICACIÓN
-========================================================= */
-function mostrarExplicacion(ejercicio) {
-    modalImagen.src = ejercicio.imagen;
-    modalImagen.alt = ejercicio.nombre;
-    modalTitulo.textContent = ejercicio.nombre;
-    modalExplicacion.textContent = ejercicio.explicacion;
-    modalConsejo.textContent = ejercicio.consejo;
-    modalSeries.textContent = ejercicio.series;
-
-    modal.classList.add("activo");
-    document.body.style.overflow = "hidden";
-}
-
-function cerrar() {
-    modal.classList.remove("activo");
-    document.body.style.overflow = "";
-}
-
-cerrarModal.addEventListener("click", cerrar);
-modal.addEventListener("click", (e) => { if (e.target === modal) cerrar(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrar(); });
-
-inicializarRutina();
+    document.addEventListener("DOMContentLoaded", cargarPlan);
 </script>
 
 </body>
