@@ -105,6 +105,12 @@
             margin-bottom: 15px;
         }
 
+        .fila-campos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
         .campo label {
             font-size: 13px;
             color: #ccc;
@@ -208,6 +214,71 @@
             filter: brightness(1.1);
         }
 
+        .btn-secundario {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: transparent;
+            color: #ccc;
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-secundario:hover {
+            border-color: #666;
+            color: white;
+        }
+
+        /* PASARELAS DE PAGO */
+        .seccion-pago {
+            display: none;
+        }
+
+        .seccion-pago.activa {
+            display: block;
+        }
+
+        .info-bancaria {
+            background: #222;
+            border: 1px dashed var(--verde);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .info-bancaria h3 {
+            color: var(--verde);
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .info-bancaria p {
+            font-size: 13px;
+            color: #ddd;
+            line-height: 1.7;
+        }
+
+        .tarjeta-grafica {
+            background: linear-gradient(135deg, #1f2e22, #111);
+            border: 1px solid var(--verde);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tarjeta-grafica .chip {
+            width: 40px;
+            height: 28px;
+            background: #d4af37;
+            border-radius: 5px;
+        }
+
         @media (max-width: 800px) {
             .checkout-grid { grid-template-columns: 1fr; }
             header { padding: 0 20px; }
@@ -222,14 +293,15 @@
 </header>
 
 <main>
-    <h1>Confirmación de Compra</h1>
-    <p class="subtitulo">Ingresa tus datos de envío para procesar el pedido.</p>
+    <h1 id="tituloPaso">Confirmación de Pedido</h1>
+    <p class="subtitulo" id="subtituloPaso">Paso 1 de 2: Ingresa los datos para coordinar tu entrega.</p>
 
     <div class="checkout-grid">
-        <!-- FORMULARIO DE ENVÍO -->
-        <section class="card">
-            <h2>Datos de envío y contacto</h2>
-            <form id="formCheckout">
+
+        <!-- PASO 1: DATOS DE ENVÍO Y SELECCIÓN DE MÉTODO -->
+        <section class="card" id="pasoEnvio">
+            <h2>Datos de entrega</h2>
+            <form id="formEnvio">
                 <div class="campo">
                     <label for="nombreCliente">Nombre completo *</label>
                     <input type="text" id="nombreCliente" required placeholder="Ej. Carlos Martínez">
@@ -247,23 +319,88 @@
                     <input type="text" id="ciudadCliente" required placeholder="Ej. Medellín, Bogotá, Cali">
                 </div>
                 <div class="campo">
-                    <label for="metodoPago">Método de pago preferido</label>
-                    <select id="metodoPago">
+                    <label for="metodoPago">Selecciona tu método de pago *</label>
+                    <select id="metodoPago" required>
                         <option value="transferencia">Transferencia bancaria / Nequi / Daviplata</option>
-                        <option value="contraentrega">Pago contra entrega</option>
                         <option value="tarjeta">Tarjeta de crédito / Débito</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-pagar">Confirmar y pagar pedido</button>
+                <button type="submit" class="btn-pagar">Continuar al pago →</button>
+            </form>
+        </section>
+
+        <!-- PASO 2A: PASARELA DE TRANSFERENCIA / NEQUI / DAVIPLATA -->
+        <section class="card seccion-pago" id="pasoTransferencia">
+            <h2>Pago por Transferencia / Nequi</h2>
+            
+            <div class="info-bancaria">
+                <h3>Datos oficiales de cuenta</h3>
+                <p><strong>Nequi / Daviplata:</strong> 300 123 4567</p>
+                <p><strong>Bancolombia (Ahorros):</strong> 123-456789-01</p>
+                <p><strong>Titular:</strong> VIGA Deportes S.A.S</p>
+                <p><strong>Monto exacto:</strong> <span id="montoTransferencia" style="color:var(--verde); font-weight:700;">$ 0</span></p>
+            </div>
+
+            <form id="formTransferencia">
+                <div class="campo">
+                    <label for="comprobanteNequi">Número de aprobación o comprobante *</label>
+                    <input type="text" id="comprobanteNequi" required placeholder="Ej. M1234567 o # de transacción">
+                </div>
+                <div class="campo">
+                    <label for="cuentaOrigen">Banco o billetera desde donde envías *</label>
+                    <select id="cuentaOrigen" required>
+                        <option value="Nequi">Nequi</option>
+                        <option value="Daviplata">Daviplata</option>
+                        <option value="Bancolombia">Bancolombia</option>
+                        <option value="Otro">Otro banco</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-pagar">Confirmar pago y finalizar</button>
+                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de envío</button>
+            </form>
+        </section>
+
+        <!-- PASO 2B: PASARELA DE TARJETA DE CRÉDITO / DÉBITO -->
+        <section class="card seccion-pago" id="pasoTarjeta">
+            <h2>Pago con Tarjeta de Crédito / Débito</h2>
+
+            <div class="tarjeta-grafica">
+                <div class="chip"></div>
+                <div style="font-size: 16px; letter-spacing: 2px;" id="vistaNumeroTarjeta">•••• •••• •••• ••••</div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
+                    <span id="vistaNombreTarjeta">TITULAR DE LA TARJETA</span>
+                    <span id="vistaFechaTarjeta">MM/AA</span>
+                </div>
+            </div>
+
+            <form id="formTarjeta">
+                <div class="campo">
+                    <label for="numeroTarjeta">Número de la tarjeta *</label>
+                    <input type="text" id="numeroTarjeta" maxlength="19" required placeholder="4500 0000 0000 0000" oninput="actualizarTarjetaVisual()">
+                </div>
+                <div class="campo">
+                    <label for="nombreTarjeta">Nombre impreso en la tarjeta *</label>
+                    <input type="text" id="nombreTarjeta" required placeholder="Como aparece en el plástico" oninput="actualizarTarjetaVisual()">
+                </div>
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="expiracionTarjeta">Expiración (MM/AA) *</label>
+                        <input type="text" id="expiracionTarjeta" maxlength="5" required placeholder="MM/AA" oninput="actualizarTarjetaVisual()">
+                    </div>
+                    <div class="campo">
+                        <label for="cvvTarjeta">CVV / CVC *</label>
+                        <input type="password" id="cvvTarjeta" maxlength="4" required placeholder="123">
+                    </div>
+                </div>
+                <button type="submit" class="btn-pagar">Pagar pedido</button>
+                <button type="button" class="btn-secundario" onclick="regresarAEnvio()">← Modificar datos de envío</button>
             </form>
         </section>
 
         <!-- RESUMEN DEL PEDIDO -->
         <section class="card">
             <h2>Resumen del pedido</h2>
-            <div class="lista-articulos" id="listaArticulos">
-                <!-- Se llena con Javascript -->
-            </div>
+            <div class="lista-articulos" id="listaArticulos"></div>
 
             <div class="linea-total">
                 <span>Subtotal</span>
@@ -271,7 +408,7 @@
             </div>
             <div class="linea-total">
                 <span>Envío estimado</span>
-                <span>Calculado en la entrega</span>
+                <span style="color:var(--verde);">Gratis</span>
             </div>
             <div class="linea-total destacado">
                 <span>Total a pagar</span>
@@ -283,6 +420,8 @@
 
 <script>
     const carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+    let datosEnvioGuardados = null;
+    let totalPedido = 0;
 
     function dinero(valor) {
         return Number(valor || 0).toLocaleString("es-CO", {
@@ -323,17 +462,77 @@
             contenedor.appendChild(div);
         });
 
+        totalPedido = suma;
         subtotalEl.textContent = dinero(suma);
         totalEl.textContent = dinero(suma);
+        document.getElementById("montoTransferencia").textContent = dinero(suma);
     }
 
-    document.getElementById("formCheckout").addEventListener("submit", (e) => {
+    /* =========================================================
+       CONTROL DE PASOS
+    ========================================================= */
+    document.getElementById("formEnvio").addEventListener("submit", (e) => {
         e.preventDefault();
-        alert("¡Pedido realizado con éxito! Un asesor se contactará contigo para confirmar el envío.");
-        // Limpia el carrito tras la compra
+
+        datosEnvioGuardados = {
+            nombre: document.getElementById("nombreCliente").value.trim(),
+            telefono: document.getElementById("telefonoCliente").value.trim(),
+            direccion: document.getElementById("direccionCliente").value.trim(),
+            ciudad: document.getElementById("ciudadCliente").value.trim(),
+            metodo: document.getElementById("metodoPago").value
+        };
+
+        // Ocultar paso 1
+        document.getElementById("pasoEnvio").style.display = "none";
+        document.getElementById("tituloPaso").textContent = "Detalles del Pago";
+        document.getElementById("subtituloPaso").textContent = "Paso 2 de 2: Ingresa la información de tu cuenta para procesar el pago.";
+
+        // Mostrar formulario correspondiente
+        if (datosEnvioGuardados.metodo === "transferencia") {
+            document.getElementById("pasoTransferencia").classList.add("activa");
+        } else {
+            document.getElementById("pasoTarjeta").classList.add("activa");
+        }
+    });
+
+    function regresarAEnvio() {
+        document.getElementById("pasoTransferencia").classList.remove("activa");
+        document.getElementById("pasoTarjeta").classList.remove("activa");
+        document.getElementById("pasoEnvio").style.display = "block";
+        document.getElementById("tituloPaso").textContent = "Confirmación de Pedido";
+        document.getElementById("subtituloPaso").textContent = "Paso 1 de 2: Ingresa los datos para coordinar tu entrega.";
+    }
+
+    function actualizarTarjetaVisual() {
+        const num = document.getElementById("numeroTarjeta").value;
+        const nom = document.getElementById("nombreTarjeta").value;
+        const exp = document.getElementById("expiracionTarjeta").value;
+
+        document.getElementById("vistaNumeroTarjeta").textContent = num || "•••• •••• •••• ••••";
+        document.getElementById("vistaNombreTarjeta").textContent = (nom || "TITULAR DE LA TARJETA").toUpperCase();
+        document.getElementById("vistaFechaTarjeta").textContent = exp || "MM/AA";
+    }
+
+    /* =========================================================
+       CONFIRMAR PAGO
+    ========================================================= */
+    document.getElementById("formTransferencia").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const comprobante = document.getElementById("comprobanteNequi").value.trim();
+        alert(`¡Pago verificado con éxito!\n\nComprobante #${comprobante} recibido.\nSe enviará tu pedido a ${datosEnvioGuardados.direccion}, ${datosEnvioGuardados.ciudad}.`);
+        concluirCompra();
+    });
+
+    document.getElementById("formTarjeta").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert(`¡Pago procesado con éxito por ${dinero(totalPedido)}!\n\nTu pedido ha sido despachado a nombre de ${datosEnvioGuardados.nombre}.`);
+        concluirCompra();
+    });
+
+    function concluirCompra() {
         localStorage.removeItem("viga_carrito");
         window.location.href = "tienda.html";
-    });
+    }
 
     document.addEventListener("DOMContentLoaded", cargarResumen);
 </script>
