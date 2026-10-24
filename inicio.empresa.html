@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -408,18 +407,6 @@
             border-radius: 0px;
         }
 
-        .perfil-datos {
-            display: grid;
-            gap: 18px;
-            max-width: 650px;
-        }
-
-        .nota {
-            font-size: 12px;
-            color: var(--secundario);
-            line-height: 1.7;
-        }
-
         @media (max-width: 900px) {
             .layout {
                 grid-template-columns: 190px minmax(0, 1fr);
@@ -522,7 +509,6 @@
     <main>
 
         <!-- RESUMEN -->
-
         <section class="seccion activa" id="resumen">
             <div class="encabezado">
                 <div>
@@ -584,7 +570,6 @@
         </section>
 
         <!-- TIENDA -->
-
         <section class="seccion" id="productos">
             <div class="encabezado">
                 <div>
@@ -602,7 +587,6 @@
         </section>
 
         <!-- AGREGAR / EDITAR PRODUCTO -->
-
         <section class="seccion" id="nuevo">
             <div class="encabezado">
                 <div>
@@ -683,34 +667,44 @@
             </div>
         </section>
 
-        <!-- PERFIL EMPRESA -->
-
+        <!-- MI EMPRESA: AHORA HISTORIAL DE VENTAS Y PRODUCTOS COMPRADOS -->
         <section class="seccion" id="perfil">
             <div class="encabezado">
                 <div>
-                    <h1>Mi empresa</h1>
+                    <h1>Historial de ventas</h1>
                     <p class="muted">
-                        Consulta la información de tu cuenta empresarial.
+                        Consulta el registro de productos que te han comprado tus clientes.
                     </p>
+                </div>
+                <button class="boton boton-secundario" onclick="cargarVentasEmpresa()">
+                    Actualizar ventas
+                </button>
+            </div>
+
+            <!-- RESUMEN DE VENTAS -->
+            <div class="estadisticas">
+                <div class="tarjeta">
+                    <p class="muted">Ingresos generados</p>
+                    <div class="estadistica-numero verde" id="ventasDineroTotal">$ 0</div>
+                    <p class="muted">Total dinero recibido</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Unidades vendidas</p>
+                    <div class="estadistica-numero verde" id="ventasUnidadesTotal">0</div>
+                    <p class="muted">Implementos entregados</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Pedidos recibidos</p>
+                    <div class="estadistica-numero verde" id="ventasPedidosTotal">0</div>
+                    <p class="muted">Compras registradas</p>
                 </div>
             </div>
 
-            <div class="tarjeta perfil-datos">
-                <div class="campo">
-                    <label>Nombre comercial</label>
-                    <input id="perfilNombre" readonly>
-                </div>
-
-                <div class="campo">
-                    <label>Correo empresarial</label>
-                    <input id="perfilCorreo" readonly>
-                </div>
-
-                <p class="nota">
-                    Los datos se muestran a partir de la sesión empresarial.
-                    La edición del perfil se habilitará cuando exista la ruta
-                    correspondiente en el backend.
-                </p>
+            <!-- TABLA DE VENTAS -->
+            <div id="contenedorTablaVentas">
+                <div class="vacio">Cargando historial de compras recibidas...</div>
             </div>
         </section>
 
@@ -718,13 +712,6 @@
 </div>
 
 <script>
-    /*
-      IMPORTANTE:
-      Este panel necesita las rutas empresariales en app.js.
-      No uses identificadores enviados por el navegador como única
-      medida de seguridad: el backend debe comprobar qué empresa inició sesión.
-    */
-
     const API = "https://viga-c607.onrender.com";
 
     const empresaGuardada = localStorage.getItem("empresaLogueada");
@@ -772,6 +759,10 @@
 
         if (nombre === "productos" || nombre === "resumen") {
             cargarProductos();
+        }
+
+        if (nombre === "perfil") {
+            cargarVentasEmpresa();
         }
 
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -869,8 +860,7 @@
     async function cargarProductos() {
         if (!empresa || !empresa.id) {
             $("tablaProductos").innerHTML =
-                '<div class="vacio">Debes iniciar sesión con una cuenta empresarial válida. ' +
-                'La ruta de autenticación empresarial aún debe conectarse.</div>';
+                '<div class="vacio">Debes iniciar sesión con una cuenta empresarial válida.</div>';
 
             $("recientes").innerHTML =
                 '<div class="vacio">Inicia sesión como empresa para consultar tus productos.</div>';
@@ -882,14 +872,6 @@
         }
 
         try {
-            /*
-              Ruta que debe existir en app.js:
-              GET /empresa/:id/productos
-
-              El backend debe validar la sesión y filtrar los productos
-              por la empresa autenticada.
-            */
-
             const datos = await peticion(
                 "/empresa/" + encodeURIComponent(empresa.id) + "/productos"
             );
@@ -902,8 +884,7 @@
                 '<div class="vacio">' + escapar(error.message) + '</div>';
 
             $("recientes").innerHTML =
-                '<div class="vacio">No fue posible cargar el catálogo. ' +
-                'Verifica las rutas del backend.</div>';
+                '<div class="vacio">No fue posible cargar el catálogo.</div>';
         }
     }
 
@@ -1070,11 +1051,6 @@
             return;
         }
 
-        /*
-          La ruta debe aceptar los datos del producto y la imagen.
-          FormData permite enviar el archivo al servidor sin convertirlo a base64.
-        */
-
         const formulario = new FormData();
 
         Object.entries(producto).forEach(([clave, valor]) => {
@@ -1143,18 +1119,90 @@
         }
     }
 
+    /* =========================================================
+       CARGAR HISTORIAL DE PRODUCTOS COMPRADOS (VENTAS)
+    ========================================================= */
+    async function cargarVentasEmpresa() {
+        if (!empresa || !empresa.id) return;
+
+        const contenedor = $("contenedorTablaVentas");
+
+        try {
+            const ventas = await peticion(
+                "/empresa/" + encodeURIComponent(empresa.id) + "/ventas"
+            );
+
+            if (!Array.isArray(ventas) || ventas.length === 0) {
+                contenedor.innerHTML =
+                    '<div class="vacio">Aún no se registran compras de tus productos.</div>';
+                $("ventasDineroTotal").textContent = "$ 0";
+                $("ventasUnidadesTotal").textContent = "0";
+                $("ventasPedidosTotal").textContent = "0";
+                return;
+            }
+
+            let sumaDinero = 0;
+            let sumaUnidades = 0;
+
+            const filas = ventas.map(v => {
+                sumaDinero += Number(v.total || 0);
+                sumaUnidades += Number(v.cantidad || 0);
+
+                return `
+                    <tr>
+                        <td style="color:#aaa;">${escapar(v.fecha || "--")}</td>
+                        <td class="producto-nombre">${escapar(v.nombre_producto)}</td>
+                        <td>${escapar(v.cantidad)}</td>
+                        <td style="color:var(--verde); font-weight:600;">${dinero(v.total)}</td>
+                        <td>${escapar(v.cliente_nombre || "Cliente")}</td>
+                        <td>${escapar(v.cliente_ciudad || "Colombia")}</td>
+                        <td>${escapar(v.cliente_telefono || "--")}</td>
+                        <td>${escapar(v.metodo_pago || "Directo")}</td>
+                    </tr>
+                `;
+            }).join("");
+
+            $("ventasDineroTotal").textContent = dinero(sumaDinero);
+            $("ventasUnidadesTotal").textContent = sumaUnidades;
+            $("ventasPedidosTotal").textContent = ventas.length;
+
+            contenedor.innerHTML = `
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Total</th>
+                                <th>Cliente</th>
+                                <th>Ciudad</th>
+                                <th>Teléfono</th>
+                                <th>Método</th>
+                            </tr>
+                        </thead>
+                        <tbody>${filas}</tbody>
+                    </table>
+                </div>
+            `;
+
+        } catch (error) {
+            contenedor.innerHTML =
+                '<div class="vacio">' + escapar(error.message) + '</div>';
+        }
+    }
+
     $("btnCerrarSesion").addEventListener("click", () => {
         if (!confirm("¿Deseas cerrar tu sesión empresarial?")) return;
 
         localStorage.removeItem("empresaLogueada");
-        window.location.href = "login-empresa.html";
+        window.location.href = "index.empresa.html";
     });
 
     function iniciarPanel() {
         if (!empresaGuardada) {
             $("tablaProductos").innerHTML =
-                '<div class="vacio">No se encontró una sesión empresarial. ' +
-                'Inicia sesión para acceder a tu tienda.</div>';
+                '<div class="vacio">No se encontró una sesión empresarial. Inicia sesión para acceder.</div>';
             $("recientes").innerHTML =
                 '<div class="vacio">Inicia sesión para cargar tu catálogo.</div>';
             return;
@@ -1162,14 +1210,14 @@
 
         try {
             empresa = JSON.parse(empresaGuardada);
+            if (!empresa.id && empresa.nit) empresa.id = empresa.nit;
         } catch {
             empresa = null;
         }
 
         if (!empresa || !empresa.id) {
             $("tablaProductos").innerHTML =
-                '<div class="vacio">La sesión empresarial no contiene un identificador válido. ' +
-                'Hay que ajustar la respuesta del inicio de sesión.</div>';
+                '<div class="vacio">La sesión empresarial no contiene un identificador válido.</div>';
             return;
         }
 
@@ -1178,8 +1226,6 @@
         $("nombreEmpresaBarra").textContent = nombre;
         $("saludoEmpresa").textContent = "Bienvenido, " + nombre;
         $("avatarEmpresa").textContent = nombre.charAt(0).toUpperCase();
-        $("perfilNombre").value = nombre;
-        $("perfilCorreo").value = empresa.correo || "";
 
         cargarProductos();
     }
