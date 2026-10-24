@@ -369,7 +369,7 @@ app.get("/empresa/:id/ventas", function (req, res) {
 
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
-   (Con protección para cuando no exista 'dias_entreno')
+   (Con normalización de altura y protección para 'dias_entreno')
 ========================================= */
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
@@ -382,7 +382,6 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
-            // Si la columna dias_entreno aún no está creada, consultar sin ella
             const fallbackSql = `SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad FROM usuarios WHERE identificacion = ? LIMIT 1`;
             return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
                 if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
@@ -400,6 +399,12 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
 
+    // Normalizar altura: si viene en centímetros (ej. 175), convertir a metros (1.75) para evitar out of range
+    let alturaFinal = altura ? Number(altura) : null;
+    if (alturaFinal && alturaFinal > 3) {
+        alturaFinal = Number((alturaFinal / 100).toFixed(2));
+    }
+
     const sql = `
         UPDATE usuarios 
         SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
@@ -410,7 +415,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         sql, 
         [
             peso || null, 
-            altura || null, 
+            alturaFinal, 
             lesionFinal, 
             objetivo || null, 
             lugar_entrenamiento || null, 
@@ -420,16 +425,16 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                // Si la columna dias_entreno aún no existe en MySQL, guardar los demás campos sin romper el proceso
+                // Respaldo por si la columna dias_entreno aún no ha sido agregada a la tabla
                 if (error.code === 'ER_BAD_FIELD_ERROR' && error.message.includes('dias_entreno')) {
                     const sqlFallback = `
                         UPDATE usuarios 
                         SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
                         WHERE identificacion = ?
                     `;
-                    return conexion.query(sqlFallback, [peso, altura, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
+                    return conexion.query(sqlFallback, [peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, identificacion], function(errFallback) {
                         if (errFallback) return res.status(500).json({ error: errFallback.message });
-                        return res.json({ mensaje: "Datos guardados correctamente." });
+                        return res.json({ mensaje: "Datos físicos guardados correctamente." });
                     });
                 }
                 console.error("❌ Error en MySQL:", error);
