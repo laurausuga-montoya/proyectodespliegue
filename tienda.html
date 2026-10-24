@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIGA | Tienda Deportiva</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
@@ -13,14 +13,13 @@
             --fondo: #121212;
             --panel: #1b1b1b;
             --verde: #37E359;
-            --texto: #f4f4f4;
+            --texto: #ffffff;
             --secundario: #aaa;
             --borde: #2d2d2d;
-            --card-fondo: #181818;
-            --badge-fondo: #233827;
-            --badge-texto: #37E359;
-            --btn-disabled-bg: #2b2b2b;
-            --btn-disabled-color: #777;
+            --card-fondo: #ffffff;
+            --card-texto: #111111;
+            --badge-fondo: #daf5de;
+            --badge-texto: #12822a;
         }
 
         body.claro {
@@ -29,11 +28,6 @@
             --texto: #111111;
             --secundario: #666666;
             --borde: #dddddd;
-            --card-fondo: #ffffff;
-            --badge-fondo: #daf5de;
-            --badge-texto: #12822a;
-            --btn-disabled-bg: #e0e0e0;
-            --btn-disabled-color: #999;
         }
 
         * {
@@ -61,7 +55,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -89,6 +82,9 @@
             cursor: pointer;
             transition: .2s;
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-header:hover {
@@ -97,9 +93,6 @@
         }
 
         .badge-carrito {
-            position: absolute;
-            top: -6px;
-            right: -6px;
             background: var(--verde);
             color: #111;
             font-size: 11px;
@@ -124,8 +117,6 @@
             border-radius: 16px;
             padding: 25px 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .hero-tienda h1 {
@@ -141,64 +132,63 @@
 
         .catalogo {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
         }
 
+        /* DISEÑO DE TARJETA ORIGINAL */
         .tarjeta-prod {
-            background: var(--card-fondo);
-            border: 1px solid var(--borde);
-            border-radius: 14px;
+            background: #ffffff;
+            color: #111111;
+            border-radius: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform .2s, border-color .2s;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform .2s;
         }
 
         .tarjeta-prod:hover {
             transform: translateY(-4px);
-            border-color: var(--verde);
         }
 
         .img-prod {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
-            background: #202020;
+            background: #222222;
         }
 
         .info-prod {
-            padding: 18px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
 
         .categoria-tag {
-            background: var(--badge-fondo);
-            color: var(--badge-texto);
+            background: #daf5de;
+            color: #12822a;
             font-size: 11px;
             font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             align-self: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .nombre-prod {
-            font-size: 16px;
-            color: var(--texto);
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-size: 18px;
+            color: #111111;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
         .desc-prod {
-            font-size: 12px;
-            color: var(--secundario);
-            line-height: 1.5;
-            margin-bottom: 12px;
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 15px;
             flex-grow: 1;
         }
 
@@ -206,51 +196,50 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 15px;
         }
 
         .precio-txt {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--verde);
+            color: #111111;
         }
 
         .stock-txt {
             font-size: 12px;
-            color: var(--secundario);
+            color: #777777;
             font-weight: 500;
         }
 
         .stock-txt.agotado-txt {
             color: #ff5252;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .btn-comprar {
             width: 100%;
-            padding: 12px;
-            background: var(--verde);
-            color: #111;
+            padding: 14px;
+            background: #37E359;
+            color: #111111;
             font-weight: 700;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: .2s;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .btn-comprar:hover:not(:disabled) {
-            filter: brightness(1.1);
+            filter: brightness(1.08);
         }
 
-        /* ESTADO AGOTADO */
+        /* BOTÓN AGOTADO SIN ALERTAS */
         .btn-comprar:disabled,
         .btn-comprar.btn-agotado {
-            background: var(--btn-disabled-bg) !important;
-            color: var(--btn-disabled-color) !important;
+            background: #e0e0e0 !important;
+            color: #888888 !important;
             cursor: not-allowed !important;
             filter: none !important;
-            border: 1px solid var(--borde);
         }
 
         @media (max-width: 650px) {
@@ -273,10 +262,8 @@
 
 <main>
     <div class="hero-tienda">
-        <div>
-            <h1>Tienda Oficial VIGA</h1>
-            <p>Implementos, nutrición y accesorios deportivos certificados para tu entrenamiento.</p>
-        </div>
+        <h1>Tienda Oficial VIGA</h1>
+        <p>Implementos, nutrición y accesorios deportivos certificados para tu entrenamiento.</p>
     </div>
 
     <div class="catalogo" id="grillaProductos">
@@ -340,9 +327,9 @@
             card.innerHTML = `
                 <img class="img-prod" src="${imagen}" alt="${p.nombre}">
                 <div class="info-prod">
-                    <span class="categoria-tag">${p.categoria || 'Accesorio'}</span>
+                    <span class="categoria-tag">${p.categoria || 'OTROS'}</span>
                     <h3 class="nombre-prod">${p.nombre}</h3>
-                    <p class="desc-prod">${p.descripcion || 'Producto oficial de entrenamiento VIGA.'}</p>
+                    <p class="desc-prod">${p.descripcion || ''}</p>
                     <div class="precio-stock">
                         <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
                         <span class="stock-txt ${!hayStock ? 'agotado-txt' : ''}" id="stockTxt-${p.id}">
@@ -369,7 +356,6 @@
         let itemExistente = carrito.find(x => x.id === idProducto);
         const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
 
-        // Si aún quedan unidades por tomar
         if (cantidadActual < stockOriginal) {
             if (itemExistente) {
                 itemExistente.cantidad += 1;
@@ -387,13 +373,11 @@
             localStorage.setItem("viga_carrito", JSON.stringify(carrito));
             actualizarContador();
 
-            // Calcular las unidades que quedan disponibles
             const nuevasRestantes = stockOriginal - (cantidadActual + 1);
             const btn = document.getElementById(`btnProd-${idProducto}`);
             const stockTxt = document.getElementById(`stockTxt-${idProducto}`);
 
             if (nuevasRestantes <= 0) {
-                // Se agotaron todas las unidades: deshabilitar botón y cambiar a Agotado
                 if (btn) {
                     btn.disabled = true;
                     btn.classList.add("btn-agotado");
@@ -404,7 +388,6 @@
                     stockTxt.classList.add("agotado-txt");
                 }
             } else {
-                // Aún quedan unidades
                 if (stockTxt) {
                     stockTxt.textContent = `Stock: ${nuevasRestantes}`;
                 }
