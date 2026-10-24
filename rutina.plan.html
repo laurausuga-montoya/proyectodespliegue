@@ -99,7 +99,7 @@
             color: var(--secundario);
         }
 
-        /* BARRA DE BOTONES / DÍAS SEPARADOS */
+        /* SELECTOR DE DÍAS */
         .selector-dias {
             display: flex;
             gap: 10px;
@@ -133,7 +133,6 @@
             border-color: var(--verde);
         }
 
-        /* CONTENEDOR DEL DÍA ACTIVO */
         .tarjeta-dia-activa {
             background: var(--panel);
             border: 1px solid var(--borde);
@@ -166,7 +165,7 @@
             gap: 18px;
         }
 
-        /* TARJETA DE EJERCICIO CON FOTO */
+        /* TARJETA INTERACTIVA DE CADA EJERCICIO */
         .tarjeta-ejercicio {
             background: #171717;
             border: 1px solid #292929;
@@ -177,15 +176,17 @@
             align-items: center;
             padding: 12px;
             transition: .2s;
+            cursor: pointer;
         }
 
         .tarjeta-ejercicio:hover {
-            border-color: #3b3b3b;
+            border-color: var(--verde);
+            transform: translateY(-2px);
         }
 
         .ejercicio-foto {
-            width: 140px;
-            height: 105px;
+            width: 130px;
+            height: 100px;
             border-radius: 8px;
             object-fit: cover;
             background: #222;
@@ -199,24 +200,111 @@
         .ejercicio-info h4 {
             font-size: 16px;
             color: white;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .ejercicio-info p {
             font-size: 12px;
             color: var(--secundario);
-            line-height: 1.5;
             margin-bottom: 8px;
         }
 
+        .tags-contenedor {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
         .series-badge {
-            display: inline-block;
             background: #233827;
             color: var(--verde);
             font-size: 12px;
             font-weight: 700;
             padding: 4px 10px;
             border-radius: 6px;
+        }
+
+        .ver-detalle-txt {
+            font-size: 12px;
+            color: var(--secundario);
+            text-decoration: underline;
+        }
+
+        /* MODAL EXPLICATIVO DEL EJERCICIO */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.activo {
+            display: flex;
+        }
+
+        .modal-caja {
+            background: #191919;
+            border: 1px solid var(--borde);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            position: relative;
+        }
+
+        .btn-cerrar-modal {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .btn-cerrar-modal:hover {
+            color: white;
+        }
+
+        .modal-foto {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 1px solid var(--borde);
+        }
+
+        .modal-titulo {
+            font-size: 22px;
+            color: var(--verde);
+            margin-bottom: 8px;
+        }
+
+        .modal-seccion {
+            margin-top: 15px;
+            border-top: 1px solid #282828;
+            padding-top: 12px;
+        }
+
+        .modal-seccion h5 {
+            font-size: 14px;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .modal-seccion p {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.6;
         }
 
         .vacio {
@@ -236,7 +324,7 @@
             }
             .ejercicio-foto {
                 width: 100%;
-                height: 170px;
+                height: 160px;
             }
         }
     </style>
@@ -246,7 +334,7 @@
 <header>
     <a href="inicio.html" class="logo">VIGA</a>
     <div class="header-acciones">
-        <a id="btnModificarRespuestas" class="btn-header">⚙️ Modificar respuestas</a>
+        <a id="btnModificarRespuestas" class="btn-header">⚙️ Modificar mis respuestas</a>
         <a href="inicio.html" class="btn-header">← Inicio</a>
     </div>
 </header>
@@ -258,57 +346,87 @@
         <p id="resumenPerfil">Cargando la estructura personalizada...</p>
     </div>
 
-    <!-- BOTONES PARA NAVEGAR DÍA A DÍA -->
+    <!-- PESTAÑAS DE DÍAS INDIVIDUALES -->
     <div class="selector-dias" id="contenedorBotonesDias"></div>
 
-    <!-- ZONA DONDE APARECE EL DÍA SELECCIONADO -->
+    <!-- DÍA EN PANTALLA -->
     <div id="vistaDiaSeleccionado">
         <div class="vacio">Cargando ejercicios...</div>
     </div>
 
 </main>
 
+<!-- MODAL PARA VER TÉCNICA Y DETALLES DEL EJERCICIO -->
+<div class="modal-overlay" id="modalEjercicio">
+    <div class="modal-caja">
+        <button class="btn-cerrar-modal" onclick="cerrarModal()">×</button>
+        <img id="modalFoto" class="modal-foto" src="" alt="Demostración">
+        <h3 id="modalNombre" class="modal-titulo">Nombre del Ejercicio</h3>
+        <span id="modalSeries" class="series-badge" style="margin-bottom: 15px;"></span>
+
+        <div class="modal-seccion">
+            <h5>📖 ¿Cómo se hace?</h5>
+            <p id="modalExplicacion">Instrucciones paso a paso.</p>
+        </div>
+
+        <div class="modal-seccion">
+            <h5>⚠️ Errores comunes a evitar</h5>
+            <p id="modalErrores">Errores posturales frecuentes.</p>
+        </div>
+
+        <div class="modal-seccion">
+            <h5>💪 Músculos activados</h5>
+            <p id="modalMusculos">Grupos musculares principales y secundarios.</p>
+        </div>
+    </div>
+</div>
+
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    const params = new URLSearchParams(window.location.search);
-    let idUsuario = params.get("id");
+    // OBTENER ID DEL USUARIO ACTIVO
+    function obtenerUsuarioActivo() {
+        const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        if (!sesionUser) return null;
+        try {
+            const u = JSON.parse(sesionUser);
+            return u.identificacion || u.id || null;
+        } catch(e) {
+            return null;
+        }
+    }
+
+    const idUsuario = obtenerUsuarioActivo();
 
     if (!idUsuario) {
-        const sesionUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
-        if (sesionUser) {
-            try {
-                const u = JSON.parse(sesionUser);
-                idUsuario = u.identificacion || u.id;
-            } catch(e) {}
-        }
+        window.location.href = "login.html";
     }
 
     document.getElementById("btnModificarRespuestas").href = `rutinas.html?id=${encodeURIComponent(idUsuario || '')}&editar=1`;
 
     let planEstructurado = [];
 
-    async function cargarPlan() {
+    async function cargarPlanUsuario() {
         let datos = null;
 
-        if (idUsuario) {
-            try {
-                const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
-                if (res.ok) {
-                    datos = await res.json();
-                }
-            } catch(e) {}
-        }
+        try {
+            const res = await fetch(`${API}/usuario/${encodeURIComponent(idUsuario)}/datos-fisicos`);
+            if (res.ok) {
+                datos = await res.json();
+            }
+        } catch(e) {}
 
+        // Si falló internet, leer clave propia de este usuario
         if (!datos || !datos.objetivo) {
-            const guardado = localStorage.getItem("viga_rutina_datos");
+            const guardado = localStorage.getItem(`viga_rutina_${idUsuario}`);
             if (guardado) {
                 try { datos = JSON.parse(guardado); } catch(e) {}
             }
         }
 
+        // Si el usuario aún no configuró su rutina, redirigir al formulario
         if (!datos || !datos.objetivo) {
-            window.location.replace(`rutinas.html?id=${encodeURIComponent(idUsuario || '')}`);
+            window.location.replace(`rutinas.html?id=${encodeURIComponent(idUsuario)}`);
             return;
         }
 
@@ -318,7 +436,7 @@
     function generarEstructuraRutina(datos) {
         const tieneLesion = datos.lesion && datos.lesion !== "ninguna";
         document.getElementById("resumenPerfil").textContent = 
-            `Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días/semana | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
+            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo} | Frecuencia: ${datos.dias_entreno || 3} días/semana | Adaptación: ${tieneLesion ? datos.lesion : 'Ninguna'}`;
 
         const numDias = parseInt(datos.dias_entreno) || 3;
         const lesion = (datos.lesion || "").toLowerCase();
@@ -328,217 +446,273 @@
         const faltaSuperior = lesion.includes("extremidad superior");
         const faltaInferior = lesion.includes("extremidad inferior");
 
-        // BANCO DE BLOQUES CON FOTOS REALES
+        // BANCO CON TÉCNICA DETALLADA POR EJERCICIO
         const bloques = {
             cuerpoCompleto: {
-                titulo: "Cuerpo Completo (Full Body)",
-                descripcion: "Entrenamiento balanceado que activa todos los grupos musculares mayores en una sola sesión.",
+                titulo: "Día 1: Cuerpo Completo (Full Body)",
+                descripcion: "Estímulo integral de piernas, torso y core en una sola jornada.",
                 ejercicios: [
                     {
-                        nombre: esRodilla ? "Prensa a 90° con tempo controlado" : (faltaInferior ? "Extensiones unilaterales en máquina" : "Sentadilla con mancuernas o barra"),
+                        nombre: esRodilla ? "Prensa inclinada a 90° sin bloqueo" : (faltaInferior ? "Extensiones de pierna unilateral" : "Sentadilla profunda"),
                         series: "4 series × 8-10 reps",
                         foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
-                        nota: "Enfócate en la profundidad controlada sin despegar los talones."
+                        explicacion: "Coloca los pies al ancho de los hombros. Desciende empujando las rodillas hacia afuera y manteniendo el pecho erguido hasta romper el paralelo.",
+                        errores: "Despegar los talones del suelo o curvar la zona lumbar al bajar.",
+                        musculos: "Cuádriceps, glúteo mayor, aductores y core."
                     },
                     {
-                        nombre: esHombro || faltaSuperior ? "Pec-Deck en máquina (aislamiento)" : "Press de banca plano con mancuernas",
+                        nombre: esHombro || faltaSuperior ? "Pec-Deck en máquina con soporte" : "Press de banca plano con barra o mancuernas",
                         series: "4 series × 8-10 reps",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
-                        nota: "Mantén retracción escapular y codos a 45 grados."
+                        explicacion: "Acuéstate con los ojos debajo de la barra, retrae las escápulas y desciende el peso de forma controlada hasta rozar la parte media del esternón.",
+                        errores: "Abrir los codos a 90° (riesgo articular) o rebotar la barra contra el pecho.",
+                        musculos: "Pectoral mayor, deltoides anterior y tríceps."
                     },
                     {
                         nombre: esEspalda ? "Jalón al pecho con agarre neutro" : "Jalón al pecho en polea alta",
                         series: "4 series × 10 reps",
                         foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
-                        nota: "Lleva la barra hacia la parte alta del esternón sin balancear el torso."
+                        explicacion: "Toma la barra con agarre amplio, saca pecho y tira con los codos dirigidos hacia las caderas hasta la altura de la clavícula.",
+                        errores: "Tirarse bruscamente hacia atrás usando impulso lumbar.",
+                        musculos: "Dorsal ancho, redondo mayor, bíceps y trapecio medio."
                     },
                     {
-                        nombre: esRodilla ? "Puente de glúteo en suelo o banco" : "Peso muerto rumano con mancuernas",
+                        nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Peso muerto rumano con mancuernas",
                         series: "3 series × 10-12 reps",
                         foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-                        nota: "Bisagra de cadera manteniendo la columna neutra."
+                        explicacion: "Mantén una ligera flexión de rodilla constante y empuja la cadera hacia atrás como si quisieras tocar una pared con los glúteos.",
+                        errores: "Doblar la espalda baja o agacharse en lugar de hacer bisagra de cadera.",
+                        musculos: "Isquiotibiales, glúteos y erectores espinales."
                     },
                     {
-                        nombre: esHombro ? "Elevaciones laterales ligeras" : "Press militar con mancuernas sentado",
+                        nombre: esHombro ? "Elevaciones laterales ligeras en polea" : "Press militar con mancuernas sentado",
                         series: "3 series × 12 reps",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
-                        nota: "Empuja verticalmente sin arquear la zona lumbar."
+                        explicacion: "Siéntate con la espalda apoyada firmemente. Empuja las mancuernas verticalmente sin bloquear por completo los codos arriba.",
+                        errores: "Arquear la espalda excesivamente para empujar con el pecho superior.",
+                        musculos: "Deltoides medio y anterior, tríceps."
                     },
                     {
                         nombre: "Plancha frontal isométrica",
                         series: "3 series × 45 segundos",
                         foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
-                        nota: "Aprieta glúteos y abdomen manteniendo el cuerpo en línea recta."
+                        explicacion: "Apóyate en los antebrazos y las puntas de los pies. Mantén una línea recta desde la cabeza hasta los talones activando el abdomen.",
+                        errores: "Dejar caer la cadera o levantar los glúteos demasiado.",
+                        musculos: "Recto abdominal, transverso del abdomen y glúteos."
                     },
                     {
-                        nombre: "Cardio en elíptica o caminata inclinada",
-                        series: "12 a 15 minutos continuos",
+                        nombre: "Cardio en elíptica o caminadora inclinada",
+                        series: "15 minutos continuos",
                         foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
-                        nota: "Ritmo constante a zona 2 para finalizar la sesión."
+                        explicacion: "Mantén un ritmo constante que te permita respirar rítmicamente en zona aeróbica sin impacto articular excesivo.",
+                        errores: "Apoyarse en las barras de agarre reduciendo el esfuerzo cardiovascular.",
+                        musculos: "Sistema cardiovascular, pantorrillas y cuádriceps."
                     }
                 ]
             },
             trenSuperior: {
                 titulo: "Tren Superior (Torso y Brazos)",
-                descripcion: "Énfasis completo en pecho, espalda, hombros y brazos.",
+                descripcion: "Desarrollo de fuerza y volumen para pecho, espalda, hombros y brazos.",
                 ejercicios: [
                     {
                         nombre: esHombro ? "Press banca con mancuernas (agarre neutro)" : "Press de banca plano",
                         series: "4 series × 8-10 reps",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
-                        nota: "Controla la fase excéntrica en 2 segundos."
+                        explicacion: "Desciende el peso de forma controlada manteniendo los codos a 45 grados respecto al cuerpo para cuidar los hombros.",
+                        errores: "Subir de forma asimétrica o rebotar la barra contra el pecho.",
+                        musculos: "Pectoral mayor, deltoides anterior, tríceps."
                     },
                     {
-                        nombre: esEspalda ? "Remo en máquina con pecho apoyado" : "Remo con barra o mancuerna",
+                        nombre: esEspalda ? "Remo con soporte en el pecho" : "Remo con barra o mancuerna",
                         series: "4 series × 10 reps",
                         foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
-                        nota: "Tira llevando los codos hacia las caderas."
+                        explicacion: "Inclina el torso manteniendo la espalda recta. Tira de la carga concentrándote en juntar las escápulas al final.",
+                        errores: "Dar tirones violentos con la columna.",
+                        musculos: "Dorsal, romboides, trapecio y bíceps."
                     },
                     {
-                        nombre: esHombro ? "Elevaciones laterales en polea" : "Press militar con mancuernas",
+                        nombre: esHombro ? "Elevaciones laterales controladas en polea" : "Press militar con mancuernas",
                         series: "3 series × 12 reps",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
-                        nota: "Rango fluido sin impulsos del cuerpo."
+                        explicacion: "Eleva las mancuernas en el plano escapular (ligeramente hacia adelante) hasta la altura de los hombros.",
+                        errores: "Usar impulso del cuerpo balanceándose.",
+                        musculos: "Deltoides lateral y medio."
                     },
                     {
                         nombre: "Jalón al pecho en polea alta",
                         series: "4 series × 10-12 reps",
                         foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-                        nota: "Extiende completamente los dorsales en la parte alta."
+                        explicacion: "Lleva la barra a la parte alta del pecho con los codos apuntando al suelo y pausa 1 segundo abajo.",
+                        errores: "Pasar la barra por detrás de la nuca (riesgo cervical).",
+                        musculos: "Dorsal ancho, redondo mayor, bíceps."
                     },
                     {
-                        nombre: "Aperturas en poleas o máquina pec-deck",
+                        nombre: "Aperturas en máquina Pec-Deck o poleas",
                         series: "3 series × 12-15 reps",
                         foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
-                        nota: "Apertura amplia sintiendo el estiramiento en pectorales."
+                        explicacion: "Abre los brazos con una ligera flexión de codos constante y junta las manos frente al pecho apretando el pectoral.",
+                        errores: "Flexionar y extender los codos como si fuera un press.",
+                        musculos: "Pectoral mayor y menor."
                     },
                     {
                         nombre: "Curl de bíceps en banco inclinado",
                         series: "3 series × 12 reps",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
-                        nota: "Aísla el bíceps sin mover los codos hacia adelante."
+                        explicacion: "Acuéstate en banco a 60° con los brazos colgando. Flexiona los codos sin mover los hombros de su sitio.",
+                        errores: "Mover los codos hacia adelante perdiendo la tensión en la cabeza larga del bíceps.",
+                        musculos: "Bíceps braquial y braquiorradial."
                     },
                     {
-                        nombre: "Extensiones de tríceps en polea alta",
+                        nombre: "Extensiones de tríceps en polea alta con cuerda",
                         series: "3 series × 12-15 reps",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
-                        nota: "Bloquea los codos a los lados del torso."
+                        explicacion: "Empuja la cuerda hacia abajo y ábrela al final del recorrido bloqueando los tríceps con fuerza.",
+                        errores: "Separar los codos del cuerpo durante la bajada.",
+                        musculos: "Tríceps (cabeza lateral y medial)."
                     }
                 ]
             },
             trenInferior: {
                 titulo: "Tren Inferior (Pierna y Glúteos)",
-                descripcion: "Fuerza, volumen y estabilidad en cuádriceps, femorales y pantorrillas.",
+                descripcion: "Trabajo pesado de cuádriceps, femorales, glúteos y pantorrillas.",
                 ejercicios: [
                     {
-                        nombre: esRodilla ? "Prensa a 90° sin bloqueo articular" : (faltaInferior ? "Extensiones adaptadas en máquina" : "Sentadilla con barra trasera"),
+                        nombre: esRodilla ? "Prensa inclinada a 90°" : (faltaInferior ? "Extensiones adaptadas en máquina" : "Sentadilla con barra trasera"),
                         series: "4 series × 8-10 reps",
                         foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
-                        nota: "Baja controlado manteniendo el core rígido."
+                        explicacion: "Coloca la barra sobre los trapecios. Inhala, aprieta el abdomen y desciende de forma controlada empujando con toda la planta.",
+                        errores: "Colapsar las rodillas hacia adentro (valgo de rodilla).",
+                        musculos: "Cuádriceps, glúteos y aductores."
                     },
                     {
-                        nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas o estocadas caminando",
+                        nombre: esRodilla ? "Puente de glúteo en banco (Hip Thrust)" : "Zancadas o estocadas con mancuernas",
                         series: "4 series × 10-12 reps",
                         foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-                        nota: "Empuja con el talón para activar glúteos y femorales."
+                        explicacion: "Apoya la parte alta de la espalda en el banco con la barra sobre la pelvis. Empuja con los talones hasta alinear torso y muslos.",
+                        errores: "Hiperextender la columna lumbar en lugar de apretar los glúteos.",
+                        musculos: "Glúteo mayor e isquiotibiales."
                     },
                     {
                         nombre: "Curl femoral tumbado o sentado",
                         series: "4 series × 12 reps",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
-                        nota: "Controla el retorno del peso para máxima tensión."
+                        explicacion: "Flexiona las rodillas tirando del rodillo hacia tus glúteos y aguanta 1 segundo la contracción antes de volver lento.",
+                        errores: "Despegar la pelvis del banco al hacer fuerza.",
+                        musculos: "Bíceps femoral, semitendinoso y semimembranoso."
                     },
                     {
-                        nombre: esRodilla ? "Extensiones de cuádriceps rango medio" : "Prensa inclinada 45°",
+                        nombre: esRodilla ? "Extensiones de cuádriceps en máquina (rango medio)" : "Prensa a 45 grados",
                         series: "3 series × 12 reps",
                         foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
-                        nota: "Pies al ancho de los hombros."
+                        explicacion: "Pies al centro de la plataforma. Baja hasta que las piernas formen 90 grados y empuja con potencia sin trabar las rodillas.",
+                        errores: "Despegar los glúteos del respaldo de la máquina.",
+                        musculos: "Cuádriceps y glúteos."
                     },
                     {
-                        nombre: "Abductores en máquina",
+                        nombre: "Abductores en máquina para glúteo medio",
                         series: "3 series × 15 reps",
                         foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
-                        nota: "Pausa de un segundo en máxima apertura."
+                        explicacion: "Siéntate erguido y abre las almohadillas empujando hacia afuera. Haz una pausa arriba antes de cerrar lento.",
+                        errores: "Cerrar las piernas por inercia sin resistir el peso.",
+                        musculos: "Glúteo medio y tensor de la fascia lata."
                     },
                     {
-                        nombre: "Elevación de talones para gemelo",
+                        nombre: "Elevación de talones en máquina o de pie",
                         series: "4 series × 15-20 reps",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
-                        nota: "Estira bien abajo y contrae fuerte arriba."
+                        explicacion: "Ponte sobre las puntas de los pies. Desciende hasta sentir un estiramiento profundo del talón y sube a tope.",
+                        errores: "Rebotar sin controlar la fase de bajada.",
+                        musculos: "Gastrocnemio y sóleo."
                     },
                     {
-                        nombre: "Elevaciones de piernas en colchoneta o banco",
+                        nombre: "Elevaciones de piernas en banco para abdomen bajo",
                         series: "3 series × 15 reps",
                         foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
-                        nota: "No arquees la zona lumbar al bajar las piernas."
+                        explicacion: "Acostado en el banco, sube las piernas juntas hacia el techo contrayendo el abdomen bajo y baja lentamente.",
+                        errores: "Curvar la espalda lumbar al bajar las piernas.",
+                        musculos: "Recto abdominal inferior e iliopsoas."
                     }
                 ]
             },
             cardioCore: {
                 titulo: "Cardio, Abdomen y Movilidad",
-                descripcion: "Acondicionamiento cardiovascular, fortalecimiento de la zona media y recuperación activa.",
+                descripcion: "Acondicionamiento físico, fortalecimiento del core y recuperación articular.",
                 ejercicios: [
                     {
                         nombre: "Cardio Hiit o Intervalos en Elíptica/Cinta",
                         series: "20 minutos (1 min intenso x 1 min suave)",
                         foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
-                        nota: "Eleva las pulsaciones controlando la respiración."
+                        explicacion: "Alterna 1 minuto de máxima velocidad y resistencia con 1 minuto de recuperación a paso suave.",
+                        errores: "Empezar al 100% sin calentamiento previo de 5 minutos.",
+                        musculos: "Acondicionamiento cardiovascular y resistencia global."
                     },
                     {
                         nombre: "Plancha frontal isométrica",
                         series: "4 series × 45 segundos",
                         foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80",
-                        nota: "Core totalmente bloqueado y glúteos activos."
+                        explicacion: "Apóyate sobre antebrazos con el cuello neutro y el abdomen contraído hacia adentro.",
+                        errores: "Dejar que la pelvis caiga por debajo de la línea del cuerpo.",
+                        musculos: "Transverso abdominal y estabilizadores espinales."
                     },
                     {
-                        nombre: "Crunch abdominal en polea alta o suelo",
+                        nombre: "Crunch abdominal en polea alta o colchoneta",
                         series: "3 series × 15 reps",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
-                        nota: "Flexiona el tronco sin tirar del cuello."
+                        explicacion: "De rodillas sujetando la cuerda, flexiona el torso acercando las costillas a la cadera.",
+                        errores: "Sentarse sobre los talones en lugar de flexionar la columna.",
+                        musculos: "Recto abdominal superior."
                     },
                     {
                         nombre: "Giros rusos (Russian Twists)",
                         series: "3 series × 20 giros totales",
                         foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-                        nota: "Activa los oblicuos con un disco o mancuerna liviana."
+                        explicacion: "Sentado con los pies despegados del suelo, rota el tronco llevando un disco o mancuerna de lado a lado.",
+                        errores: "Mover únicamente los brazos sin rotar el torso.",
+                        musculos: "Oblicuos internos y externos."
                     },
                     {
-                        nombre: "Elevación de rodillas suspendido o en banco",
+                        nombre: "Elevación de rodillas suspendido en barra",
                         series: "3 series × 12-15 reps",
                         foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
-                        nota: "Lleva las rodillas al pecho sin balanceo."
+                        explicacion: "Cuélgate de la barra y lleva las rodillas flexionadas hacia tu pecho redondeando suavemente la pelvis.",
+                        errores: "Balancear el cuerpo hacia adelante y hacia atrás.",
+                        musculos: "Abdomen inferior y flexores de cadera."
                     },
                     {
-                        nombre: "Caminadora con inclinación constante",
-                        series: "15 minutos a paso ligero",
+                        nombre: "Caminadora inclinada a paso constante",
+                        series: "15 minutos continuos",
                         foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80",
-                        nota: "Quema calórica de bajo impacto articular."
+                        explicacion: "Ajusta la inclinación entre 8% y 12% a una velocidad de 4.5 a 5.5 km/h.",
+                        errores: "Sujetarse de la pantalla o barras de apoyo.",
+                        musculos: "Gemelos, glúteos e isquiotibiales (gasto aeróbico)."
                     },
                     {
-                        nombre: "Sesión de movilidad articular y estiramiento",
+                        nombre: "Estiramiento dinámico y movilidad lumbar",
                         series: "10 minutos completos",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
-                        nota: "Relaja caderas, isquiotibiales y hombros."
+                        explicacion: "Posturas de gato-vaca, estiramiento del piriforme y descompresión de columna respirando profundo.",
+                        errores: "Forzar rebotes balísticos bruscos.",
+                        musculos: "Fascia toracolumbar, psoas y flexores."
                     }
                 ]
             }
         };
 
-        // DISTRIBUCIÓN SEGÚN EL NÚMERO DE DÍAS SELECCIONADO
+        // DISTRIBUCIÓN ESTRICTA SEGÚN LOS DÍAS SELECCIONADOS POR ESTE USUARIO
         if (numDias === 1) {
             planEstructurado = [
                 { diaNumero: 1, ...bloques.cuerpoCompleto }
             ];
         } else if (numDias === 2) {
             planEstructurado = [
-                { diaNumero: 1, ...bloques.trenSuperior },
-                { diaNumero: 2, ...bloques.trenInferior }
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Tren Superior (Torso)" },
+                { diaNumero: 2, ...bloques.trenInferior, titulo: "Día 2: Tren Inferior (Pierna)" }
             ];
         } else if (numDias === 3) {
             planEstructurado = [
-                { diaNumero: 1, ...bloques.trenSuperior },
-                { diaNumero: 2, ...bloques.trenInferior },
-                { diaNumero: 3, ...bloques.cardioCore }
+                { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Tren Superior" },
+                { diaNumero: 2, ...bloques.trenInferior, titulo: "Día 2: Tren Inferior" },
+                { diaNumero: 3, ...bloques.cardioCore, titulo: "Día 3: Cardio, Core y Abdomen" }
             ];
         } else if (numDias === 4) {
             planEstructurado = [
@@ -550,7 +724,7 @@
         } else if (numDias === 5) {
             planEstructurado = [
                 { diaNumero: 1, ...bloques.trenSuperior, titulo: "Día 1: Empuje (Pecho, Hombro, Tríceps)" },
-                { diaNumero: 2, ...bloques.trenSuperior, titulo: "Día 2: Tracción (Espalda, Bíceps)" },
+                { diaNumero: 2, ...bloques.trenSuperior, titulo: "Día 2: Tirón (Espalda, Bíceps)" },
                 { diaNumero: 3, ...bloques.trenInferior, titulo: "Día 3: Pierna Completa" },
                 { diaNumero: 4, ...bloques.trenSuperior, titulo: "Día 4: Torso Completo" },
                 { diaNumero: 5, ...bloques.cardioCore, titulo: "Día 5: Pierna Enfoque y Core" }
@@ -577,7 +751,7 @@
         }
 
         renderizarBotonesDias();
-        verDia(1); // Carga el primer día de inicio
+        verDia(1);
     }
 
     function renderizarBotonesDias() {
@@ -605,14 +779,18 @@
         const contenedorVista = document.getElementById("vistaDiaSeleccionado");
 
         let htmlEjercicios = "";
-        diaData.ejercicios.forEach(ej => {
+        diaData.ejercicios.forEach((ej, index) => {
+            // Se asocia el clic para abrir el modal explicativo
             htmlEjercicios += `
-                <div class="tarjeta-ejercicio">
+                <div class="tarjeta-ejercicio" onclick='abrirModalEjercicio(${numeroDia}, ${index})'>
                     <img class="ejercicio-foto" src="${ej.foto}" alt="${ej.nombre}" loading="lazy">
                     <div class="ejercicio-info">
                         <h4>${ej.nombre}</h4>
-                        <p>${ej.nota}</p>
-                        <span class="series-badge">${ej.series}</span>
+                        <p>${ej.explicacion.substring(0, 85)}...</p>
+                        <div class="tags-contenedor">
+                            <span class="series-badge">${ej.series}</span>
+                            <span class="ver-detalle-txt">Tocar para ver cómo se hace</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -634,7 +812,36 @@
         `;
     }
 
-    document.addEventListener("DOMContentLoaded", cargarPlan);
+    /* FUNCIONES DEL MODAL EXPLICATIVO */
+    function abrirModalEjercicio(diaNum, index) {
+        const diaData = planEstructurado.find(d => d.diaNumero === diaNum);
+        if (!diaData) return;
+        const ej = diaData.ejercicios[index];
+        if (!ej) return;
+
+        document.getElementById("modalFoto").src = ej.foto;
+        document.getElementById("modalNombre").textContent = ej.nombre;
+        document.getElementById("modalSeries").textContent = ej.series;
+        document.getElementById("modalExplicacion").textContent = ej.explicacion;
+        document.getElementById("modalErrores").textContent = ej.errores;
+        document.getElementById("modalMusculos").textContent = ej.musculos;
+
+        document.getElementById("modalEjercicio").classList.add("activo");
+    }
+
+    function cerrarModal() {
+        document.getElementById("modalEjercicio").classList.remove("activo");
+    }
+
+    // Cierra al tocar fuera de la caja
+    window.addEventListener("click", function(e) {
+        const modal = document.getElementById("modalEjercicio");
+        if (e.target === modal) {
+            cerrarModal();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", cargarPlanUsuario);
 </script>
 
 </body>
