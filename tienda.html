@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Tienda de Implementos Deportivos</title>
+    <title>VIGA | Tienda Deportiva</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
     <style>
@@ -15,7 +16,20 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
-            --rojo: #ff5252;
+            --card-fondo: #181818;
+            --badge-fondo: #233827;
+            --badge-texto: #37E359;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --card-fondo: #ffffff;
+            --badge-fondo: #daf5de;
+            --badge-texto: #12822a;
         }
 
         * {
@@ -29,75 +43,66 @@
             background: var(--fondo);
             color: var(--texto);
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         header {
-            height: 80px;
+            height: 75px;
             background: var(--panel);
             border-bottom: 1px solid var(--borde);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 50px;
+            padding: 0 40px;
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
             color: var(--verde);
-            font-size: 34px;
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: 2px;
             text-decoration: none;
         }
 
-        .nav-derecha {
+        .acciones-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .volver {
-            color: #ddd;
+        .btn-header {
+            color: var(--texto);
             text-decoration: none;
-            transition: .2s;
-            font-size: 14px;
-        }
-
-        .volver:hover {
-            color: var(--verde);
-        }
-
-        .btn-carrito {
-            position: relative;
-            background: #252525;
+            font-size: 13px;
+            background: var(--panel);
             border: 1px solid var(--borde);
-            color: white;
-            padding: 10px 18px;
-            border-radius: 9px;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             transition: .2s;
+            position: relative;
         }
 
-        .btn-carrito:hover {
-            border-color: var(--verde);
+        .btn-header:hover {
             color: var(--verde);
+            border-color: var(--verde);
         }
 
-        .contador-carrito {
+        .badge-carrito {
+            position: absolute;
+            top: -6px;
+            right: -6px;
             background: var(--verde);
             color: #111;
             font-size: 11px;
             font-weight: 700;
-            border-radius: 50%;
             width: 20px;
             height: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -105,399 +110,142 @@
 
         main {
             width: 90%;
-            max-width: 1300px;
-            margin: 40px auto;
+            max-width: 1100px;
+            margin: 35px auto;
         }
 
-        .titulo-seccion {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .titulo-seccion h1 {
-            font-size: 36px;
-            color: var(--verde);
-            margin-bottom: 8px;
-        }
-
-        .titulo-seccion p {
-            color: var(--secundario);
-            font-size: 15px;
-        }
-
-        .filtros {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .filtro-btn {
-            background: #252525;
-            color: #ddd;
+        .hero-tienda {
+            background: var(--panel);
             border: 1px solid var(--borde);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: .2s;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        .filtro-btn:hover, .filtro-btn.activo {
-            background: var(--verde);
-            color: #111;
-            font-weight: 600;
-            border-color: var(--verde);
+        .hero-tienda h1 {
+            font-size: 26px;
+            color: var(--texto);
+        }
+
+        .hero-tienda p {
+            font-size: 13px;
+            color: var(--secundario);
+            margin-top: 4px;
         }
 
         .catalogo {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 22px;
         }
 
-        .tarjeta-producto {
-            background: var(--panel);
+        .tarjeta-prod {
+            background: var(--card-fondo);
             border: 1px solid var(--borde);
             border-radius: 14px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: .3s;
-            position: relative;
+            transition: transform .2s, border-color .2s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
         }
 
-        .tarjeta-producto:hover {
-            transform: translateY(-5px);
+        .tarjeta-prod:hover {
+            transform: translateY(-4px);
             border-color: var(--verde);
         }
 
-        .tarjeta-producto.agotado {
-            opacity: 0.7;
-        }
-
-        .tarjeta-producto.agotado:hover {
-            transform: none;
-            border-color: var(--borde);
-        }
-
-        .img-contenedor {
+        .img-prod {
             width: 100%;
-            height: 230px;
-            background: #181818;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .img-contenedor img {
-            width: 100%;
-            height: 100%;
+            height: 200px;
             object-fit: cover;
-            display: block;
+            background: #202020;
+        }
+
+        .info-prod {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .categoria-tag {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(18, 18, 18, 0.85);
-            color: var(--verde);
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(55, 227, 89, 0.3);
-        }
-
-        .badge-agotado {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(255, 82, 82, 0.9);
-            color: white;
+            background: var(--badge-fondo);
+            color: var(--badge-texto);
             font-size: 11px;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            letter-spacing: 1px;
-        }
-
-        .info-producto {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .info-producto h3 {
-            font-size: 19px;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .info-producto p {
-            font-size: 13px;
-            color: var(--secundario);
-            line-height: 1.6;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .pie-tarjeta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px solid #292929;
-        }
-
-        .precio {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--verde);
-        }
-
-        .stock-disponible {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .stock-disponible.sin-stock {
-            color: var(--rojo);
-            font-weight: 600;
-        }
-
-        .btn-anadir {
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px;
-            background: var(--verde);
-            color: #111;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-anadir:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-anadir:disabled {
-            background: #2a2a2a;
-            color: #666;
-            cursor: not-allowed;
-            border: 1px solid #333;
-        }
-
-        .vacio {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--secundario);
-            background: var(--panel);
-            border-radius: 12px;
-            border: 1px solid var(--borde);
-        }
-
-        /* MODAL CARRITO */
-        .carrito-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-            display: none;
-            backdrop-filter: blur(3px);
-        }
-
-        .carrito-overlay.activo {
-            display: block;
-        }
-
-        .carrito-panel {
-            position: fixed;
-            top: 0;
-            right: -450px;
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            background: #181818;
-            border-left: 1px solid var(--borde);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            transition: right .3s ease;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-        }
-
-        .carrito-panel.activo {
-            right: 0;
-        }
-
-        .carrito-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--borde);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .carrito-header h2 {
-            font-size: 20px;
-            color: var(--verde);
-        }
-
-        .btn-cerrar-carrito {
-            background: #252525;
-            border: none;
-            color: white;
-            font-size: 20px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .btn-cerrar-carrito:hover {
-            background: #333;
-            color: var(--verde);
-        }
-
-        .carrito-items {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .item-carrito {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #202020;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #292929;
-        }
-
-        .item-carrito img {
-            width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #111;
-        }
-
-        .item-detalles {
-            flex-grow: 1;
-        }
-
-        .item-detalles h4 {
-            font-size: 14px;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .item-detalles .item-precio {
-            color: var(--verde);
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .item-cantidad {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        .btn-cant {
-            background: #2b2b2b;
-            border: 1px solid #3b3b3b;
-            color: white;
-            width: 24px;
-            height: 24px;
+            padding: 3px 8px;
             border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            align-self: flex-start;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
 
-        .btn-cant:hover {
-            border-color: var(--verde);
-            color: var(--verde);
+        .nombre-prod {
+            font-size: 16px;
+            color: var(--texto);
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
-        .btn-eliminar-item {
-            background: transparent;
-            border: none;
-            color: #ff9292;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 5px;
+        .desc-prod {
+            font-size: 12px;
+            color: var(--secundario);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            flex-grow: 1;
         }
 
-        .btn-eliminar-item:hover {
-            color: #ff5252;
-        }
-
-        .carrito-footer {
-            padding: 20px 25px;
-            border-top: 1px solid var(--borde);
-            background: #141414;
-        }
-
-        .carrito-total {
+        .precio-stock {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
-            font-size: 16px;
+            margin-bottom: 14px;
         }
 
-        .carrito-total strong {
-            font-size: 22px;
+        .precio-txt {
+            font-size: 18px;
+            font-weight: 700;
             color: var(--verde);
         }
 
-        .btn-finalizar {
+        .stock-txt {
+            font-size: 11px;
+            color: var(--secundario);
+        }
+
+        .btn-comprar {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--verde);
             color: #111;
+            font-weight: 700;
             border: none;
             border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
             cursor: pointer;
             transition: .2s;
         }
 
-        .btn-finalizar:hover {
+        .btn-comprar:hover {
             filter: brightness(1.1);
         }
 
-        .carrito-vacio {
-            text-align: center;
-            padding: 40px 10px;
-            color: var(--secundario);
-            font-size: 14px;
+        .btn-agotado {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 650px) {
             header { padding: 0 20px; }
-            .catalogo { grid-template-columns: 1fr; }
-            .carrito-panel { max-width: 100%; }
+            .hero-tienda { padding: 20px; }
         }
     </style>
 </head>
@@ -505,283 +253,118 @@
 
 <header>
     <a href="inicio.html" class="logo">VIGA</a>
-
-    <div class="nav-derecha">
-        <a href="inicio.html" class="volver">← Volver al inicio</a>
-        <a href="informes.html" class="volver" style="color:var(--verde);">📜 Mis compras</a>
-        <button class="btn-carrito" id="btnAbrirCarrito">
-            🛒 Carrito <span class="contador-carrito" id="contadorCarrito">0</span>
-        </button>
+    <div class="acciones-header">
+        <a href="checkout.html" class="btn-header">
+            🛒 Carrito <span id="contadorCarrito" class="badge-carrito">0</span>
+        </a>
+        <a href="inicio.html" class="btn-header">← Inicio</a>
     </div>
 </header>
 
 <main>
-    <div class="titulo-seccion">
-        <h1>Tienda de Implementos Deportivos</h1>
-        <p>Encuentra pesas, indumentaria y accesorios publicados por nuestras marcas aliadas.</p>
+    <div class="hero-tienda">
+        <div>
+            <h1>Tienda Oficial VIGA</h1>
+            <p>Implementos, nutrición y accesorios deportivos certificados para tu entrenamiento.</p>
+        </div>
     </div>
 
-    <!-- FILTROS -->
-    <div class="filtros" id="contenedorFiltros">
-        <button class="filtro-btn activo" onclick="filtrarCategoria('Todas', this)">Todas</button>
-        <button class="filtro-btn" onclick="filtrarCategoria('Pesas y mancuernas', this)">Pesas y mancuernas</button>
-        <button class="filtro-btn" onclick="filtrarCategoria('Máquinas', this)">Máquinas</button>
-        <button class="filtro-btn" onclick="filtrarCategoria('Accesorios', this)">Accesorios</button>
-        <button class="filtro-btn" onclick="filtrarCategoria('Ropa deportiva', this)">Ropa deportiva</button>
-        <button class="filtro-btn" onclick="filtrarCategoria('Protección', this)">Protección</button>
-    </div>
-
-    <!-- GRILLA DE PRODUCTOS -->
     <div class="catalogo" id="grillaProductos">
-        <div class="vacio">Cargando productos de las marcas aliadas...</div>
+        <p style="color:var(--secundario); text-align:center; grid-column:1/-1;">Cargando catálogo oficial...</p>
     </div>
 </main>
 
-<!-- MODAL CARRITO -->
-<div class="carrito-overlay" id="carritoOverlay"></div>
-<aside class="carrito-panel" id="carritoPanel">
-    <div class="carrito-header">
-        <h2>Mi Carrito de Compras</h2>
-        <button class="btn-cerrar-carrito" id="btnCerrarCarrito">×</button>
-    </div>
-
-    <div class="carrito-items" id="carritoItems">
-        <div class="carrito-vacio">El carrito está vacío.</div>
-    </div>
-
-    <div class="carrito-footer">
-        <div class="carrito-total">
-            <span>Total:</span>
-            <strong id="totalCarrito">$ 0</strong>
-        </div>
-        <button class="btn-finalizar" onclick="procederPago()">Continuar al pago</button>
-    </div>
-</aside>
-
 <script>
     const API = "https://viga-c607.onrender.com";
-    let listaProductos = [];
+
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") document.body.classList.add("claro");
+        else document.body.classList.remove("claro");
+    }
+    sincronizarTema();
+
     let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
 
-    function dinero(valor) {
-        return Number(valor || 0).toLocaleString("es-CO", {
-            style: "currency",
-            currency: "COP",
-            maximumFractionDigits: 0
-        });
+    function actualizarContador() {
+        const total = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+        document.getElementById("contadorCarrito").textContent = total;
     }
 
-    function obtenerUrlImagen(urlGuardada) {
-        if (!urlGuardada) {
-            return "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
-        }
-        if (urlGuardada.startsWith("http://") || urlGuardada.startsWith("https://")) {
-            return urlGuardada;
-        }
-        return `${API}${urlGuardada.startsWith("/") ? "" : "/"}${urlGuardada}`;
-    }
-
-    async function cargarTienda() {
-        const contenedor = document.getElementById("grillaProductos");
+    async function cargarCatalogo() {
         try {
-            const res = await fetch(`${API}/productos`);
-            if (!res.ok) throw new Error("No se pudo cargar el catálogo.");
+            const res = await fetch(`${API}/productos?t=${Date.now()}`);
+            if (!res.ok) throw new Error("No se pudo cargar la tienda");
+            const prods = await res.json();
 
-            listaProductos = await res.json();
-            renderizarCatalogo(listaProductos);
-            actualizarInterfazCarrito();
+            const grilla = document.getElementById("grillaProductos");
+            grilla.innerHTML = "";
 
-        } catch (error) {
-            contenedor.innerHTML = `<div class="vacio">No fue posible conectar con la tienda. ${error.message}</div>`;
-        }
-    }
+            if (!prods || prods.length === 0) {
+                grilla.innerHTML = `<p style="grid-column:1/-1; color:var(--secundario); text-align:center; padding:50px;">No hay productos disponibles por ahora.</p>`;
+                return;
+            }
 
-    function renderizarCatalogo(productos) {
-        const contenedor = document.getElementById("grillaProductos");
-        contenedor.innerHTML = "";
+            prods.forEach(p => {
+                const stockValido = p.stock > 0;
+                const imagen = p.imagen_url ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
-        if (!productos || productos.length === 0) {
-            contenedor.innerHTML = `<div class="vacio">Actualmente no hay productos disponibles.</div>`;
-            return;
-        }
-
-        productos.forEach(prod => {
-            const imagenSrc = obtenerUrlImagen(prod.imagen_url);
-            const stockDisponible = Number(prod.stock || 0);
-            const precioProducto = Number(prod.precio || 0);
-            const estaAgotado = stockDisponible <= 0;
-
-            const tarjeta = document.createElement("div");
-            tarjeta.className = `tarjeta-producto ${estaAgotado ? "agotado" : ""}`;
-
-            tarjeta.innerHTML = `
-                <div class="img-contenedor">
-                    <span class="categoria-tag">${prod.categoria || "Implemento"}</span>
-                    ${estaAgotado ? '<span class="badge-agotado">AGOTADO</span>' : ''}
-                    <img src="${imagenSrc}" alt="${prod.nombre}" loading="lazy">
-                </div>
-                <div class="info-producto">
-                    <h3>${prod.nombre}</h3>
-                    <p>${prod.descripcion}</p>
-                    <div class="pie-tarjeta">
-                        <div class="precio">${dinero(precioProducto)}</div>
-                        <div class="stock-disponible ${estaAgotado ? 'sin-stock' : ''}">
-                            ${estaAgotado ? 'Sin existencias' : `${stockDisponible} disponibles`}
+                const card = document.createElement("div");
+                card.className = "tarjeta-prod";
+                card.innerHTML = `
+                    <img class="img-prod" src="${imagen}" alt="${p.nombre}">
+                    <div class="info-prod">
+                        <span class="categoria-tag">${p.categoria || 'Accesorio'}</span>
+                        <h3 class="nombre-prod">${p.nombre}</h3>
+                        <p class="desc-prod">${p.descripcion || 'Producto oficial de entrenamiento VIGA.'}</p>
+                        <div class="precio-stock">
+                            <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
+                            <span class="stock-txt">${stockValido ? `Stock: ${p.stock}` : 'Agotado'}</span>
                         </div>
+                        <button class="btn-comprar ${!stockValido ? 'btn-agotado' : ''}" 
+                                onclick='agregarAlCarrito(${JSON.stringify(p)})' 
+                                ${!stockValido ? 'disabled' : ''}>
+                            ${stockValido ? 'Agregar al Carrito' : 'Sin Unidades'}
+                        </button>
                     </div>
-                    <button class="btn-anadir" ${estaAgotado ? "disabled" : ""} onclick="agregarAlCarrito(${prod.id})">
-                        ${estaAgotado ? "Agotado" : "Añadir al carrito"}
-                    </button>
-                </div>
-            `;
+                `;
+                grilla.appendChild(card);
+            });
 
-            contenedor.appendChild(tarjeta);
-        });
+        } catch (e) {
+            document.getElementById("grillaProductos").innerHTML = `<p style="grid-column:1/-1; color:#ff5252; text-align:center;">Error al conectar con la tienda.</p>`;
+        }
     }
 
-    function agregarAlCarrito(idProducto) {
-        const prod = listaProductos.find(p => p.id === idProducto);
-        if (!prod) return;
-
-        const stockMax = Number(prod.stock || 0);
-        if (stockMax <= 0) {
-            alert("Este producto está agotado.");
-            return;
-        }
-
-        const existente = carrito.find(item => item.id === idProducto);
-        const imagenReal = obtenerUrlImagen(prod.imagen_url);
-
-        if (existente) {
-            if (existente.cantidad < stockMax) {
-                existente.cantidad += 1;
+    function agregarAlCarrito(producto) {
+        const itemExistente = carrito.find(x => x.id === producto.id);
+        if (itemExistente) {
+            if (itemExistente.cantidad < producto.stock) {
+                itemExistente.cantidad += 1;
             } else {
-                alert(`Solo quedan ${stockMax} unidades disponibles de este producto.`);
+                alert("Has alcanzado el stock máximo disponible para este artículo.");
                 return;
             }
         } else {
             carrito.push({
-                id: prod.id,
-                nombre: prod.nombre,
-                precio: Number(prod.precio),
-                imagen: imagenReal,
-                stock: stockMax,
-                cantidad: 1
+                id: producto.id,
+                nombre: producto.nombre,
+                precio: Number(producto.precio),
+                cantidad: 1,
+                stock: producto.stock,
+                imagen_url: producto.imagen_url
             });
         }
 
-        guardarCarrito();
-        actualizarInterfazCarrito();
-        abrirCarrito();
-    }
-
-    function cambiarCantidad(idProducto, cambio) {
-        const item = carrito.find(p => p.id === idProducto);
-        if (!item) return;
-
-        item.cantidad += cambio;
-
-        if (item.cantidad <= 0) {
-            eliminarDelCarrito(idProducto);
-            return;
-        }
-
-        if (item.cantidad > item.stock) {
-            item.cantidad = item.stock;
-            alert("No hay más unidades disponibles.");
-        }
-
-        guardarCarrito();
-        actualizarInterfazCarrito();
-    }
-
-    function eliminarDelCarrito(idProducto) {
-        carrito = carrito.filter(p => p.id !== idProducto);
-        guardarCarrito();
-        actualizarInterfazCarrito();
-    }
-
-    function guardarCarrito() {
         localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+        actualizarContador();
     }
 
-    function actualizarInterfazCarrito() {
-        const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-        document.getElementById("contadorCarrito").textContent = totalItems;
-
-        const contenedorItems = document.getElementById("carritoItems");
-        const totalTexto = document.getElementById("totalCarrito");
-
-        if (carrito.length === 0) {
-            contenedorItems.innerHTML = `<div class="carrito-vacio">El carrito está vacío.</div>`;
-            totalTexto.textContent = "$ 0";
-            return;
-        }
-
-        let sumaTotal = 0;
-        contenedorItems.innerHTML = "";
-
-        carrito.forEach(item => {
-            const subtotal = item.precio * item.cantidad;
-            sumaTotal += subtotal;
-
-            const div = document.createElement("div");
-            div.className = "item-carrito";
-            div.innerHTML = `
-                <img src="${item.imagen}" alt="${item.nombre}">
-                <div class="item-detalles">
-                    <h4>${item.nombre}</h4>
-                    <div class="item-precio">${dinero(item.precio)}</div>
-                    <div class="item-cantidad">
-                        <button class="btn-cant" onclick="cambiarCantidad(${item.id}, -1)">-</button>
-                        <span>${item.cantidad}</span>
-                        <button class="btn-cant" onclick="cambiarCantidad(${item.id}, 1)">+</button>
-                    </div>
-                </div>
-                <button class="btn-eliminar-item" onclick="eliminarDelCarrito(${item.id})" title="Eliminar">🗑️</button>
-            `;
-            contenedorItems.appendChild(div);
-        });
-
-        totalTexto.textContent = dinero(sumaTotal);
-    }
-
-    function abrirCarrito() {
-        document.getElementById("carritoOverlay").classList.add("activo");
-        document.getElementById("carritoPanel").classList.add("activo");
-    }
-
-    function cerrarCarrito() {
-        document.getElementById("carritoOverlay").classList.remove("activo");
-        document.getElementById("carritoPanel").classList.remove("activo");
-    }
-
-    document.getElementById("btnAbrirCarrito").addEventListener("click", abrirCarrito);
-    document.getElementById("btnCerrarCarrito").addEventListener("click", cerrarCarrito);
-    document.getElementById("carritoOverlay").addEventListener("click", cerrarCarrito);
-
-    function filtrarCategoria(categoria, boton) {
-        document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("activo"));
-        if (boton) boton.classList.add("activo");
-
-        if (categoria === "Todas") {
-            renderizarCatalogo(listaProductos);
-        } else {
-            const filtrados = listaProductos.filter(p => p.categoria === categoria);
-            renderizarCatalogo(filtrados);
-        }
-    }
-
-    function procederPago() {
-        if (carrito.length === 0) {
-            alert("Tu carrito está vacío. Agrega al menos un producto para continuar.");
-            return;
-        }
-        guardarCarrito();
-        window.location.href = "checkout.html";
-    }
-
-    document.addEventListener("DOMContentLoaded", cargarTienda);
+    document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTema();
+        actualizarContador();
+        cargarCatalogo();
+    });
 </script>
 
 </body>

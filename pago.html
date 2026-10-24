@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Procesando Pago</title>
+    <title>VIGA | Confirmación de Pago</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
     <style>
@@ -15,6 +16,18 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
+            --input-fondo: #252525;
+            --input-borde: #383838;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --input-fondo: #f9f9f9;
+            --input-borde: #cccccc;
         }
 
         * {
@@ -29,358 +42,218 @@
             color: var(--texto);
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
         }
 
-        .contenedor-pago {
-            width: 100%;
-            max-width: 480px;
+        header {
+            height: 75px;
             background: var(--panel);
-            border: 1px solid var(--borde);
-            border-radius: 0px;
-            padding: 35px 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        .logo-viga {
+        .logo {
             color: var(--verde);
             font-size: 28px;
             font-weight: 700;
             letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        main {
+            width: 90%;
+            max-width: 580px;
+            margin: 40px auto;
+        }
+
+        .caja-pago {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .caja-pago h2 {
+            font-size: 20px;
+            color: var(--verde);
+            margin-bottom: 8px;
+        }
+
+        .caja-pago p {
+            font-size: 13px;
+            color: var(--secundario);
             margin-bottom: 20px;
         }
 
-        .icono-app {
-            width: 70px;
-            height: 70px;
-            border-radius: 0px;
+        .metodos {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .opcion-metodo {
+            background: var(--input-fondo);
+            border: 1px solid var(--input-borde);
+            border-radius: 10px;
+            padding: 14px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 20px;
-            background: #252525;
-            border: 1px solid var(--borde);
-        }
-
-        h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .descripcion {
-            color: var(--secundario);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .caja-cobro {
-            background: #202020;
-            border: 1px solid #2d2d2d;
-            border-radius: 0px;
-            padding: 18px;
-            margin-bottom: 25px;
-            text-align: left;
-        }
-
-        .fila-cobro {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: #ccc;
-        }
-
-        .fila-cobro.destacada {
-            border-top: 1px solid #333;
-            padding-top: 10px;
-            margin-top: 10px;
-            margin-bottom: 0;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .fila-cobro.destacada span:last-child {
-            color: var(--verde);
-        }
-
-        .btn-accion {
-            width: 100%;
-            padding: 14px;
-            background: var(--verde);
-            color: #111;
-            border: none;
-            border-radius: 0px;
-            font-size: 15px;
-            font-weight: 700;
+            gap: 12px;
             cursor: pointer;
             transition: .2s;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .btn-accion:hover {
+        .opcion-metodo:hover {
+            border-color: var(--verde);
+        }
+
+        .opcion-metodo input {
+            accent-color: var(--verde);
+        }
+
+        .resumen-total {
+            background: var(--fondo);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .btn-finalizar {
+            width: 100%;
+            padding: 15px;
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-finalizar:hover {
             filter: brightness(1.1);
         }
 
-        .btn-cancelar {
-            background: transparent;
-            color: #ff9292;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 8px;
-        }
-
-        .btn-cancelar:hover {
-            text-decoration: underline;
-        }
-
-        .pantalla-exito {
-            display: none;
-        }
-
-        .animacion-check {
-            width: 70px;
-            height: 70px;
-            border-radius: 0%;
-            background: #1c3621;
-            border: 2px solid var(--verde);
-            color: var(--verde);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            margin: 0 auto 20px;
-        }
-
-        .spinner {
-            display: none;
-            width: 22px;
-            height: 22px;
-            border: 3px solid rgba(0,0,0,0.2);
-            border-top-color: #111;
-            border-radius: 0%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .btn-finalizar:disabled {
+            opacity: .6;
+            cursor: wait;
         }
     </style>
 </head>
 <body>
 
-<div class="contenedor-pago">
-    <div class="logo-viga">VIGA</div>
+<header>
+    <a href="inicio.html" class="logo">VIGA</a>
+    <a href="checkout.html" style="color:var(--texto); text-decoration:none; font-size:14px;">← Volver</a>
+</header>
 
-    <div id="vistaCobro">
-        <div class="icono-app" id="iconoApp"></div>
-        <h2 id="tituloCobro">Acepta la solicitud de cobro</h2>
-        <p class="descripcion" id="mensajeCobro">
-            Hemos enviado una solicitud a tu aplicación. Confirma el débito para procesar tu orden.
-        </p>
+<main>
+    <div class="caja-pago">
+        <h2>Pasarela de Pago Segura</h2>
+        <p>Selecciona el medio con el que deseas completar tu pedido.</p>
 
-        <div class="caja-cobro">
-            <div class="fila-cobro">
-                <span>Comercio:</span>
-                <strong>VIGA Deportes S.A.S</strong>
-            </div>
-            <div class="fila-cobro">
-                <span>Cliente:</span>
-                <strong id="nombreClienteResumen">--</strong>
-            </div>
-            <div class="fila-cobro">
-                <span>Método / Banco:</span>
-                <strong id="metodoPagoResumen">--</strong>
-            </div>
-            <div class="fila-cobro" id="filaDetalleCuenta">
-                <span id="etiquetaDetalleCuenta">Cuenta / Celular:</span>
-                <strong id="valorDetalleCuenta">--</strong>
-            </div>
-            <div class="fila-cobro destacada">
-                <span>Total a debitar:</span>
-                <span id="totalDebitar">$ 0</span>
-            </div>
+        <div class="metodos">
+            <label class="opcion-metodo">
+                <input type="radio" name="metodoPago" value="Tarjeta de Crédito / Débito" checked>
+                <span>💳 Tarjeta de Crédito / Débito</span>
+            </label>
+            <label class="opcion-metodo">
+                <input type="radio" name="metodoPago" value="Transferencia PSE / Bancolombia">
+                <span>📱 PSE / Transferencia Bancolombia</span>
+            </label>
+            <label class="opcion-metodo">
+                <input type="radio" name="metodoPago" value="Pago Contra Entrega">
+                <span>📦 Contra Entrega (Efectivo al recibir)</span>
+            </label>
         </div>
 
-        <button class="btn-accion" id="btnAceptarDebito" onclick="procesarDebito()">
-            <span id="textoBotonDebito">Aceptar cobro</span>
-            <div class="spinner" id="spinnerCarga"></div>
+        <div class="resumen-total">
+            <span>Monto Total:</span>
+            <span style="color:var(--verde);" id="montoTotalTxt">$0</span>
+        </div>
+
+        <button class="btn-finalizar" id="btnConfirmarPago" onclick="procesarCompra()">
+            Confirmar y Finalizar Pedido
         </button>
-
-        <div>
-            <button class="btn-cancelar" onclick="cancelarPago()">Rechazar y volver </button>
-        </div>
     </div>
-
-    <div class="pantalla-exito" id="vistaExito">
-        <div class="animacion-check">✓</div>
-        <h2>¡Pago aceptado con éxito!</h2>
-        <p class="descripcion">
-            El valor fue descontado de tu cuenta. El stock ha sido actualizado y tu pedido se encuentra registrado.
-        </p>
-        <p style="font-size: 13px; color: var(--secundario);">
-            Redirigiendo a la tienda en <strong id="segundosRedireccion" style="color:var(--verde);">3</strong> segundos...
-        </p>
-    </div>
-</div>
+</main>
 
 <script>
     const API = "https://viga-c607.onrender.com";
-    const pedido = JSON.parse(localStorage.getItem("viga_pedido_actual") || "null");
 
-    function dinero(valor) {
-        return Number(valor || 0).toLocaleString("es-CO", {
-            style: "currency",
-            currency: "COP",
-            maximumFractionDigits: 0
-        });
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") document.body.classList.add("claro");
+        else document.body.classList.remove("claro");
     }
+    sincronizarTema();
 
-    function inicializarPantalla() {
-        if (!pedido || !pedido.total) {
-            alert("No se encontró información del pedido.");
-            window.location.href = "tienda.html";
+    const orden = JSON.parse(localStorage.getItem("viga_orden_temporal") || "null");
+
+    function calcularTotal() {
+        if (!orden || !orden.articulos || orden.articulos.length === 0) {
+            window.location.replace("tienda.html");
             return;
         }
 
-        document.getElementById("nombreClienteResumen").textContent = pedido.nombre || "Cliente VIGA";
-        document.getElementById("totalDebitar").textContent = dinero(pedido.total);
-
-        const icono = document.getElementById("iconoApp");
-        const titulo = document.getElementById("tituloCobro");
-        const mensaje = document.getElementById("mensajeCobro");
-        const textoBtn = document.getElementById("textoBotonDebito");
-        const metodo = document.getElementById("metodoPagoResumen");
-        const etiquetaCuenta = document.getElementById("etiquetaDetalleCuenta");
-        const valorCuenta = document.getElementById("valorDetalleCuenta");
-
-        const bancoNombre = (pedido.banco || "").toLowerCase();
-
-        if (pedido.metodo === "nequi" || bancoNombre.includes("nequi")) {
-            metodo.textContent = "Nequi";
-            etiquetaCuenta.textContent = "Celular Nequi:";
-            valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
-            titulo.textContent = "Notificación de cobro Nequi";
-            mensaje.textContent = `Hemos enviado una solicitud de débito a tu cuenta Nequi (${pedido.cuenta || pedido.telefono}). Pulsa en aceptar para autorizar el cobro.`;
-            textoBtn.textContent = "Aceptar débito en Nequi";
-        } else if (pedido.metodo === "daviplata" || bancoNombre.includes("daviplata")) {
-            metodo.textContent = "Daviplata";
-            etiquetaCuenta.textContent = "Número Daviplata:";
-            valorCuenta.textContent = pedido.cuenta || pedido.telefono || "--";
-            titulo.textContent = "Cobro directo Daviplata";
-            mensaje.textContent = `Confirma el descuento de fondos de tu monedero Daviplata (${pedido.cuenta || pedido.telefono}) para completar el pedido.`;
-            textoBtn.textContent = "Aceptar cobro en Daviplata";
-        } else if (bancoNombre.includes("bancolombia")) {
-            metodo.textContent = pedido.banco || "Bancolombia";
-            etiquetaCuenta.textContent = "Cuenta Bancolombia:";
-            valorCuenta.textContent = pedido.cuenta || "--";
-            titulo.textContent = "Autorización Bancolombia";
-            mensaje.textContent = `Autoriza la transferencia inmediata desde tu cuenta ${pedido.banco} para despachar la compra.`;
-            textoBtn.textContent = "Autorizar débito Bancolombia";
-        } else if (pedido.metodo === "pse") {
-            metodo.textContent = pedido.banco || "PSE";
-            etiquetaCuenta.textContent = "Correo PSE:";
-            valorCuenta.textContent = pedido.correoPSE || "--";
-            titulo.textContent = "Verificación de pago PSE";
-            mensaje.textContent = `Transacción respaldada por ACH Colombia. Valida el débito de tu cuenta bancaria asociada.`;
-            textoBtn.textContent = "Confirmar pago PSE";
-        } else {
-            metodo.textContent = "Tarjeta Débito / Crédito";
-            etiquetaCuenta.textContent = "Terminación de tarjeta:";
-            valorCuenta.textContent = `•••• ${pedido.terminacion || "4242"}`;
-            titulo.textContent = "Verificación bancaria (3D Secure)";
-            mensaje.textContent = `Tu entidad financiera está procesando la solicitud para la tarjeta terminada en ${pedido.terminacion || "4242"}.`;
-            textoBtn.textContent = "Aprobar pago con tarjeta";
-        }
+        const total = orden.articulos.reduce((acc, i) => acc + (i.precio * i.cantidad), 0);
+        document.getElementById("montoTotalTxt").textContent = `$${total.toLocaleString('es-CO')}`;
     }
 
-    async function procesarDebito() {
-        const btn = document.getElementById("btnAceptarDebito");
-        const texto = document.getElementById("textoBotonDebito");
-        const spinner = document.getElementById("spinnerCarga");
-
-        texto.style.display = "none";
-        spinner.style.display = "block";
+    async function procesarCompra() {
+        const btn = document.getElementById("btnConfirmarPago");
         btn.disabled = true;
+        btn.textContent = "Procesando orden y descontando inventario...";
 
-        const carritoActual = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+        const metodoSeleccionado = document.querySelector('input[name="metodoPago"]:checked').value;
+
+        const payload = {
+            articulos: orden.articulos,
+            cliente: orden.cliente,
+            metodo_pago: metodoSeleccionado
+        };
 
         try {
-            // Guardar en la base de datos MySQL (Render)
-            const respuesta = await fetch(`${API}/compras/procesar`, {
+            const res = await fetch(`${API}/compras/procesar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    articulos: carritoActual,
-                    cliente: {
-                        nombre: pedido.nombre,
-                        ciudad: pedido.ciudad,
-                        telefono: pedido.telefono
-                    },
-                    metodo_pago: pedido.banco || pedido.metodo || "Transferencia/Tarjeta"
-                })
+                body: JSON.stringify(payload)
             });
 
-            if (!respuesta.ok) {
-                console.error("Respuesta del servidor no fue OK:", await respuesta.text());
-            }
-        } catch (error) {
-            console.error("Error al registrar venta en el backend:", error);
-        }
+            if (!res.ok) throw new Error("Error procesando la compra en el servidor");
 
-        // Historial local para el comprador
-        const historialPrevio = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
-        historialPrevio.push({
-            idOrden: Math.floor(100000 + Math.random() * 900000),
-            fecha: new Date().toLocaleDateString("es-CO", { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            }),
-            metodo: pedido.metodo,
-            banco: pedido.banco || "Tarjeta Débito / Crédito",
-            ciudad: pedido.ciudad,
-            direccion: pedido.direccion,
-            total: pedido.total,
-            articulos: carritoActual
-        });
-        localStorage.setItem("viga_historial_compras", JSON.stringify(historialPrevio));
+            // Limpiar carrito tras compra exitosa
+            localStorage.removeItem("viga_carrito");
+            localStorage.removeItem("viga_orden_temporal");
 
-        document.getElementById("vistaCobro").style.display = "none";
-        document.getElementById("vistaExito").style.display = "block";
+            alert("¡Compra procesada con éxito! El inventario ha sido actualizado.");
+            window.location.replace("tienda.html");
 
-        localStorage.removeItem("viga_carrito");
-        localStorage.removeItem("viga_pedido_actual");
-
-        let segundos = 3;
-        const cuentaAtras = setInterval(() => {
-            segundos--;
-            document.getElementById("segundosRedireccion").textContent = segundos;
-            if (segundos <= 0) {
-                clearInterval(cuentaAtras);
-                window.location.href = "tienda.html";
-            }
-        }, 1000);
-    }
-
-    function cancelarPago() {
-        if (confirm("¿Deseas cancelar el cobro y regresar?")) {
-            window.location.href = "checkout.html";
+        } catch (e) {
+            alert("No se pudo completar el pedido. Intenta nuevamente.");
+            btn.disabled = false;
+            btn.textContent = "Confirmar y Finalizar Pedido";
         }
     }
 
-    document.addEventListener("DOMContentLoaded", inicializarPantalla);
+    document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTema();
+        calcularTotal();
+    });
 </script>
 
 </body>
