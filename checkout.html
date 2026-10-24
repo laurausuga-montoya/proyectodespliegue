@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIGA | Finalizar Compra</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 
     <style>
@@ -15,6 +16,23 @@
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
+            --campo-bg: #252525;
+            --campo-borde: #3b3b3b;
+            --info-bg: #202020;
+            --articulo-borde: #282828;
+        }
+
+        /* REGLAS PARA TEMA CLARO */
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --campo-bg: #f8f8f8;
+            --campo-borde: #cccccc;
+            --info-bg: #f0f0f0;
+            --articulo-borde: #e4e4e4;
         }
 
         * {
@@ -28,6 +46,7 @@
             background: var(--fondo);
             color: var(--texto);
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         header {
@@ -38,6 +57,10 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 50px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -49,7 +72,7 @@
         }
 
         .volver {
-            color: #ddd;
+            color: var(--texto);
             text-decoration: none;
             font-size: 14px;
             transition: .2s;
@@ -88,6 +111,8 @@
             border: 1px solid var(--borde);
             border-radius: 0px;
             padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .card h2 {
@@ -95,7 +120,7 @@
             margin-bottom: 20px;
             border-bottom: 1px solid var(--borde);
             padding-bottom: 10px;
-            color: #fff;
+            color: var(--texto);
         }
 
         .campo {
@@ -113,17 +138,18 @@
 
         .campo label {
             font-size: 13px;
-            color: #ccc;
+            color: var(--texto);
         }
 
         .campo input, .campo select {
             padding: 12px;
-            background: #252525;
-            border: 1px solid #3b3b3b;
+            background: var(--campo-bg);
+            border: 1px solid var(--campo-borde);
             border-radius: 0px;
-            color: white;
+            color: var(--texto);
             outline: none;
             font-size: 14px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
         }
 
         .campo input:focus, .campo select:focus {
@@ -145,7 +171,7 @@
             align-items: center;
             gap: 12px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #282828;
+            border-bottom: 1px solid var(--articulo-borde);
         }
 
         .articulo img {
@@ -163,6 +189,7 @@
         .art-info h4 {
             font-size: 14px;
             margin-bottom: 3px;
+            color: var(--texto);
         }
 
         .art-info span {
@@ -176,18 +203,53 @@
             font-size: 14px;
         }
 
+        .art-controles {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .btn-qty {
+            background: var(--campo-bg);
+            border: 1px solid var(--campo-borde);
+            color: var(--texto);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .btn-qty:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+        }
+
+        .btn-eliminar-item {
+            background: transparent;
+            border: none;
+            color: #ff5252;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+
         .linea-total {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-size: 14px;
-            color: #bbb;
+            color: var(--secundario);
         }
 
         .linea-total.destacado {
             font-size: 18px;
             font-weight: 700;
-            color: white;
+            color: var(--texto);
             border-top: 1px solid var(--borde);
             padding-top: 15px;
             margin-top: 15px;
@@ -220,7 +282,7 @@
             margin-top: 10px;
             padding: 12px;
             background: transparent;
-            color: #ccc;
+            color: var(--secundario);
             border: 1px solid var(--borde);
             border-radius: 0px;
             font-weight: 600;
@@ -230,7 +292,7 @@
 
         .btn-secundario:hover {
             border-color: #666;
-            color: white;
+            color: var(--texto);
         }
 
         .tarjeta-grafica {
@@ -259,8 +321,8 @@
         }
 
         .info-app-box {
-            background: #202020;
-            border: 1px solid #333;
+            background: var(--info-bg);
+            border: 1px solid var(--borde);
             border-radius: 0px;
             padding: 15px;
             margin-bottom: 18px;
@@ -269,13 +331,9 @@
             gap: 12px;
         }
 
-        .info-app-box .icono {
-            font-size: 26px;
-        }
-
         .info-app-box p {
             font-size: 13px;
-            color: #ccc;
+            color: var(--secundario);
             line-height: 1.5;
         }
 
@@ -330,7 +388,7 @@
                             <option value="pse">PSE (Débito bancario con CVV)</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-pagar">Continuar a ingresar datos de pago </button>
+                    <button type="submit" class="btn-pagar">Continuar a ingresar datos de pago</button>
                 </form>
             </section>
 
@@ -375,7 +433,6 @@
             <section class="card" id="pasoNequi" style="display: none;">
                 <h2>Datos de tu cuenta Nequi</h2>
                 <div class="info-app-box">
-                    <div class="icono"></div>
                     <p>Ingresa tu número Nequi. Te solicitaremos la autorización de débito en la pantalla de cobro.</p>
                 </div>
                 <form id="formNequi">
@@ -392,7 +449,6 @@
             <section class="card" id="pasoDaviplata" style="display: none;">
                 <h2>Datos de tu cuenta Daviplata</h2>
                 <div class="info-app-box">
-                    <div class="icono"></div>
                     <p>Ingresa el número de tu Daviplata y documento de identidad.</p>
                 </div>
                 <form id="formDaviplata">
@@ -413,7 +469,6 @@
             <section class="card" id="pasoBancolombia" style="display: none;">
                 <h2>Datos de tu cuenta Bancolombia</h2>
                 <div class="info-app-box">
-                    <div class="icono"></div>
                     <p>Ingresa el número de tu cuenta Bancolombia para autorizar el débito.</p>
                 </div>
                 <form id="formBancolombia">
@@ -433,11 +488,10 @@
                 </form>
             </section>
 
-            <!-- PASO 2E: PSE (CON CVV) -->
+            <!-- PASO 2E: PSE -->
             <section class="card" id="pasoPSE" style="display: none;">
                 <h2>Pago por PSE (Con código de seguridad / CVV)</h2>
                 <div class="info-app-box">
-                    <div class="icono"></div>
                     <p>Ingresa tu entidad bancaria, correo registrado y tu código de seguridad CVV.</p>
                 </div>
                 <form id="formPSE">
@@ -489,7 +543,20 @@
 </main>
 
 <script>
-    const carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+    const API = "https://viga-c607.onrender.com";
+
+    // SINCRONIZAR TEMA CLARO/OSCURO
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") {
+            document.body.classList.add("claro");
+        } else {
+            document.body.classList.remove("claro");
+        }
+    }
+    sincronizarTema();
+
+    let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
     let datosEnvioGuardados = null;
     let totalPedido = 0;
 
@@ -507,25 +574,38 @@
         const totalEl = document.getElementById("totalTexto");
 
         if (carrito.length === 0) {
-            alert("No tienes productos en el carrito.");
-            window.location.href = "tienda.html";
+            contenedor.innerHTML = `<p style="color:var(--secundario); padding:20px 0; text-align:center;">No tienes productos en el carrito.</p>`;
+            subtotalEl.textContent = dinero(0);
+            totalEl.textContent = dinero(0);
             return;
         }
 
         contenedor.innerHTML = "";
         let suma = 0;
 
-        carrito.forEach(item => {
+        carrito.forEach((item, index) => {
             const sub = item.precio * item.cantidad;
             suma += sub;
+
+            // Soporte para item.imagen o item.imagen_url
+            let imagenSrc = item.imagen || item.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
+            if (imagenSrc.startsWith("/uploads")) {
+                imagenSrc = API + imagenSrc;
+            }
 
             const div = document.createElement("div");
             div.className = "articulo";
             div.innerHTML = `
-                <img src="${item.imagen}" alt="${item.nombre}">
+                <img src="${imagenSrc}" alt="${item.nombre}">
                 <div class="art-info">
                     <h4>${item.nombre}</h4>
-                    <span>Cantidad: ${item.cantidad} × ${dinero(item.precio)}</span>
+                    <span>${dinero(item.precio)} c/u</span>
+                    <div class="art-controles">
+                        <button type="button" class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
+                        <span style="font-size:13px; font-weight:600; color:var(--texto);">${item.cantidad}</span>
+                        <button type="button" class="btn-qty" onclick="cambiarCantidad(${index}, 1)">+</button>
+                        <button type="button" class="btn-eliminar-item" onclick="eliminarArticulo(${index})">✕</button>
+                    </div>
                 </div>
                 <div class="art-precio">${dinero(sub)}</div>
             `;
@@ -535,6 +615,30 @@
         totalPedido = suma;
         subtotalEl.textContent = dinero(suma);
         totalEl.textContent = dinero(suma);
+    }
+
+    function cambiarCantidad(idx, cambio) {
+        const item = carrito[idx];
+        const stockMax = parseInt(item.stock, 10);
+
+        if (cambio > 0 && item.cantidad >= stockMax) {
+            return;
+        }
+
+        item.cantidad += cambio;
+
+        if (item.cantidad <= 0) {
+            carrito.splice(idx, 1);
+        }
+
+        localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+        cargarResumen();
+    }
+
+    function eliminarArticulo(idx) {
+        carrito.splice(idx, 1);
+        localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+        cargarResumen();
     }
 
     function ocultarTodosLosPasos() {
@@ -547,6 +651,12 @@
 
     document.getElementById("formEnvio").addEventListener("submit", function(e) {
         e.preventDefault();
+
+        if (carrito.length === 0) {
+            alert("Tu carrito está vacío. Agrega productos en la tienda.");
+            window.location.href = "tienda.html";
+            return;
+        }
 
         datosEnvioGuardados = {
             nombre: document.getElementById("nombreCliente").value.trim(),
@@ -598,11 +708,27 @@
         document.getElementById("vistaFechaTarjeta").textContent = exp || "MM/AA";
     }
 
-    // Handlers para enviar a pago.html
+    function guardarYRedirigirPago(objetoPedido) {
+        // Guarda en los dos nombres para compatibilidad total con cualquier versión de pago.html
+        localStorage.setItem("viga_pedido_actual", JSON.stringify(objetoPedido));
+        localStorage.setItem("viga_orden_temporal", JSON.stringify({
+            articulos: carrito,
+            cliente: {
+                nombre: objetoPedido.nombre,
+                ciudad: objetoPedido.ciudad,
+                telefono: objetoPedido.telefono,
+                direccion: objetoPedido.direccion
+            },
+            metodo_pago: objetoPedido.banco || objetoPedido.metodo
+        }));
+        window.location.href = "pago.html";
+    }
+
+    // Formularios del Paso 2
     document.getElementById("formTarjeta").addEventListener("submit", function(e) {
         e.preventDefault();
         const num = document.getElementById("numeroTarjeta").value.replace(/\s+/g, '');
-        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+        guardarYRedirigirPago({
             metodo: "tarjeta",
             banco: "Tarjeta Débito / Crédito",
             terminacion: num.slice(-4) || "4242",
@@ -612,13 +738,12 @@
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
-        }));
-        window.location.href = "pago.html";
+        });
     });
 
     document.getElementById("formNequi").addEventListener("submit", function(e) {
         e.preventDefault();
-        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+        guardarYRedirigirPago({
             metodo: "nequi",
             banco: "Nequi",
             cuenta: document.getElementById("numeroNequi").value.trim(),
@@ -627,13 +752,12 @@
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
-        }));
-        window.location.href = "pago.html";
+        });
     });
 
     document.getElementById("formDaviplata").addEventListener("submit", function(e) {
         e.preventDefault();
-        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+        guardarYRedirigirPago({
             metodo: "daviplata",
             banco: "Daviplata",
             cuenta: document.getElementById("numeroDaviplata").value.trim(),
@@ -643,14 +767,13 @@
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
-        }));
-        window.location.href = "pago.html";
+        });
     });
 
     document.getElementById("formBancolombia").addEventListener("submit", function(e) {
         e.preventDefault();
         const tipo = document.getElementById("tipoCuentaBancolombia").value;
-        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+        guardarYRedirigirPago({
             metodo: "bancolombia",
             banco: `Bancolombia (${tipo})`,
             cuenta: document.getElementById("numeroCuentaBancolombia").value.trim(),
@@ -659,13 +782,12 @@
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
-        }));
-        window.location.href = "pago.html";
+        });
     });
 
     document.getElementById("formPSE").addEventListener("submit", function(e) {
         e.preventDefault();
-        localStorage.setItem("viga_pedido_actual", JSON.stringify({
+        guardarYRedirigirPago({
             metodo: "pse",
             banco: `PSE - ${document.getElementById("bancoPSE").value}`,
             correoPSE: document.getElementById("correoPSE").value.trim(),
@@ -675,11 +797,13 @@
             direccion: datosEnvioGuardados.direccion,
             ciudad: datosEnvioGuardados.ciudad,
             total: totalPedido
-        }));
-        window.location.href = "pago.html";
+        });
     });
 
-    document.addEventListener("DOMContentLoaded", cargarResumen);
+    document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTema();
+        cargarResumen();
+    });
 </script>
 
 </body>
