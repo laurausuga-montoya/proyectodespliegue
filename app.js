@@ -1,4 +1,4 @@
-require('dotenv').config(); // 👈 Vital para leer el archivo .env
+require('dotenv').config();
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos desde la misma carpeta donde reside app.js
+// Servir archivos estáticos del proyecto
 app.use(express.static(path.resolve(__dirname)));
 
 /* =========================================
@@ -26,13 +26,13 @@ app.get("/index.css", function (req, res) {
     res.sendFile(path.resolve(__dirname, "index.css"), function (err) {
         if (err) {
             console.error("❌ Error al enviar index.css:", err);
-            res.status(404).send("Archivo index.css no encontrado en el servidor.");
+            res.status(404).send("Archivo index.css no encontrado.");
         }
     });
 });
 
 /* =========================================
-   CONFIGURACIÓN DE IMÁGENES (MULTER)
+   CONFIGURACIÓN DE SUBIDA DE IMÁGENES
 ========================================= */
 if (!fs.existsSync("./uploads")) {
     fs.mkdirSync("./uploads");
@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /* =========================================
-   CONEXIÓN MYSQL
+   CONEXIÓN A BASE DE DATOS MYSQL
 ========================================= */
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
@@ -73,10 +73,14 @@ conexion.connect(function (error) {
 });
 
 /* =========================================
-   VISTAS HTML
+   RUTAS DE VISTAS HTML
 ========================================= */
 app.get("/", function (req, res) {
     res.sendFile(path.resolve(__dirname, "index.html"));
+});
+
+app.get("/tienda", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "tienda.html"));
 });
 
 app.get("/empresa", function (req, res) {
@@ -187,7 +191,7 @@ app.post("/login-empresa", function (req, res) {
 });
 
 /* =========================================
-   PRODUCTOS: PANEL EMPRESARIAL
+   PRODUCTOS: GESTIÓN EMPRESARIAL
 ========================================= */
 app.get("/empresa/:id/productos", function (req, res) {
     const identificacion_empresa = req.params.id;
@@ -223,13 +227,13 @@ app.put("/empresa/:id_empresa/productos/:id_producto", upload.single("imagen"), 
         const imagen_url = `/uploads/${req.file.filename}`;
         const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=?, imagen_url=? WHERE id=? AND identificacion_empresa=?`;
         conexion.query(sql, [nombre, categoria, descripcion, precio, stock, imagen_url, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar." });
+            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
             res.json({ mensaje: "Producto actualizado." });
         });
     } else {
         const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=? WHERE id=? AND identificacion_empresa=?`;
         conexion.query(sql, [nombre, categoria, descripcion, precio, stock, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar." });
+            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
             res.json({ mensaje: "Producto actualizado." });
         });
     }
@@ -240,8 +244,8 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     const sql = "DELETE FROM productos WHERE id = ? AND identificacion_empresa = ?";
     
     conexion.query(sql, [id_producto, id_empresa], function (error) {
-        if (error) return res.status(500).json({ error: "Error al eliminar." });
-        res.json({ mensaje: "Producto eliminado." });
+        if (error) return res.status(500).json({ error: "Error al eliminar producto." });
+        res.json({ mensaje: "Producto eliminado correctamente." });
     });
 });
 
@@ -325,11 +329,11 @@ app.put("/configuracion/:identificacion/password", function (req, res) {
 /* =========================================
    PERFIL FÍSICO / RUTINA DEL USUARIO
 ========================================= */
-// Consultar datos físicos existentes
+// Consultar datos físicos, objetivo y días
 app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
     const sql = `
-        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad 
+        SELECT peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno 
         FROM usuarios 
         WHERE identificacion = ? 
         LIMIT 1
@@ -346,20 +350,29 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     });
 });
 
-// Guardar o actualizar datos físicos
+// Guardar o actualizar datos físicos, objetivo y días
 app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const { identificacion } = req.params;
-    const { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad } = req.body;
+    const { peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno } = req.body;
 
     const sql = `
         UPDATE usuarios 
-        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?
+        SET peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
         WHERE identificacion = ?
     `;
 
     conexion.query(
         sql, 
-        [peso, altura, lesion || 'ninguna', objetivo, lugar_entrenamiento, intensidad, identificacion], 
+        [
+            peso, 
+            altura, 
+            lesion || 'ninguna', 
+            objetivo, 
+            lugar_entrenamiento, 
+            intensidad, 
+            dias_entreno ? parseInt(dias_entreno) : 5, 
+            identificacion
+        ], 
         function (error, resultado) {
             if (error) {
                 console.error("Error guardando datos físicos:", error);
@@ -371,8 +384,8 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
 });
 
 /* =========================================
-   INICIAR SERVIDOR
+   INICIAR SERVIDOR (VINCULADO A 0.0.0.0)
 ========================================= */
 app.listen(PORT, "0.0.0.0", function () {
-    console.log(`🚀 Servidor VIGA funcionando en el puerto ${PORT}`);
+    console.log(`🚀 Servidor VIGA funcionando en http://0.0.0.0:${PORT}`);
 });
