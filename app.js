@@ -101,6 +101,10 @@ app.get("/rutina-plan", function (req, res) {
     res.sendFile(path.resolve(__dirname, "rutina.plan.html"));
 });
 
+app.get("/configuracion", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "configuracion.html"));
+});
+
 app.get("/empresa", function (req, res) {
     res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
 });
@@ -298,8 +302,8 @@ app.post("/compras/procesar", function (req, res) {
 
     articulos.forEach(item => {
         const sqlStock = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
-        conexion.query(sqlStock, [item.cantidad, item.id], function (err) {
-            if (err) console.error("❌ Error stock:", err);
+        conexion.query(sqlStock, [parseInt(item.cantidad, 10), item.id], function (err) {
+            if (err) console.error("❌ Error al descontar stock:", err);
         });
 
         const sqlEmpresa = "SELECT identificacion_empresa FROM productos WHERE id = ? LIMIT 1";
@@ -330,7 +334,7 @@ app.post("/compras/procesar", function (req, res) {
                     if (errVenta) console.error("❌ Error guardando venta:", errVenta);
                     procesados++;
                     if (procesados === totalArticulos) {
-                        return res.json({ mensaje: "Ventas guardadas y stock actualizado con éxito." });
+                        return res.json({ mensaje: "Ventas registradas y stock actualizado con éxito." });
                     }
                 });
             } else {
@@ -388,6 +392,55 @@ app.delete("/empresa/:id/ventas", function (req, res) {
             return res.status(500).json({ error: "Error al borrar el historial de ventas." });
         }
         res.json({ mensaje: "Historial de ventas eliminado correctamente.", eliminados: resultado.affectedRows });
+    });
+});
+
+/* =========================================
+   SOPORTE Y REPORTES DE USUARIOS (QUEJAS)
+========================================= */
+app.post("/soporte/reporte", function (req, res) {
+    const { identificacion, categoria, asunto, descripcion } = req.body;
+
+    if (!categoria || !asunto || !descripcion) {
+        return res.status(400).json({ error: "Completa la categoría, asunto y detalle del reporte." });
+    }
+
+    const sql = `
+        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) 
+        VALUES (?, ?, ?, ?)
+    `;
+
+    conexion.query(sql, [identificacion || null, categoria, asunto, descripcion], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al guardar reporte de soporte:", error);
+            return res.status(500).json({ error: "No se pudo enviar el reporte." });
+        }
+        res.status(201).json({ mensaje: "Reporte enviado con éxito al equipo de soporte.", id: resultado.insertId });
+    });
+});
+
+app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
+    const identificacion = req.params.identificacion;
+    const sql = `
+        SELECT id, categoria, asunto, descripcion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        FROM reportes_soporte 
+        WHERE identificacion_usuario = ? 
+        ORDER BY fecha DESC
+    `;
+
+    conexion.query(sql, [identificacion], function (error, resultados) {
+        if (error) return res.status(500).json({ error: "Error al consultar los reportes." });
+        res.json(resultados);
+    });
+});
+
+app.delete("/soporte/mis-reportes/:identificacion", function (req, res) {
+    const identificacion = req.params.identificacion;
+    const sql = "DELETE FROM reportes_soporte WHERE identificacion_usuario = ?";
+
+    conexion.query(sql, [identificacion], function (error) {
+        if (error) return res.status(500).json({ error: "Error al limpiar los reportes." });
+        res.json({ mensaje: "Historial de reportes limpiado." });
     });
 });
 

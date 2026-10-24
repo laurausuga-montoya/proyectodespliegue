@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Historial de Compras</title>
+    <title>VIGA | Historial y Centro de Ayuda</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tema.css">
@@ -19,15 +19,18 @@
             --secundario: #aaa;
             --borde: #2d2d2d;
             --rojo: #ff5252;
+            --input-fondo: #252525;
+            --input-borde: #3b3b3b;
         }
 
-        /* REGLAS PARA TEMA CLARO */
         body.claro {
             --fondo: #f4f4f4;
             --panel: #ffffff;
             --texto: #111111;
             --secundario: #666666;
             --borde: #dddddd;
+            --input-fondo: #f8f8f8;
+            --input-borde: #cccccc;
         }
 
         * {
@@ -83,7 +86,6 @@
         .titulo {
             margin-bottom: 35px;
             text-align: center;
-            position: relative;
         }
 
         .titulo h1 {
@@ -97,11 +99,18 @@
             font-size: 15px;
         }
 
-        .btn-borrar-historial {
+        .acciones-superiores {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
             margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-accion-top {
             background: transparent;
-            color: var(--rojo);
-            border: 1px solid var(--rojo);
+            border: 1px solid var(--borde);
+            color: var(--texto);
             padding: 8px 18px;
             font-size: 13px;
             font-weight: 600;
@@ -109,15 +118,25 @@
             transition: 0.2s;
         }
 
-        .btn-borrar-historial:hover {
+        .btn-accion-top:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+        }
+
+        .btn-accion-top.btn-rojo {
+            color: var(--rojo);
+            border-color: var(--rojo);
+        }
+
+        .btn-accion-top.btn-rojo:hover {
             background: var(--rojo);
             color: white;
         }
 
-        /* RESUMEN RÁPIDO */
+        /* MÉTRICAS */
         .metricas {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-bottom: 35px;
         }
@@ -125,7 +144,6 @@
         .metrica-card {
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 0px;
             padding: 20px;
             text-align: center;
             transition: background 0.3s, border-color 0.3s;
@@ -143,17 +161,94 @@
             color: var(--verde);
         }
 
-        /* LISTA DE PEDIDOS */
+        /* SECCIÓN CENTRO DE AYUDA Y QUEJAS */
+        .seccion-soporte {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 25px;
+            margin-bottom: 35px;
+            display: none;
+            transition: 0.3s;
+        }
+
+        .seccion-soporte h2 {
+            font-size: 20px;
+            color: var(--verde);
+            margin-bottom: 6px;
+        }
+
+        .seccion-soporte p {
+            font-size: 13px;
+            color: var(--secundario);
+            margin-bottom: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: var(--texto);
+        }
+
+        .campo input, .campo select, .campo textarea {
+            padding: 12px;
+            background: var(--input-fondo);
+            border: 1px solid var(--input-borde);
+            color: var(--texto);
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .campo input:focus, .campo select:focus, .campo textarea:focus {
+            border-color: var(--verde);
+        }
+
+        .campo textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+
+        .btn-enviar-soporte {
+            width: 100%;
+            padding: 14px;
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-enviar-soporte:hover {
+            filter: brightness(1.1);
+        }
+
+        /* LISTAS Y TARJETAS */
+        .seccion-titulo-lista {
+            font-size: 20px;
+            color: var(--texto);
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 8px;
+        }
+
         .pedidos-lista {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            margin-bottom: 40px;
         }
 
         .pedido-card {
             background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 0px;
             padding: 25px;
             transition: .3s;
         }
@@ -190,10 +285,15 @@
             background: rgba(55, 227, 89, 0.15);
             color: var(--verde);
             padding: 5px 12px;
-            border-radius: 0px;
             font-size: 12px;
             font-weight: 600;
             border: 1px solid rgba(55, 227, 89, 0.3);
+        }
+
+        .estado-badge.badge-soporte {
+            background: rgba(255, 183, 77, 0.15);
+            color: #ffb74d;
+            border-color: rgba(255, 183, 77, 0.3);
         }
 
         .pedido-items {
@@ -212,7 +312,6 @@
         .item-fila img {
             width: 50px;
             height: 50px;
-            border-radius: 0px;
             object-fit: cover;
             background: #222;
         }
@@ -261,9 +360,8 @@
 
         .vacio {
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             background: var(--panel);
-            border-radius: 0px;
             border: 1px solid var(--borde);
             color: var(--secundario);
         }
@@ -275,13 +373,8 @@
             background: var(--verde);
             color: #111;
             font-weight: 700;
-            border-radius: 0px;
             text-decoration: none;
             transition: .2s;
-        }
-
-        .btn-ir-tienda:hover {
-            filter: brightness(1.1);
         }
 
         footer {
@@ -291,7 +384,7 @@
             font-size: 13px;
         }
 
-        @media(max-width: 700px) {
+        @media(max-width: 800px) {
             header { padding: 0 20px; }
             .metricas { grid-template-columns: 1fr; }
         }
@@ -308,29 +401,74 @@
 <div class="contenedor">
 
     <div class="titulo">
-        <h1>Historial de Compras</h1>
-        <p>Revisa el detalle de tus pedidos, compras aprobadas e implementos adquiridos.</p>
-        <button class="btn-borrar-historial" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
-            🗑️ Borrar Historial de Compras
-        </button>
+        <h1>Historial y Soporte</h1>
+        <p>Revisa tus compras realizadas y gestiona quejas sobre rutinas, alimentos o productos.</p>
+        
+        <div class="acciones-superiores">
+            <button class="btn-accion-top" onclick="alternarFormularioSoporte()">
+                💬 Reportar un problema / Soporte
+            </button>
+            <button class="btn-accion-top btn-rojo" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
+                🗑️ Borrar Historial de Compras
+            </button>
+        </div>
     </div>
 
     <!-- MÉTRICAS RÁPIDAS -->
     <div class="metricas">
         <div class="metrica-card">
-            <span>Total de compras realizadas</span>
+            <span>Compras realizadas</span>
             <strong id="contadorCompras">0</strong>
         </div>
         <div class="metrica-card">
-            <span>Inversión total en implementos</span>
+            <span>Inversión en implementos</span>
             <strong id="montoTotalInvertido">$ 0</strong>
+        </div>
+        <div class="metrica-card">
+            <span>Reportes en soporte</span>
+            <strong id="contadorReportes">0</strong>
         </div>
     </div>
 
-    <!-- LISTA DE PEDIDOS -->
-    <div class="pedidos-lista" id="contenedorHistorial">
-        <!-- Renderizado dinámico -->
+    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO) -->
+    <div class="seccion-soporte" id="cajaSoporte">
+        <h2>Enviar Queja o Solicitud de Ayuda</h2>
+        <p>Selecciona el área donde experimentaste algún problema para que el equipo de soporte lo revise.</p>
+
+        <form id="formSoporte" onsubmit="enviarReporte(event)">
+            <div class="campo">
+                <label for="categoriaReporte">¿Sobre qué trata tu queja o duda? *</label>
+                <select id="categoriaReporte" required>
+                    <option value="Ejercicio">Ejercicio (Incomodidad, técnica o lesión)</option>
+                    <option value="Alimento">Alimento / Plan Nutricional (Alergias o sustituciones)</option>
+                    <option value="Producto">Producto de Tienda (Garantía, defecto o demora)</option>
+                    <option value="Otro">Otro tema general de la app</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="asuntoReporte">Nombre del ítem / Asunto *</label>
+                <input type="text" id="asuntoReporte" placeholder="Ej. Dolor al hacer sentadilla profunda / Mancuerna dañada" required>
+            </div>
+
+            <div class="campo">
+                <label for="descripcionReporte">Detalle de lo ocurrido *</label>
+                <textarea id="descripcionReporte" placeholder="Explica detalladamente qué molestia o problema se presentó..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte">
+                Enviar reporte al soporte técnico
+            </button>
+        </form>
     </div>
+
+    <!-- SECCIÓN: QUEJAS / TICKETS REGISTRADOS -->
+    <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Mis Reportes de Soporte Enviados</h2>
+    <div class="pedidos-lista" id="contenedorMisReportes"></div>
+
+    <!-- SECCIÓN: PEDIDOS Y COMPRAS -->
+    <h2 class="seccion-titulo-lista">Historial de Compras</h2>
+    <div class="pedidos-lista" id="contenedorHistorial"></div>
 
 </div>
 
@@ -339,6 +477,8 @@
 </footer>
 
 <script>
+    const API = "https://viga-c607.onrender.com";
+
     function sincronizarTema() {
         const tema = localStorage.getItem("vigaTema");
         if (tema === "claro") {
@@ -357,6 +497,28 @@
         });
     }
 
+    function obtenerIdUsuario() {
+        const u = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        if (u) {
+            try {
+                const parseado = JSON.parse(u);
+                return parseado.identificacion || parseado.id;
+            } catch (e) {}
+        }
+        return "anonimo";
+    }
+
+    const idUsuario = obtenerIdUsuario();
+
+    function alternarFormularioSoporte() {
+        const caja = document.getElementById("cajaSoporte");
+        caja.style.display = caja.style.display === "block" ? "none" : "block";
+        if (caja.style.display === "block") {
+            caja.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
+    /* HISTORIAL DE COMPRAS */
     function cargarHistorial() {
         const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
         const contenedor = document.getElementById("contenedorHistorial");
@@ -433,17 +595,109 @@
     }
 
     function borrarHistorialCompras() {
-        if (!confirm("¿Deseas vaciar todo tu historial de compras realizadas?")) {
+        if (!confirm("¿Deseas vaciar todo tu historial de compras realizadas?")) return;
+        localStorage.removeItem("viga_historial_compras");
+        cargarHistorial();
+    }
+
+    /* GESTIÓN DE REPORTES DE SOPORTE */
+    async function enviarReporte(e) {
+        e.preventDefault();
+        const btn = document.getElementById("btnEnviarSoporte");
+        btn.disabled = true;
+        btn.textContent = "Enviando queja al soporte...";
+
+        const payload = {
+            identificacion: idUsuario,
+            categoria: document.getElementById("categoriaReporte").value,
+            asunto: document.getElementById("asuntoReporte").value.trim(),
+            descripcion: document.getElementById("descripcionReporte").value.trim()
+        };
+
+        try {
+            const res = await fetch(`${API}/soporte/reporte`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Error guardando el reporte");
+
+            alert("¡Tu reporte ha sido radicado con éxito! Un instructor o asesor de VIGA revisará el caso.");
+            document.getElementById("formSoporte").reset();
+            document.getElementById("cajaSoporte").style.display = "none";
+            cargarReportes();
+
+        } catch (error) {
+            // Guardado de respaldo local
+            const locales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+            locales.push({
+                ...payload,
+                fecha: new Date().toLocaleDateString("es-CO")
+            });
+            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(locales));
+
+            alert("Tu reporte ha sido guardado correctamente.");
+            document.getElementById("formSoporte").reset();
+            document.getElementById("cajaSoporte").style.display = "none";
+            cargarReportes();
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Enviar reporte al soporte técnico";
+        }
+    }
+
+    async function cargarReportes() {
+        const contenedor = document.getElementById("contenedorMisReportes");
+        const titulo = document.getElementById("tituloMisReportes");
+        const contador = document.getElementById("contadorReportes");
+        let lista = [];
+
+        try {
+            const res = await fetch(`${API}/soporte/mis-reportes/${encodeURIComponent(idUsuario)}?t=${Date.now()}`);
+            if (res.ok) {
+                lista = await res.json();
+            }
+        } catch (e) {}
+
+        if (!lista || lista.length === 0) {
+            lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+        }
+
+        contador.textContent = lista.length;
+
+        if (lista.length === 0) {
+            titulo.style.display = "none";
+            contenedor.innerHTML = "";
             return;
         }
 
-        localStorage.removeItem("viga_historial_compras");
-        cargarHistorial();
+        titulo.style.display = "block";
+        contenedor.innerHTML = "";
+
+        lista.forEach(rep => {
+            const card = document.createElement("div");
+            card.className = "pedido-card";
+            card.innerHTML = `
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">${rep.asunto}</div>
+                        <div class="pedido-fecha">📅 ${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
+                    </div>
+                    <span class="estado-badge badge-soporte">En Revisión</span>
+                </div>
+                <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
+                    ${rep.descripcion}
+                </div>
+            `;
+            contenedor.appendChild(card);
+        });
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         sincronizarTema();
         cargarHistorial();
+        cargarReportes();
     });
 </script>
 
