@@ -353,7 +353,6 @@
 <header>
     <a href="inicio.html" class="logo">VIGA</a>
     <div class="header-acciones">
-        <a id="btnModificarRespuestas" class="btn-header">⚙️ Modificar mis respuestas</a>
         <a href="inicio.html" class="btn-header">← Inicio</a>
     </div>
 </header>
@@ -421,8 +420,6 @@
     if (!idUsuario) {
         window.location.href = "login.html";
     }
-
-    document.getElementById("btnModificarRespuestas").href = "rutinas.html?editar=1";
 
     let planEstructurado = [];
 
@@ -505,10 +502,6 @@
             seriesCore = "3 series × 15 reps con peso";
         }
 
-        /* =========================================================
-           BLOQUE ADAPTADO PARA TREN INFERIOR CON DISCAPACIDAD/AMPUTACIÓN
-           (Incluye puente de glúteo, elevación lateral de cadera, extensión de rodilla)
-        ========================================================= */
         function generarDiaPiernaAdaptada(num) {
             return {
                 diaNumero: num,
@@ -582,9 +575,6 @@
             };
         }
 
-        /* =========================================================
-           BLOQUE ADAPTADO TREN SUPERIOR CON AMPUTACIÓN/DIFICULTAD
-        ========================================================= */
         function generarDiaTorsoAdaptado(num) {
             return {
                 diaNumero: num,
@@ -658,9 +648,6 @@
             };
         }
 
-        /* =========================================================
-           BLOQUES ESTÁNDAR (PERSONAS SIN AMPUTACIÓN)
-        ========================================================= */
         function generarDiaEmpuje(num) {
             return {
                 diaNumero: num,
@@ -807,11 +794,7 @@
             };
         }
 
-        /* ---------------------------------------------------------
-           ASIGNACIÓN CONDICIONAL DE DÍAS Y RUTINAS
-        --------------------------------------------------------- */
         if (tieneAmputacionInferior || movilidadDificilInferior) {
-            // Usuario con amputación o dificultad en pierna: alterna días de torso adaptado y tren inferior en suelo/máquina segura
             planEstructurado = [];
             for (let i = 1; i <= numDias; i++) {
                 if (i % 2 === 1) {
@@ -821,7 +804,6 @@
                 }
             }
         } else if (tieneAmputacionSuperior || movilidadDificilSuperior) {
-            // Usuario con falta de brazo o dificultad motriz superior
             planEstructurado = [];
             for (let i = 1; i <= numDias; i++) {
                 if (i % 2 === 1) {
@@ -831,12 +813,11 @@
                 }
             }
         } else {
-            // Usuario sin amputaciones: flujo estándar de empuje, tirón, pierna
             planEstructurado = [];
             const generadores = [
                 () => generarDiaEmpuje(1),
                 () => generarDiaTiron(2),
-                () => generarDiaPiernaAdaptada(3), // Usa variante completa de pierna
+                () => generarDiaPiernaAdaptada(3),
                 () => generarDiaEmpuje(4),
                 () => generarDiaTiron(5),
                 () => generarDiaPiernaAdaptada(6),
