@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Tienda Deportiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #ffffff;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+            --card-fondo: #ffffff;
+            --card-texto: #111111;
+            --badge-fondo: #daf5de;
+            --badge-texto: #12822a;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .acciones-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-header {
+            color: var(--texto);
+            text-decoration: none;
+            font-size: 13px;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 8px 16px;
+            border-radius: 0px;
+            cursor: pointer;
+            transition: .2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-header:hover {
+            color: var(--verde);
+            border-color: var(--verde);
+        }
+
+        .badge-carrito {
+            background: var(--verde);
+            color: #111;
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .hero-tienda {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+        }
+
+        .hero-tienda h1 {
+            font-size: 26px;
+            color: var(--texto);
+        }
+
+        .hero-tienda p {
+            font-size: 13px;
+            color: var(--secundario);
+            margin-top: 4px;
+        }
+
+        .catalogo {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        /* DISEÑO DE TARJETA ORIGINAL */
+        .tarjeta-prod {
+            background: #ffffff;
+            color: #111111;
+            border-radius: 0px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform .2s;
+        }
+
+        .tarjeta-prod:hover {
+            transform: translateY(-4px);
+        }
+
+        .img-prod {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #222222;
+        }
+
+        .info-prod {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .categoria-tag {
+            background: #daf5de;
+            color: #12822a;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 0px;
+            align-self: flex-start;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .nombre-prod {
+            font-size: 18px;
+            color: #111111;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .desc-prod {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .precio-stock {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .precio-txt {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .stock-txt {
+            font-size: 12px;
+            color: #777777;
+            font-weight: 500;
+        }
+
+        .stock-txt.agotado-txt {
+            color: #ff5252;
+            font-weight: 700;
+        }
+
+        .btn-comprar {
+            width: 100%;
+            padding: 14px;
+            background: #37E359;
+            color: #111111;
+            font-weight: 700;
+            border: none;
+            border-radius: 0px;
+            cursor: pointer;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .btn-comprar:hover:not(:disabled) {
+            filter: brightness(1.08);
+        }
+
+        /* BOTÓN AGOTADO SIN ALERTAS */
+        .btn-comprar:disabled,
+        .btn-comprar.btn-agotado {
+            background: #e0e0e0 !important;
+            color: #888888 !important;
+            cursor: not-allowed !important;
+            filter: none !important;
+        }
+
+        @media (max-width: 650px) {
+            header { padding: 0 20px; }
+            .hero-tienda { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="inicio.html" class="logo">VIGA</a>
+    <div class="acciones-header">
+        <a href="checkout.html" class="btn-header">
+             Carrito <span id="contadorCarrito" class="badge-carrito">0</span>
+        </a>
+        <a href="inicio.html" class="btn-header">← Inicio</a>
+    </div>
+</header>
+
+<main>
+    <div class="hero-tienda">
+        <h1>Tienda Oficial VIGA</h1>
+        <p>Implementos, nutrición y accesorios deportivos certificados para tu entrenamiento.</p>
+    </div>
+
+    <div class="catalogo" id="grillaProductos">
+        <p style="color:var(--secundario); text-align:center; grid-column:1/-1;">Cargando catálogo oficial...</p>
+    </div>
+</main>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") document.body.classList.add("claro");
+        else document.body.classList.remove("claro");
+    }
+    sincronizarTema();
+
+    let carrito = JSON.parse(localStorage.getItem("viga_carrito") || "[]");
+    let listaProductosServidor = [];
+
+    function actualizarContador() {
+        const total = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+        document.getElementById("contadorCarrito").textContent = total;
+    }
+
+    async function cargarCatalogo() {
+        try {
+            const res = await fetch(`${API}/productos?t=${Date.now()}`);
+            if (!res.ok) throw new Error("No se pudo cargar la tienda");
+            listaProductosServidor = await res.json();
+
+            renderizarProductos();
+
+        } catch (e) {
+            document.getElementById("grillaProductos").innerHTML = `<p style="grid-column:1/-1; color:#ff5252; text-align:center;">Error al conectar con la tienda.</p>`;
+        }
+    }
+
+    function renderizarProductos() {
+        const grilla = document.getElementById("grillaProductos");
+        grilla.innerHTML = "";
+
+        if (!listaProductosServidor || listaProductosServidor.length === 0) {
+            grilla.innerHTML = `<p style="grid-column:1/-1; color:var(--secundario); text-align:center; padding:50px;">No hay productos disponibles por ahora.</p>`;
+            return;
+        }
+
+        listaProductosServidor.forEach(p => {
+            const stockOriginal = parseInt(p.stock, 10) || 0;
+            const itemEnCarrito = carrito.find(x => x.id === p.id);
+            const unidadesEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+            const unidadesRestantes = Math.max(0, stockOriginal - unidadesEnCarrito);
+            const hayStock = unidadesRestantes > 0;
+
+            const imagen = p.imagen_url 
+                ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
+                : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
+
+            const card = document.createElement("div");
+            card.className = "tarjeta-prod";
+            card.innerHTML = `
+                <img class="img-prod" src="${imagen}" alt="${p.nombre}">
+                <div class="info-prod">
+                    <span class="categoria-tag">${p.categoria || 'OTROS'}</span>
+                    <h3 class="nombre-prod">${p.nombre}</h3>
+                    <p class="desc-prod">${p.descripcion || ''}</p>
+                    <div class="precio-stock">
+                        <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
+                        <span class="stock-txt ${!hayStock ? 'agotado-txt' : ''}" id="stockTxt-${p.id}">
+                            ${hayStock ? `Stock: ${unidadesRestantes}` : 'Agotado'}
+                        </span>
+                    </div>
+                    <button id="btnProd-${p.id}" 
+                            class="btn-comprar ${!hayStock ? 'btn-agotado' : ''}" 
+                            onclick='agregarAlCarrito(${p.id})' 
+                            ${!hayStock ? 'disabled' : ''}>
+                        ${hayStock ? 'Agregar al Carrito' : 'Agotado'}
+                    </button>
+                </div>
+            `;
+            grilla.appendChild(card);
+        });
+    }
+
+    function agregarAlCarrito(idProducto) {
+        const producto = listaProductosServidor.find(p => p.id === idProducto);
+        if (!producto) return;
+
+        const stockOriginal = parseInt(producto.stock, 10) || 0;
+        let itemExistente = carrito.find(x => x.id === idProducto);
+        const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
+
+        if (cantidadActual < stockOriginal) {
+            if (itemExistente) {
+                itemExistente.cantidad += 1;
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: Number(producto.precio),
+                    cantidad: 1,
+                    stock: stockOriginal,
+                    imagen_url: producto.imagen_url
+                });
+            }
+
+            localStorage.setItem("viga_carrito", JSON.stringify(carrito));
+            actualizarContador();
+
+            const nuevasRestantes = stockOriginal - (cantidadActual + 1);
+            const btn = document.getElementById(`btnProd-${idProducto}`);
+            const stockTxt = document.getElementById(`stockTxt-${idProducto}`);
+
+            if (nuevasRestantes <= 0) {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add("btn-agotado");
+                    btn.textContent = "Agotado";
+                }
+                if (stockTxt) {
+                    stockTxt.textContent = "Agotado";
+                    stockTxt.classList.add("agotado-txt");
+                }
+            } else {
+                if (stockTxt) {
+                    stockTxt.textContent = `Stock: ${nuevasRestantes}`;
+                }
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTema();
+        actualizarContador();
+        cargarCatalogo();
+    });
+</script>
+
+</body>
+</html>

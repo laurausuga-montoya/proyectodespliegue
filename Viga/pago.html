@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Confirmación de Cobro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+            --info-bg: #222222;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --info-bg: #f7f7f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        main {
+            width: 90%;
+            max-width: 580px;
+            margin: 40px auto;
+        }
+
+        .tarjeta-pago {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .tarjeta-pago h2 {
+            font-size: 22px;
+            color: var(--verde);
+            margin-bottom: 8px;
+        }
+
+        .sub-txt {
+            font-size: 13px;
+            color: var(--secundario);
+            margin-bottom: 22px;
+        }
+
+        .aviso-descuento {
+            background: var(--info-bg);
+            border-left: 4px solid var(--verde);
+            padding: 16px;
+            margin-bottom: 22px;
+            border-radius: 0px;
+        }
+
+        .aviso-descuento p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--texto);
+        }
+
+        .resumen-filas {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+            border-top: 1px solid var(--borde);
+            border-bottom: 1px solid var(--borde);
+            padding: 16px 0;
+        }
+
+        .fila-dato {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .fila-dato.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--verde);
+            padding-top: 6px;
+        }
+
+        .acciones {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-aceptar {
+            width: 100%;
+            padding: 14px;
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-aceptar:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-aceptar:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .btn-volver {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--secundario);
+            border: 1px solid var(--borde);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-volver:hover {
+            color: var(--texto);
+            border-color: #666;
+        }
+
+        /* PANTALLA ÉXITO */
+        .pantalla-exito {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .icono-check {
+            width: 70px;
+            height: 70px;
+            border-radius: 0%;
+            background: rgba(55, 227, 89, 0.15);
+            border: 2px solid var(--verde);
+            color: var(--verde);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px auto;
+        }
+
+        .pantalla-exito h2 {
+            font-size: 24px;
+            color: var(--texto);
+            margin-bottom: 8px;
+        }
+
+        .pantalla-exito p {
+            font-size: 14px;
+            color: var(--secundario);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="inicio.html" class="logo">VIGA</a>
+</header>
+
+<main>
+    <div class="tarjeta-pago">
+        
+        <!-- BLOQUE DE AUTORIZACIÓN Y DESCUENTO -->
+        <div id="bloqueConfirmacion">
+            <h2>Autorización de Débito</h2>
+            <p class="sub-txt">Confirma los datos para autorizar la transacción.</p>
+
+            <div class="aviso-descuento">
+                <p>
+                    Se procederá a debitar el monto total de tu cuenta <strong id="txtMetodoPago">--</strong> y se descontarán automáticamente las unidades correspondientes del inventario oficial.
+                </p>
+            </div>
+
+            <div class="resumen-filas">
+                <div class="fila-dato">
+                    <span>Cliente:</span>
+                    <strong id="txtNombreCliente">--</strong>
+                </div>
+                <div class="fila-dato">
+                    <span>Ciudad de entrega:</span>
+                    <span id="txtCiudadCliente">--</span>
+                </div>
+                <div class="fila-dato">
+                    <span>Cuenta / Identificador:</span>
+                    <strong id="txtCuentaCliente">--</strong>
+                </div>
+                <div class="fila-dato">
+                    <span>Código de seguridad / CVV:</span>
+                    <span id="txtCVVCliente">••••</span>
+                </div>
+                <div class="fila-dato">
+                    <span>Artículos a recibir:</span>
+                    <span id="txtCantidadItems">0</span>
+                </div>
+                <div class="fila-dato total">
+                    <span>Total a descontar:</span>
+                    <span id="txtTotalDescontar">$0</span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button class="btn-aceptar" id="btnAceptarDebito" onclick="procesarPago()">
+                    Aceptar y descontar
+                </button>
+                <button class="btn-volver" onclick="volverCheckout()">
+                    Volver al Checkout
+                </button>
+            </div>
+        </div>
+
+        <!-- BLOQUE DE PEDIDO ACEPTADO -->
+        <div id="bloqueExito" class="pantalla-exito">
+            <div class="icono-check">✓</div>
+            <h2>¡Pago Aceptado con Éxito!</h2>
+            <p>
+                El débito fue confirmado y las unidades han sido descontadas del stock. Tu pedido está en preparación para ser despachado.
+            </p>
+            <button class="btn-aceptar" onclick="irATienda()">
+                Volver a la Tienda
+            </button>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") document.body.classList.add("claro");
+        else document.body.classList.remove("claro");
+    }
+    sincronizarTema();
+
+    const orden = JSON.parse(localStorage.getItem("viga_orden_temporal") || "null");
+
+    function cargarDatos() {
+        if (!orden || !orden.articulos || orden.articulos.length === 0) {
+            window.location.replace("tienda.html");
+            return;
+        }
+
+        const total = orden.articulos.reduce((acc, i) => acc + (i.precio * i.cantidad), 0);
+        const cantArticulos = orden.articulos.reduce((acc, i) => acc + i.cantidad, 0);
+        const detalles = orden.detalles_pago || {};
+
+        document.getElementById("txtMetodoPago").textContent = detalles.banco || orden.metodo_pago;
+        document.getElementById("txtNombreCliente").textContent = orden.cliente.nombre || "Cliente VIGA";
+        document.getElementById("txtCiudadCliente").textContent = orden.cliente.ciudad || "Colombia";
+        document.getElementById("txtCuentaCliente").textContent = detalles.cuenta ? `•••• ${detalles.cuenta.slice(-4)}` : "Cuenta Verificada";
+        document.getElementById("txtCVVCliente").textContent = detalles.cvv ? `•••• (${detalles.cvv.length} dígitos validados)` : "Validado";
+        document.getElementById("txtCantidadItems").textContent = `${cantArticulos} unidad(es)`;
+        document.getElementById("txtTotalDescontar").textContent = `$${total.toLocaleString('es-CO')}`;
+    }
+
+    async function procesarPago() {
+        const btn = document.getElementById("btnAceptarDebito");
+        btn.disabled = true;
+        btn.textContent = "Procesando débito...";
+
+        const payload = {
+            articulos: orden.articulos,
+            cliente: orden.cliente,
+            metodo_pago: `${orden.metodo_pago} (${orden.detalles_pago?.banco || 'Directo'})`
+        };
+
+        try {
+            const res = await fetch(`${API}/compras/procesar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("No se pudo procesar la compra.");
+
+            // Limpiar carritos de la sesión
+            localStorage.removeItem("viga_carrito");
+            localStorage.removeItem("viga_orden_temporal");
+
+            // Mostrar vista de éxito
+            document.getElementById("bloqueConfirmacion").style.display = "none";
+            document.getElementById("bloqueExito").style.display = "block";
+
+        } catch (error) {
+            alert("Ocurrió un error al procesar el débito. Intenta de nuevo.");
+            btn.disabled = false;
+            btn.textContent = "Aceptar y descontar";
+        }
+    }
+
+    function volverCheckout() {
+        window.location.href = "checkout.html";
+    }
+
+    function irATienda() {
+        window.location.href = "tienda.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        sincronizarTema();
+        cargarDatos();
+    });
+</script>
+
+</body>
+</html>

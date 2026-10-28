@@ -171,7 +171,7 @@
 
             height: 46px;
 
-            border-radius: 50%;
+            border-radius: 0%;
 
             background: #37E359;
 
@@ -262,7 +262,7 @@
 
             margin-bottom: 8px;
 
-            border-radius: 10px;
+            border-radius: 0px;
 
             font-size: 15px;
 
@@ -356,7 +356,7 @@
             border:
                 1px solid #292929;
 
-            border-radius: 18px;
+            border-radius: 0px;
 
             padding: 30px;
 
@@ -437,7 +437,7 @@
 
             padding: 13px 20px;
 
-            border-radius: 10px;
+            border-radius: 0px;
 
             font-weight: 600;
 
@@ -772,14 +772,14 @@
 
         <a href="reportes.html">
 
-            📊 Reportes
+             Reportes
 
         </a>
 
 
         <a href="configuracion.html">
 
-            ⚙️ Configuraciones
+             Configuraciones
 
         </a>
 
@@ -789,7 +789,7 @@
             onclick="irAlPerfil(); return false;"
         >
 
-            👤 Mi cuenta
+             Mi cuenta
 
         </a>
 
@@ -799,7 +799,7 @@
             onclick="cerrarSesion()"
         >
 
-            🚪 Cerrar sesión
+             Cerrar sesión
 
         </a>
 
@@ -869,7 +869,7 @@
 
                     <div class="icono-tarjeta">
 
-                        🏋️
+                        
 
                     </div>
 
@@ -916,7 +916,7 @@
 
                     <div class="icono-tarjeta">
 
-                        🥗
+                        
 
                     </div>
 
@@ -962,7 +962,7 @@
 
                     <div class="icono-tarjeta">
 
-                        🛒
+                        
 
                     </div>
 
@@ -1008,510 +1008,204 @@
     <!-- =================================
          JAVASCRIPT
     ================================== -->
+<script>
+    const API = "https://viga-c607.onrender.com";
 
-    <script>
+    /* =================================
+       OBTENER IDENTIFICACIÓN
+    ================================== */
+    function obtenerIdentificacion() {
+        const parametros = new URLSearchParams(window.location.search);
+        let identificacion = parametros.get("id");
 
+        /*
+            Si no existe en la URL,
+            buscamos la sesión.
+        */
+        if (!identificacion) {
+            const usuarioGuardado = localStorage.getItem("usuario");
 
-        const API =
-            "https://viga-c607.onrender.com";
+            if (usuarioGuardado) {
+                try {
+                    const usuario = JSON.parse(usuarioGuardado);
+                    identificacion = usuario.identificacion;
+                } catch (error) {
+                    console.error("Error leyendo usuario:", error);
+                }
+            }
+        }
 
+        return identificacion;
+    }
 
+    /* =================================
+       IR AL PERFIL
+    ================================== */
+    function irAlPerfil() {
+        const identificacion = obtenerIdentificacion();
 
-        /* =================================
-           OBTENER IDENTIFICACIÓN
-        ================================== */
+        if (!identificacion) {
+            alert("No se pudo identificar al usuario.");
+            return;
+        }
 
-        function obtenerIdentificacion() {
+        window.location.href = "perfil.html?id=" + encodeURIComponent(identificacion);
+    }
 
+    /* =================================
+       CARGAR USUARIO
+    ================================== */
+    async function cargarUsuario() {
+        const identificacion = obtenerIdentificacion();
 
-            const parametros =
-                new URLSearchParams(
-                    window.location.search
-                );
+        if (!identificacion) {
+            console.log("No existe una identificación.");
+            return;
+        }
 
+        try {
+            const respuesta = await fetch(API + "/usuario/" + encodeURIComponent(identificacion));
+            const usuario = await respuesta.json();
 
-            let identificacion =
-                parametros.get("id");
+            if (!respuesta.ok) {
+                throw new Error(usuario.mensaje || usuario.error || "Usuario no encontrado.");
+            }
 
+            /* ==========================
+               TEMA
+            ========================== */
+            if (usuario.tema) {
+                if (window.vigaAplicarTema) {
+                    window.vigaAplicarTema(usuario.tema);
+                } else {
+                    localStorage.setItem("vigaTema", usuario.tema === "claro" ? "claro" : "oscuro");
+                }
+            }
+
+            /* ==========================
+               NOMBRE
+            ========================== */
+            const nombre = usuario.nombres || "Usuario";
+
+            const elNombreUsuario = document.getElementById("nombreUsuario");
+            if (elNombreUsuario) elNombreUsuario.textContent = nombre;
+
+            const elNombreBienvenida = document.getElementById("nombreBienvenida");
+            if (elNombreBienvenida) elNombreBienvenida.textContent = nombre;
+
+            /* ==========================
+               ICONO
+            ========================== */
+            const avatar = document.getElementById("avatar");
+            if (avatar) {
+                if (usuario.icono) {
+                    avatar.textContent = usuario.icono;
+                } else {
+                    avatar.textContent = nombre.charAt(0).toUpperCase();
+                }
+            }
+
+            /* ==========================
+               GUARDAR SESIÓN
+            ========================== */
+            localStorage.setItem("usuario", JSON.stringify(usuario));
+
+            /* ==========================
+               ENLACES
+            ========================== */
+            const btnRutinas = document.getElementById("btnRutinas");
+            if (btnRutinas) {
+                btnRutinas.href = "rutinas.html?id=" + encodeURIComponent(identificacion);
+            }
+
+            const btnAlimentacion = document.getElementById("btnAlimentacion");
+            if (btnAlimentacion) {
+                btnAlimentacion.href = "alimentacion.html?id=" + encodeURIComponent(identificacion);
+            }
+
+            const btnTienda = document.getElementById("btnTienda");
+            if (btnTienda) {
+                btnTienda.href = "tienda.html?id=" + encodeURIComponent(identificacion);
+            }
+
+        } catch (error) {
+            console.error("❌ Error cargando usuario:", error);
 
             /*
-                Si no existe en la URL,
-                buscamos la sesión.
+                Si ya tenemos datos guardados,
+                mostramos esos datos mientras
+                el servidor está disponible.
             */
+            const usuarioGuardado = localStorage.getItem("usuario");
 
-            if (!identificacion) {
+            if (usuarioGuardado) {
+                try {
+                    const usuario = JSON.parse(usuarioGuardado);
 
-
-                const usuarioGuardado =
-                    localStorage.getItem(
-                        "usuario"
-                    );
-
-
-                if (usuarioGuardado) {
-
-
-                    try {
-
-
-                        const usuario =
-                            JSON.parse(
-                                usuarioGuardado
-                            );
-
-
-                        identificacion =
-                            usuario.identificacion;
-
-
-                    } catch (error) {
-
-
-                        console.error(
-                            "Error leyendo usuario:",
-                            error
-                        );
-
-
+                    /* ======================
+                       APLICAR TEMA GUARDADO
+                    ====================== */
+                    if (usuario.tema && window.vigaAplicarTema) {
+                        window.vigaAplicarTema(usuario.tema);
                     }
 
-                }
+                    const nombre = usuario.nombres || "Usuario";
 
-            }
+                    const elNombreUsuario = document.getElementById("nombreUsuario");
+                    if (elNombreUsuario) elNombreUsuario.textContent = nombre;
 
+                    const elNombreBienvenida = document.getElementById("nombreBienvenida");
+                    if (elNombreBienvenida) elNombreBienvenida.textContent = nombre;
 
-            return identificacion;
-
-        }
-
-
-
-        /* =================================
-           IR AL PERFIL
-        ================================== */
-
-        function irAlPerfil() {
-
-
-            const identificacion =
-                obtenerIdentificacion();
-
-
-            if (!identificacion) {
-
-
-                alert(
-                    "No se pudo identificar al usuario."
-                );
-
-
-                return;
-
-            }
-
-
-            window.location.href =
-
-                "perfil.html?id=" +
-                encodeURIComponent(
-                    identificacion
-                );
-
-        }
-
-
-
-        /* =================================
-           CARGAR USUARIO
-        ================================== */
-
-        async function cargarUsuario() {
-
-
-            const identificacion =
-                obtenerIdentificacion();
-
-
-            if (!identificacion) {
-
-
-                console.log(
-                    "No existe una identificación."
-                );
-
-
-                return;
-
-            }
-
-
-            try {
-
-
-                const respuesta =
-                    await fetch(
-
-                        API +
-                        "/usuario/" +
-                        encodeURIComponent(
-                            identificacion
-                        )
-
-                    );
-
-
-                const usuario =
-                    await respuesta.json();
-
-
-                if (!respuesta.ok) {
-
-
-                    throw new Error(
-
-                        usuario.mensaje ||
-                        usuario.error ||
-                        "Usuario no encontrado."
-
-                    );
-
-                }
-
-
-                /* ==========================
-                   TEMA
-                ========================== */
-
-                if (usuario.tema) {
-
-                    if (
-                        window.vigaAplicarTema
-                    ) {
-
-                        window.vigaAplicarTema(
-                            usuario.tema
-                        );
-
-                    } else {
-
-                        localStorage.setItem(
-
-                            "vigaTema",
-
-                            usuario.tema === "claro"
-                                ? "claro"
-                                : "oscuro"
-
-                        );
-
+                    const avatar = document.getElementById("avatar");
+                    if (avatar && usuario.icono) {
+                        avatar.textContent = usuario.icono;
                     }
 
+                } catch (e) {
+                    console.error(e);
                 }
-
-
-
-                /* ==========================
-                   NOMBRE
-                ========================== */
-
-                const nombre =
-                    usuario.nombres ||
-                    "Usuario";
-
-
-                document
-                    .getElementById(
-                        "nombreUsuario"
-                    )
-                    .textContent =
-                    nombre;
-
-
-                document
-                    .getElementById(
-                        "nombreBienvenida"
-                    )
-                    .textContent =
-                    nombre;
-
-
-
-                /* ==========================
-                   ICONO
-                ========================== */
-
-                const avatar =
-                    document.getElementById(
-                        "avatar"
-                    );
-
-
-                if (usuario.icono) {
-
-
-                    avatar.textContent =
-                        usuario.icono;
-
-
-                } else {
-
-
-                    avatar.textContent =
-
-                        nombre
-                            .charAt(0)
-                            .toUpperCase();
-
-                }
-
-
-
-                /* ==========================
-                   GUARDAR SESIÓN
-                ========================== */
-
-                localStorage.setItem(
-
-                    "usuario",
-
-                    JSON.stringify(
-                        usuario
-                    )
-
-                );
-
-
-
-                /* ==========================
-                   ENLACES
-                ========================== */
-
-                document
-                    .getElementById(
-                        "btnRutinas"
-                    )
-                    .href =
-
-                    "rutinas.html?id=" +
-                    encodeURIComponent(
-                        identificacion
-                    );
-
-
-                document
-                    .getElementById(
-                        "btnAlimentacion"
-                    )
-                    .href =
-
-                    "alimentacion.html?id=" +
-                    encodeURIComponent(
-                        identificacion
-                    );
-
-
-                document
-                    .getElementById(
-                        "btnTienda"
-                    )
-                    .href =
-
-                    "tienda.html?id=" +
-                    encodeURIComponent(
-                        identificacion
-                    );
-
-
-            } catch (error) {
-
-
-                console.error(
-                    "❌ Error cargando usuario:",
-                    error
-                );
-
-
-                /*
-                    Si ya tenemos datos guardados,
-                    mostramos esos datos mientras
-                    el servidor está disponible.
-                */
-
-                const usuarioGuardado =
-                    localStorage.getItem(
-                        "usuario"
-                    );
-
-
-                if (usuarioGuardado) {
-
-
-                    try {
-
-
-                        const usuario =
-                            JSON.parse(
-                                usuarioGuardado
-                            );
-
-
-                        /* ======================
-                           APLICAR TEMA GUARDADO
-                        ====================== */
-
-                        if (
-                            usuario.tema &&
-                            window.vigaAplicarTema
-                        ) {
-
-                            window.vigaAplicarTema(
-                                usuario.tema
-                            );
-
-                        }
-
-
-
-                        const nombre =
-                            usuario.nombres ||
-                            "Usuario";
-
-
-                        document
-                            .getElementById(
-                                "nombreUsuario"
-                            )
-                            .textContent =
-                            nombre;
-
-
-                        document
-                            .getElementById(
-                                "nombreBienvenida"
-                            )
-                            .textContent =
-                            nombre;
-
-
-                        if (
-                            usuario.icono
-                        ) {
-
-
-                            document
-                                .getElementById(
-                                    "avatar"
-                                )
-                                .textContent =
-                                usuario.icono;
-
-                        }
-
-
-                    } catch (e) {
-
-
-                        console.error(e);
-
-                    }
-
-                }
-
             }
-
         }
+    }
 
+    /* =================================
+       ABRIR MENU
+    ================================== */
+    function abrirMenu() {
+        const menu = document.getElementById("menu");
+        const fondoMenu = document.getElementById("fondoMenu");
 
+        if (menu) menu.classList.add("activo");
+        if (fondoMenu) fondoMenu.classList.add("activo");
+    }
 
-        /* =================================
-           ABRIR MENU
-        ================================== */
+    /* =================================
+       CERRAR MENU
+    ================================== */
+    function cerrarMenu() {
+        const menu = document.getElementById("menu");
+        const fondoMenu = document.getElementById("fondoMenu");
 
-        function abrirMenu() {
+        if (menu) menu.classList.remove("activo");
+        if (fondoMenu) fondoMenu.classList.remove("activo");
+    }
 
+    /* =================================
+       CERRAR SESIÓN
+    ================================== */
+    function cerrarSesion() {
+        localStorage.removeItem("usuario");
+        window.location.href = "index.html";
+    }
 
-            document
-                .getElementById(
-                    "menu"
-                )
-                .classList.add(
-                    "activo"
-                );
-
-
-            document
-                .getElementById(
-                    "fondoMenu"
-                )
-                .classList.add(
-                    "activo"
-                );
-
-        }
-
-
-
-        /* =================================
-           CERRAR MENU
-        ================================== */
-
-        function cerrarMenu() {
-
-
-            document
-                .getElementById(
-                    "menu"
-                )
-                .classList.remove(
-                    "activo"
-                );
-
-
-            document
-                .getElementById(
-                    "fondoMenu"
-                )
-                .classList.remove(
-                    "activo"
-                );
-
-        }
-
-
-
-        /* =================================
-           CERRAR SESIÓN
-        ================================== */
-
-        function cerrarSesion() {
-
-
-            localStorage.removeItem(
-                "usuario"
-            );
-
-        }
-
-
-
-        /* =================================
-           INICIAR
-        ================================== */
-
-        document.addEventListener(
-
-            "DOMContentLoaded",
-
-            function() {
-
-                cargarUsuario();
-
-            }
-
-        );
-
-
-    </script>
+    /* =================================
+       INICIAR
+    ================================== */
+    document.addEventListener("DOMContentLoaded", function() {
+        cargarUsuario();
+    });
+</script>
 
 
 </body>

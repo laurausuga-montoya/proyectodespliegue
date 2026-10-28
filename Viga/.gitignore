@@ -1,2 +1,5 @@
-Viga/.env
-Viga/node_modules/
+.env
+node_modules/
+package-lock.json
+ *.zip
+*.rar
