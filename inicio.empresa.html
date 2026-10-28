@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VIGA | Panel empresarial</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --panel2: #252525;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .barra {
+            height: 76px;
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 29px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .etiqueta {
+            color: var(--secundario);
+            font-size: 12px;
+        }
+
+        .empresa-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 0%;
+            background: #263b2b;
+            color: var(--verde);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 235px minmax(0, 1fr);
+            min-height: calc(100vh - 76px);
+        }
+
+        aside {
+            padding: 25px 16px;
+            background: var(--panel);
+            border-right: 1px solid var(--borde);
+        }
+
+        .menu-titulo {
+            color: var(--secundario);
+            font-size: 11px;
+            margin: 12px 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu {
+            display: grid;
+            gap: 7px;
+        }
+
+        .menu button {
+            width: 100%;
+            text-align: left;
+            border: 0;
+            border-radius: 0px;
+            padding: 13px 12px;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .menu button:hover,
+        .menu button.activo {
+            background: #263b2b;
+            color: var(--verde);
+        }
+
+        .salir {
+            margin-top: 35px;
+            color: #ff9292 !important;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1500px;
+            padding: 35px;
+            min-width: 0;
+            margin: auto;
+        }
+
+        .seccion {
+            display: none;
+        }
+
+        .seccion.activa {
+            display: block;
+        }
+
+        .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-size: clamp(23px, 3vw, 32px);
+            margin-bottom: 7px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .muted {
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .verde {
+            color: var(--verde);
+        }
+
+        .boton {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 17px;
+            border: 1px solid transparent;
+            border-radius: 0px;
+            background: var(--verde);
+            color: #102014;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .boton:hover {
+            filter: brightness(1.08);
+        }
+
+        .boton:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .boton-secundario {
+            color: var(--texto);
+            background: var(--panel2);
+            border-color: var(--borde);
+        }
+
+        .boton-peligro {
+            color: #ff9292;
+            background: transparent;
+            border-color: #633636;
+        }
+
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .tarjeta {
+            padding: 23px;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            min-width: 0;
+        }
+
+        .estadistica-numero {
+            font-size: 30px;
+            font-weight: 700;
+            margin: 12px 0 4px;
+        }
+
+        .icono-tarjeta {
+            font-size: 23px;
+        }
+
+        .bienvenida {
+            padding: 27px;
+            border-radius: 0px;
+            border: 1px solid #2d5035;
+            background: linear-gradient(110deg, #1b1b1b, #203326);
+            margin-bottom: 28px;
+        }
+
+        .bienvenida p {
+            color: #c7d0c9;
+            font-size: 13px;
+            line-height: 1.8;
+            max-width: 650px;
+        }
+
+        .bienvenida h2 {
+            margin: 10px 0;
+        }
+
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            background: var(--panel);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--borde);
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--secundario);
+            font-weight: 500;
+            background: #202020;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .producto-nombre {
+            font-weight: 600;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 0px;
+            background: #263b2b;
+            color: var(--verde);
+            font-size: 11px;
+        }
+
+        .estado-agotado {
+            background: #3c2929;
+            color: #ff9292;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .acciones button {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        .campo input,
+        .campo textarea,
+        .campo select {
+            width: 100%;
+            background: #121212;
+            color: var(--texto);
+            border: 1px solid #414141;
+            padding: 12px;
+            border-radius: 0px;
+            outline: none;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus,
+        .campo select:focus {
+            border-color: var(--verde);
+        }
+
+        .campo textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .campo input[type="file"] {
+            padding: 10px;
+        }
+
+        .previsualizacion {
+            display: none;
+            width: 130px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 0px;
+            border: 1px solid var(--borde);
+        }
+
+        .form-acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+
+        .mensaje {
+            margin: 15px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .mensaje.error {
+            color: #ff9292;
+        }
+
+        .mensaje.correcto {
+            color: var(--verde);
+        }
+
+        .vacio {
+            padding: 35px;
+            text-align: center;
+            color: var(--secundario);
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 190px minmax(0, 1fr);
+            }
+
+            main {
+                padding: 24px 18px;
+            }
+
+            .estadisticas {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .barra {
+                height: auto;
+                min-height: 70px;
+                padding: 13px 17px;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            aside {
+                border-right: 0;
+                border-bottom: 1px solid var(--borde);
+                padding: 12px;
+            }
+
+            .menu {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .menu button {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .menu-titulo {
+                display: none;
+            }
+
+            .salir {
+                margin-top: 5px;
+            }
+
+            main {
+                padding: 23px 14px;
+            }
+
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+
+            .campo.completo,
+            .form-acciones {
+                grid-column: auto;
+            }
+
+            .etiqueta {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="barra">
+    <div>
+        <div class="logo">VIGA</div>
+        <div class="etiqueta">PORTAL EMPRESARIAL</div>
+    </div>
+
+    <div class="empresa-mini">
+        <div>
+            <strong id="nombreEmpresaBarra">Mi empresa</strong>
+            <div class="etiqueta">Cuenta empresarial</div>
+        </div>
+        <div class="avatar" id="avatarEmpresa">E</div>
+    </div>
+</header>
+
+<div class="layout">
+
+    <aside>
+        <p class="menu-titulo">Zona empresarial</p>
+
+        <nav class="menu">
+            <button class="activo" data-seccion="resumen">Resumen</button>
+            <button data-seccion="productos">Mi tienda</button>
+            <button data-seccion="nuevo">Agregar producto</button>
+            <button data-seccion="perfil">Mi empresa</button>
+            <button class="salir" id="btnCerrarSesion">Cerrar sesión</button>
+        </nav>
+    </aside>
+
+    <main>
+
+        <!-- RESUMEN -->
+        <section class="seccion activa" id="resumen">
+            <div class="encabezado">
+                <div>
+                    <h1>¡Bienvenido a tu <span class="verde">tienda!</span></h1>
+                    <p class="muted">
+                        Administra tus implementos deportivos desde un solo lugar.
+                    </p>
+                </div>
+
+                <button class="boton" data-ir="nuevo">Nuevo producto</button>
+            </div>
+
+            <div class="bienvenida">
+                <span class="verde">PORTAL DE EMPRESAS VIGA</span>
+                <h2 id="saludoEmpresa">Gestiona tu negocio</h2>
+                <p>
+                    Publica tus productos, mantén actualizado el inventario
+                    y edita la información de tu catálogo. Los productos
+                    deben pertenecer a tu cuenta empresarial.
+                </p>
+            </div>
+
+            <div class="estadisticas">
+                <div class="tarjeta">
+                    <span class="icono-tarjeta"></span>
+                    <p class="muted">Productos registrados</p>
+                    <div class="estadistica-numero" id="totalProductos">—</div>
+                    <p class="muted">En tu catálogo</p>
+                </div>
+
+                <div class="tarjeta">
+                    <span class="icono-tarjeta"></span>
+                    <p class="muted">Con existencias</p>
+                    <div class="estadistica-numero" id="productosDisponibles">—</div>
+                    <p class="muted">Productos con stock</p>
+                </div>
+
+                <div class="tarjeta">
+                    <span class="icono-tarjeta"></span>
+                    <p class="muted">Agotados</p>
+                    <div class="estadistica-numero" id="productosAgotados">—</div>
+                    <p class="muted">Sin unidades disponibles</p>
+                </div>
+            </div>
+
+            <div class="encabezado">
+                <div>
+                    <h2>Productos recientes</h2>
+                    <p class="muted">Los últimos productos de tu catálogo.</p>
+                </div>
+                <button class="boton boton-secundario" data-ir="productos">
+                    Ver mi tienda
+                </button>
+            </div>
+
+            <div id="recientes">
+                <div class="vacio">Conecta tu cuenta empresarial para cargar tus productos.</div>
+            </div>
+        </section>
+
+        <!-- TIENDA -->
+        <section class="seccion" id="productos">
+            <div class="encabezado">
+                <div>
+                    <h1>Mi tienda</h1>
+                    <p class="muted">
+                        Consulta y administra los productos de tu empresa.
+                    </p>
+                </div>
+                <button class="boton" data-ir="nuevo">Agregar producto</button>
+            </div>
+
+            <div id="tablaProductos">
+                <div class="vacio">Los productos aparecerán cuando se conecte el backend.</div>
+            </div>
+        </section>
+
+        <!-- AGREGAR / EDITAR PRODUCTO -->
+        <section class="seccion" id="nuevo">
+            <div class="encabezado">
+                <div>
+                    <h1 id="tituloFormulario">Agregar producto</h1>
+                    <p class="muted">
+                        Completa los datos del implemento que deseas publicar.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <form id="productoForm" class="formulario">
+
+                    <input type="hidden" id="productoId">
+
+                    <div class="campo">
+                        <label for="nombreProducto">Nombre del producto *</label>
+                        <input id="nombreProducto" maxlength="150"
+                               placeholder="Ej. Mancuernas ajustables" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="categoria">Categoría *</label>
+                        <select id="categoria" required>
+                            <option value="">Selecciona una categoría</option>
+                            <option value="Pesas y mancuernas">Pesas y mancuernas</option>
+                            <option value="Máquinas">Máquinas de ejercicio</option>
+                            <option value="Accesorios">Accesorios deportivos</option>
+                            <option value="Ropa deportiva">Ropa deportiva</option>
+                            <option value="Protección">Protección deportiva</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="descripcion">Descripción *</label>
+                        <textarea id="descripcion" maxlength="2000"
+                                  placeholder="Describe las características del producto..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="campo">
+                        <label for="precio">Precio en pesos colombianos (COP) </label>
+                        <input id="precio" type="number" min="1" step="1"
+                               placeholder="Ej. 150000" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="stock">Unidades disponibles </label>
+                        <input id="stock" type="number" min="0" step="1"
+                               placeholder="Ej. 20" required>
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="imagen">Imagen del producto</label>
+                        <input id="imagen" type="file"
+                               accept="image/jpeg,image/png,image/webp">
+                        <img id="vistaImagen" class="previsualizacion" alt="Vista previa del producto">
+                        <p class="nota">
+                            Selecciona una imagen JPG, PNG o WebP de máximo 3 MB.
+                        </p>
+                    </div>
+
+                    <div class="form-acciones">
+                        <button class="boton" id="btnGuardarProducto" type="submit">
+                            Guardar producto
+                        </button>
+                        <button class="boton boton-secundario" type="button"
+                                id="btnCancelarEdicion">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+
+                <p id="mensajeProducto" class="mensaje" role="status"></p>
+            </div>
+        </section>
+
+        <!-- MI EMPRESA: HISTORIAL DE VENTAS Y PRODUCTOS COMPRADOS -->
+        <section class="seccion" id="perfil">
+            <div class="encabezado">
+                <div>
+                    <h1>Historial de ventas</h1>
+                    <p class="muted">
+                        Consulta el registro de productos que te han comprado tus clientes.
+                    </p>
+                </div>
+                <button class="boton boton-secundario" onclick="cargarVentasEmpresa()">
+                    Actualizar ventas
+                </button>
+            </div>
+
+            <!-- RESUMEN DE VENTAS -->
+            <div class="estadisticas">
+                <div class="tarjeta">
+                    <p class="muted">Ingresos generados</p>
+                    <div class="estadistica-numero verde" id="ventasDineroTotal">$ 0</div>
+                    <p class="muted">Total dinero recibido</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Unidades vendidas</p>
+                    <div class="estadistica-numero verde" id="ventasUnidadesTotal">0</div>
+                    <p class="muted">Implementos entregados</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Pedidos recibidos</p>
+                    <div class="estadistica-numero verde" id="ventasPedidosTotal">0</div>
+                    <p class="muted">Compras registradas</p>
+                </div>
+            </div>
+
+            <!-- TABLA DE VENTAS -->
+            <div id="contenedorTablaVentas">
+                <div class="vacio">Cargando historial de compras recibidas...</div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+
+    const empresaGuardada = localStorage.getItem("empresaLogueada");
+
+    let empresa = null;
+    let productos = [];
+    let imagenSeleccionada = null;
+
+    const $ = id => document.getElementById(id);
+
+    function mostrarMensaje(texto, tipo = "") {
+        $("mensajeProducto").textContent = texto;
+        $("mensajeProducto").className = "mensaje " + tipo;
+    }
+
+    function escapar(texto) {
+        return String(texto ?? "").replace(/[&<>"']/g, caracter => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[caracter]);
+    }
+
+    function dinero(valor) {
+        return Number(valor || 0).toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0
+        });
+    }
+
+    function abrirSeccion(nombre) {
+        document.querySelectorAll(".seccion").forEach(seccion => {
+            seccion.classList.toggle("activa", seccion.id === nombre);
+        });
+
+        document.querySelectorAll("[data-seccion]").forEach(boton => {
+            boton.classList.toggle(
+                "activo",
+                boton.dataset.seccion === nombre
+            );
+        });
+
+        if (nombre === "productos" || nombre === "resumen") {
+            cargarProductos();
+        }
+
+        if (nombre === "perfil") {
+            cargarVentasEmpresa();
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-seccion]").forEach(boton => {
+        boton.addEventListener("click", () => {
+            abrirSeccion(boton.dataset.seccion);
+        });
+    });
+
+    document.querySelectorAll("[data-ir]").forEach(boton => {
+        boton.addEventListener("click", () => {
+            if (boton.dataset.ir === "nuevo") {
+                limpiarFormulario();
+            }
+            abrirSeccion(boton.dataset.ir);
+        });
+    });
+
+    function limpiarFormulario() {
+        $("productoForm").reset();
+        $("productoId").value = "";
+        $("tituloFormulario").textContent = "Agregar producto";
+        $("btnGuardarProducto").textContent = "Guardar producto";
+        $("vistaImagen").style.display = "none";
+        $("vistaImagen").src = "";
+        imagenSeleccionada = null;
+        mostrarMensaje("");
+    }
+
+    $("btnCancelarEdicion").addEventListener("click", () => {
+        limpiarFormulario();
+        abrirSeccion("productos");
+    });
+
+    $("imagen").addEventListener("change", event => {
+        const archivo = event.target.files[0];
+        imagenSeleccionada = null;
+
+        if (!archivo) {
+            $("vistaImagen").style.display = "none";
+            return;
+        }
+
+        const tiposPermitidos = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        if (!tiposPermitidos.includes(archivo.type)) {
+            event.target.value = "";
+            mostrarMensaje("Selecciona una imagen JPG, PNG o WebP.", "error");
+            return;
+        }
+
+        if (archivo.size > 3 * 1024 * 1024) {
+            event.target.value = "";
+            mostrarMensaje("La imagen no puede superar los 3 MB.", "error");
+            return;
+        }
+
+        const lector = new FileReader();
+
+        lector.onload = () => {
+            imagenSeleccionada = lector.result;
+            $("vistaImagen").src = lector.result;
+            $("vistaImagen").style.display = "block";
+        };
+
+        lector.readAsDataURL(archivo);
+    });
+
+    async function peticion(ruta, opciones = {}) {
+        const respuesta = await fetch(API + ruta, {
+            ...opciones,
+            headers: {
+                ...(opciones.body instanceof FormData
+                    ? {}
+                    : { "Content-Type": "application/json" }),
+                ...(opciones.headers || {})
+            }
+        });
+
+        const datos = await respuesta.json().catch(() => ({}));
+
+        if (!respuesta.ok) {
+            throw new Error(datos.error || "No se pudo completar la solicitud.");
+        }
+
+        return datos;
+    }
+
+    async function cargarProductos() {
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+
+        try {
+            const datos = await peticion(
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos"
+            );
+
+            productos = Array.isArray(datos) ? datos : (datos.productos || []);
+            renderizarProductos();
+
+        } catch (error) {
+            $("tablaProductos").innerHTML =
+                '<div class="vacio">' + escapar(error.message) + '</div>';
+
+            $("recientes").innerHTML =
+                '<div class="vacio">No fue posible cargar el catálogo.</div>';
+        }
+    }
+
+    function renderizarProductos() {
+        const total = productos.length;
+        const disponibles = productos.filter(p => Number(p.stock) > 0).length;
+        const agotados = productos.filter(p => Number(p.stock) <= 0).length;
+
+        $("totalProductos").textContent = total;
+        $("productosDisponibles").textContent = disponibles;
+        $("productosAgotados").textContent = agotados;
+
+        if (total === 0) {
+            $("tablaProductos").innerHTML =
+                '<div class="vacio">Aún no tienes productos. Agrega el primero para comenzar.</div>';
+
+            $("recientes").innerHTML =
+                '<div class="vacio">Tu catálogo está vacío.</div>';
+            return;
+        }
+
+        const filas = lista => lista.map(p => {
+            const id = escapar(p.id);
+            const nombre = escapar(p.nombre);
+            const stock = Number(p.stock || 0);
+            const estado = stock > 0
+                ? '<span class="estado">Disponible</span>'
+                : '<span class="estado estado-agotado">Agotado</span>';
+
+            return `
+                <tr>
+                    <td class="producto-nombre">${nombre}</td>
+                    <td>${escapar(p.categoria || "Sin categoría")}</td>
+                    <td>${dinero(p.precio)}</td>
+                    <td>${stock}</td>
+                    <td>${estado}</td>
+                    <td>
+                        <div class="acciones">
+                            <button class="boton boton-secundario"
+                                data-editar="${id}">Editar</button>
+                            <button class="boton boton-peligro"
+                                data-eliminar="${id}">Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+
+        $("tablaProductos").innerHTML = `
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>${filas(productos)}</tbody>
+                </table>
+            </div>
+        `;
+
+        $("recientes").innerHTML = `
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productos.slice(0, 5).map(p => `
+                            <tr>
+                                <td>${escapar(p.nombre)}</td>
+                                <td>${dinero(p.precio)}</td>
+                                <td>${Number(p.stock || 0)}</td>
+                                <td>
+                                    <button class="boton boton-secundario"
+                                        data-editar="${escapar(p.id)}">Editar</button>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        document.querySelectorAll("[data-editar]").forEach(boton => {
+            boton.addEventListener("click", () => {
+                editarProducto(boton.dataset.editar);
+            });
+        });
+
+        document.querySelectorAll("[data-eliminar]").forEach(boton => {
+            boton.addEventListener("click", () => {
+                eliminarProducto(boton.dataset.eliminar);
+            });
+        });
+    }
+
+    function editarProducto(id) {
+        const producto = productos.find(p => String(p.id) === String(id));
+        if (!producto) return;
+
+        limpiarFormulario();
+
+        $("productoId").value = producto.id;
+        $("nombreProducto").value = producto.nombre || "";
+        $("categoria").value = producto.categoria || "";
+        $("descripcion").value = producto.descripcion || "";
+        $("precio").value = producto.precio || "";
+        $("stock").value = producto.stock ?? 0;
+
+        if (producto.imagen_url) {
+            $("vistaImagen").src = producto.imagen_url;
+            $("vistaImagen").style.display = "block";
+        }
+
+        $("tituloFormulario").textContent = "Editar producto";
+        $("btnGuardarProducto").textContent = "Guardar cambios";
+
+        abrirSeccion("nuevo");
+    }
+
+    $("productoForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        mostrarMensaje("");
+
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        const id = $("productoId").value;
+
+        const producto = {
+            nombre: $("nombreProducto").value.trim(),
+            categoria: $("categoria").value,
+            descripcion: $("descripcion").value.trim(),
+            precio: Number($("precio").value),
+            stock: Number($("stock").value)
+        };
+
+        const formulario = new FormData();
+        Object.entries(producto).forEach(([clave, valor]) => {
+            formulario.append(clave, String(valor));
+        });
+
+        if ($("imagen").files[0]) {
+            formulario.append("imagen", $("imagen").files[0]);
+        }
+
+        const boton = $("btnGuardarProducto");
+        boton.disabled = true;
+        boton.textContent = "Guardando...";
+
+        try {
+            const base = "/empresa/" + encodeURIComponent(idEmpresa) + "/productos";
+
+            await peticion(
+                id ? base + "/" + encodeURIComponent(id) : base,
+                {
+                    method: id ? "PUT" : "POST",
+                    body: formulario
+                }
+            );
+
+            mostrarMensaje(
+                id ? "Producto actualizado correctamente." :
+                     "Producto agregado correctamente.",
+                "correcto"
+            );
+
+            limpiarFormulario();
+            await cargarProductos();
+            abrirSeccion("productos");
+
+        } catch (error) {
+            mostrarMensaje(error.message, "error");
+        } finally {
+            boton.disabled = false;
+            boton.textContent = id ? "Guardar cambios" : "Guardar producto";
+        }
+    });
+
+    async function eliminarProducto(id) {
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        const producto = productos.find(p => String(p.id) === String(id));
+
+        if (!confirm('¿Seguro que deseas eliminar "' + (producto?.nombre || "este producto") + '"?')) return;
+
+        try {
+            await peticion(
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos/" + encodeURIComponent(id),
+                { method: "DELETE" }
+            );
+
+            await cargarProductos();
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    /* =========================================================
+       CARGAR HISTORIAL DE PRODUCTOS COMPRADOS (VENTAS)
+    ========================================================= */
+    async function cargarVentasEmpresa() {
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        const contenedor = $("contenedorTablaVentas");
+
+        try {
+            const ventas = await peticion(
+                "/empresa/" + encodeURIComponent(idEmpresa) + "/ventas"
+            );
+
+            if (!Array.isArray(ventas) || ventas.length === 0) {
+                contenedor.innerHTML =
+                    '<div class="vacio">Aún no se registran compras de tus productos.</div>';
+                $("ventasDineroTotal").textContent = "$ 0";
+                $("ventasUnidadesTotal").textContent = "0";
+                $("ventasPedidosTotal").textContent = "0";
+                return;
+            }
+
+            let sumaDinero = 0;
+            let sumaUnidades = 0;
+
+            const filas = ventas.map(v => {
+                sumaDinero += Number(v.total || 0);
+                sumaUnidades += Number(v.cantidad || 0);
+
+                return `
+                    <tr>
+                        <td style="color:#aaa;">${escapar(v.fecha || "--")}</td>
+                        <td class="producto-nombre">${escapar(v.nombre_producto)}</td>
+                        <td>${escapar(v.cantidad)}</td>
+                        <td style="color:var(--verde); font-weight:600;">${dinero(v.total)}</td>
+                        <td>${escapar(v.cliente_nombre || "Cliente")}</td>
+                        <td>${escapar(v.cliente_ciudad || "Colombia")}</td>
+                        <td>${escapar(v.cliente_telefono || "--")}</td>
+                        <td>${escapar(v.metodo_pago || "Directo")}</td>
+                    </tr>
+                `;
+            }).join("");
+
+            $("ventasDineroTotal").textContent = dinero(sumaDinero);
+            $("ventasUnidadesTotal").textContent = sumaUnidades;
+            $("ventasPedidosTotal").textContent = ventas.length;
+
+            contenedor.innerHTML = `
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Total</th>
+                                <th>Cliente</th>
+                                <th>Ciudad</th>
+                                <th>Teléfono</th>
+                                <th>Método</th>
+                            </tr>
+                        </thead>
+                        <tbody>${filas}</tbody>
+                    </table>
+                </div>
+            `;
+
+        } catch (error) {
+            contenedor.innerHTML =
+                '<div class="vacio">' + escapar(error.message) + '</div>';
+        }
+    }
+
+    $("btnCerrarSesion").addEventListener("click", () => {
+        if (!confirm("¿Deseas cerrar tu sesión empresarial?")) return;
+
+        localStorage.removeItem("empresaLogueada");
+        window.location.href = "index.empresa.html";
+    });
+
+    function iniciarPanel() {
+        if (!empresaGuardada) {
+            $("tablaProductos").innerHTML =
+                '<div class="vacio">No se encontró una sesión empresarial. Inicia sesión para acceder.</div>';
+            return;
+        }
+
+        try {
+            empresa = JSON.parse(empresaGuardada);
+            if (!empresa.id && empresa.nit) empresa.id = empresa.nit;
+            if (!empresa.id && empresa.identificacion) empresa.id = empresa.identificacion;
+        } catch {
+            empresa = null;
+        }
+
+        if (!empresa || !empresa.id) {
+            $("tablaProductos").innerHTML =
+                '<div class="vacio">La sesión empresarial no contiene un identificador válido.</div>';
+            return;
+        }
+
+        const nombre = empresa.nombre || empresa.nombre_comercial || "Mi empresa";
+
+        $("nombreEmpresaBarra").textContent = nombre;
+        $("saludoEmpresa").textContent = "Bienvenido, " + nombre;
+        $("avatarEmpresa").textContent = nombre.charAt(0).toUpperCase();
+
+        cargarProductos();
+    }
+
+    iniciarPanel();
+</script>
+
+</body>
+</html>

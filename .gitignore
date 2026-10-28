@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 Viga/.env
 Viga/node_modules/
+=======
+.env
+node_modules/
+package-lock.json
+ *.zip
+*.rar
+>>>>>>> dd551166b1f6e4b6f5a845e3996f6d1fd2fed1f5

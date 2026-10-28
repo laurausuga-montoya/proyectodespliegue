@@ -1,0 +1,586 @@
+/* =========================================================
+   TEMA GLOBAL VIGA
+========================================================= */
+
+
+/* =========================================================
+   TRANSICIÓN
+========================================================= */
+
+body,
+header,
+nav,
+main,
+section,
+article,
+footer,
+aside,
+div,
+.card,
+.tarjeta,
+.config-card,
+.ejercicio,
+.producto,
+.informacion,
+.contenedor,
+.menu,
+.modal-contenido,
+.formulario,
+.caja,
+.panel,
+input,
+select,
+textarea,
+button {
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+/* =========================================================
+   MODO CLARO - GENERAL
+========================================================= */
+
+body.claro {
+
+    background: #f3f3f3 !important;
+
+    color: #111 !important;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+body.claro header {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+/* Logos */
+
+body.claro .logo {
+
+    color: #37e359 !important;
+
+}
+
+
+/* Enlaces */
+
+body.claro a {
+
+    color: inherit;
+
+}
+
+
+/* Botón volver */
+
+body.claro .volver {
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   TEXTOS
+========================================================= */
+
+body.claro h1,
+body.claro h2,
+body.claro h3,
+body.claro h4,
+body.claro h5,
+body.claro h6 {
+
+    color: #111 !important;
+
+}
+
+
+body.claro p {
+
+    color: #555 !important;
+
+}
+
+
+body.claro span {
+
+    color: inherit;
+
+}
+
+
+body.claro label {
+
+    color: #333 !important;
+
+}
+
+
+/* =========================================================
+   CONTENEDORES
+========================================================= */
+
+body.claro .contenedor {
+
+    color: #111;
+
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+body.claro .tarjeta,
+body.claro .config-card,
+body.claro .card,
+body.claro .ejercicio,
+body.claro .producto,
+body.claro .informacion,
+body.claro .seccion,
+body.claro .panel,
+body.claro .caja {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #dddddd !important;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* Hover */
+
+body.claro .tarjeta:hover,
+body.claro .config-card:hover,
+body.claro .card:hover,
+body.claro .ejercicio:hover,
+body.claro .producto:hover {
+
+    background: #fafafa !important;
+
+}
+
+
+/* =========================================================
+   INFORMACIÓN DE RUTINAS
+========================================================= */
+
+body.claro .dato {
+
+    color: #111 !important;
+
+}
+
+
+body.claro .dato strong {
+
+    color: #159c35 !important;
+
+}
+
+
+body.claro .dato span {
+
+    color: #666 !important;
+
+}
+
+
+/* =========================================================
+   BOTONES DE DÍAS
+========================================================= */
+
+body.claro .dia {
+
+    background: #ffffff !important;
+
+    color: #222 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+body.claro .dia:hover {
+
+    background: #eeeeee !important;
+
+}
+
+
+body.claro .dia.activo {
+
+    background: #37e359 !important;
+
+    color: #111 !important;
+
+}
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+body.claro input,
+body.claro select,
+body.claro textarea {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #cccccc !important;
+
+}
+
+
+body.claro input::placeholder,
+body.claro textarea::placeholder {
+
+    color: #888 !important;
+
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+body.claro select {
+
+    background: #ffffff !important;
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   BOTONES SECUNDARIOS
+========================================================= */
+
+body.claro .boton-secundario {
+
+    background: #eeeeee !important;
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   ICONOS / CAJAS DE ICONOS
+========================================================= */
+
+body.claro .icono {
+
+    background: #eeeeee !important;
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   MENÚ
+========================================================= */
+
+body.claro .menu {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+body.claro .menu a {
+
+    color: #222 !important;
+
+}
+
+
+body.claro .menu a:hover {
+
+    background: #f0f0f0 !important;
+
+}
+
+
+/* =========================================================
+   OPCIONES
+========================================================= */
+
+body.claro .opcion {
+
+    border-color: #e0e0e0 !important;
+
+}
+
+
+body.claro .opcion-titulo {
+
+    color: #111 !important;
+
+}
+
+
+body.claro .opcion-descripcion {
+
+    color: #777 !important;
+
+}
+
+
+/* =========================================================
+   APARIENCIA
+========================================================= */
+
+body.claro .tema {
+
+    background: #ffffff !important;
+
+    color: #555 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+body.claro .tema:hover {
+
+    border-color: #37e359 !important;
+
+}
+
+
+body.claro .tema.activo {
+
+    background:
+        rgba(55, 227, 89, 0.10) !important;
+
+    color: #159c35 !important;
+
+    border-color: #37e359 !important;
+
+}
+
+
+/* =========================================================
+   PRIVACIDAD
+========================================================= */
+
+body.claro .privacidad-box {
+
+    background: #f4f4f4 !important;
+
+    color: #666 !important;
+
+}
+
+
+body.claro .privacidad-box strong {
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   SERIES DE RUTINAS
+========================================================= */
+
+body.claro .series {
+
+    background: #f0f0f0 !important;
+
+    color: #159c35 !important;
+
+}
+
+
+/* =========================================================
+   EXPLICACIÓN DE EJERCICIO
+========================================================= */
+
+body.claro .modal {
+
+    background:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+body.claro .modal-contenido {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #37e359 !important;
+
+}
+
+
+body.claro .modal-contenido h2 {
+
+    color: #159c35 !important;
+
+}
+
+
+body.claro .modal-contenido h4 {
+
+    color: #222 !important;
+
+}
+
+
+body.claro .modal-contenido p {
+
+    color: #555 !important;
+
+}
+
+
+body.claro .modal-series {
+
+    background: #f0f0f0 !important;
+
+    color: #159c35 !important;
+
+}
+
+
+body.claro .cerrar {
+
+    background: #eeeeee !important;
+
+    color: #222 !important;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+body.claro footer {
+
+    background: transparent !important;
+
+    color: #777 !important;
+
+}
+
+
+/* =========================================================
+   CERRAR SESIÓN
+========================================================= */
+
+body.claro .cerrar-card {
+
+    background: #ffffff !important;
+
+    color: #111 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+body.claro .cerrar-card p {
+
+    color: #666 !important;
+
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+body.claro #mensaje {
+
+    background: #ffffff !important;
+
+    color: #222 !important;
+
+    border-color: #37e359 !important;
+
+}
+
+
+/* =========================================================
+   TABLAS / REPORTES
+========================================================= */
+
+body.claro table {
+
+    background: #ffffff !important;
+
+    color: #222 !important;
+
+}
+
+
+body.claro th {
+
+    background: #eeeeee !important;
+
+    color: #222 !important;
+
+}
+
+
+body.claro td {
+
+    background: #ffffff !important;
+
+    color: #333 !important;
+
+    border-color: #dddddd !important;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 750px) {
+
+    body.claro .tarjeta,
+    body.claro .config-card,
+    body.claro .card,
+    body.claro .ejercicio,
+    body.claro .producto {
+
+        background: #ffffff !important;
+
+    }
+
+}

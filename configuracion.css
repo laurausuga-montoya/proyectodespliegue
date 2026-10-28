@@ -1,0 +1,471 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+body {
+    background: #121212;
+    color: white;
+    min-height: 100vh;
+    transition: 0.3s;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    height: 80px;
+    width: 100%;
+
+    background: #1b1b1b;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 60px;
+
+    border-bottom: 1px solid #2d2d2d;
+}
+
+
+.logo {
+    font-size: 40px;
+    font-weight: 700;
+
+    color: #37E359;
+
+    letter-spacing: 2px;
+}
+
+
+.titulo {
+    font-size: 22px;
+    font-weight: 500;
+
+    color: #ddd;
+}
+
+
+.volver {
+    text-decoration: none;
+
+    color: #37E359;
+
+    border: 1px solid #37E359;
+
+    padding: 10px 20px;
+
+    border-radius: 10px;
+
+    transition: 0.3s;
+}
+
+
+.volver:hover {
+    background: #37E359;
+    color: #111;
+}
+
+
+/* =========================
+   CONTENIDO
+========================= */
+
+main {
+    width: 850px;
+    max-width: 90%;
+
+    margin: 45px auto;
+}
+
+
+main h1 {
+    font-size: 38px;
+
+    margin-bottom: 8px;
+}
+
+
+.descripcion {
+    color: #999;
+
+    margin-bottom: 30px;
+}
+
+
+/* =========================
+   TARJETAS
+========================= */
+
+.config-card {
+    background: #1b1b1b;
+
+    border: 1px solid #292929;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    margin-bottom: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    transition: 0.3s;
+}
+
+
+.config-card:hover {
+    background: #202020;
+
+    transform: translateY(-2px);
+}
+
+
+.icono {
+    width: 60px;
+    height: 60px;
+
+    background: #252525;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+
+.contenido {
+    flex: 1;
+}
+
+
+.contenido h2 {
+    margin-bottom: 6px;
+}
+
+
+.contenido p {
+    color: #aaa;
+
+    margin-bottom: 15px;
+}
+
+
+.contenido button {
+    border: none;
+
+    background: #37E359;
+
+    color: #111;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.contenido button:hover {
+    background: #5cff79;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+select {
+    background: #252525;
+
+    color: white;
+
+    border: 1px solid #444;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+.version {
+    font-size: 13px;
+    color: #666 !important;
+}
+
+
+/* =========================
+   INTERRUPTOR
+========================= */
+
+.switch {
+    position: relative;
+
+    display: inline-block;
+
+    width: 50px;
+    height: 26px;
+
+    margin-right: 10px;
+}
+
+
+.switch input {
+    opacity: 0;
+
+    width: 0;
+    height: 0;
+}
+
+
+.slider {
+    position: absolute;
+
+    cursor: pointer;
+
+    inset: 0;
+
+    background: #444;
+
+    border-radius: 30px;
+
+    transition: 0.3s;
+}
+
+
+.slider:before {
+    content: "";
+
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+
+    left: 3px;
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: 0.3s;
+}
+
+
+.switch input:checked + .slider {
+    background: #37E359;
+}
+
+
+.switch input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+
+.cerrar-card {
+    background: #1b1b1b;
+
+    border: 1px solid #292929;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    margin-top: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.cerrar-card h2 {
+    margin-bottom: 5px;
+}
+
+
+.cerrar-card p {
+    color: #999;
+}
+
+
+.cerrar-card button {
+    background: #d9534f;
+
+    border: none;
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+
+.cerrar-card button:hover {
+    background: #f05c57;
+}
+
+
+/* =========================
+   MENSAJE
+========================= */
+
+.mensaje {
+    position: fixed;
+
+    bottom: 30px;
+
+    right: 30px;
+
+    background: #37E359;
+
+    color: #111;
+
+    padding: 15px 25px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    transform: translateY(100px);
+
+    opacity: 0;
+
+    transition: 0.3s;
+}
+
+
+.mensaje.mostrar {
+    transform: translateY(0);
+
+    opacity: 1;
+}
+
+
+/* =========================
+   TEMA CLARO
+========================= */
+
+body.tema-claro {
+    background: #f2f2f2;
+
+    color: #222;
+}
+
+
+body.tema-claro header {
+    background: white;
+
+    border-bottom: 1px solid #ddd;
+}
+
+
+body.tema-claro .titulo {
+    color: #444;
+}
+
+
+body.tema-claro .config-card,
+body.tema-claro .cerrar-card {
+    background: white;
+
+    border-color: #ddd;
+}
+
+
+body.tema-claro .config-card:hover {
+    background: #fafafa;
+}
+
+
+body.tema-claro .contenido p,
+body.tema-claro .cerrar-card p {
+    color: #666;
+}
+
+
+body.tema-claro .icono {
+    background: #eee;
+}
+
+
+body.tema-claro select {
+    background: white;
+
+    color: #222;
+
+    border-color: #ccc;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 30px;
+    }
+
+    .titulo {
+        display: none;
+    }
+
+    main {
+        max-width: 92%;
+    }
+
+    .config-card {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .cerrar-card {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+}

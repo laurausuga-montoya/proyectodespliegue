@@ -1,0 +1,352 @@
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
+
+}
+
+
+body {
+
+    background: #121212;
+
+    color: white;
+
+    min-height: 100vh;
+
+}
+
+
+/* ================= HEADER ================= */
+
+header {
+
+    width: 100%;
+
+    height: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 60px;
+
+    background: #1b1b1b;
+
+    border-bottom: 1px solid #2d2d2d;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+}
+
+
+.marca {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+
+.logo {
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    color: #37E359;
+
+    letter-spacing: 2px;
+
+}
+
+
+header h1 {
+
+    font-size: 25px;
+
+    font-weight: 500;
+
+    color: #ddd;
+
+}
+
+
+/* ================= VOLVER ================= */
+
+.volver {
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 10px;
+
+    border: 1px solid #333;
+
+    background: #242424;
+
+    color: #37E359;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+
+.volver:hover {
+
+    background: #37E359;
+
+    color: #111;
+
+}
+
+
+/* ================= AVATAR ================= */
+
+.avatar {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #37E359;
+
+    color: #111;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+
+}
+
+
+/* ================= CONTENIDO ================= */
+
+main {
+
+    padding: 45px 70px;
+
+}
+
+
+.titulo {
+
+    margin-bottom: 35px;
+
+}
+
+
+.titulo h2 {
+
+    font-size: 34px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.titulo p {
+
+    color: #999;
+
+}
+
+
+/* ================= GRID ================= */
+
+.reportes {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+
+}
+
+
+/* ================= TARJETA ================= */
+
+.reporte {
+
+    background: #1b1b1b;
+
+    border: 1px solid #292929;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    display: flex;
+
+    gap: 22px;
+
+    min-height: 190px;
+
+    transition: .3s;
+
+}
+
+
+.reporte:hover {
+
+    transform: translateY(-5px);
+
+    border-color: #37E359;
+
+    background: #202020;
+
+}
+
+
+/* ================= NUMERO ================= */
+
+.numero {
+
+    width: 50px;
+
+    height: 50px;
+
+    min-width: 50px;
+
+    border-radius: 12px;
+
+    background: #37E359;
+
+    color: #111;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+
+}
+
+
+/* ================= CONTENIDO ================= */
+
+.contenido {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.contenido h3 {
+
+    font-size: 20px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.contenido p {
+
+    color: #aaa;
+
+    line-height: 25px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.contenido strong {
+
+    color: #37E359;
+
+    font-size: 30px;
+
+}
+
+
+.contenido small {
+
+    color: #777;
+
+    margin-top: 5px;
+
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width: 900px) {
+
+    .reportes {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    header {
+
+        padding: 0 25px;
+
+    }
+
+
+    main {
+
+        padding: 35px 25px;
+
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    header h1 {
+
+        display: none;
+
+    }
+
+
+    main {
+
+        padding: 25px 18px;
+
+    }
+
+
+    .reporte {
+
+        padding: 20px;
+
+    }
+
+}

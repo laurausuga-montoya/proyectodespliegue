@@ -1,0 +1,989 @@
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
+
+}
+
+
+body {
+
+    background: #121212;
+
+    color: white;
+
+}
+
+
+/* ==================================================
+   HEADER
+================================================== */
+
+header {
+
+    width: 100%;
+
+    height: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 60px;
+
+    background: #1b1b1b;
+
+    border-bottom: 1px solid #2d2d2d;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+}
+
+
+/* ==================================================
+   MARCA
+================================================== */
+
+.marca {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.logo {
+
+    font-size: 42px;
+
+    font-weight: 700;
+
+    color: #37E359;
+
+    letter-spacing: 2px;
+
+}
+
+
+/* ==================================================
+   TRES RAYAS
+================================================== */
+
+.menu-btn {
+
+    width: 42px;
+
+    height: 42px;
+
+    background: transparent;
+
+    border: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    cursor: pointer;
+
+    padding: 5px;
+
+}
+
+
+.menu-btn span {
+
+    width: 28px;
+
+    height: 3px;
+
+    background: #37E359;
+
+    border-radius: 5px;
+
+    transition: .3s;
+
+}
+
+
+.menu-btn:hover span:nth-child(1) {
+
+    transform: translateX(5px);
+
+}
+
+
+.menu-btn:hover span:nth-child(3) {
+
+    transform: translateX(-5px);
+
+}
+
+
+/* ==================================================
+   NAVEGACIÓN
+================================================== */
+
+nav {
+
+    display: flex;
+
+    gap: 35px;
+
+}
+
+
+nav a {
+
+    text-decoration: none;
+
+    color: #ddd;
+
+    font-size: 17px;
+
+    transition: .3s;
+
+}
+
+
+nav a:hover {
+
+    color: #37E359;
+
+}
+
+
+/* ==================================================
+   USUARIO
+================================================== */
+
+.usuario {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.avatar {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #37E359;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-weight: bold;
+
+    color: black;
+
+}
+
+
+/* ==================================================
+   MENÚ LATERAL
+================================================== */
+
+.menu-lateral {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 330px;
+
+    height: 100vh;
+
+    background: #181818;
+
+    border-right: 1px solid #303030;
+
+    z-index: 1000;
+
+    transform: translateX(-100%);
+
+    transition: transform .3s ease;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.menu-lateral.activo {
+
+    transform: translateX(0);
+
+}
+
+
+/* ==================================================
+   FONDO OSCURO
+================================================== */
+
+.fondo-menu {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(0,0,0,.65);
+
+    z-index: 999;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: .3s;
+
+}
+
+
+.fondo-menu.activo {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+/* ==================================================
+   HEADER DEL MENÚ
+================================================== */
+
+.menu-header {
+
+    height: 100px;
+
+    padding: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid #303030;
+
+}
+
+
+.menu-titulo {
+
+    display: block;
+
+    color: #37E359;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+}
+
+
+.menu-subtitulo {
+
+    display: block;
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 3px;
+
+}
+
+
+.cerrar-menu {
+
+    width: 38px;
+
+    height: 38px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #252525;
+
+    color: #aaa;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+
+.cerrar-menu:hover {
+
+    background: #37E359;
+
+    color: #111;
+
+}
+
+
+/* ==================================================
+   OPCIONES DEL MENÚ
+================================================== */
+
+.menu-opciones {
+
+    padding: 25px 15px;
+
+    flex: 1;
+
+}
+
+
+.opcion-menu {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: white;
+
+    transition: .3s;
+
+}
+
+
+.opcion-menu:hover {
+
+    background: #252525;
+
+    transform: translateX(5px);
+
+}
+
+
+/* ==================================================
+   ICONOS DEL MENÚ
+================================================== */
+
+.icono-menu {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 10px;
+
+    background: #252525;
+
+    color: #37E359;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 23px;
+
+    font-weight: bold;
+
+}
+
+
+.opcion-menu:hover .icono-menu {
+
+    background: #37E359;
+
+    color: #111;
+
+}
+
+
+/* ==================================================
+   TEXTO
+================================================== */
+
+.opcion-menu strong {
+
+    display: block;
+
+    font-size: 16px;
+
+    margin-bottom: 4px;
+
+}
+
+
+.opcion-menu small {
+
+    display: block;
+
+    color: #888;
+
+    font-size: 12px;
+
+}
+
+
+/* ==================================================
+   CERRAR SESIÓN
+================================================== */
+
+.cerrar-sesion {
+
+    border-top: 1px solid #303030;
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+}
+
+
+.cerrar-sesion:hover {
+
+    background: rgba(255,80,80,.08);
+
+}
+
+
+.cerrar-sesion:hover .icono-menu {
+
+    background: #ff5c5c;
+
+    color: white;
+
+}
+
+
+/* ==================================================
+   FOOTER DEL MENÚ
+================================================== */
+
+.menu-footer {
+
+    padding: 25px;
+
+    border-top: 1px solid #303030;
+
+    color: #666;
+
+    font-size: 12px;
+
+    line-height: 20px;
+
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
+
+.hero {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 50px 70px;
+
+}
+
+
+.hero h1 {
+
+    font-size: 48px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.hero h1 span {
+
+    color: #37E359;
+
+}
+
+
+.hero p {
+
+    color: #bdbdbd;
+
+    font-size: 18px;
+
+    line-height: 30px;
+
+}
+
+
+.stats {
+
+    display: flex;
+
+    gap: 20px;
+
+}
+
+
+/* ==================================================
+   ESTADISTICAS
+================================================== */
+
+.stat {
+
+    width: 180px;
+
+    background: #1f1f1f;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+}
+
+
+.stat h2 {
+
+    font-size: 35px;
+
+    color: #37E359;
+
+}
+
+
+.stat p {
+
+    margin-top: 10px;
+
+    color: #bbb;
+
+}
+
+
+/* ==================================================
+   PROGRESO
+================================================== */
+
+.progreso {
+
+    margin: 0 70px;
+
+    background: #1b1b1b;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+}
+
+
+.progreso h2 {
+
+    margin-bottom: 20px;
+
+}
+
+
+.barra {
+
+    height: 18px;
+
+    background: #2c2c2c;
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+}
+
+
+.barra span {
+
+    display: block;
+
+    height: 100%;
+
+    width: 65%;
+
+    background: linear-gradient(
+        90deg,
+        #37E359,
+        #8cff9e
+    );
+
+}
+
+
+.progreso p {
+
+    margin-top: 15px;
+
+    color: #aaa;
+
+}
+
+
+.progreso strong {
+
+    color: #37E359;
+
+}
+
+
+/* ==================================================
+   TARJETAS
+================================================== */
+
+.cards {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    padding: 45px 70px;
+
+}
+
+
+.card {
+
+    background: #1b1b1b;
+
+    width: 320px;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    transition: .3s;
+
+}
+
+
+.card:hover {
+
+    transform: translateY(-10px);
+
+    background: #252525;
+
+}
+
+
+.icono {
+
+    color: #37E359;
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    margin-bottom: 20px;
+
+}
+
+
+.card h2 {
+
+    margin-bottom: 15px;
+
+}
+
+
+.card p {
+
+    color: #bcbcbc;
+
+    line-height: 28px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.card button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    background: #37E359;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.card button:hover {
+
+    background: #5fff79;
+
+}
+
+
+/* ==================================================
+   ENTRENAMIENTO
+================================================== */
+
+.recomendado {
+
+    margin: 0 70px 40px;
+
+    background: linear-gradient(
+        135deg,
+        #1c1c1c,
+        #252525
+    );
+
+    border-radius: 20px;
+
+    padding: 40px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+.recomendado h1 {
+
+    font-size: 36px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.recomendado p {
+
+    color: #bdbdbd;
+
+    line-height: 30px;
+
+}
+
+
+.recomendado button {
+
+    margin-top: 25px;
+
+    padding: 15px 35px;
+
+    background: #37E359;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.imagen {
+
+    font-size: 50px;
+
+    color: #37E359;
+
+    font-weight: 700;
+
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+footer {
+
+    padding: 30px;
+
+    text-align: center;
+
+    color: #888;
+
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media(max-width: 1000px) {
+
+    nav {
+
+        display: none;
+
+    }
+
+
+    .hero {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 30px;
+
+    }
+
+
+    .stats {
+
+        width: 100%;
+
+    }
+
+}
+
+
+@media(max-width: 700px) {
+
+    header {
+
+        padding: 0 20px;
+
+    }
+
+
+    .hero {
+
+        padding: 35px 25px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size: 35px;
+
+    }
+
+
+    .stats {
+
+        flex-direction: column;
+
+    }
+
+
+    .stat {
+
+        width: 100%;
+
+    }
+
+
+    .cards {
+
+        flex-direction: column;
+
+        padding: 30px 25px;
+
+    }
+
+
+    .card {
+
+        width: 100%;
+
+    }
+
+
+    .progreso {
+
+        margin: 0 25px;
+
+    }
+
+
+    .recomendado {
+
+        margin: 0 25px 30px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 30px;
+
+    }
+
+
+    .menu-lateral {
+
+        width: 290px;
+
+    }
+
+}

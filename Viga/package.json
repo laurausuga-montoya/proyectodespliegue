@@ -1,14 +1,28 @@
 {
+<<<<<<< HEAD
   "name": "viga2.0",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+=======
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.4"
+  },
+  "name": "viga2.0",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+>>>>>>> dd551166b1f6e4b6f5a845e3996f6d1fd2fed1f5
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+<<<<<<< HEAD
   "description": "",
   "dependencies": {
     "cors": "^2.8.6",
@@ -18,3 +32,7 @@
     "mysql2": "^3.24.4"
   }
 }
+=======
+  "description": ""
+}
+>>>>>>> dd551166b1f6e4b6f5a845e3996f6d1fd2fed1f5

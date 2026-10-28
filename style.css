@@ -1,0 +1,982 @@
+/* =====================================
+   CONFIGURACIÓN GENERAL
+===================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
+
+}
+
+
+body {
+
+    background: #121212;
+
+    color: white;
+
+    min-height: 100vh;
+
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+header {
+
+    width: 100%;
+
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 60px;
+
+    background: #1b1b1b;
+
+    border-bottom: 1px solid #2d2d2d;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+}
+
+
+.zona-logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.logo {
+
+    font-size: 40px;
+
+    font-weight: 700;
+
+    color: #37E359;
+
+    letter-spacing: 3px;
+
+}
+
+
+/* =====================================
+   TRES RAYAS
+===================================== */
+
+.menu-btn {
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+
+.menu-btn span {
+
+    display: block;
+
+    width: 27px;
+
+    height: 3px;
+
+    background: white;
+
+    border-radius: 5px;
+
+    transition: 0.3s;
+
+}
+
+
+.menu-btn:hover span {
+
+    background: #37E359;
+
+}
+
+
+/* =====================================
+   NAVEGACIÓN
+===================================== */
+
+nav {
+
+    display: flex;
+
+    gap: 35px;
+
+}
+
+
+nav a {
+
+    color: #ddd;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    transition: 0.3s;
+
+}
+
+
+nav a:hover {
+
+    color: #37E359;
+
+}
+
+
+/* =====================================
+   USUARIO
+===================================== */
+
+.usuario {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.avatar {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #37E359;
+
+    color: #111;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================
+   MENÚ LATERAL
+===================================== */
+
+.menu-lateral {
+
+    position: fixed;
+
+    top: 0;
+
+    left: -320px;
+
+    width: 320px;
+
+    height: 100vh;
+
+    background: #1b1b1b;
+
+    z-index: 2000;
+
+    transition: 0.35s ease;
+
+    box-shadow: 10px 0 30px rgba(0,0,0,0.4);
+
+}
+
+
+.menu-lateral.activo {
+
+    left: 0;
+
+}
+
+
+.menu-header {
+
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    border-bottom: 1px solid #333;
+
+}
+
+
+.menu-header h2 {
+
+    color: #37E359;
+
+    letter-spacing: 2px;
+
+}
+
+
+.cerrar-menu {
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 35px;
+
+    cursor: pointer;
+
+}
+
+
+.cerrar-menu:hover {
+
+    color: #37E359;
+
+}
+
+
+/* =====================================
+   OPCIONES DEL MENÚ
+===================================== */
+
+.menu-opciones {
+
+    padding: 25px 15px;
+
+}
+
+
+.menu-opciones a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px 15px;
+
+    color: #ddd;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    margin-bottom: 8px;
+
+    transition: 0.3s;
+
+}
+
+
+.menu-opciones a span {
+
+    width: 25px;
+
+    color: #37E359;
+
+    font-size: 20px;
+
+}
+
+
+.menu-opciones a:hover {
+
+    background: #292929;
+
+    color: #37E359;
+
+}
+
+
+/* =====================================
+   FONDO DEL MENÚ
+===================================== */
+
+.fondo-menu {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.65);
+
+    z-index: 1500;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: 0.3s;
+
+}
+
+
+.fondo-menu.activo {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+/* =====================================
+   HERO
+===================================== */
+
+.hero {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 40px;
+
+    padding: 55px 70px;
+
+}
+
+
+.hero-texto {
+
+    max-width: 600px;
+
+}
+
+
+.pequeno-titulo {
+
+    color: #37E359;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.hero h1 {
+
+    font-size: 48px;
+
+    line-height: 1.2;
+
+    margin-bottom: 18px;
+
+}
+
+
+.hero h1 span {
+
+    color: #37E359;
+
+}
+
+
+.descripcion {
+
+    color: #aaa;
+
+    font-size: 17px;
+
+    line-height: 30px;
+
+}
+
+
+/* =====================================
+   ESTADÍSTICAS
+===================================== */
+
+.stats {
+
+    display: flex;
+
+    gap: 15px;
+
+}
+
+
+.stat {
+
+    width: 150px;
+
+    background: #1e1e1e;
+
+    border: 1px solid #292929;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    text-align: center;
+
+}
+
+
+.stat h2 {
+
+    font-size: 32px;
+
+    color: #37E359;
+
+}
+
+
+.stat p {
+
+    color: #aaa;
+
+    font-size: 14px;
+
+    margin-top: 8px;
+
+}
+
+
+/* =====================================
+   PROGRESO
+===================================== */
+
+.progreso {
+
+    margin: 0 70px;
+
+    padding: 30px;
+
+    background: #1b1b1b;
+
+    border-radius: 20px;
+
+    border: 1px solid #292929;
+
+}
+
+
+.progreso-arriba {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+
+}
+
+
+.progreso h2 {
+
+    margin-bottom: 5px;
+
+}
+
+
+.progreso-arriba p {
+
+    color: #888;
+
+    font-size: 14px;
+
+}
+
+
+.progreso-arriba strong {
+
+    font-size: 25px;
+
+    color: #37E359;
+
+}
+
+
+.barra {
+
+    height: 15px;
+
+    background: #303030;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+}
+
+
+.barra span {
+
+    display: block;
+
+    width: 65%;
+
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        #37E359,
+        #72ef8a
+    );
+
+    border-radius: 20px;
+
+}
+
+
+.texto-progreso {
+
+    color: #888;
+
+    margin-top: 15px;
+
+    font-size: 14px;
+
+}
+
+
+.texto-progreso strong {
+
+    color: #37E359;
+
+}
+
+
+/* =====================================
+   TARJETAS
+===================================== */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+
+    padding: 45px 70px;
+
+}
+
+
+.card {
+
+    background: #1b1b1b;
+
+    border: 1px solid #292929;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    transition: 0.3s;
+
+}
+
+
+.card:hover {
+
+    transform: translateY(-7px);
+
+    border-color: #37E359;
+
+}
+
+
+.icono {
+
+    font-size: 50px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.card h2 {
+
+    margin-bottom: 12px;
+
+}
+
+
+.card p {
+
+    color: #aaa;
+
+    line-height: 27px;
+
+    min-height: 80px;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* =====================================
+   BOTONES DE LAS TARJETAS
+===================================== */
+
+.btn-card {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 14px;
+
+    background: #37E359;
+
+    color: #111;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-card:hover {
+
+    background: #65ef7e;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* =====================================
+   ENTRENAMIENTO RECOMENDADO
+===================================== */
+
+.recomendado {
+
+    margin: 0 70px 45px;
+
+    padding: 40px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1b1b1b,
+            #252525
+        );
+
+    border: 1px solid #292929;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+.recomendado-texto {
+
+    max-width: 650px;
+
+}
+
+
+.etiqueta {
+
+    color: #37E359;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.recomendado h1 {
+
+    font-size: 35px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.recomendado p {
+
+    color: #aaa;
+
+}
+
+
+.btn-entrenamiento {
+
+    display: inline-block;
+
+    margin-top: 25px;
+
+    padding: 14px 28px;
+
+    background: #37E359;
+
+    color: #111;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+}
+
+
+.btn-entrenamiento:hover {
+
+    background: #65ef7e;
+
+}
+
+
+/* =====================================
+   FIGURA VIGA
+===================================== */
+
+.figura {
+
+    width: 180px;
+
+    height: 180px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.circulo {
+
+    width: 140px;
+
+    height: 140px;
+
+    border-radius: 50%;
+
+    border: 2px solid #37E359;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 70px;
+
+    font-weight: 700;
+
+    color: #37E359;
+
+    box-shadow:
+        0 0 35px rgba(55,227,89,0.12);
+
+}
+
+
+/* =====================================
+   FOOTER
+===================================== */
+
+footer {
+
+    text-align: center;
+
+    color: #777;
+
+    padding: 30px;
+
+    border-top: 1px solid #222;
+
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media(max-width: 950px) {
+
+    header {
+
+        padding: 0 30px;
+
+    }
+
+
+    nav {
+
+        display: none;
+
+    }
+
+
+    .hero {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 45px 30px;
+
+    }
+
+
+    .stats {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
+
+    .progreso {
+
+        margin: 0 30px;
+
+    }
+
+
+    .cards {
+
+        grid-template-columns: 1fr;
+
+        padding: 40px 30px;
+
+    }
+
+
+    .recomendado {
+
+        margin: 0 30px 40px;
+
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .logo {
+
+        font-size: 32px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .stats {
+
+        flex-direction: column;
+
+    }
+
+
+    .stat {
+
+        width: 100%;
+
+    }
+
+
+    .recomendado {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 30px;
+
+    }
+
+
+    .figura {
+
+        display: none;
+
+    }
+
+}
