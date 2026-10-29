@@ -436,10 +436,10 @@
         generarEstructuraRutinaPorEntorno(datos);
     }
 
-    // BANCOS DE 6 A 7 EJERCICIOS ESTRICTOS POR CADA ENTORNO
-    function obtenerEjerciciosPorLugarExacto(lugar, tipoMuscular) {
+    // BANCOS DE 6 A 7 EJERCICIOS EXACTOS POR CADA ENTORNO
+    function obtenerEjerciciosPorLugarExacto(lugarRaw, tipoMuscular) {
+        const lugar = (lugarRaw || "").toLowerCase();
         
-        // 1. CASA SIN IMPLEMENTOS (100% Peso Corporal)
         const casaSinImplementos = {
             inferior: [
                 { nombre: "Sentadillas Libres con Peso Corporal", series: "4 x 15 reps", dificultad: "Corporal", explicacion: "Baja la cadera manteniendo la espalda recta y las rodillas alineadas.", errores: "Dejar que las rodillas colapsen hacia adentro.", musculos: "Cuádriceps y glúteos." },
@@ -461,7 +461,6 @@
             ]
         };
 
-        // 2. CASA CON IMPLEMENTOS (Mancuernas / Mochila con peso)
         const casaConImplementos = {
             inferior: [
                 { nombre: "Sentadilla Goblet con Mancuerna o Peso", series: "4 x 12 reps", dificultad: "Con implemento", explicacion: "Sostén una mancuerna verticalmente frente al pecho y baja.", errores: "Dejar que el peso te incline hacia adelante.", musculos: "Cuádriceps y glúteos." },
@@ -483,7 +482,6 @@
             ]
         };
 
-        // 3. GIMNASIO (Máquinas, barras libres y poleas)
         const gimnasio = {
             inferior: [
                 { nombre: "Sentadilla Libre con Barra en Rack", series: "4 x 10 reps", dificultad: "Gimnasio", explicacion: "Coloca la barra en la espalda alta, desciende y sube con potencia.", errores: "Desalinear las rodillas hacia adentro.", musculos: "Cuádriceps y glúteos." },
@@ -505,7 +503,6 @@
             ]
         };
 
-        // 4. BARRAS / PARQUE AL AIRE LIBRE
         const parqueBarras = {
             inferior: [
                 { nombre: "Sentadillas Búlgaras usando Banca del Parque", series: "3 x 10 por pierna", dificultad: "Parque", explicacion: "Apoya un empeine en la banca y baja con la pierna delantera.", errores: "Dejar que la rodilla pase demasiado la punta del pie.", musculos: "Cuádriceps y glúteos." },
@@ -528,9 +525,13 @@
         };
 
         let repositorio = casaSinImplementos;
-        if (lugar.includes("implementos") || lugar.includes("mancuernas")) repositorio = casaConImplementos;
-        else if (lugar.includes("gimnasio")) repositorio = gimnasio;
-        else if (lugar.includes("parque") || lugar.includes("barras")) repositorio = parqueBarras;
+        if (lugar.includes("gym") || lugar.includes("gimnasio")) {
+            repositorio = gimnasio;
+        } else if (lugar.includes("implementos") || lugar.includes("mancuernas")) {
+            repositorio = casaConImplementos;
+        } else if (lugar.includes("parque") || lugar.includes("barras") || lugar.includes("aire libre")) {
+            repositorio = parqueBarras;
+        }
 
         return repositorio[tipoMuscular] || repositorio.inferior;
     }
@@ -539,23 +540,33 @@
         const diasParsed = parseInt(datos.dias_entreno, 10);
         const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 4;
         
-        const lugar = (datos.lugar || "casa_sin_implementos").toLowerCase();
+        const lugarTexto = datos.lugar_entrenamiento || datos.lugar || "casa_sin_implementos";
+        const lugarLower = lugarTexto.toLowerCase();
+
+        let nombreVisualLugar = "Casa (Sin implementos)";
+        if (lugarLower.includes("gym") || lugarLower.includes("gimnasio")) {
+            nombreVisualLugar = "Gimnasio";
+        } else if (lugarLower.includes("implementos") || lugarLower.includes("mancuernas")) {
+            nombreVisualLugar = "Casa con implementos";
+        } else if (lugarLower.includes("parque") || lugarLower.includes("barras")) {
+            nombreVisualLugar = "Parque / Barras al aire libre";
+        }
 
         document.getElementById("resumenPerfil").textContent = 
-            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo || 'General'} | Entorno: ${datos.lugar || 'Casa'}`;
+            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo || 'General'} | Entorno: ${nombreVisualLugar}`;
 
-        document.getElementById("badgeEnfoque").textContent = `📍 Lugar de Entreno: ${(datos.lugar || 'Casa').toUpperCase()}`;
+        document.getElementById("badgeEnfoque").textContent = `📍 LUGAR DE ENTRENO: ${nombreVisualLugar.toUpperCase()}`;
 
         planEstructurado = [];
 
         for (let i = 1; i <= numDias; i++) {
             let tipo = (i % 2 !== 0) ? "inferior" : "superior";
-            let ejerciciosDelDia = obtenerEjerciciosPorLugarExacto(lugar, tipo);
+            let ejerciciosDelDia = obtenerEjerciciosPorLugarExacto(lugarLower, tipo);
 
             planEstructurado.push({
                 diaNumero: i,
                 titulo: `Día ${i}: ${tipo === 'inferior' ? 'Tren Inferior y Core' : 'Tren Superior y Tracción'}`,
-                descripcion: `Rutina estructurada con 6-7 ejercicios específicos para tu entorno (${datos.lugar || 'Personalizado'}).`,
+                descripcion: `Rutina estructurada con 6-7 ejercicios específicos para: ${nombreVisualLugar}.`,
                 ejercicios: ejerciciosDelDia
             });
         }
