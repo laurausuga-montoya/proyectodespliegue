@@ -216,14 +216,6 @@
             transform: translateY(-2px);
         }
 
-        .ejercicio-foto {
-            width: 130px;
-            height: 100px;
-            object-fit: cover;
-            background: #222;
-            flex-shrink: 0;
-        }
-
         .ejercicio-info {
             flex-grow: 1;
         }
@@ -444,64 +436,101 @@
         generarEstructuraRutinaPorEntorno(datos);
     }
 
-    // BANCOS DE EJERCICIOS SEGÚN EL ENTORNO SELECCIONADO
-    function obtenerEjerciciosPorLugar(lugar, tipoMuscular) {
-        const baseCasaSin = {
+    // BANCOS DE 6 A 7 EJERCICIOS ESTRICTOS POR CADA ENTORNO
+    function obtenerEjerciciosPorLugarExacto(lugar, tipoMuscular) {
+        
+        // 1. CASA SIN IMPLEMENTOS (100% Peso Corporal)
+        const casaSinImplementos = {
             inferior: [
-                { nombre: "Sentadillas con Peso Corporal", series: "4 x 15 reps", dificultad: "Corporal", explicacion: "Baja la cadera manteniendo la espalda recta.", errores: "Dejar que las rodillas colapsen hacia adentro.", musculos: "Cuádriceps y glúteos." },
-                { nombre: "Zancadas (Lunges) Estáticas", series: "3 x 12 por pierna", dificultad: "Corporal", explicacion: "Da un paso al frente y baja la rodilla trasera sin tocar el suelo.", errores: "Inclinar el tronco hacia adelante.", musculos: "Cuádriceps y glúteos." },
-                { nombre: "Puente de Glúteos en Suelo", series: "4 x 15 reps", dificultad: "Corporal", explicacion: "Acuéstate boca arriba y eleva la cadera contrayendo con fuerza.", errores: "Arquear demasiado la columna lumbar.", musculos: "Glúteos e isquiotibiales." },
-                { nombre: "Elevación de Talones de Pie (Gemelos)", series: "3 x 20 reps", dificultad: "Corporal", explicacion: "Sube sobre la punta de tus pies controlando el movimiento.", errores: "Hacer rebotes muy rápidos sin control.", musculos: "Gemelos." }
+                { nombre: "Sentadillas Libres con Peso Corporal", series: "4 x 15 reps", dificultad: "Corporal", explicacion: "Baja la cadera manteniendo la espalda recta y las rodillas alineadas.", errores: "Dejar que las rodillas colapsen hacia adentro.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Zancadas Estáticas Alternas (Lunges)", series: "3 x 12 por pierna", dificultad: "Corporal", explicacion: "Da un paso al frente y baja la rodilla trasera rozando el suelo.", errores: "Inclinar el tronco demasiado hacia adelante.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Puente de Glúteos en el Suelo", series: "4 x 15 reps", dificultad: "Corporal", explicacion: "Acuéstate boca arriba, eleva la cadera y contrae los glúteos arriba.", errores: "Arquear la columna lumbar excesivamente.", musculos: "Glúteos e isquiotibiales." },
+                { nombre: "Sentadilla Sumo con Salto", series: "3 x 10 reps", dificultad: "Alta Intensidad", explicacion: "Abre los pies más ancho que los hombros, baja y haz un salto explosivo.", errores: "Caer con las rodillas totalmente rígidas.", musculos: "Glúteos, abductores y cardio." },
+                { nombre: "Elevación de Talones de Pie (Gemelos)", series: "3 x 20 reps", dificultad: "Corporal", explicacion: "Párate firme y eleva los talones controlando la bajada.", errores: "Hacer rebotes demasiado rápidos.", musculos: "Gemelos." },
+                { nombre: "Zancadas hacia Atrás (Reverse Lunges)", series: "3 x 12 por pierna", dificultad: "Corporal", explicacion: "Da un paso hacia atrás bajando la cadera de forma estable.", errores: "Perder el equilibrio por ir muy rápido.", musculos: "Glúteos y cuádriceps." },
+                { nombre: "Sentadilla Isométrica en Pared (Wall Sit)", series: "3 x 45 segundos", dificultad: "Isometría", explicacion: "Apoya la espalda en la pared formando un ángulo de 90 grados en las rodillas.", errores: "Apoyar las manos en los muslos.", musculos: "Cuádriceps y resistencia." }
             ],
             superior: [
-                { nombre: "Flexiones de Pecho Tradicionales", series: "3 x 12 reps", dificultad: "Corporal", explicacion: "Mantén el cuerpo en línea recta y baja el pecho hacia el suelo.", errores: "Dejar caer la cadera.", musculos: "Pectorales, tríceps y hombros." },
-                { nombre: "Fondos de Tríceps en Silla", series: "3 x 12 reps", dificultad: "Corporal", explicacion: "Apoya las manos en el borde de una silla y baja flexionando los codos.", errores: "Separar demasiado los codos hacia afuera.", musculos: "Tríceps y hombros." },
-                { nombre: "Plancha Abdominal Isométrica", series: "3 x 45 segundos", dificultad: "Core", explicacion: "Mantén el abdomen contraído y el cuerpo completamente recto.", errores: "Elevar o hundir la cadera.", musculos: "Core y abdomen." }
+                { nombre: "Flexiones de Pecho Tradicionales", series: "3 x 12 reps", dificultad: "Corporal", explicacion: "Cuerpo recto, baja el pecho hasta casi tocar el suelo.", errores: "Dejar caer la cadera.", musculos: "Pectorales, tríceps y hombros." },
+                { nombre: "Flexiones Diamante (para Tríceps)", series: "3 x 10 reps", dificultad: "Intermedia", explicacion: "Junta las manos formando un triángulo con los índices y pulgares.", errores: "Abrir los codos demasiado hacia los lados.", musculos: "Tríceps y pecho interno." },
+                { nombre: "Fondos de Tríceps en Silla o Banco", series: "3 x 12 reps", dificultad: "Corporal", explicacion: "Apoya las manos en una silla y baja flexionando los codos.", errores: "Alejar demasiado los glúteos de la silla.", musculos: "Tríceps y hombro anterior." },
+                { nombre: "Flexiones Pica (Pike Push-ups para Hombros)", series: "3 x 10 reps", dificultad: "Intermedia", explicacion: "Eleva la cadera formando una V invertida y baja la cabeza hacia el suelo.", errores: "Arquear la espalda.", musculos: "Hombros y trapecios." },
+                { nombre: "Plancha Abdominal Isométrica", series: "3 x 45 segundos", dificultad: "Core", explicacion: "Mantén el cuerpo recto apoyado sobre los antebrazos.", errores: "Elevar o hundir la cadera.", musculos: "Core y abdomen." },
+                { nombre: "Plancha con Toque de Hombro", series: "3 x 20 toques", dificultad: "Core Dinámico", explicacion: "En posición de plancha alta, toca tu hombro opuesto alternadamente.", errores: "Balancear la cadera al mover los brazos.", musculos: "Core y estabilidad." },
+                { nombre: "Superman (Extensiones lumbares en suelo)", series: "3 x 15 reps", dificultad: "Corporal", explicacion: "Acuéstate boca abajo y eleva simultáneamente brazos y piernas del suelo.", errores: "Dar tirones bruscos con el cuello.", musculos: "Espalda baja y glúteos." }
             ]
         };
 
-        const baseCasaCon = {
+        // 2. CASA CON IMPLEMENTOS (Mancuernas / Mochila con peso)
+        const casaConImplementos = {
             inferior: [
-                { nombre: "Sentadillas sosteniendo Mancuernas / Mochila con peso", series: "4 x 12 reps", dificultad: "Con implemento", explicacion: "Sostén el peso firmemente frente al pecho y realiza la sentadilla.", errores: "Redondear la espalda baja.", musculos: "Cuádriceps y glúteos." },
-                { nombre: "Peso Muerto Rumano con Mancuernas", series: "4 x 12 reps", dificultad: "Con implemento", explicacion: "Flexiona ligeramente las rodillas y lleva la cadera hacia atrás.", errores: "Curvar la columna al bajar el peso.", musculos: "Isquiotibiales y glúteos." },
-                { nombre: "Zancadas con Mancuernas", series: "3 x 10 por pierna", dificultad: "Con implemento", explicacion: "Da un paso al frente cargando mancuernas a los costados.", errores: "Perder el equilibrio por ir demasiado rápido.", musculos: "Piernas y estabilidad." }
+                { nombre: "Sentadilla Goblet con Mancuerna o Peso", series: "4 x 12 reps", dificultad: "Con implemento", explicacion: "Sostén una mancuerna verticalmente frente al pecho y baja.", errores: "Dejar que el peso te incline hacia adelante.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Peso Muerto Rumano con Mancuernas", series: "4 x 12 reps", dificultad: "Con implemento", explicacion: "Desliza las mancuernas cerca de tus muslos llevando la cadera atrás.", errores: "Curvar la zona lumbar.", musculos: "Isquiotibiales y glúteos." },
+                { nombre: "Zancadas Caminando con Mancuernas", series: "3 x 10 por pierna", dificultad: "Con implemento", explicacion: "Avanza dando zancadas sosteniendo peso en ambas manos.", errores: "Golpear la rodilla trasera contra el piso.", musculos: "Piernas completas." },
+                { nombre: "Sentadilla Búlgara con Mancuernas", series: "3 x 10 por pierna", dificultad: "Avanzada", explicacion: "Coloca un pie elevado en una silla trasera y baja con la pierna delantera.", errores: "Inclinar demasiado el torso.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Puente de Glúteos con Peso sobre Cadera", series: "4 x 15 reps", dificultad: "Con implemento", explicacion: "Coloca una mancuerna sobre tu pelvis y eleva la cadera.", errores: "Arquear la espalda de forma exagerada.", musculos: "Glúteos." },
+                { nombre: "Peso Muerto a Una Pierna con Mancuerna", series: "3 x 10 por lado", dificultad: "Equilibrio", explicacion: "Inclina el torso mientras elevas la pierna libre hacia atrás.", errores: "Perder la alineación de la cadera.", musculos: "Isquiotibiales y estabilidad." },
+                { nombre: "Elevación de Talones con Mancuernas", series: "4 x 15 reps", dificultad: "Con implemento", explicacion: "Sostén mancuernas a los lados y eleva los talones al máximo.", errores: "Hacer el movimiento apurado.", musculos: "Gemelos." }
             ],
             superior: [
-                { nombre: "Press de Hombros con Mancuernas sentado", series: "3 x 12 reps", dificultad: "Con implemento", explicacion: "Eleva las mancuernas por encima de la cabeza de forma controlada.", errores: "Arquear la espalda al subir.", musculos: "Hombros y tríceps." },
-                { nombre: "Remo a una mano con Mancuerna", series: "3 x 12 por lado", dificultad: "Con implemento", explicacion: "Apoya una mano en un banco y rema llevando el codo hacia la cadera.", errores: "Rotar el torso excesivamente.", musculos: "Espalda alta y bíceps." },
-                { nombre: "Curl de Bíceps con Mancuernas", series: "3 x 15 reps", dificultad: "Con implemento", explicacion: "Flexiona los codos elevando el peso sin balancear el cuerpo.", errores: "Usar impulso con la cadera.", musculos: "Bíceps." }
+                { nombre: "Press de Hombros Sentado con Mancuernas", series: "3 x 12 reps", dificultad: "Con implemento", explicacion: "Eleva las mancuernas por encima de la cabeza de forma controlada.", errores: "Arquear la columna al subir.", musculos: "Hombros y tríceps." },
+                { nombre: "Remo a una mano con Mancuerna en Banco", series: "3 x 12 por lado", dificultad: "Con implemento", explicacion: "Apoya una mano en una superficie y lleva el codo hacia la cadera.", errores: "Girar el tronco al subir el peso.", musculos: "Espalda alta y bíceps." },
+                { nombre: "Floor Press con Mancuernas (en suelo)", series: "3 x 12 reps", dificultad: "Con implemento", explicacion: "Acuéstate en el suelo y empuja las mancuernas hacia arriba.", errores: "Golpear los codos contra el piso de golpe.", musculos: "Pectorales y tríceps." },
+                { nombre: "Aperturas con Mancuernas en Suelo", series: "3 x 12 reps", dificultad: "Aislamiento", explicacion: "Con los brazos semi-flexionados, abre y cierra abrazando el aire.", errores: "Estirar por completo los codos.", musculos: "Pectorales." },
+                { nombre: "Elevaciones Laterales con Mancuernas", series: "3 x 15 reps", dificultad: "Con implemento", explicacion: "Eleva las mancuernas hacia los lados hasta la altura de los hombros.", errores: "Usar impulso con la cadera.", musculos: "Deltoides lateral." },
+                { nombre: "Curl de Bíceps Alterno con Mancuernas", series: "3 x 12 reps", dificultad: "Con implemento", explicacion: "Flexiona los codos alternadamente girando ligeramente la muñeca.", errores: "Balancear el cuerpo para subir.", musculos: "Bíceps." },
+                { nombre: "Extensiones de Tríceps Copa a Dos Manos", series: "3 x 12 reps", dificultad: "Con implemento", explicacion: "Sostén una mancuerna tras la nuca y extiende los brazos hacia arriba.", errores: "Abrir los codos hacia afuera.", musculos: "Tríceps." }
             ]
         };
 
-        const baseGimnasio = {
+        // 3. GIMNASIO (Máquinas, barras libres y poleas)
+        const gimnasio = {
             inferior: [
-                { nombre: "Sentadilla Libre con Barra en Rack", series: "4 x 10 reps", dificultad: "Gimnasio", explicacion: "Coloca la barra sobre la espalda alta y ejecuta la sentadilla profunda.", errores: "Dejar que las rodillas colapsen.", musculos: "Cuádriceps y glúteos completos." },
-                { nombre: "Prensa de Piernas Horizontal", series: "4 x 12 reps", dificultad: "Gimnasio", explicacion: "Coloca los pies en la plataforma y empuja controlando el retorno.", errores: "Bloquear por completo las rodillas arriba.", musculos: "Cuádriceps y piernas." },
-                { nombre: "Curl de Femorales en Máquina", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Acuéstate boca abajo y flexiona las piernas acercando el rodillo a los glúteos.", errores: "Elevar la cadera del banco al tirar.", musculos: "Isquiotibiales." }
+                { nombre: "Sentadilla Libre con Barra en Rack", series: "4 x 10 reps", dificultad: "Gimnasio", explicacion: "Coloca la barra en la espalda alta, desciende y sube con potencia.", errores: "Desalinear las rodillas hacia adentro.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Prensa de Piernas Inclinada a 45°", series: "4 x 12 reps", dificultad: "Gimnasio", explicacion: "Coloca los pies a la anchura de los hombros y empuja la plataforma.", errores: "Bloquear las rodillas por completo arriba.", musculos: "Cuádriceps y piernas." },
+                { nombre: "Peso Muerto con Barra Olímpica", series: "4 x 8 reps", dificultad: "Avanzado", explicacion: "Mantén la espalda neutra y eleva la barra pegada a tus piernas.", errores: "Redondear la espalda al despegar el peso.", musculos: "Cadena posterior completa." },
+                { nombre: "Curl de Femorales Acostado en Máquina", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Flexiona las rodillas llevando el rodillo hacia tus glúteos.", errores: "Elevar la cadera del banco al contraer.", musculos: "Isquiotibiales." },
+                { nombre: "Extensiones de Cuádriceps en Máquina", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Siéntate y extiende las piernas por completo reteniendo la bajada.", errores: "Hacer tirones bruscos.", musculos: "Cuádriceps." },
+                { nombre: "Elevación de Talones en Máquina (Gemelos)", series: "4 x 15 reps", dificultad: "Gimnasio", explicacion: "Apoya la punta de los pies y realiza un recorrido articular completo.", errores: "Acortar el rango de movimiento.", musculos: "Gemelos." },
+                { nombre: "Hip Thrust con Barra en Banco", series: "4 x 12 reps", dificultad: "Gimnasio", explicacion: "Apoya la espalda alta en el banco, pon la barra en la cadera y empuja.", errores: "Arquear en exceso la zona lumbar al subir.", musculos: "Glúteos." }
             ],
             superior: [
-                { nombre: "Press de Banca Plano con Barra", series: "4 x 10 reps", dificultad: "Gimnasio", explicacion: "Baja la barra de forma controlada hasta el pecho y empuja.", errores: "Rebotar la barra en el esternón.", musculos: "Pectorales y tríceps." },
-                { nombre: "Jalón al Pecho en Polea Alta", series: "4 x 12 reps", dificultad: "Gimnasio", explicacion: "Tira de la barra hacia tu pecho superior sacando el pecho.", errores: "Echarse demasiado hacia atrás.", musculos: "Dorsales y espalda." },
-                { nombre: "Elevaciones Laterales con Mancuernas", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Eleva los brazos hacia los costados hasta la altura de los hombros.", errores: "Usar inercia con el torso.", musculos: "Hombros (deltoides lateral)." }
+                { nombre: "Press de Banca Plano con Barra", series: "4 x 10 reps", dificultad: "Gimnasio", explicacion: "Baja la barra de forma controlada al pecho y empuja con fuerza.", errores: "Rebotar el peso en el esternón.", musculos: "Pectorales y tríceps." },
+                { nombre: "Jalón al Pecho en Polea Alta", series: "4 x 12 reps", dificultad: "Gimnasio", explicacion: "Tira de la barra hacia el pecho superior sacando el pecho.", errores: "Inclinarse demasiado hacia atrás.", musculos: "Dorsales y espalda." },
+                { nombre: "Press Militar de Pie con Barra", series: "3 x 10 reps", dificultad: "Gimnasio", explicacion: "Sostén la barra al pecho y presiona verticalmente por encima de la cabeza.", errores: "Arquear la espalda baja.", musculos: "Hombros y tríceps." },
+                { nombre: "Remo en Polea Baja (Agarre Estrecho)", series: "3 x 12 reps", dificultad: "Gimnasio", explicacion: "Tracciona el maneral hacia tu abdomen manteniendo el torso firme.", errores: "Balancear el tronco hacia adelante y atrás.", musculos: "Espalda media." },
+                { nombre: "Aperturas en Máquina Contractor (Pec-Deck)", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Junta los brazos al frente apretando los pectorales.", errores: "Doblar los codos en exceso como si hicieras press.", musculos: "Pectorales." },
+                { nombre: "Elevaciones Laterales con Polea Baja", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Toma el cable por detrás y eleva el brazo lateralmente.", errores: "Usar inercia corporal.", musculos: "Deltoides lateral." },
+                { nombre: "Extensiones de Tríceps en Polea con Cuerda", series: "3 x 15 reps", dificultad: "Gimnasio", explicacion: "Codos fijos a los costados y abre la cuerda al final del tramo.", errores: "Separar los codos del cuerpo.", musculos: "Tríceps." }
             ]
         };
 
-        const baseParque = {
+        // 4. BARRAS / PARQUE AL AIRE LIBRE
+        const parqueBarras = {
             inferior: [
-                { nombre: "Sentadillas Búlgaras usando banca del parque", series: "3 x 10 por pierna", dificultad: "Parque / Barras", explicacion: "Apoya un pie en el banco trasero y baja con la pierna delantera.", errores: "Inclinar el tronco demasiado al frente.", musculos: "Cuádriceps y glúteos." },
-                { nombre: "Step-ups (Subidas al banco)", series: "3 x 12 por pierna", dificultad: "Parque / Barras", explicacion: "Sube y baja del banco del parque de forma controlada.", errores: "Impulsarse con el pie de abajo.", musculos: "Piernas y estabilidad." }
+                { nombre: "Sentadillas Búlgaras usando Banca del Parque", series: "3 x 10 por pierna", dificultad: "Parque", explicacion: "Apoya un empeine en la banca y baja con la pierna delantera.", errores: "Dejar que la rodilla pase demasiado la punta del pie.", musculos: "Cuádriceps y glúteos." },
+                { nombre: "Step-ups (Subidas al escalón o banca)", series: "3 x 12 por pierna", dificultad: "Parque", explicacion: "Sube al banco estirando por completo la pierna de apoyo.", errores: "Impulsarse con el pie del suelo de golpe.", musculos: "Piernas y estabilidad." },
+                { nombre: "Sentadillas libres profundas en exterior", series: "4 x 15 reps", dificultad: "Parque", explicacion: "Aprovecha el espacio abierto para realizar sentadillas con buena técnica.", errores: "Levantar los talones del suelo.", musculos: "Cuádriceps." },
+                { nombre: "Zancadas en movimiento sobre césped", series: "3 x 12 por pierna", dificultad: "Parque", explicacion: "Avanza por el parque haciendo zancadas largas y controladas.", errores: "Ir demasiado rápido perdiendo estabilidad.", musculos: "Glúteos y piernas." },
+                { nombre: "Elevación de Talones en Bordillo o Escalón", series: "4 x 20 reps", dificultad: "Parque", explicacion: "Apoya la mitad del pie en el borde de un escalón y baja el talón.", errores: "Hacer un rango de movimiento incompleto.", musculos: "Gemelos." },
+                { nombre: "Sentadilla Sumo con peso corporal en parque", series: "3 x 15 reps", dificultad: "Parque", explicacion: "Separa los pies con las puntas hacia afuera y desciende con control.", errores: "Cerrar las rodillas al subir.", musculos: "Aductores y glúteos." },
+                { nombre: "Puente de Glúteos sobre pasto", series: "4 x 15 reps", dificultad: "Parque", explicacion: "Acuéstate sobre una esterilla en el parque y eleva la cadera.", errores: "Arquear la columna en exceso.", musculos: "Glúteos." }
             ],
             superior: [
-                { nombre: "Dominadas en Barra Fija (Pull-ups)", series: "3 x Máximas reps", dificultad: "Avanzado / Parque", explicacion: "Súbete a la barra fija y eleva tu barbilla por encima de ella.", errores: "No realizar el rango completo de movimiento.", musculos: "Dorsales, espalda y bíceps." },
-                { nombre: "Fondos en Paralelas (Dips)", series: "3 x 10 reps", dificultad: "Parque / Barras", explicacion: "Suspéndete en las barras paralelas y flexiona los codos.", errores: "Bajar demasiado comprometiendo los hombros.", musculos: "Pecho y tríceps." },
-                { nombre: "Remo Australiano en Barra Baja", series: "3 x 12 reps", dificultad: "Parque / Barras", explicacion: "Toma una barra baja, estira el cuerpo y tracciona tu pecho hacia ella.", errores: "Doblar la cadera al subir.", musculos: "Espalda media y bíceps." }
+                { nombre: "Dominadas en Barra Fija (Pull-ups)", series: "3 x Máximas reps", dificultad: "Avanzado / Parque", explicacion: "Súbete a la barra con agarre prono y eleva la barbilla sobre esta.", errores: "Balancearse con el cuerpo (kipping excesivo).", musculos: "Dorsales y bíceps." },
+                { nombre: "Dominadas Supinas (Chin-ups)", series: "3 x Máximas reps", dificultad: "Intermedia", explicacion: "Agarra la barra con las palmas hacia ti para enfocar el esfuerzo en bíceps.", errores: "No estirar los brazos abajo por completo.", musculos: "Bíceps y espalda." },
+                { nombre: "Fondos en Paralelas (Dips)", series: "3 x 10 reps", dificultad: "Parque", explicacion: "Suspéndete en las barras paralelas y baja flexionando los codos.", errores: "Bajar de forma descontrolada.", musculos: "Pecho y tríceps." },
+                { nombre: "Remo Australiano en Barra Baja", series: "3 x 12 reps", dificultad: "Parque", explicacion: "Toma una barra baja, estira el cuerpo y tracciona tu pecho hacia ella.", errores: "Doblar la cadera formando una V.", musculos: "Espalda media." },
+                { nombre: "Flexiones declinadas usando la banca", series: "3 x 12 reps", dificultad: "Parque", explicacion: "Coloca los pies sobre la banca del parque y las manos en el suelo.", errores: "Dejar caer la cintura.", musculos: "Pectorales superiores." },
+                { nombre: "Elevación de Rodillas Colgado de la Barra", series: "3 x 12 reps", dificultad: "Core / Parque", explicacion: "Suspéndete de la barra fija y eleva las rodillas hacia tu pecho.", errores: "Balancear el cuerpo para impulsarse.", musculos: "Abdomen y core." },
+                { nombre: "Flexiones inclinadas con manos en la banca", series: "3 x 15 reps", dificultad: "Principiante", explicacion: "Apoya las manos en el respaldar o asiento de la banca y haz flexiones.", errores: "Separar los codos demasiado.", musculos: "Pectorales inferiores." }
             ]
         };
 
-        let repositorio = baseCasaSin;
-        if (lugar.includes("implementos") || lugar.includes("mancuernas")) repositorio = baseCasaCon;
-        else if (lugar.includes("gimnasio")) repositorio = baseGimnasio;
-        else if (lugar.includes("parque") || lugar.includes("barras")) repositorio = baseParque;
+        let repositorio = casaSinImplementos;
+        if (lugar.includes("implementos") || lugar.includes("mancuernas")) repositorio = casaConImplementos;
+        else if (lugar.includes("gimnasio")) repositorio = gimnasio;
+        else if (lugar.includes("parque") || lugar.includes("barras")) repositorio = parqueBarras;
 
         return repositorio[tipoMuscular] || repositorio.inferior;
     }
@@ -510,7 +539,6 @@
         const diasParsed = parseInt(datos.dias_entreno, 10);
         const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 4;
         
-        const objetivo = (datos.objetivo || "").toLowerCase();
         const lugar = (datos.lugar || "casa_sin_implementos").toLowerCase();
 
         document.getElementById("resumenPerfil").textContent = 
@@ -522,12 +550,12 @@
 
         for (let i = 1; i <= numDias; i++) {
             let tipo = (i % 2 !== 0) ? "inferior" : "superior";
-            let ejerciciosDelDia = obtenerEjerciciosPorLugar(lugar, tipo);
+            let ejerciciosDelDia = obtenerEjerciciosPorLugarExacto(lugar, tipo);
 
             planEstructurado.push({
                 diaNumero: i,
                 titulo: `Día ${i}: ${tipo === 'inferior' ? 'Tren Inferior y Core' : 'Tren Superior y Tracción'}`,
-                descripcion: `Rutina diseñada específicamente para tu entorno (${datos.lugar || 'Personalizado'}).`,
+                descripcion: `Rutina estructurada con 6-7 ejercicios específicos para tu entorno (${datos.lugar || 'Personalizado'}).`,
                 ejercicios: ejerciciosDelDia
             });
         }
@@ -557,7 +585,7 @@
 
         if (!diaData) return;
 
-        let htmlEjercicios = diaData.ejercicios.map((ej, index) => `
+        let htmlEjercicios = diaData.ejercicios.map((ej) => `
             <div class="tarjeta-ejercicio" onclick='abrirModal(${JSON.stringify(ej)})'>
                 <div class="ejercicio-info">
                     <h4>${ej.nombre}</h4>
