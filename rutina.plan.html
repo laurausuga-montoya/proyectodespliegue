@@ -363,7 +363,7 @@
     <div class="selector-dias" id="contenedorBotonesDias"></div>
 
     <div id="vistaDiaSeleccionado">
-        <div class="vacio">Generando tu rutina adaptada a tus capacidades...</div>
+        <div class="vacio">Generando tu rutina adaptada con ejercicios unilaterales...</div>
     </div>
 </main>
 
@@ -378,7 +378,7 @@
             <span id="modalDificultad" class="dificultad-badge"></span>
         </div>
         <div class="modal-seccion">
-            <h5>📖 ¿Cómo se hace correctamente?</h5>
+            <h5>📖 ¿Cómo se hace exactamente?</h5>
             <p id="modalExplicacion">Instrucciones paso a paso.</p>
         </div>
         <div class="modal-seccion">
@@ -444,27 +444,26 @@
         generarRutinaConFiltroDeLimitaciones(datos);
     }
 
-    // BANCO COMPLETO DE EJERCICIOS CON OPCIONES ADAPTADAS PARA LIMITACIONES FÍSICAS
-    function obtenerBancoEjerciciosAdaptados(grupoMuscular, tieneLimitacionExtremidad) {
+    // BANCO DE EJERCICIOS CON EXCLUSIÓN ESTRICTA DE EJERCICIOS BILATERALES CUANDO FALTA UNA PIERNA
+    function obtenerBancoEjerciciosAdaptados(grupoMuscular, faltaPierna) {
         
-        // SI EL USUARIO TIENE UNA LIMITACIÓN DE EXTREMIDAD (Falta de brazo o pierna)
-        if (tieneLimitacionExtremidad) {
+        if (faltaPierna) {
             if (grupoMuscular === "inf") {
                 return [
                     {
                         nombre: "Extensión de Cuádriceps Unilateral en Máquina",
                         series: "3 x 12 reps",
-                        dificultad: "Adaptado / Unilateral",
-                        explicacion: "1. Siéntate en la máquina de extensiones de forma estable. 2. Trabaja de manera unilateral utilizando únicamente la pierna disponible de forma controlada. 3. Realiza la extensión completa reteniendo la bajada.",
-                        errores: "Intentar forzar movimientos con apoyo bilateral inseguro.",
+                        dificultad: "Unilateral Adaptado",
+                        explicacion: "1. Siéntate en la máquina de extensiones con apoyo seguro. 2. Trabaja de forma estrictamente unilateral utilizando únicamente la extremidad inferior disponible. 3. Realiza la extensión completa reteniendo la bajada.",
+                        errores: "Intentar forzar apoyos bilaterales inexistentes.",
                         musculos: "Cuádriceps.",
                         foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80"
                     },
                     {
                         nombre: "Curl de Femorales Sentado o Acostado Unilateral",
                         series: "3 x 12 reps",
-                        dificultad: "Adaptado / Unilateral",
-                        explicacion: "1. Ajusta la máquina para realizar el ejercicio apoyando y moviendo la extremidad inferior disponible. 2. Flexiona de forma controlada contrayendo el músculo posterior.",
+                        dificultad: "Unilateral Adaptado",
+                        explicacion: "1. Ajusta la máquina para trabajar de forma aislada y unilateral con tu pierna disponible. 2. Flexiona de manera controlada contrayendo el músculo posterior.",
                         errores: "Arquear la columna por exceso de carga.",
                         musculos: "Isquiotibiales.",
                         foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80"
@@ -472,75 +471,76 @@
                     {
                         nombre: "Prensa de Piernas Unilateral",
                         series: "3 x 10 reps",
-                        dificultad: "Adaptado / Unilateral",
+                        dificultad: "Unilateral Adaptado",
                         explicacion: "1. Ubícate en la prensa apoyando un solo pie en el centro de la plataforma. 2. Desciende con control sin exceder el rango y empuja firmemente con el talón.",
                         errores: "Colocar mal el pie generando desalineación en la rodilla.",
                         musculos: "Cuádriceps y glúteos.",
                         foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Puente de Glúteos Adaptado en Suelo",
+                        nombre: "Puente de Glúteos Unilateral en Suelo",
                         series: "3 x 15 reps",
-                        dificultad: "Adaptado",
-                        explicacion: "1. Acuéstate boca arriba apoyando firme la base de apoyo disponible en el suelo. 2. Eleva la cadera contrayendo los glúteos de forma segura y simétrica.",
+                        dificultad: "Unilateral Adaptado",
+                        explicacion: "1. Acuéstate boca arriba apoyando firmemente el pie disponible en el suelo. 2. Eleva la cadera contrayendo el glúteo de forma aislada y segura.",
                         errores: "Empujar con fuerza desmedida en la zona lumbar.",
                         musculos: "Glúteos y estabilidad de cadera.",
                         foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Elevación de Talones Sentado en Máquina",
+                        nombre: "Elevación de Talones Unilateral Sentado",
                         series: "3 x 15 reps",
-                        dificultad: "Adaptado",
-                        explicacion: "1. Siéntate en la máquina de gemelos apoyando la extremidad disponible bajo el cojín de carga. 2. Realiza el movimiento completo de elevación de talón.",
+                        dificultad: "Unilateral Adaptado",
+                        explicacion: "1. Siéntate en la máquina de gemelos apoyando una sola extremidad bajo el cojín. 2. Realiza el movimiento completo de elevación de talón de manera aislada.",
                         errores: "Hacer rebotes rápidos.",
                         musculos: "Gemelos.",
                         foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80"
                     }
                 ];
             } else {
+                // Tren superior adaptado para usuarios con falta de extremidad inferior
                 return [
                     {
                         nombre: "Press en Máquina Convergente Unilateral",
                         series: "3 x 12 reps",
-                        dificultad: "Adaptado / Unilateral",
-                        explicacion: "1. Siéntate en la máquina de pecho o hombros adaptada. 2. Utiliza el brazo o extremidad superior disponible para realizar el empuje de forma aislada y segura.",
-                        errores: "Girar demasiado el torso al empujar.",
+                        dificultad: "Adaptado",
+                        explicacion: "1. Siéntate en la máquina de pecho de manera estable. 2. Empuja de forma controlada trabajando la fuerza superior de manera segura.",
+                        errores: "Girar demasiado el torso.",
                         musculos: "Pectorales y deltoides.",
                         foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Jalón al Pecho con Agarre Unilateral en Polea",
+                        nombre: "Jalón al Pecho en Polea Alta",
                         series: "3 x 12 reps",
-                        dificultad: "Adaptado / Unilateral",
-                        explicacion: "1. Conecta un maneral individual a la polea alta. 2. Sujétalo firmemente con la extremidad superior disponible y realiza el tirón hacia abajo contrayendo el dorsal.",
-                        errores: "Inclinarse en exceso hacia un lado.",
+                        dificultad: "Adaptado",
+                        explicacion: "1. Siéntate firmemente en la polea alta y tira de la barra hacia tu pecho superior sacando pecho.",
+                        errores: "Inclinarse en exceso hacia atrás.",
                         musculos: "Dorsales y espalda alta.",
                         foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Curl de Bíceps Unilateral en Polea Baja",
+                        nombre: "Curl de Bíceps en Polea Baja",
                         series: "3 x 12 reps",
                         dificultad: "Adaptado",
-                        explicacion: "1. Toma el maneral de la polea baja con tu brazo disponible. 2. Flexiona el codo manteniendo el brazo firme junto al cuerpo.",
+                        explicacion: "1. Toma el maneral de la polea y flexiona los codos manteniendo los brazos fijos a los costados.",
                         errores: "Usar impulso con el torso.",
                         musculos: "Bíceps.",
                         foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Extensiones de Tríceps en Polea con una Mano",
+                        nombre: "Extensiones de Tríceps en Polea con Cuerda",
                         series: "3 x 12 reps",
                         dificultad: "Adaptado",
-                        explicacion: "1. Sujeta el cable con una mano y fija el codo a un costado. 2. Extiende el brazo hacia abajo de forma controlada.",
-                        errores: "Separar el codo del cuerpo.",
+                        explicacion: "1. Extiende los brazos hacia abajo manteniendo los codos fijos al torso.",
+                        errores: "Separar los codos del cuerpo.",
                         musculos: "Tríceps.",
                         foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80"
                     },
                     {
-                        nombre: "Elevaciones Laterales Unilaterales con Mancuerna o Polea",
+                        nombre: "Elevaciones Laterales con Mancuernas",
                         series: "3 x 15 reps",
                         dificultad: "Adaptado",
-                        explicacion: "1. Sujeta un peso ligero o maneral y eleva lateralmente el brazo disponible hasta la altura del hombro.",
-                        errores: "Usar impulso del cuerpo.",
+                        explicacion: "1. Sentado de forma estable, eleva las mancuernas hacia los lados hasta la altura de los hombros.",
+                        errores: "Usar impulso corporal.",
                         musculos: "Deltoides lateral.",
                         foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80"
                     }
@@ -548,7 +548,7 @@
             }
         }
 
-        // EJERCICIOS ESTÁNDARES SI NO HAY LIMITACIONES DE EXTREMIDADES
+        // EJERCICIOS ESTÁNDARES SI NO HAY LIMITACIÓN DE PIERNA
         if (grupoMuscular === "inf") {
             return [
                 { nombre: "Sentadilla Libre con Barra", series: "4 x 10 reps", dificultad: "Estándar", explicacion: "1. Coloca la barra en la espalda alta, desciende controlado y sube empujando con los talones.", errores: "Cerrar las rodillas.", musculos: "Cuádriceps y glúteos.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
@@ -575,19 +575,18 @@
         const objetivoTexto = datos.objetivo || "Aumento de masa muscular";
         const lugarTexto = datos.lugar_entrenamiento || datos.lugar || "Gimnasio";
         
-        // DETECTAR SI EL USUARIO TIENE LIMITACIÓN DE EXTREMIDAD (Falta de extremidad, amputación, etc.)
-        const limitacionesTexto = (datos.limitaciones || datos.lesiones || "").toLowerCase();
-        const tieneLimitacionExtremidad = limitacionesTexto.includes("extremidad") || 
-                                          limitacionesTexto.includes("falta") || 
-                                          limitacionesTexto.includes("amput") || 
-                                          limitacionesTexto.includes("brazo") || 
-                                          limitacionesTexto.includes("pierna");
+        // DETECTAR ESPECÍFICAMENTE SI FALTA UNA PIERNA O EXTREMIDAD INFERIOR
+        const limitacionesTexto = (datos.limitaciones || datos.lesiones || datos.tipo_discapacidad || "").toLowerCase();
+        const faltaPierna = limitacionesTexto.includes("pierna") || 
+                            limitacionesTexto.includes("amput") || 
+                            limitacionesTexto.includes("falta") || 
+                            limitacionesTexto.includes("extremidad inferior");
 
         document.getElementById("resumenPerfil").textContent = 
             `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${objetivoTexto} | Entorno: ${lugarTexto}`;
 
-        if (tieneLimitacionExtremidad) {
-            document.getElementById("badgeEnfoque").textContent = `🛡️ MODO ADAPTADO: EJERCICIOS UNILATERALES Y SEGUROS`;
+        if (faltaPierna) {
+            document.getElementById("badgeEnfoque").textContent = `🛡️ MODO ADAPTADO: EJERCICIOS UNILATERALES PARA PIERNA DISPONIBLE`;
         } else {
             document.getElementById("badgeEnfoque").textContent = `🎯 OBJETIVO: ${objetivoTexto.toUpperCase()}`;
         }
@@ -596,13 +595,13 @@
 
         for (let i = 1; i <= numDias; i++) {
             let grupo = (i % 2 !== 0) ? "inf" : "sup";
-            let ejerciciosDelDia = obtenerBancoEjerciciosAdaptados(grupo, tieneLimitacionExtremidad);
+            let ejerciciosDelDia = obtenerBancoEjerciciosAdaptados(grupo, faltaPierna);
 
             planEstructurado.push({
                 diaNumero: i,
-                titulo: `Día ${i}: ${grupo === 'inf' ? 'Tren Inferior Adaptado' : 'Tren Superior Adaptado'}`,
-                descripcion: tieneLimitacionExtremidad ? 
-                    `Rutina 100% adaptada sin requerir ambas extremidades simétricas.` : 
+                titulo: `Día ${i}: ${grupo === 'inf' ? 'Tren Inferior Unilateral' : 'Tren Superior Adaptado'}`,
+                descripcion: faltaPierna ? 
+                    `Rutina adaptada con ejercicios unilaterales seguros para trabajar la pierna disponible.` : 
                     `Plan de entrenamiento estándar para ${objetivoTexto}.`,
                 ejercicios: ejerciciosDelDia
             });
