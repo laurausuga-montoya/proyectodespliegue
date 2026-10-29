@@ -356,7 +356,7 @@
 <main>
     <div class="cabecera-plan">
         <h1>Tu Rutina de Entrenamiento Adaptada</h1>
-        <p id="resumenPerfil">Cargando perfil y entorno de entrenamiento...</p>
+        <p id="resumenPerfil">Cargando perfil y objetivos...</p>
         <span id="badgeEnfoque" class="etiqueta-enfoque">--</span>
     </div>
 
@@ -441,141 +441,135 @@
             return;
         }
 
-        generarEstructuraRutinaPorEntorno(datos);
+        generarEstructuraRutinaPorObjetivo(datos);
     }
 
-    // BANCOS DE EJERCICIOS VARIADOS SEGÚN GRUPO MUSCULAR Y ENTORNO
-    function obtenerEjerciciosEspecificos(lugar, grupoMuscular, esBajarDePeso) {
-        const l = lugar.toLowerCase();
-        const esGym = l.includes("gym") || l.includes("gimnasio");
-        const esParque = l.includes("parque") || l.includes("barras");
-        const esConImplementos = l.includes("implementos") || l.includes("mancuernas");
+    // BANCOS DE EJERCICIOS SEGÚN EL OBJETIVO SELECCIONADO EN EL FORMULARIO
+    function obtenerEjerciciosPorObjetivo(objetivoRaw, grupoMuscular) {
+        const obj = (objetivoRaw || "").toLowerCase();
 
-        // SERIES Y REPETICIONES ADAPATADAS SEGÚN OBJETIVO (BAJAR DE PESO / QUEMA VS HIPERTROFIA)
-        const repes = esBajarDePeso ? "4 series x 15-20 reps (Circuito dinámico)" : "4 series x 10-12 reps (Carga controlada)";
-
-        let lista = [];
-
-        if (grupoMuscular === "piernas_gluteos") {
-            if (esGym) {
-                lista = [
-                    { nombre: "Sentadilla Libre con Barra", series: repes, dificultad: "Gimnasio", explicacion: "Baja de forma controlada manteniendo la espalda recta.", errores: "Inclinarse demasiado al frente.", musculos: "Cuádriceps y glúteos.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Hip Thrust con Barra en Banco", series: repes, dificultad: "Gimnasio", explicacion: "Apoya la espalda en el banco y eleva la cadera con potencia.", errores: "Arquear la columna lumbar al subir.", musculos: "Glúteos y femorales.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Prensa Inclinada 45°", series: repes, dificultad: "Gimnasio", explicacion: "Coloca los pies en la plataforma y empuja de manera uniforme.", errores: "Bloquear las rodillas por completo.", musculos: "Cuádriceps.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Peso Muerto Rumano", series: repes, dificultad: "Gimnasio", explicacion: "Desliza la barra cerca de las piernas llevando la cadera atrás.", errores: "Curvar la espalda baja.", musculos: "Isquiotibiales y glúteos.", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Curl de Femorales Acostado", series: repes, dificultad: "Gimnasio", explicacion: "Flexiona las rodillas acercando el rodillo a los glúteos.", errores: "Elevar la cadera del asiento.", musculos: "Femorales.", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Extensiones de Cuádriceps", series: repes, dificultad: "Gimnasio", explicacion: "Extiende las piernas por completo reteniendo la bajada.", errores: "Hacer tirones bruscos.", musculos: "Cuádriceps.", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
-                ];
-            } else if (esConImplementos) {
-                lista = [
-                    { nombre: "Sentadilla Goblet con Mancuerna", series: repes, dificultad: "Con implemento", explicacion: "Sostén peso frente al pecho y realiza la sentadilla profunda.", errores: "Dejar caer el torso.", musculos: "Cuádriceps y glúteos.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Peso Muerto con Mancuernas", series: repes, dificultad: "Con implemento", explicacion: "Inina el torso recto bajando las mancuernas hacia el suelo.", errores: "Doblar la columna.", musculos: "Glúteos y femorales.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Zancadas con Mancuernas", series: repes, dificultad: "Con implemento", explicacion: "Da pasos largos al frente cargando peso en las manos.", errores: "Perder la verticalidad.", musculos: "Piernas.", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Puente de Glúteos con Peso", series: repes, dificultad: "Con implemento", explicacion: "Coloca peso sobre la pelvis y eleva la cadera en el suelo.", errores: "Arquear la espalda.", musculos: "Glúteos.", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Sentadilla Búlgara", series: repes, dificultad: "Avanzada", explicacion: "Apoya un pie en una silla atrás y baja con la pierna delantera.", errores: "Inclinarse demasiado.", musculos: "Cuádriceps.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Elevación de Talones con Peso", series: "4 x 20 reps", dificultad: "Con implemento", explicacion: "Eleva los talones sosteniendo mancuernas.", errores: "Rebotar sin control.", musculos: "Gemelos.", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
-                ];
-            } else {
-                lista = [
-                    { nombre: "Sentadillas Libres con Peso Corporal", series: repes, dificultad: "Corporal", explicacion: "Baja la cadera manteniendo los talones firmes en el suelo.", errores: "Cerrar las rodillas.", musculos: "Cuádriceps y glúteos.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Puente de Glúteos en el Suelo", series: repes, dificultad: "Corporal", explicacion: "Acuéstate y eleva la cadera contrayendo los glúteos fuerte.", errores: "Empujar con la zona lumbar.", musculos: "Glúteos.", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Zancadas Estáticas en Casa", series: repes, dificultad: "Corporal", explicacion: "Da un paso atrás o al frente bajando en vertical.", errores: "Golpear la rodilla contra el piso.", musculos: "Piernas completas.", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Sentadilla con Salto (Cardio/Quema)", series: "3 x 12 reps", dificultad: "Alta Intensidad", explicacion: "Haz una sentadilla y explota con un salto vertical.", errores: "Caer con las rodillas rígidas.", musculos: "Glúteos y cardio.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Patada de Glúteo en Cuadrupedia", series: repes, dificultad: "Corporal", explicacion: "En cuatro puntos, eleva la pierna hacia el techo.", errores: "Girar la cadera.", musculos: "Glúteo mayor.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                    { nombre: "Elevación de Talones de Pie", series: "4 x 20 reps", dificultad: "Corporal", explicacion: "Sube a la punta de los pies de forma continua.", errores: "Movimientos muy cortos.", musculos: "Gemelos.", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
-                ];
-            }
-        } else if (grupoMuscular === "espalda_core_trapecios") {
-            lista = [
-                { nombre: esGym ? "Jalón al Pecho en Polea Alta" : (esParque ? "Dominadas en Barra Fija" : "Remo con Mochila / Peso"), series: repes, dificultad: "Espalda", explicacion: "Tracciona llevando los codos hacia abajo o hacia el cuerpo.", errores: "Usar exceso de inercia.", musculos: "Dorsales y espalda alta.", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
-                { nombre: esGym ? "Remo en Polea Baja" : (esParque ? "Remo Australiano en Barra Baja" : "Remo a una mano con Mancuerna"), series: repes, dificultad: "Espalda", explicacion: "Lleva el peso o maneral hacia el abdomen contrayendo escápulas.", errores: "Encoger los hombros hacia las orejas.", musculos: "Espalda media y trapecios.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Encogimientos de Hombros (Trapecio)", series: repes, dificultad: "Trapecios", explicacion: "Eleva los hombros verticalmente hacia las orejas y mantén 1 segundo.", errores: "Rotar los hombros al subir.", musculos: "Trapecios.", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Plancha Abdominal Isométrica", series: "3 x 50 segundos", dificultad: "Core", explicacion: "Mantén el cuerpo completamente recto apoyado en antebrazos.", errores: "Dejar caer la cadera.", musculos: "Core y abdomen.", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Elevación de Piernas en Suelo o Barra", series: repes, dificultad: "Core", explicacion: "Eleva las piernas sin arquear la espalda baja.", errores: "Dejar caer las piernas de golpe.", musculos: "Abdomen bajo.", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Plancha Lateral con Rotación", series: "3 x 12 por lado", dificultad: "Core / Oblicuos", explicacion: "Gira el torso de lado a lado manteniendo la estabilidad.", errores: "Perder el equilibrio.", musculos: "Oblicuos y core.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" }
+        // 1. AUMENTO DE MASA MUSCULAR (Hipertrofia)
+        if (obj.includes("masa") || obj.includes("hipertrofia")) {
+            if (grupoMuscular === "inf") return [
+                { nombre: "Sentadilla Libre con Barra", series: "4 x 8-10 reps (RPE 8)", dificultad: "Hipertrofia", explicacion: "Baja controlado y sube con potencia.", errores: "Rebotar abajo.", musculos: "Cuádriceps y glúteos", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Prensa Inclinada a 45°", series: "4 x 10-12 reps", dificultad: "Hipertrofia", explicacion: "Empuja la plataforma controlando el peso.", errores: "Bloquear rodillas.", musculos: "Cuádriceps", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Peso Muerto Rumano", series: "4 x 10 reps", dificultad: "Hipertrofia", explicacion: "Cadena posterior con tensión constante.", errores: "Curvar espalda.", musculos: "Femorales y glúteos", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Curl de Femorales en Máquina", series: "3 x 12 reps", dificultad: "Aislamiento", explicacion: "Contrae los isquiotibiales arriba.", errores: "Elevar la cadera.", musculos: "Isquiotibiales", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Extensiones de Cuádriceps", series: "3 x 12 reps", dificultad: "Aislamiento", explicacion: "Extiende las piernas reteniendo la bajada.", errores: "Tirones bruscos.", musculos: "Cuádriceps", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Elevación de Talones (Gemelos)", series: "4 x 15 reps", dificultad: "Hipertrofia", explicacion: "Rango de movimiento completo.", errores: "Rebotar.", musculos: "Gemelos", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" }
             ];
-        } else if (grupoMuscular === "pierna_completa_cardio") {
-            lista = [
-                { nombre: esBajarDePeso ? "Burpees Metabólicos (Quema Grasa)" : "Sentadillas profundas con peso", series: esBajarDePeso ? "4 x 45 segundos" : repes, dificultad: "Cardio / Pierna", explicacion: "Movimiento global para máxima elevación de pulsaciones y gasto calórico.", errores: "Mala postura al saltar o bajar.", musculos: "Piernas y cardio completo.", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Zancadas en Movimiento (Lunges)", series: repes, dificultad: "Dinámica", explicacion: "Avanza continuamente bajando la cadera con fluidez.", errores: "Tropiezos o ritmo irregular.", musculos: "Glúteos y cuádriceps.", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Saltos de Tijera (Jumping Jacks)", series: "4 x 1 minuto", dificultad: "Cardio", explicacion: "Abre y cierra piernas y brazos de forma continua para quemar calorías.", errores: "Falta de coordinación en la respiración.", musculos: "Sistema cardiovascular y piernas.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Peso Muerto con Piernas Semirrígidas", series: repes, dificultad: "Cadena Posterior", explicacion: "Flexiona ligeramente las rodillas y enfoca el trabajo atrás.", errores: "Doblar la espalda.", musculos: "Isquiotibiales.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Escaladores de Montaña (Mountain Climbers)", series: "4 x 45 segundos", dificultad: "Cardio / Core", explicacion: "En posición de plancha alta, lleva las rodillas al pecho alternadamente a buen ritmo.", errores: "Elevar los glúteos demasiado.", musculos: "Abdomen, piernas y cardio.", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Elevación de Talones Continuos", series: "4 x 25 reps", dificultad: "Resistencia", explicacion: "Gemelos al fallo con ritmo constante.", errores: "Pausas muy largas.", musculos: "Gemelos.", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
-            ];
-        } else if (grupoMuscular === "biceps_triceps") {
-            lista = [
-                { nombre: esGym ? "Curl de Bíceps con Barra Z" : "Curl de Bíceps con Mancuernas", series: repes, dificultad: "Bíceps", explicacion: "Flexiona los codos sin mover los brazos de los costados.", errores: "Impulsarse con la espalda.", musculos: "Bíceps.", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
-                { nombre: esGym ? "Extensiones de Tríceps en Polea" : (esParque ? "Fondos en Paralelas (Dips)" : "Fondos de Tríceps en Silla"), series: repes, dificultad: "Tríceps", explicacion: "Extiende los brazos por completo contrayendo el tríceps.", errores: "Separar los codos.", musculos: "Tríceps.", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Curl Martillo con Mancuernas", series: repes, dificultad: "Bíceps / Antebrazo", explicacion: "Sostén las mancuernas con las Palmas encontradas y eleva.", errores: "Girar las muñecas.", musculos: "Braquial y bíceps.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Press Francés con Mancuernas o Barra", series: repes, dificultad: "Tríceps", explicacion: "Baja el peso detrás de la cabeza flexionando solo los codos.", errores: "Mover los codos hacia los lados.", musculos: "Tríceps cabeza larga.", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Curl Concentrado a una Mano", series: repes, dificultad: "Aislamiento", explicacion: "Apoya el codo en la parte interna del muslo y haz el curl.", errores: "Ayudarse con el hombro.", musculos: "Pico de bíceps.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Patada de Tríceps inclinado", series: repes, dificultad: "Tríceps", explicacion: "Inclina el torso y estira el brazo hacia atrás.", errores: "Bajar el codo al estirar.", musculos: "Tríceps lateral.", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" }
-            ];
-        } else {
-            // Predeterminado / Pecho, Hombros y Full Body
-            lista = [
-                { nombre: esGym ? "Press de Banca Plano" : "Flexiones de Pecho Tradicionales", series: repes, dificultad: "Pecho", explicacion: "Baja el peso de forma controlada al pecho y empuja.", errores: "Rebotar el peso.", musculos: "Pectorales y tríceps.", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Press de Hombros con Mancuernas", series: repes, dificultad: "Hombros", explicacion: "Eleva el peso verticalmente sobre tu cabeza.", errores: "Arquear la zona lumbar.", musculos: "Deltoides.", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Elevaciones Laterales", series: repes, dificultad: "Hombros", explicacion: "Abre los brazos hasta la altura de los hombros con control.", errores: "Usar impulso corporal.", musculos: "Hombro lateral.", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Sentadillas Libres", series: repes, dificultad: "Piernas", explicacion: "Flexiona rodillas y cadera con buena postura.", errores: "Talones levantados.", musculos: "Cuádriceps.", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Plancha Abdominal", series: "3 x 45 segundos", dificultad: "Core", explicacion: "Mantén la postura firme y recta.", errores: "Hundir la espalda.", musculos: "Abdomen.", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
-                { nombre: "Jumping Jacks o Cardio Suave", series: "3 x 1 minuto", dificultad: "Cardio", explicacion: "Eleva pulsaciones al final de la sesión.", errores: "Ritmo inconstante.", musculos: "Cardiovascular.", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" }
+            return [
+                { nombre: "Press de Banca Plano con Barra", series: "4 x 8-10 reps", dificultad: "Hipertrofia", explicacion: "Toca el pecho y empuja fuerte.", errores: "Rebotar barra.", musculos: "Pectorales y tríceps", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Jalón al Pecho en Polea Alta", series: "4 x 10 reps", dificultad: "Hipertrofia", explicacion: "Tira hacia el esternón sacando pecho.", errores: "Balanceo excesivo.", musculos: "Dorsales", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Press Militar de Hombros", series: "3 x 10 reps", dificultad: "Hipertrofia", explicacion: "Empuje vertical controlado.", errores: "Arquear columna.", musculos: "Deltoides", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Remo en Polea Baja", series: "3 x 12 reps", dificultad: "Hipertrofia", explicacion: "Tracciona hacia el abdomen.", errores: "Girar tronco.", musculos: "Espalda media", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Curl de Bíceps con Barra Z", series: "3 x 12 reps", dificultad: "Aislamiento", explicacion: "Flexiona sin mover codos.", errores: "Usar inercia.", musculos: "Bíceps", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Extensiones de Tríceps en Polea", series: "3 x 12 reps", dificultad: "Aislamiento", explicacion: "Bloquea los codos a los lados.", errores: "Separar codos.", musculos: "Tríceps", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" }
             ];
         }
 
-        return lista;
+        // 2. PÉRDIDA DE GRASA Y DEFINICIÓN (Circuitos y Cardio)
+        if (obj.includes("pérdida") || obj.includes("grasa") || obj.includes("definición")) {
+            if (grupoMuscular === "inf") return [
+                { nombre: "Zancadas Dinámicas (Lunges)", series: "4 x 15 reps (Circuito)", dificultad: "Quema Grasa", explicacion: "Ritmo constante sin pausa larga.", errores: "Perder equilibrio.", musculos: "Piernas y glúteos", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Sentadillas con Salto (Jump Squats)", series: "4 x 45 segundos", dificultad: "Alta Intensidad", explicacion: "Explosión y aceleración cardíaca.", errores: "Caer rígido.", musculos: "Cuádriceps y cardio", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Puente de Glúteos Dinámico", series: "4 x 20 reps", dificultad: "Alta Repetición", explicacion: "Contracción rápida y continua.", errores: "Arquear espalda.", musculos: "Glúteos", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Escaladores de Montaña (Mountain Climbers)", series: "4 x 1 minuto", dificultad: "Cardio", explicacion: "Rodillas al pecho a máxima velocidad.", errores: "Elevar cadera.", musculos: "Abdomen y cardio", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Burpees Metabólicos", series: "3 x 40 segundos", dificultad: "Extrema", explicacion: "Flexión y salto vertical continuo.", errores: "P mala postura al bajar.", musculos: "Full body", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Jumping Jacks", series: "4 x 1 minuto", dificultad: "Aeróbico", explicacion: "Apertura constante de brazos y piernas.", errores: "Respiración irregular.", musculos: "Cardiovascular", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" }
+            ];
+            return [
+                { nombre: "Flexiones de Pecho al Fallo", series: "4 x Máx reps", dificultad: "Metabólico", explicacion: "Flexiones continuas para acelerar metabolismo.", errores: "Bajar cadera.", musculos: "Pecho y brazos", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Remo con Mancuernas en Circuito", series: "4 x 15 reps", dificultad: "Quema Grasa", explicacion: "Tracción ágil sin descanso prolongado.", errores: "Inercia.", musculos: "Espalda", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Plancha Abdominal Dinámica", series: "4 x 50 segundos", dificultad: "Core", explicacion: "Mantener tensión continua en abdomen.", errores: "Hundir cintura.", musculos: "Core", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Shadow Boxing (Boxeo a sombra con peso ligero)", series: "4 x 1 minuto", dificultad: "Cardio", explicacion: "Golpes al aire rápidos.", errores: "Bajar guardia.", musculos: "Hombros y cardio", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Curl y Press Militar Continuo", series: "4 x 12 reps", dificultad: "Metabólico", explicacion: "Combinación de fuerza y resistencia.", errores: "Apurar técnica.", musculos: "Bíceps y hombros", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Cinta de correr o Bici Estática (HIIT)", series: "15 minutos", dificultad: "Cardio", explicacion: "Intervalos de alta intensidad y recuperación.", errores: "Ritmo plano.", musculos: "Sistema aeróbico", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" }
+            ];
+        }
+
+        // 3. FUERZA Y POTENCIA (Bajas repeticiones, alta carga)
+        if (obj.includes("fuerza")) {
+            if (grupoMuscular === "inf") return [
+                { nombre: "Sentadilla Pesada con Barra", series: "5 x 5 reps (Descanso 3 min)", dificultad: "Fuerza Máxima", explicacion: "Carga alta, técnica estricta y pausa completa.", errores: "Curvar espalda.", musculos: "Piernas completas", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Peso Muerto Tradicional", series: "4 x 4 reps", dificultad: "Fuerza Pura", explicacion: "Despegue potente desde el suelo.", errores: "Redondear zona lumbar.", musculos: "Cadena posterior", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Hip Thrust Pesado", series: "4 x 6 reps", dificultad: "Potencia", explicacion: "Empuje de cadera con carga máxima.", errores: "Falta de bloqueo.", musculos: "Glúteos", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Prensa de Piernas Alta Carga", series: "4 x 6 reps", dificultad: "Fuerza", explicacion: "Empuje pesado controlado.", errores: "Recorrido corto.", musculos: "Cuádriceps", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Desplantes con Mancuernas Pesadas", series: "3 x 6 por pierna", dificultad: "Fuerza Estabilidad", explicacion: "Zancada profunda con carga.", errores: "Inestabilidad.", musculos: "Piernas", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Elevación de Talones con Carga Pesada", series: "4 x 8 reps", dificultad: "Fuerza", explicacion: "Pausa de 2 segundos arriba.", errores: "Rebote.", musculos: "Gemelos", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
+            ];
+            return [
+                { nombre: "Press de Banca Pesado", series: "5 x 5 reps", dificultad: "Fuerza Máxima", explicacion: "Control total de la barra en el pecho.", errores: "Rebotar.", musculos: "Pecho y fuerza de empuje", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Dominadas Lastradas", series: "4 x 5 reps", dificultad: "Potencia / Fuerza", explicacion: "Dominadas con peso extra en cinturón.", errores: "Rango incompleto.", musculos: "Espalda y tracción", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Press Militar Estricto", series: "4 x 6 reps", dificultad: "Fuerza", explicacion: "Empuje vertical desde clavícula sin impulso de piernas.", errores: "Usar inercia.", musculos: "Hombros", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Remo con Barra Pendlay", series: "4 x 6 reps", dificultad: "Potencia", explicacion: "Tracción explosiva desde el suelo.", errores: "Arquear espalda.", musculos: "Espalda alta", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Fondos en Paralelas con Lastre", series: "3 x 6 reps", dificultad: "Fuerza", explicacion: "Flexión de brazos en paralelas con carga.", errores: "Abrir codos en exceso.", musculos: "Tríceps y pecho", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Curl de Bíceps Estricto con Barra", series: "3 x 6 reps", dificultad: "Fuerza", explicacion: "Espalda apoyada en pared, sin trampas.", errores: "Balanceo.", musculos: "Bíceps", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" }
+            ];
+        }
+
+        // 4. RESISTENCIA CARDIOVASCULAR (Aeróbico y alta duración)
+        if (obj.includes("resistencia") || obj.includes("cardiovascular")) {
+            if (grupoMuscular === "inf") return [
+                { nombre: "Trote Continuo o Elíptica", series: "20 minutos sin parar", dificultad: "Cardio Aeróbico", explicacion: "Ritmo constante y moderado.", errores: "Ir demasiado rápido al inicio.", musculos: "Sistema cardiopulmonar", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Zancadas Aeróbicas Continuas", series: "4 x 20 reps", dificultad: "Resistencia Muscular", explicacion: "Movimiento fluido de piernas.", errores: "Pausas largas.", musculos: "Piernas y resistencia", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Saltos a la Cuerda (Jump Rope)", series: "5 x 2 minutos", dificultad: "Cardio / Coordinación", explicacion: "Saltos continuos con cuerda o simulación.", errores: "Saltar muy alto.", musculos: "Pantorrillas y cardio", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Sentadillas de Alta Resistencia (Sin peso)", series: "4 x 30 reps", dificultad: "Resistencia", explicacion: "Velocidad constante y respiración rítmica.", errores: "Parar antes de tiempo.", musculos: "Cuádriceps", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Bicicleta Estática de Larga Duración", series: "20 minutos", dificultad: "Aeróbico", explicacion: "Cadencia constante de pedaleo.", errores: "Resistencia muy pesada.", musculos: "Piernas y corazón", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Elevación de Talones a Alta Cadencia", series: "4 x 30 reps", dificultad: "Resistencia", explicacion: "Bombeo sanguíneo continuo en gemelos.", errores: "Descansar más de 30s.", musculos: "Gemelos", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
+            ];
+            return [
+                { nombre: "Remo en Ergómetro (Máquina de Remo)", series: "15 minutos continuos", dificultad: "Cardio Total", explicacion: "Tracción rítmica constante.", errores: "Forma encorvada.", musculos: "Espalda, brazos y cardio", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Circuito de Boxeo sin Carga (Sombra)", series: "4 x 2 minutos", dificultad: "Resistencia de Brazos", explicacion: "Lanzamiento continuo de golpes al aire.", errores: "Bajar los brazos.", musculos: "Hombros y brazos", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Plancha Abdominal de Larga Duración", series: "3 x 1 minuto", dificultad: "Resistencia Core", explicacion: "Sostener la posición sin quiebres.", errores: "Arquear espalda.", musculos: "Core", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Flexiones de Pecho a Ritmo Constante", series: "4 x 15 reps", dificultad: "Resistencia", explicacion: "Sin pausas largas entre series.", errores: "Apoyar rodillas antes de tiempo.", musculos: "Pectorales", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Skipping Estático (Carrera en el puesto)", series: "4 x 1 minuto", dificultad: "Cardio", explicacion: "Elevar rodillas alternadamente con energía.", errores: "Inclinarse hacia atrás.", musculos: "Cardiovascular", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" },
+                { nombre: "Brazos en Círculo (Movilidad y Resistencia Hombros)", series: "4 x 1 minuto", dificultad: "Resistencia Articular", explicacion: "Giros continuos de brazos extendidos.", errores: "Bajar los brazos por cansancio.", musculos: "Deltoides", foto: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" }
+            ];
+        }
+
+        // 5. SALUD, POSTURA Y MOVILIDAD (Estiramientos activos, control y alineación)
+        if (grupoMuscular === "inf") return [
+            { nombre: "Sentadilla Libre Profunda con Pausa", series: "3 x 12 reps", dificultad: "Movilidad", explicacion: "Baja lento y mantén 3 segundos abajo abriendo caderas.", errores: "Levantar talones.", musculos: "Caderas y cuádriceps", foto: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Estiramiento Activo de Isquiotibiales", series: "3 x 10 por pierna", dificultad: "Flexibilidad", explicacion: "Inclinación suave de tronco con espalda neutra.", errores: "Forzar tirones.", musculos: "Isquiotibiales", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Movilidad de Cadera en Suelo (90/90)", series: "3 x 10 transiciones", dificultad: "Movilidad", explicacion: "Abre y rota las piernas de lado a lado en el suelo.", errores: "Movimiento brusco.", musculos: "Cadera y glúteos", foto: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Puente de Glúteos con Activación Postural", series: "3 x 15 reps", dificultad: "Salud Lumbar", explicacion: "Eleva la cadera contrayendo con enfoque en postura.", errores: "Arquear de más.", musculos: "Glúteos y zona lumbar", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Zancada Corta de Apertura de Psoas", series: "3 x 10 por lado", dificultad: "Postura", explicacion: "Rodilla al suelo estirando la cadera frontalmente.", errores: "Pérdida de equilibrio.", musculos: "Flexores de cadera", foto: "https://images.unsplash.com/photo-1434682881907-b43d6017bbee?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Movilidad de Tobillos en Pared", series: "3 x 15 reps", dificultad: "Salud Articular", explicacion: "Acerca la rodilla a la pared sin levantar el talón.", errores: "Separar el talón.", musculos: "Tobillos y gemelos", foto: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        return [
+            { nombre: "Gato-Vaca (Movilidad de Columna Vertebral)", series: "3 x 12 ciclos", dificultad: "Postura y Salud", explicacion: "Arquea y hunde la espalda de forma suave coordinando respiración.", errores: "Movimientos rápidos.", musculos: "Columna y erectores", foto: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Rotaciones Torácicas en Cuadrupedia", series: "3 x 10 por lado", dificultad: "Movilidad Torácica", explicacion: "Gira el tronco elevando el codo hacia el cielo.", errores: "Rotar la cadera.", musculos: "Espalda alta y hombros", foto: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Y-W-T Prono (Corrección de Postura Escapular)", series: "3 x 12 reps", dificultad: "Postura", explicacion: "Tumbado boca abajo, eleva brazos formando letras Y, W y T.", errores: "Encoger hombros al cuello.", musculos: "Trapecio medio y romboides", foto: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Estiramiento de Pectorales en Marco de Puerta", series: "3 x 45 segundos", dificultad: "Postura", explicacion: "Abre el pecho estirando los hombros hacia atrás.", errores: "Empujar con el cuello.", musculos: "Pectorales y hombros", foto: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Plancha Abdominal de Alineación Postural", series: "3 x 45 segundos", dificultad: "Core Saludable", explicacion: "Sostén con fuerte activación de faja abdominal.", errores: "Dejar caer la cadera.", musculos: "Core profundo", foto: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" },
+            { nombre: "Respiración Diafragmática Profunda", series: "3 minutos", dificultad: "Bienestar", explicacion: "Inhalación abdominal lenta y controlada para relajación.", errores: "Respirar solo con el pecho.", musculos: "Diafragma y sistema nervioso", foto: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80" }
+        ];
     }
 
-    function generarEstructuraRutinaPorEntorno(datos) {
+    function generarEstructuraRutinaPorObjetivo(datos) {
         const diasParsed = parseInt(datos.dias_entreno, 10);
-        const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 5;
+        const numDias = (!isNaN(diasParsed) && diasParsed >= 1 && diasParsed <= 7) ? diasParsed : 3;
         
-        const lugarTexto = datos.lugar_entrenamiento || datos.lugar || "casa_sin_implementos";
-        const objetivoTexto = (datos.objetivo || "").toLowerCase();
-        const esBajarDePeso = objetivoTexto.includes("grasa") || objetivoTexto.includes("pérdida") || objetivoTexto.includes("bajar") || objetivoTexto.includes("definición");
-
-        let nombreVisualLugar = "Casa (Sin implementos)";
-        const lugarLower = lugarTexto.toLowerCase();
-        if (lugarLower.includes("gym") || lugarLower.includes("gimnasio")) {
-            nombreVisualLugar = "Gimnasio";
-        } else if (lugarLower.includes("implementos") || lugarLower.includes("mancuernas")) {
-            nombreVisualLugar = "Casa con implementos";
-        } else if (lugarLower.includes("parque") || lugarLower.includes("barras")) {
-            nombreVisualLugar = "Parque / Barras al aire libre";
-        }
+        const objetivoTexto = datos.objetivo || "Aumento de masa muscular";
+        const lugarTexto = datos.lugar_entrenamiento || datos.lugar || "Gimnasio";
 
         document.getElementById("resumenPerfil").textContent = 
-            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${datos.objetivo || 'General'} | Entorno: ${nombreVisualLugar}`;
+            `Perfil: ${datos.genero || 'Usuario'} | Objetivo: ${objetivoTexto} | Entorno: ${lugarTexto}`;
 
-        document.getElementById("badgeEnfoque").textContent = esBajarDePeso ? "🔥 Enfoque: Pérdida de Grasa y Cardio" : "💪 Enfoque: Tonificación y Ganancia Muscular";
+        document.getElementById("badgeEnfoque").textContent = `🎯 OBJETIVO: ${objetivoTexto.toUpperCase()}`;
 
         planEstructurado = [];
 
-        // DISTRIBUCIÓN INTELIGENTE DE DÍAS SEGÚN LO QUE PIDIÓ EL USUARIO
-        // Día 1: Piernas y Glúteos
-        // Día 2: Espalda, Core y Trapecios
-        // Día 3: Pierna Completa y Cardio
-        // Día 4: Bíceps y Tríceps
-        // Día 5, 6 y 7: Variaciones complementarias (Pecho/Hombro, Full Body, etc.)
-        const distribucionDias = [
-            { titulo: "Piernas y Glúteos", grupo: "piernas_gluteos" },
-            { titulo: "Espalda, Core y Trapecios", grupo: "espalda_core_trapecios" },
-            { titulo: "Pierna Completa y Cardio", grupo: "pierna_completa_cardio" },
-            { titulo: "Bíceps y Tríceps", grupo: "biceps_triceps" },
-            { titulo: "Pecho, Hombros y Abdomen", grupo: "pecho_hombros" },
-            { titulo: "Circuito Metabólico Quema Grasa", grupo: "pierna_completa_cardio" },
-            { titulo: "Cuerpo Completo (Full Body)", grupo: "piernas_gluteos" }
-        ];
-
         for (let i = 1; i <= numDias; i++) {
-            let configDia = distribucionDias[(i - 1) % distribucionDias.length];
-            let ejerciciosDelDia = obtenerEjerciciosEspecificos(lugarTexto, configDia.grupo, esBajarDePeso);
+            let grupo = (i % 2 !== 0) ? "inf" : "sup";
+            let ejerciciosDelDia = obtenerEjerciciosPorObjetivo(objetivoTexto, grupo);
 
             planEstructurado.push({
                 diaNumero: i,
-                titulo: `Día ${i}: ${configDia.titulo}`,
-                descripcion: esBajarDePeso ? `Entrenamiento enfocado en quema calórica, intervalos y alta actividad en ${nombreVisualLugar}.` : `Rutina orientada a hipertrofia y fuerza en ${nombreVisualLugar}.`,
+                titulo: `Día ${i}: ${grupo === 'inf' ? 'Tren Inferior / Enfoque Principal' : 'Tren Superior / Bloque Complementario'}`,
+                descripcion: `Plan adaptado para la meta de: ${objetivoTexto}.`,
                 ejercicios: ejerciciosDelDia
             });
         }
