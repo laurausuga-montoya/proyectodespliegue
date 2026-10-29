@@ -133,10 +133,10 @@
             color: white;
         }
 
-        /* MÉTRICAS EN FORMATO VERTICAL */
+        /* MÉTRICAS EN FORMATO VERTICAL OBLIGATORIO */
         .metricas {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex !important;
+            flex-direction: column !important;
             gap: 20px;
             margin-bottom: 35px;
         }
