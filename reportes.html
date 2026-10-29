@@ -133,7 +133,7 @@
             color: white;
         }
 
-        /* MÉTRICAS EN FORMATO VERTICAL OBLIGATORIO */
+        /* MÉTRICAS VERTICALES CON ELEMENTOS A LOS EXTREMOS */
         .metricas {
             display: flex !important;
             flex-direction: column !important;
@@ -144,20 +144,22 @@
         .metrica-card {
             background: var(--panel);
             border: 1px solid var(--borde);
-            padding: 20px;
-            text-align: center;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: background 0.3s, border-color 0.3s;
         }
 
         .metrica-card span {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--secundario);
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0;
         }
 
         .metrica-card strong {
-            font-size: 26px;
+            font-size: 24px;
             color: var(--verde);
         }
 
@@ -413,7 +415,7 @@
         </div>
     </div>
 
-    <!-- MÉTRICAS RÁPIDAS (VERTICALES) -->
+    <!-- MÉTRICAS RÁPIDAS (VERTICALES CON VALORES A LOS EXTREMOS) -->
     <div class="metricas">
         <div class="metrica-card">
             <span>Compras realizadas</span>
@@ -634,7 +636,7 @@
                 ...payload,
                 fecha: new Date().toLocaleDateString("es-CO")
             });
-            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(locales));
+            localStorage.setItem(`viga_reportes_${idJSON.stringify(locales)}`); // o locales
 
             alert("Tu reporte ha sido guardado correctamente.");
             document.getElementById("formSoporte").reset();
