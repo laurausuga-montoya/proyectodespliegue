@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>VIGA | Panel empresarial</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -87,7 +86,6 @@
         .layout {
             display: grid;
             grid-template-columns: 235px minmax(0, 1fr);
-            min-height: calc(100vh - 76px);
         }
 
         aside {
@@ -236,7 +234,6 @@
             margin-bottom: 28px;
         }
 
-        /* DISEÑO HORIZONTAL LARGO CON NÚMERO A LA DERECHA (MI EMPRESA) */
         .estadisticas-vertical-larga {
             display: flex;
             flex-direction: column;
@@ -443,35 +440,6 @@
             background: var(--panel);
             border: 1px solid var(--borde);
         }
-
-        @media (max-width: 900px) {
-            .layout {
-                grid-template-columns: 190px minmax(0, 1fr);
-            }
-            main {
-                padding: 24px 18px;
-            }
-            .estadisticas {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 650px) {
-            .layout {
-                display: block;
-            }
-            aside {
-                border-right: 0;
-                border-bottom: 1px solid var(--borde);
-                padding: 12px;
-            }
-            .menu {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            main {
-                padding: 23px 14px;
-            }
-        }
     </style>
 </head>
 
@@ -639,7 +607,7 @@
             </div>
         </section>
 
-        <!-- MI EMPRESA: DISEÑO HORIZONTAL LARGO CON NÚMERO A LA DERECHA -->
+        <!-- MI EMPRESA -->
         <section class="seccion" id="perfil">
             <div class="encabezado">
                 <div>
@@ -649,7 +617,6 @@
                 <button class="boton boton-secundario" onclick="cargarVentasEmpresa()">Actualizar datos</button>
             </div>
 
-            <!-- TARJETAS HORIZONTALES LARGAS CON NÚMERO AL FINAL DE LA DERECHA -->
             <div class="estadisticas-vertical-larga">
                 <div class="tarjeta-horizontal">
                     <div class="tarjeta-horizontal-info">
@@ -682,12 +649,12 @@
             </div>
         </section>
 
-        <!-- SECCIÓN: REPORTES RECIBIDOS Y GESTIÓN DE BLOQUEO -->
+        <!-- SECCIÓN: REPORTES RECIBIDOS -->
         <section class="seccion" id="reportes">
             <div class="encabezado">
                 <div>
                     <h1>Reportes de usuarios</h1>
-                    <p class="muted">Gestiona los reportes sobre tus productos o entregas. Si alcanzas 10 reportes pendientes, tu cuenta será suspendida para nuevas ventas.</p>
+                    <p class="muted">Gestiona los reportes sobre tus productos. Si alcanzas 10 reportes pendientes, tu cuenta será suspendida.</p>
                 </div>
                 <button class="boton boton-secundario" onclick="cargarReportesEmpresa()">Actualizar reportes</button>
             </div>
@@ -703,16 +670,12 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    // Recuperamos los datos reales de la empresa logueada que guardó su NIT al registrarse
     let empresa = JSON.parse(localStorage.getItem("empresaLogueada") || '{"nit": "900123456", "nombre": "Tienda Deportiva Viga"}');
-    
     let productos = [];
     let reportesEmpresa = [];
     let imagenSeleccionada = null;
 
     const $ = id => document.getElementById(id);
-
-    // Identificador único y seguro basado en el NIT de la empresa
     const nitEmpresaActual = empresa.nit || empresa.id || empresa.identificacion || "default_nit";
 
     if(empresa) {
@@ -770,7 +733,7 @@
     function verificarBloqueoCuenta() {
         const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
         if (pendientes.length >= 10) {
-            alert("Tu cuenta empresarial se encuentra detenida (bloqueada) por acumular 10 o más reportes sin solucionar. Debes resolverlos en la sección de 'Reportes' para poder continuar vendiendo o publicando.");
+            alert("Tu cuenta empresarial se encuentra suspendida por acumular 10 o más reportes sin solucionar.");
             return true;
         }
         return false;
@@ -784,12 +747,12 @@
 
         if (cantPendientes >= 10) {
             banner.classList.add("bloqueada");
-            texto.innerHTML = `<strong style="color: #ff9292;">¡CUENTA SUSPENDIDA!</strong> Has acumulado ${cantPendientes} reportes pendientes sin resolver. Tus funciones de venta y publicación están detenidas hasta que des solución a los reportes en tu sección correspondiente.`;
+            texto.innerHTML = `<strong style="color: #ff9292;">¡CUENTA SUSPENDIDA!</strong> Has acumulado ${cantPendientes} reportes pendientes sin resolver.`;
             if(btnNuevo1) btnNuevo1.disabled = true;
             if(btnNuevo2) btnNuevo2.disabled = true;
         } else {
             banner.classList.remove("bloqueada");
-            texto.innerHTML = `Publica tus productos, mantén actualizado el inventario y edita la información de tu catálogo. Reportes pendientes actuales: <strong>${cantPendientes}/10</strong>.`;
+            texto.innerHTML = `Publica tus productos, mantén actualizado el inventario y edita la información de tu catálogo. Reportes pendientes: <strong>${cantPendientes}/10</strong>.`;
             if(btnNuevo1) btnNuevo1.disabled = false;
             if(btnNuevo2) btnNuevo2.disabled = false;
         }
@@ -911,7 +874,8 @@
         formulario.append("descripcion", $("descripcion").value.trim());
         formulario.append("precio", Number($("precio").value));
         formulario.append("stock", Number($("stock").value));
-        // Aseguramos enviar el NIT de la empresa junto al producto
+        
+        // ENVÍA EL NIT FIJO DE LA EMPRESA ASOCIADO AL PRODUCTO
         formulario.append("nit_empresa", nitEmpresaActual);
 
         if ($("imagen").files[0]) {
@@ -950,21 +914,21 @@
     });
 
     async function cargarVentasEmpresa() {
-        $("ventasDineroTotal").textContent = dinero(450000);
-        $("ventasUnidadesTotal").textContent = "5";
-        $("ventasPedidosTotal").textContent = "2";
+        $("ventasDineroTotal").textContent = dinero(0);
+        $("ventasUnidadesTotal").textContent = "0";
+        $("ventasPedidosTotal").textContent = "0";
         $("contenedorTablaVentas").innerHTML = `<div class="vacio">No hay ventas recientes registradas.</div>`;
     }
 
     // CARGA DE REPORTES USANDO EXCLUSIVAMENTE EL NIT DE LA EMPRESA
     async function cargarReportesEmpresa() {
         try {
-            // Se leen los reportes específicos de esta tienda usando su NIT exacto
-            reportesEmpresa = JSON.parse(localStorage.getItem("reportes_nit_" + nitEmpresaActual) || '[]');
+            let storageKey = "reportes_nit_" + nitEmpresaActual;
+            reportesEmpresa = JSON.parse(localStorage.getItem(storageKey) || "[]");
 
-            const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
-            
             const badge = $("badgeReportes");
+            const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
+
             if (pendientes.length > 0) {
                 badge.textContent = pendientes.length;
                 badge.style.display = "inline-block";
@@ -973,85 +937,49 @@
             }
 
             actualizarBannerBloqueo(pendientes.length);
-            renderizarTablaReportes(reportesEmpresa);
+
+            const contenedor = $("contenedorTablaReportes");
+            if (reportesEmpresa.length === 0) {
+                contenedor.innerHTML = '<div class="vacio">No hay reportes de usuarios para esta empresa.</div>';
+                return;
+            }
+
+            const filas = reportesEmpresa.map(r => `
+                <tr>
+                    <td>${escapar(r.fecha || "Reciente")}</td>
+                    <td><strong>${escapar(r.producto || r.asunto || "General")}</strong></td>
+                    <td>${escapar(r.categoria || "Producto")}</td>
+                    <td>${escapar(r.descripcion || r.detalle || "")}</td>
+                    <td><span class="estado ${r.status === 'resuelto' ? '' : 'estado-agotado'}">${escapar(r.status || 'pendiente')}</span></td>
+                    <td>
+                        ${r.status !== 'resuelto' ? `<button class="boton" onclick="resolverReporte(${r.id})">Resolver</button>` : 'Solventado'}
+                    </td>
+                </tr>
+            `).join("");
+
+            contenedor.innerHTML = `<div class="tabla-contenedor"><table><thead><tr><th>Fecha</th><th>Producto / Asunto</th><th>Área</th><th>Detalle</th><th>Estado</th><th>Acción</th></tr></thead><tbody>${filas}</tbody></table></div>`;
         } catch (e) {
-            $("contenedorTablaReportes").innerHTML = '<div class="vacio">Error al cargar reportes.</div>';
+            $("contenedorTablaReportes").innerHTML = '<div class="vacio">Error al cargar los reportes.</div>';
         }
     }
 
-    function renderizarTablaReportes(lista) {
-        if(lista.length === 0) {
-            $("contenedorTablaReportes").innerHTML = '<div class="vacio">No hay reportes de usuarios registrados para este NIT. ¡Buen trabajo!</div>';
-            return;
-        }
-
-        const html = `
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID Reporte</th>
-                            <th>Producto / Motivo</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${lista.map(r => `
-                            <tr>
-                                <td>#${r.id}</td>
-                                <td><strong>${escapar(r.producto || 'General')}</strong>: ${escapar(r.detalle)}</td>
-                                <td>${r.fecha || 'Reciente'}</td>
-                                <td><span class="estado ${r.status === 'solucionado' ? '' : 'estado-agotado'}">${r.status.toUpperCase()}</span></td>
-                                <td>
-                                    ${r.status === 'pendiente' ? `<button class="boton" style="padding: 5px 10px; font-size:11px;" onclick="solucionarReporte(${r.id})">Dar solución</button>` : 'Resuelto'}
-                                </td>
-                            </tr>
-                        `).join("")}
-                    </tbody>
-                </table>
-            </div>
-        `;
-        $("contenedorTablaReportes").innerHTML = html;
-    }
-
-    window.solucionarReporte = function(idReporte) {
-        reportesEmpresa = reportesEmpresa.map(r => {
-            if(r.id === idReporte) r.status = "solucionado";
+    function resolverReporte(idReporte) {
+        let storageKey = "reportes_nit_" + nitEmpresaActual;
+        let lista = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        
+        lista = lista.map(r => {
+            if (r.id === idReporte) r.status = "resuelto";
             return r;
         });
 
-        localStorage.setItem("reportes_nit_" + nitEmpresaActual, JSON.stringify(reportesEmpresa));
+        localStorage.setItem(storageKey, JSON.stringify(lista));
         cargarReportesEmpresa();
-        alert("¡Reporte marcado como solucionado! El sistema evaluará el desbloqueo de tu cuenta.");
-    };
+    }
 
-    /**
-     * FUNCIÓN PARA LLAMAR DESDE LA CUENTA PERSONAL:
-     * Cuando el usuario hace un reporte, pasas el NIT de la empresa vendedora para que guarde 
-     * el reporte exactamente en la bandeja correspondiente a ese NIT.
-     */
-    window.enviarReporteDesdeCuentaPersonal = function(nitEmpresaVendedora, nombreProducto, detalleProblema) {
-        if(!nitEmpresaVendedora) {
-            alert("Error: El producto no tiene un NIT de empresa asociado.");
-            return;
-        }
-
-        let storageKey = "reportes_nit_" + nitEmpresaVendedora;
-        let reportesTienda = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        
-        reportesTienda.push({
-            id: Date.now(),
-            producto: nombreProducto,
-            detalle: detalleProblema,
-            status: "pendiente",
-            fecha: new Date().toLocaleDateString()
-        });
-
-        localStorage.setItem(storageKey, JSON.stringify(reportesTienda));
-        alert("Reporte enviado exitosamente a la tienda con NIT: " + nitEmpresaVendedora);
-    };
+    $("btnCerrarSesion").addEventListener("click", () => {
+        localStorage.removeItem("empresaLogueada");
+        window.location.href = "login.empresa.html";
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
         cargarProductos();

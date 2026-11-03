@@ -175,7 +175,7 @@
         .seccion-soporte p {
             font-size: 13px;
             color: var(--secundario);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .campo {
@@ -316,9 +316,10 @@
         }
 
         .item-nit-tienda {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--verde);
             font-weight: 600;
+            margin-top: 2px;
         }
 
         .item-precio {
@@ -395,7 +396,7 @@
 
     <div class="titulo">
         <h1>Historial y Soporte</h1>
-        <p>Revisa tus compras realizadas y gestiona quejas dirigidas directamente a la tienda correspondiente.</p>
+        <p>Revisa tus compras realizadas y gestiona quejas dirigidas automáticamente a la empresa vendedora.</p>
         
         <div class="acciones-superiores">
             <button class="btn-accion-top btn-rojo" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
@@ -415,16 +416,16 @@
             <strong id="montoTotalInvertido">$ 0</strong>
         </div>
         <div class="metrica-card">
-            <span>Reportes en soporte</span>
+            <span>Reportes enviados</span>
             <strong id="contadorReportes">0</strong>
         </div>
     </div>
 
-    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO DINÁMICO) -->
+    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO AUTOMÁTICO CON NIT) -->
     <div class="seccion-soporte" id="cajaSoporte">
-        <h2>Enviar Queja o Solicitud de Ayuda a la Tienda</h2>
-        <p>Estás reportando el producto: <strong id="lblProductoReporte" style="color:var(--verde);">--</strong></p>
-        <p>NIT de la empresa destino: <strong id="lblNitReporte" style="color:var(--verde);">--</strong></p>
+        <h2>Enviar Queja o Solicitud Directa a la Empresa</h2>
+        <p>Producto seleccionado: <strong id="lblProductoReporte" style="color:var(--verde);">--</strong></p>
+        <p>NIT de la empresa responsable: <strong id="lblNitReporte" style="color:var(--verde);">--</strong></p>
 
         <form id="formSoporte" onsubmit="enviarReporte(event)">
             <input type="hidden" id="reporteNitEmpresa">
@@ -434,19 +435,19 @@
                 <label for="categoriaReporte">Categoría *</label>
                 <select id="categoriaReporte" required>
                     <option value="Producto">Producto (Garantía, defecto o demora)</option>
-                    <option value="Ejercicio">Ejercicio</option>
-                    <option value="Otro">Otro</option>
+                    <option value="Ejercicio">Ejercicio / Entorno</option>
+                    <option value="Otro">Otro tema</option>
                 </select>
             </div>
 
             <div class="campo">
-                <label for="descripcionReporte">Detalle de lo ocurrido *</label>
-                <textarea id="descripcionReporte" placeholder="Explica detalladamente qué problema se presentó..." required></textarea>
+                <label for="descripcionReporte">Detalle del problema *</label>
+                <textarea id="descripcionReporte" placeholder="Describe detalladamente el inconveniente con el producto..." required></textarea>
             </div>
 
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte" style="flex: 2;">
-                    Enviar reporte a la tienda
+                    Enviar reporte a la empresa
                 </button>
                 <button type="button" class="btn-enviar-soporte" onclick="cerrarFormularioSoporte()" style="flex: 1; background: var(--panel); color: var(--texto); border: 1px solid var(--borde);">
                     Cancelar
@@ -456,7 +457,7 @@
     </div>
 
     <!-- SECCIÓN: QUEJAS REGISTRADAS -->
-    <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Mis Reportes de Soporte Enviados</h2>
+    <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Mis Reportes Enviados a las Empresas</h2>
     <div class="pedidos-lista" id="contenedorMisReportes"></div>
 
     <!-- SECCIÓN: COMPRAS -->
@@ -501,9 +502,10 @@
 
     const idUsuario = obtenerIdUsuario();
 
+    // Se abre el formulario tomando automáticamente el NIT registrado por la empresa en el producto
     function iniciarReporteItem(nitEmpresa, nombreProducto) {
-        if (!nitEmpresa) {
-            alert("Este producto no cuenta con un NIT de empresa asociado.");
+        if (!nitEmpresa || nitEmpresa === "undefined" || nitEmpresa === "null") {
+            alert("Este producto no posee un NIT empresarial válido asociado.");
             return;
         }
 
@@ -557,8 +559,8 @@
             const productosHtml = (pedido.articulos || []).map(art => {
                 const imgUrl = art.imagen || art.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
                 
-                // Captura robusta del NIT (sea cual sea el campo que guardó la tienda)
-                const nitTienda = art.nit_empresa || art.nit || art.id_empresa || art.nitEmpresa || "Sin NIT";
+                // Extrae automáticamente el NIT registrado por la empresa en el producto
+                const nitTienda = art.nit_empresa || art.nit || art.id_empresa || art.nitEmpresa || "";
 
                 return `
                     <div class="item-fila">
@@ -566,10 +568,10 @@
                         <div class="item-info">
                             <h4>${art.nombre}</h4>
                             <span>Cantidad: ${art.cantidad} unidad(es)</span>
-                            <span class="item-nit-tienda">NIT de la Empresa: <strong>${nitTienda}</strong></span>
+                            <span class="item-nit-tienda">Empresa NIT: ${nitTienda ? nitTienda : '<span style="color:red;">Sin NIT</span>'}</span>
                         </div>
                         <div class="item-precio">${dinero(art.precio * art.cantidad)}</div>
-                        <button class="btn-reportar-item" onclick="iniciarReporteItem('${nitTienda}', '${art.nombre}')">Reportar</button>
+                        ${nitTienda ? `<button class="btn-reportar-item" onclick="iniciarReporteItem('${nitTienda}', '${art.nombre}')">Reportar</button>` : ''}
                     </div>
                 `;
             }).join("");
@@ -602,7 +604,7 @@
         cargarHistorial();
     }
 
-    // ENVÍO DE REPORTE COMPATIBLE CON LA BD (reportes_soporte) Y EL PANEL EMPRESARIAL (reportes_nit_[NIT])
+    // ENVÍO DE REPORTE HACIA LA BASE DE DATOS Y LA BANDEJA ESPECÍFICA DEL NIT DE LA EMPRESA
     async function enviarReporte(e) {
         e.preventDefault();
         const btn = document.getElementById("btnEnviarSoporte");
@@ -612,17 +614,16 @@
         const categoria = document.getElementById("categoriaReporte").value;
         const descripcion = document.getElementById("descripcionReporte").value.trim();
 
-        if (!nitEmpresa || nitEmpresa === "Sin NIT") {
-            alert("Error: Este producto no tiene un NIT válido asociado para recibir el reporte.");
+        if (!nitEmpresa) {
+            alert("Error: No se encontró el NIT de la empresa.");
             return;
         }
 
         btn.disabled = true;
         btn.textContent = "Enviando reporte...";
 
-        // Estructura exacta que coincide con los campos de tu base de datos en MySQL:
-        // identificacion_usuario, categoria, asunto, descripcion
-        const payload = {
+        // Estructura exacta solicitada por tu base de datos MySQL (reportes_soporte)
+        const payloadDB = {
             identificacion_usuario: String(idUsuario),
             categoria: categoria,
             asunto: nombreProducto,
@@ -630,14 +631,14 @@
         };
 
         try {
-            // 1. Guardar en el servidor (Base de datos MySQL en Render)
+            // 1. Envía el reporte a la base de datos general del servidor en Render
             await fetch(`${API}/soporte/reporte`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payloadDB)
             });
 
-            // 2. Guardar automáticamente en el almacenamiento específico de la tienda usando su NIT exacto
+            // 2. Guarda el reporte de forma directa en el buzón exclusivo del NIT de la empresa: "reportes_nit_[NIT]"
             let storageKeyEmpresa = "reportes_nit_" + nitEmpresa;
             let reportesDeLaTienda = JSON.parse(localStorage.getItem(storageKeyEmpresa) || "[]");
             
@@ -652,24 +653,24 @@
             });
             localStorage.setItem(storageKeyEmpresa, JSON.stringify(reportesDeLaTienda));
 
-            // 3. Guardar copia local para el usuario (historial de reportes del usuario)
+            // 3. Guarda copia local en el historial de reportes del usuario
             const misReportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
             misReportesLocales.push({
-                ...payload,
+                ...payloadDB,
                 nitTienda: nitEmpresa,
                 fecha: new Date().toLocaleDateString("es-CO")
             });
             localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(misReportesLocales));
 
-            alert("¡Tu reporte ha sido enviado con éxito a la tienda correspondiente y registrado!");
+            alert("¡Reporte enviado exitosamente a la empresa responsable del producto!");
             cerrarFormularioSoporte();
             cargarReportes();
 
         } catch (error) {
-            alert("Error de conexión al enviar el reporte. Verifique su red.");
+            alert("Error de red al intentar enviar el reporte.");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Enviar reporte a la tienda";
+            btn.textContent = "Enviar reporte a la empresa";
         }
     }
 
@@ -706,7 +707,7 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">${rep.asunto || "Reporte de Producto"}</div>
-                        <div class="pedido-fecha">${rep.fecha || "Reciente"} · Área: ${rep.categoria} ${rep.nitTienda ? '· NIT: ' + rep.nitTienda : ''}</div>
+                        <div class="pedido-fecha">${rep.fecha || "Reciente"} · Área: ${rep.categoria} ${rep.nitTienda ? '· NIT Destino: ' + rep.nitTienda : ''}</div>
                     </div>
                     <span class="estado-badge badge-soporte">En Revisión</span>
                 </div>

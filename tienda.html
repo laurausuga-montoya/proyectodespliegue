@@ -356,6 +356,9 @@
         let itemExistente = carrito.find(x => x.id === idProducto);
         const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
 
+        // Captura automática del NIT de la empresa registrada en el producto
+        const nitEmpresaCalculado = producto.nit_empresa || producto.nit || producto.id_empresa || producto.nitEmpresa || "";
+
         if (cantidadActual < stockOriginal) {
             if (itemExistente) {
                 itemExistente.cantidad += 1;
@@ -366,7 +369,8 @@
                     precio: Number(producto.precio),
                     cantidad: 1,
                     stock: stockOriginal,
-                    imagen_url: producto.imagen_url
+                    imagen_url: producto.imagen_url,
+                    nit_empresa: nitEmpresaCalculado // <--- SE GUARDA EL NIT DE FORMA AUTOMÁTICA
                 });
             }
 
