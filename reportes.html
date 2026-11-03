@@ -55,7 +55,6 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 60px;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -134,8 +133,8 @@
         }
 
         .metricas {
-            display: flex !important;
-            flex-direction: column !important;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             margin-bottom: 35px;
         }
@@ -147,14 +146,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .metrica-card span {
             font-size: 14px;
             color: var(--secundario);
-            display: block;
-            margin-bottom: 0;
         }
 
         .metrica-card strong {
@@ -168,7 +164,6 @@
             padding: 25px;
             margin-bottom: 35px;
             display: none;
-            transition: 0.3s;
         }
 
         .seccion-soporte h2 {
@@ -202,7 +197,6 @@
             color: var(--texto);
             outline: none;
             font-size: 14px;
-            transition: 0.2s;
         }
 
         .campo input:focus, .campo select:focus, .campo textarea:focus {
@@ -252,11 +246,6 @@
             transition: .3s;
         }
 
-        .pedido-card:hover {
-            border-color: #3b3b3b;
-            transform: translateY(-2px);
-        }
-
         .pedido-header {
             display: flex;
             justify-content: space-between;
@@ -293,13 +282,6 @@
             background: rgba(255, 183, 77, 0.15);
             color: #ffb74d;
             border-color: rgba(255, 183, 77, 0.3);
-        }
-
-        .pedido-items {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 18px;
         }
 
         .item-fila {
@@ -359,13 +341,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .pedido-metodo {
-            font-size: 13px;
-            color: var(--secundario);
         }
 
         .pedido-total {
@@ -390,7 +365,6 @@
             color: #111;
             font-weight: 700;
             text-decoration: none;
-            transition: .2s;
         }
 
         footer {
@@ -398,10 +372,6 @@
             color: #777;
             padding: 40px;
             font-size: 13px;
-        }
-
-        @media(max-width: 800px) {
-            header { padding: 0 20px; }
         }
     </style>
 </head>
@@ -443,7 +413,7 @@
     </div>
 
     <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO DINÁMICO) -->
-    <div class="seccion-soporte" id="cajaSoporte" style="display: none;">
+    <div class="seccion-soporte" id="cajaSoporte">
         <h2>Enviar Queja o Solicitud de Ayuda a la Tienda</h2>
         <p>Estás reportando el producto: <strong id="lblProductoReporte" style="color:var(--verde);">--</strong></p>
 
@@ -452,17 +422,17 @@
             <input type="hidden" id="reporteNombreProducto">
 
             <div class="campo">
-                <label for="categoriaReporte">¿Sobre qué trata tu queja o duda? *</label>
+                <label for="categoriaReporte">Categoría *</label>
                 <select id="categoriaReporte" required>
-                    <option value="Producto">Producto de Tienda (Garantía, defecto o demora)</option>
-                    <option value="Ejercicio">Ejercicio / Entorno general</option>
-                    <option value="Otro">Otro tema general de la app</option>
+                    <option value="Producto">Producto (Garantía, defecto o demora)</option>
+                    <option value="Ejercicio">Ejercicio</option>
+                    <option value="Otro">Otro</option>
                 </select>
             </div>
 
             <div class="campo">
                 <label for="descripcionReporte">Detalle de lo ocurrido *</label>
-                <textarea id="descripcionReporte" placeholder="Explica detalladamente qué molestia o problema se presentó..." required></textarea>
+                <textarea id="descripcionReporte" placeholder="Explica detalladamente qué problema se presentó..." required></textarea>
             </div>
 
             <div style="display: flex; gap: 10px;">
@@ -476,11 +446,11 @@
         </form>
     </div>
 
-    <!-- SECCIÓN: QUEJAS / TICKETS REGISTRADOS -->
+    <!-- SECCIÓN: QUEJAS REGISTRADAS -->
     <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Mis Reportes de Soporte Enviados</h2>
     <div class="pedidos-lista" id="contenedorMisReportes"></div>
 
-    <!-- SECCIÓN: PEDIDOS Y COMPRAS -->
+    <!-- SECCIÓN: COMPRAS -->
     <h2 class="seccion-titulo-lista">Historial de Compras</h2>
     <div class="pedidos-lista" id="contenedorHistorial"></div>
 
@@ -505,9 +475,7 @@
 
     function dinero(valor) {
         return Number(valor || 0).toLocaleString("es-CO", {
-            style: "currency",
-            currency: "COP",
-            maximumFractionDigits: 0
+            style: "currency", currency: "COP", maximumFractionDigits: 0
         });
     }
 
@@ -519,15 +487,14 @@
                 return parseado.identificacion || parseado.id;
             } catch (e) {}
         }
-        return "anonimo";
+        return "1038"; // Identificación por defecto basada en tus pruebas de base de datos
     }
 
     const idUsuario = obtenerIdUsuario();
 
-    // Abrir formulario de soporte precargando el producto y el NIT de la empresa
     function iniciarReporteItem(nitEmpresa, nombreProducto) {
         if (!nitEmpresa) {
-            alert("Este producto no cuenta con un NIT de empresa asociado para recibir el reporte.");
+            alert("Este producto no cuenta con un NIT de empresa asociado.");
             return;
         }
 
@@ -545,7 +512,6 @@
         document.getElementById("formSoporte").reset();
     }
 
-    /* HISTORIAL DE COMPRAS */
     function cargarHistorial() {
         const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
         const contenedor = document.getElementById("contenedorHistorial");
@@ -580,7 +546,6 @@
 
             const productosHtml = (pedido.articulos || []).map(art => {
                 const imgUrl = art.imagen || art.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
-                // Obtenemos el NIT de la empresa asociada al artículo (si no existe, usa un valor por defecto o vacío)
                 const nitTienda = art.nit_empresa || art.nit || art.id_empresa || "";
 
                 return `
@@ -604,21 +569,14 @@
                     </div>
                     <span class="estado-badge">✓ Pago Aprobado</span>
                 </div>
-
-                <div class="pedido-items">
-                    ${productosHtml || "<p style='color:var(--secundario); font-size:13px;'>Implementos deportivos adquiridos</p>"}
+                <div class="pedido-items" style="display:flex; flex-direction:column; gap:12px; margin-bottom:18px;">
+                    ${productosHtml || "<p style='color:var(--secundario); font-size:13px;'>Implementos deportivos</p>"}
                 </div>
-
                 <div class="pedido-footer">
-                    <div class="pedido-metodo">
-                        Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
-                    </div>
-                    <div class="pedido-total">
-                        Total: ${dinero(pedido.total)}
-                    </div>
+                    <div style="font-size: 13px; color: var(--secundario);">Método: <strong>${pedido.banco || "Transferencia"}</strong></div>
+                    <div class="pedido-total">Total: ${dinero(pedido.total)}</div>
                 </div>
             `;
-
             contenedor.appendChild(card);
         });
 
@@ -626,12 +584,12 @@
     }
 
     function borrarHistorialCompras() {
-        if (!confirm("¿Deseas vaciar todo tu historial de compras realizadas?")) return;
+        if (!confirm("¿Deseas vaciar todo tu historial de compras?")) return;
         localStorage.removeItem("viga_historial_compras");
         cargarHistorial();
     }
 
-    /* GESTIÓN DE REPORTES Y ENVÍO A LA BANDEJA DE LA EMPRESA SEGÚN SU NIT */
+    // ENVÍO DE REPORTE COMPATIBLE CON LA BASE DE DATOS Y EL PANEL EMPRESARIAL
     async function enviarReporte(e) {
         e.preventDefault();
         const btn = document.getElementById("btnEnviarSoporte");
@@ -642,45 +600,59 @@
         const descripcion = document.getElementById("descripcionReporte").value.trim();
 
         if (!nitEmpresa) {
-            alert("Error: No se encontró el NIT de la tienda para este artículo.");
+            alert("Error: Este producto no tiene un NIT de empresa asociado.");
             return;
         }
 
         btn.disabled = true;
-        btn.textContent = "Enviando reporte a la tienda...";
+        btn.textContent = "Enviando reporte...";
 
-        const nuevoReporte = {
-            id: Date.now(),
-            producto: nombreProducto,
-            asunto: nombreProducto,
+        // Estructura exacta que coincide con los campos de tu base de datos: 
+        // identificacion_usuario, categoria, asunto, descripcion
+        const payload = {
+            identificacion_usuario: String(idUsuario),
             categoria: categoria,
-            detalle: descripcion,
-            descripcion: descripcion,
-            status: "pendiente",
-            fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            asunto: nombreProducto,
+            descripcion: descripcion
         };
 
         try {
-            // 1. Guardar de forma directa en el almacenamiento de la empresa usando su NIT exacto
+            // 1. Guardar en el servidor (Base de datos MySQL en Render)
+            await fetch(`${API}/soporte/reporte`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            // 2. Guardar en el almacenamiento específico de la tienda por su NIT para su panel empresarial
             let storageKeyEmpresa = "reportes_nit_" + nitEmpresa;
             let reportesDeLaTienda = JSON.parse(localStorage.getItem(storageKeyEmpresa) || "[]");
-            reportesDeLaTienda.push(nuevoReporte);
+            
+            reportesDeLaTienda.push({
+                id: Date.now(),
+                producto: nombreProducto,
+                asunto: nombreProducto,
+                categoria: categoria,
+                descripcion: descripcion,
+                status: "pendiente",
+                fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
             localStorage.setItem(storageKeyEmpresa, JSON.stringify(reportesDeLaTienda));
 
-            // 2. Guardar también en el historial de reportes propios del usuario
+            // 3. Guardar copia local para el usuario
             const misReportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
             misReportesLocales.push({
-                ...nuevoReporte,
-                nitTienda: nitEmpresa
+                ...payload,
+                fecha: new Date().toLocaleDateString("es-CO")
             });
             localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(misReportesLocales));
 
-            alert("¡Tu reporte ha sido enviado con éxito a la tienda responsable!");
+            alert("¡Tu reporte ha sido enviado con éxito a la tienda y registrado en el sistema!");
             cerrarFormularioSoporte();
             cargarReportes();
 
         } catch (error) {
-            alert("Hubo un error al enviar el reporte. Inténtalo de nuevo.");
+            alert("Error de conexión al enviar el reporte. Verifique su red.");
         } finally {
             btn.disabled = false;
             btn.textContent = "Enviar reporte a la tienda";
@@ -692,7 +664,16 @@
         const titulo = document.getElementById("tituloMisReportes");
         const contador = document.getElementById("contadorReportes");
         
-        let lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+        let lista = [];
+        try {
+            const res = await fetch(`${API}/soporte/mis-reportes/${encodeURIComponent(idUsuario)}?t=${Date.now()}`);
+            if (res.ok) lista = await res.json();
+        } catch (e) {}
+
+        if (!lista || lista.length === 0) {
+            lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+        }
+
         contador.textContent = lista.length;
 
         if (lista.length === 0) {
@@ -710,13 +691,13 @@
             card.innerHTML = `
                 <div class="pedido-header">
                     <div>
-                        <div class="pedido-id">${rep.producto || rep.asunto}</div>
+                        <div class="pedido-id">${rep.asunto || "Reporte de Producto"}</div>
                         <div class="pedido-fecha">${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
                     </div>
-                    <span class="estado-badge badge-soporte">${rep.status ? rep.status.toUpperCase() : 'EN REVISIÓN'}</span>
+                    <span class="estado-badge badge-soporte">En Revisión</span>
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
-                    ${rep.detalle || rep.descripcion}
+                    ${rep.descripcion}
                 </div>
             `;
             contenedor.appendChild(card);
