@@ -133,7 +133,6 @@
             color: white;
         }
 
-        /* MÉTRICAS VERTICALES CON ELEMENTOS A LOS EXTREMOS */
         .metricas {
             display: flex !important;
             flex-direction: column !important;
@@ -163,7 +162,6 @@
             color: var(--verde);
         }
 
-        /* SECCIÓN CENTRO DE AYUDA Y QUEJAS */
         .seccion-soporte {
             background: var(--panel);
             border: 1px solid var(--borde);
@@ -232,7 +230,6 @@
             filter: brightness(1.1);
         }
 
-        /* LISTAS Y TARJETAS */
         .seccion-titulo-lista {
             font-size: 20px;
             color: var(--texto);
@@ -309,6 +306,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            justify-content: space-between;
         }
 
         .item-fila img {
@@ -337,6 +335,22 @@
             font-weight: 600;
             font-size: 14px;
             color: var(--texto);
+        }
+
+        .btn-reportar-item {
+            background: transparent;
+            border: 1px solid var(--verde);
+            color: var(--verde);
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-reportar-item:hover {
+            background: var(--verde);
+            color: #111;
         }
 
         .pedido-footer {
@@ -403,19 +417,16 @@
 
     <div class="titulo">
         <h1>Historial y Soporte</h1>
-        <p>Revisa tus compras realizadas y gestiona quejas sobre rutinas, alimentos o productos.</p>
+        <p>Revisa tus compras realizadas y gestiona quejas dirigidas directamente a la tienda correspondiente.</p>
         
         <div class="acciones-superiores">
-            <button class="btn-accion-top" onclick="alternarFormularioSoporte()">
-                 Reportar un problema / Soporte
-            </button>
             <button class="btn-accion-top btn-rojo" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
                  Borrar Historial de Compras
             </button>
         </div>
     </div>
 
-    <!-- MÉTRICAS RÁPIDAS (VERTICALES CON VALORES A LOS EXTREMOS) -->
+    <!-- MÉTRICAS RÁPIDAS -->
     <div class="metricas">
         <div class="metrica-card">
             <span>Compras realizadas</span>
@@ -431,25 +442,22 @@
         </div>
     </div>
 
-    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO) -->
-    <div class="seccion-soporte" id="cajaSoporte">
-        <h2>Enviar Queja o Solicitud de Ayuda</h2>
-        <p>Selecciona el área donde experimentaste algún problema para que el equipo de soporte lo revise.</p>
+    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO DINÁMICO) -->
+    <div class="seccion-soporte" id="cajaSoporte" style="display: none;">
+        <h2>Enviar Queja o Solicitud de Ayuda a la Tienda</h2>
+        <p>Estás reportando el producto: <strong id="lblProductoReporte" style="color:var(--verde);">--</strong></p>
 
         <form id="formSoporte" onsubmit="enviarReporte(event)">
+            <input type="hidden" id="reporteNitEmpresa">
+            <input type="hidden" id="reporteNombreProducto">
+
             <div class="campo">
                 <label for="categoriaReporte">¿Sobre qué trata tu queja o duda? *</label>
                 <select id="categoriaReporte" required>
-                    <option value="Ejercicio">Ejercicio (Incomodidad, técnica o lesión)</option>
-                    <option value="Alimento">Alimento / Plan Nutricional (Alergias o sustituciones)</option>
                     <option value="Producto">Producto de Tienda (Garantía, defecto o demora)</option>
+                    <option value="Ejercicio">Ejercicio / Entorno general</option>
                     <option value="Otro">Otro tema general de la app</option>
                 </select>
-            </div>
-
-            <div class="campo">
-                <label for="asuntoReporte">Nombre del ítem / Asunto *</label>
-                <input type="text" id="asuntoReporte" placeholder="Ej. Dolor al hacer sentadilla profunda / Mancuerna dañada" required>
             </div>
 
             <div class="campo">
@@ -457,9 +465,14 @@
                 <textarea id="descripcionReporte" placeholder="Explica detalladamente qué molestia o problema se presentó..." required></textarea>
             </div>
 
-            <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte">
-                Enviar reporte al soporte técnico
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte" style="flex: 2;">
+                    Enviar reporte a la tienda
+                </button>
+                <button type="button" class="btn-enviar-soporte" onclick="cerrarFormularioSoporte()" style="flex: 1; background: var(--panel); color: var(--texto); border: 1px solid var(--borde);">
+                    Cancelar
+                </button>
+            </div>
         </form>
     </div>
 
@@ -511,12 +524,25 @@
 
     const idUsuario = obtenerIdUsuario();
 
-    function alternarFormularioSoporte() {
-        const caja = document.getElementById("cajaSoporte");
-        caja.style.display = caja.style.display === "block" ? "none" : "block";
-        if (caja.style.display === "block") {
-            caja.scrollIntoView({ behavior: "smooth" });
+    // Abrir formulario de soporte precargando el producto y el NIT de la empresa
+    function iniciarReporteItem(nitEmpresa, nombreProducto) {
+        if (!nitEmpresa) {
+            alert("Este producto no cuenta con un NIT de empresa asociado para recibir el reporte.");
+            return;
         }
+
+        document.getElementById("reporteNitEmpresa").value = nitEmpresa;
+        document.getElementById("reporteNombreProducto").value = nombreProducto;
+        document.getElementById("lblProductoReporte").textContent = nombreProducto;
+
+        const caja = document.getElementById("cajaSoporte");
+        caja.style.display = "block";
+        caja.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function cerrarFormularioSoporte() {
+        document.getElementById("cajaSoporte").style.display = "none";
+        document.getElementById("formSoporte").reset();
     }
 
     /* HISTORIAL DE COMPRAS */
@@ -554,6 +580,9 @@
 
             const productosHtml = (pedido.articulos || []).map(art => {
                 const imgUrl = art.imagen || art.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
+                // Obtenemos el NIT de la empresa asociada al artículo (si no existe, usa un valor por defecto o vacío)
+                const nitTienda = art.nit_empresa || art.nit || art.id_empresa || "";
+
                 return `
                     <div class="item-fila">
                         <img src="${imgUrl}" alt="${art.nombre}" onerror="this.src='https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80'">
@@ -562,6 +591,7 @@
                             <span>Cantidad: ${art.cantidad} unidad(es)</span>
                         </div>
                         <div class="item-precio">${dinero(art.precio * art.cantidad)}</div>
+                        <button class="btn-reportar-item" onclick="iniciarReporteItem('${nitTienda}', '${art.nombre}')">Reportar</button>
                     </div>
                 `;
             }).join("");
@@ -570,7 +600,7 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">Orden #${pedido.idOrden || (1000 + idx)}</div>
-                        <div class="pedido-fecha"> ${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
+                        <div class="pedido-fecha">${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
                     </div>
                     <span class="estado-badge">✓ Pago Aprobado</span>
                 </div>
@@ -581,7 +611,7 @@
 
                 <div class="pedido-footer">
                     <div class="pedido-metodo">
-                         Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
+                        Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
                     </div>
                     <div class="pedido-total">
                         Total: ${dinero(pedido.total)}
@@ -601,50 +631,59 @@
         cargarHistorial();
     }
 
-    /* GESTIÓN DE REPORTES DE SOPORTE */
+    /* GESTIÓN DE REPORTES Y ENVÍO A LA BANDEJA DE LA EMPRESA SEGÚN SU NIT */
     async function enviarReporte(e) {
         e.preventDefault();
         const btn = document.getElementById("btnEnviarSoporte");
-        btn.disabled = true;
-        btn.textContent = "Enviando queja al soporte...";
+        
+        const nitEmpresa = document.getElementById("reporteNitEmpresa").value;
+        const nombreProducto = document.getElementById("reporteNombreProducto").value;
+        const categoria = document.getElementById("categoriaReporte").value;
+        const descripcion = document.getElementById("descripcionReporte").value.trim();
 
-        const payload = {
-            identificacion: idUsuario,
-            categoria: document.getElementById("categoriaReporte").value,
-            asunto: document.getElementById("asuntoReporte").value.trim(),
-            descripcion: document.getElementById("descripcionReporte").value.trim()
+        if (!nitEmpresa) {
+            alert("Error: No se encontró el NIT de la tienda para este artículo.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Enviando reporte a la tienda...";
+
+        const nuevoReporte = {
+            id: Date.now(),
+            producto: nombreProducto,
+            asunto: nombreProducto,
+            categoria: categoria,
+            detalle: descripcion,
+            descripcion: descripcion,
+            status: "pendiente",
+            fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         };
 
         try {
-            const res = await fetch(`${API}/soporte/reporte`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+            // 1. Guardar de forma directa en el almacenamiento de la empresa usando su NIT exacto
+            let storageKeyEmpresa = "reportes_nit_" + nitEmpresa;
+            let reportesDeLaTienda = JSON.parse(localStorage.getItem(storageKeyEmpresa) || "[]");
+            reportesDeLaTienda.push(nuevoReporte);
+            localStorage.setItem(storageKeyEmpresa, JSON.stringify(reportesDeLaTienda));
+
+            // 2. Guardar también en el historial de reportes propios del usuario
+            const misReportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+            misReportesLocales.push({
+                ...nuevoReporte,
+                nitTienda: nitEmpresa
             });
+            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(misReportesLocales));
 
-            if (!res.ok) throw new Error("Error guardando el reporte");
-
-            alert("¡Tu reporte ha sido radicado con éxito! Un instructor o asesor de VIGA revisará el caso.");
-            document.getElementById("formSoporte").reset();
-            document.getElementById("cajaSoporte").style.display = "none";
+            alert("¡Tu reporte ha sido enviado con éxito a la tienda responsable!");
+            cerrarFormularioSoporte();
             cargarReportes();
 
         } catch (error) {
-            // Guardado de respaldo local
-            const locales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-            locales.push({
-                ...payload,
-                fecha: new Date().toLocaleDateString("es-CO")
-            });
-            localStorage.setItem(`viga_reportes_${idJSON.stringify(locales)}`); // o locales
-
-            alert("Tu reporte ha sido guardado correctamente.");
-            document.getElementById("formSoporte").reset();
-            document.getElementById("cajaSoporte").style.display = "none";
-            cargarReportes();
+            alert("Hubo un error al enviar el reporte. Inténtalo de nuevo.");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Enviar reporte al soporte técnico";
+            btn.textContent = "Enviar reporte a la tienda";
         }
     }
 
@@ -652,19 +691,8 @@
         const contenedor = document.getElementById("contenedorMisReportes");
         const titulo = document.getElementById("tituloMisReportes");
         const contador = document.getElementById("contadorReportes");
-        let lista = [];
-
-        try {
-            const res = await fetch(`${API}/soporte/mis-reportes/${encodeURIComponent(idUsuario)}?t=${Date.now()}`);
-            if (res.ok) {
-                lista = await res.json();
-            }
-        } catch (e) {}
-
-        if (!lista || lista.length === 0) {
-            lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-        }
-
+        
+        let lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
         contador.textContent = lista.length;
 
         if (lista.length === 0) {
@@ -676,19 +704,19 @@
         titulo.style.display = "block";
         contenedor.innerHTML = "";
 
-        lista.forEach(rep => {
+        lista.slice().reverse().forEach(rep => {
             const card = document.createElement("div");
             card.className = "pedido-card";
             card.innerHTML = `
                 <div class="pedido-header">
                     <div>
-                        <div class="pedido-id">${rep.asunto}</div>
-                        <div class="pedido-fecha"> ${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
+                        <div class="pedido-id">${rep.producto || rep.asunto}</div>
+                        <div class="pedido-fecha">${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
                     </div>
-                    <span class="estado-badge badge-soporte">En Revisión</span>
+                    <span class="estado-badge badge-soporte">${rep.status ? rep.status.toUpperCase() : 'EN REVISIÓN'}</span>
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
-                    ${rep.descripcion}
+                    ${rep.detalle || rep.descripcion}
                 </div>
             `;
             contenedor.appendChild(card);
