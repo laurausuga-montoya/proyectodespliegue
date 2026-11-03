@@ -636,8 +636,18 @@
                 detallesPago = { banco: `Bancolombia (${tipo})`, cuenta, cvv };
             }
 
+            // ASEGURAMOS QUE CADA ARTÍCULO CONSERVE SU NIT DE EMPRESA REAL
+            const articulosProcesados = carrito.map(item => ({
+                id: item.id,
+                nombre: item.nombre,
+                precio: Number(item.precio),
+                cantidad: item.cantidad,
+                imagen: item.imagen_url || item.imagen,
+                nit_empresa: item.nit_empresa || item.nit || item.id_empresa || ""
+            }));
+
             const pedido = {
-                articulos: carrito,
+                articulos: articulosProcesados,
                 cliente: {
                     nombre: document.getElementById("clienteNombre").value.trim(),
                     telefono: document.getElementById("clienteTelefono").value.trim(),
