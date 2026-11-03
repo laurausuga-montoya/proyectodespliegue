@@ -236,7 +236,7 @@
             margin-bottom: 28px;
         }
 
-        /* DISEÑO HORIZONTAL LARGO CON NÚMERO AL FINAL DE LA DERECHA (MI EMPRESA) */
+        /* DISEÑO HORIZONTAL LARGO CON NÚMERO A LA DERECHA (MI EMPRESA) */
         .estadisticas-vertical-larga {
             display: flex;
             flex-direction: column;
@@ -833,15 +833,17 @@
 
     async function cargarProductos() {
         if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+
         try {
-            productos = [
-                { id: 1, nombre: "Mancuernas 5kg", categoria: "Pesas y mancuernas", precio: 80000, stock: 15 },
-                { id: 2, nombre: "Barra olímpica", categoria: "Pesas y mancuernas", precio: 250000, stock: 0 }
-            ];
+            // Petición real al backend para mostrar los productos en la tienda
+            const datos = await peticion("/empresa/" + encodeURIComponent(idEmpresa) + "/productos");
+            productos = Array.isArray(datos) ? datos : (datos.productos || []);
             renderizarProductos();
             await cargarReportesEmpresa();
         } catch (error) {
             $("tablaProductos").innerHTML = '<div class="vacio">' + escapar(error.message) + '</div>';
+            $("recientes").innerHTML = '<div class="vacio">No fue posible cargar el catálogo.</div>';
         }
     }
 
@@ -855,18 +857,18 @@
         $("productosAgotados").textContent = agotados;
 
         if (total === 0) {
-            $("tablaProductos").innerHTML = '<div class="vacio">Aún no tienes productos.</div>';
-            $("recientes").innerHTML = '<div class="vacio">Catálogo vacío.</div>';
+            $("tablaProductos").innerHTML = '<div class="vacio">Aún no tienes productos. Agrega el primero para comenzar.</div>';
+            $("recientes").innerHTML = '<div class="vacio">Tu catálogo está vacío.</div>';
             return;
         }
 
         const filas = lista => lista.map(p => `
             <tr>
                 <td class="producto-nombre">${escapar(p.nombre)}</td>
-                <td>${escapar(p.categoria)}</td>
+                <td>${escapar(p.categoria || "Sin categoría")}</td>
                 <td>${dinero(p.precio)}</td>
                 <td>${p.stock}</td>
-                <td>${p.stock > 0 ? '<span class="estado">Disponible</span>' : '<span class="estado estado-agotado">Agotado</span>'}</td>
+                <td>${Number(p.stock) > 0 ? '<span class="estado">Disponible</span>' : '<span class="estado estado-agotado">Agotado</span>'}</td>
                 <td>
                     <div class="acciones">
                         <button class="boton boton-secundario" onclick="editarProducto(${p.id})">Editar</button>
@@ -881,22 +883,67 @@
 
     function editarProducto(id) {
         if(verificarBloqueoCuenta()) return;
-        const producto = productos.find(p => p.id === id);
+        const producto = productos.find(p => String(p.id) === String(id));
         if (!producto) return;
         $("productoId").value = producto.id;
-        $("nombreProducto").value = producto.nombre;
-        $("categoria").value = producto.categoria;
-        $("precio").value = producto.precio;
-        $("stock").value = producto.stock;
+        $("nombreProducto").value = producto.nombre || "";
+        $("categoria").value = producto.categoria || "";
+        $("descripcion").value = producto.descripcion || "";
+        $("precio").value = producto.precio || "";
+        $("stock").value = producto.stock ?? 0;
         abrirSeccion("nuevo");
     }
 
+    // REGISTRO Y ACTUALIZACIÓN DE PRODUCTOS ENVIANDO A LA API
     $("productoForm").addEventListener("submit", async event => {
         event.preventDefault();
         if (verificarBloqueoCuenta()) return;
-        mostrarMensaje("Producto guardado con éxito (Simulado)", "correcto");
-        limpiarFormulario();
-        abrirSeccion("productos");
+        mostrarMensaje("");
+
+        if (!empresa) return;
+        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        const id = $("productoId").value;
+
+        const formulario = new FormData();
+        formulario.append("nombre", $("nombreProducto").value.trim());
+        formulario.append("categoria", $("categoria").value);
+        formulario.append("descripcion", $("descripcion").value.trim());
+        formulario.append("precio", Number($("precio").value));
+        formulario.append("stock", Number($("stock").value));
+
+        if ($("imagen").files[0]) {
+            formulario.append("imagen", $("imagen").files[0]);
+        }
+
+        const boton = $("btnGuardarProducto");
+        boton.disabled = true;
+        boton.textContent = "Guardando...";
+
+        try {
+            const base = "/empresa/" + encodeURIComponent(idEmpresa) + "/productos";
+            await peticion(
+                id ? base + "/" + encodeURIComponent(id) : base,
+                {
+                    method: id ? "PUT" : "POST",
+                    body: formulario
+                }
+            );
+
+            mostrarMensaje(
+                id ? "Producto actualizado correctamente." : "Producto agregado correctamente.",
+                "correcto"
+            );
+
+            limpiarFormulario();
+            await cargarProductos();
+            abrirSeccion("productos");
+
+        } catch (error) {
+            mostrarMensaje(error.message, "error");
+        } finally {
+            boton.disabled = false;
+            boton.textContent = id ? "Guardar cambios" : "Guardar producto";
+        }
     });
 
     async function cargarVentasEmpresa() {
@@ -909,7 +956,7 @@
     // GESTIÓN DE REPORTES Y LÓGICA DESDE LA CUENTA PERSONAL
     async function cargarReportesEmpresa() {
         try {
-            reportesEmpresa = JSON.parse(localStorage.getItem("reportes_" + empresa.id) || '[{"id": 1, "detalle": "El producto llegó incompleto", "status": "pendiente", "fecha": "2026-11-01"}]');
+            reportesEmpresa = JSON.parse(localStorage.getItem("reportes_" + empresa.id) || '[]');
 
             const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
             
