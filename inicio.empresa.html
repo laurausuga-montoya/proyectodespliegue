@@ -486,7 +486,7 @@
     <div class="empresa-mini">
         <div>
             <strong id="nombreEmpresaBarra">Mi empresa</strong>
-            <div class="etiqueta">Cuenta empresarial</div>
+            <div class="etiqueta" id="nitEmpresaBarra">NIT: --</div>
         </div>
         <div class="avatar" id="avatarEmpresa">E</div>
     </div>
@@ -703,7 +703,8 @@
 <script>
     const API = "https://viga-c607.onrender.com";
 
-    let empresa = JSON.parse(localStorage.getItem("empresaLogueada") || '{"id": "empresa_demo_1", "nombre": "Tienda Deportiva Viga"}');
+    // Recuperamos los datos reales de la empresa logueada que guardó su NIT al registrarse
+    let empresa = JSON.parse(localStorage.getItem("empresaLogueada") || '{"nit": "900123456", "nombre": "Tienda Deportiva Viga"}');
     
     let productos = [];
     let reportesEmpresa = [];
@@ -711,8 +712,12 @@
 
     const $ = id => document.getElementById(id);
 
+    // Identificador único y seguro basado en el NIT de la empresa
+    const nitEmpresaActual = empresa.nit || empresa.id || empresa.identificacion || "default_nit";
+
     if(empresa) {
         $("nombreEmpresaBarra").textContent = empresa.nombre || "Mi empresa";
+        $("nitEmpresaBarra").textContent = "NIT: " + nitEmpresaActual;
         $("saludoEmpresa").textContent = "Gestiona tu negocio, " + (empresa.nombre || "");
         $("avatarEmpresa").textContent = (empresa.nombre || "E").charAt(0).toUpperCase();
     }
@@ -833,11 +838,9 @@
 
     async function cargarProductos() {
         if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
 
         try {
-            // Petición real al backend para mostrar los productos en la tienda
-            const datos = await peticion("/empresa/" + encodeURIComponent(idEmpresa) + "/productos");
+            const datos = await peticion("/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos");
             productos = Array.isArray(datos) ? datos : (datos.productos || []);
             renderizarProductos();
             await cargarReportesEmpresa();
@@ -894,14 +897,12 @@
         abrirSeccion("nuevo");
     }
 
-    // REGISTRO Y ACTUALIZACIÓN DE PRODUCTOS ENVIANDO A LA API
     $("productoForm").addEventListener("submit", async event => {
         event.preventDefault();
         if (verificarBloqueoCuenta()) return;
         mostrarMensaje("");
 
         if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
         const id = $("productoId").value;
 
         const formulario = new FormData();
@@ -910,6 +911,8 @@
         formulario.append("descripcion", $("descripcion").value.trim());
         formulario.append("precio", Number($("precio").value));
         formulario.append("stock", Number($("stock").value));
+        // Aseguramos enviar el NIT de la empresa junto al producto
+        formulario.append("nit_empresa", nitEmpresaActual);
 
         if ($("imagen").files[0]) {
             formulario.append("imagen", $("imagen").files[0]);
@@ -920,7 +923,7 @@
         boton.textContent = "Guardando...";
 
         try {
-            const base = "/empresa/" + encodeURIComponent(idEmpresa) + "/productos";
+            const base = "/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos";
             await peticion(
                 id ? base + "/" + encodeURIComponent(id) : base,
                 {
@@ -953,10 +956,11 @@
         $("contenedorTablaVentas").innerHTML = `<div class="vacio">No hay ventas recientes registradas.</div>`;
     }
 
-    // GESTIÓN DE REPORTES Y LÓGICA DESDE LA CUENTA PERSONAL
+    // CARGA DE REPORTES USANDO EXCLUSIVAMENTE EL NIT DE LA EMPRESA
     async function cargarReportesEmpresa() {
         try {
-            reportesEmpresa = JSON.parse(localStorage.getItem("reportes_" + empresa.id) || '[]');
+            // Se leen los reportes específicos de esta tienda usando su NIT exacto
+            reportesEmpresa = JSON.parse(localStorage.getItem("reportes_nit_" + nitEmpresaActual) || '[]');
 
             const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
             
@@ -977,7 +981,7 @@
 
     function renderizarTablaReportes(lista) {
         if(lista.length === 0) {
-            $("contenedorTablaReportes").innerHTML = '<div class="vacio">No hay reportes de usuarios registrados para tu tienda. ¡Buen trabajo!</div>';
+            $("contenedorTablaReportes").innerHTML = '<div class="vacio">No hay reportes de usuarios registrados para este NIT. ¡Buen trabajo!</div>';
             return;
         }
 
@@ -987,7 +991,7 @@
                     <thead>
                         <tr>
                             <th>ID Reporte</th>
-                            <th>Motivo / Detalle</th>
+                            <th>Producto / Motivo</th>
                             <th>Fecha</th>
                             <th>Estado</th>
                             <th>Acción</th>
@@ -997,7 +1001,7 @@
                         ${lista.map(r => `
                             <tr>
                                 <td>#${r.id}</td>
-                                <td>${escapar(r.detalle)}</td>
+                                <td><strong>${escapar(r.producto || 'General')}</strong>: ${escapar(r.detalle)}</td>
                                 <td>${r.fecha || 'Reciente'}</td>
                                 <td><span class="estado ${r.status === 'solucionado' ? '' : 'estado-agotado'}">${r.status.toUpperCase()}</span></td>
                                 <td>
@@ -1018,29 +1022,35 @@
             return r;
         });
 
-        localStorage.setItem("reportes_" + empresa.id, JSON.stringify(reportesEmpresa));
+        localStorage.setItem("reportes_nit_" + nitEmpresaActual, JSON.stringify(reportesEmpresa));
         cargarReportesEmpresa();
         alert("¡Reporte marcado como solucionado! El sistema evaluará el desbloqueo de tu cuenta.");
     };
 
     /**
      * FUNCIÓN PARA LLAMAR DESDE LA CUENTA PERSONAL:
-     * Cuando el usuario hace un reporte desde su perfil/compras, pasas el ID de la tienda que le vendió
-     * el producto y el texto del problema. Esto lo almacena directamente en la bandeja de esa tienda.
+     * Cuando el usuario hace un reporte, pasas el NIT de la empresa vendedora para que guarde 
+     * el reporte exactamente en la bandeja correspondiente a ese NIT.
      */
-    window.enviarReporteDesdeCuentaPersonal = function(idTiendaVendedora, detalleProblema) {
-        let storageKey = "reportes_" + idTiendaVendedora;
+    window.enviarReporteDesdeCuentaPersonal = function(nitEmpresaVendedora, nombreProducto, detalleProblema) {
+        if(!nitEmpresaVendedora) {
+            alert("Error: El producto no tiene un NIT de empresa asociado.");
+            return;
+        }
+
+        let storageKey = "reportes_nit_" + nitEmpresaVendedora;
         let reportesTienda = JSON.parse(localStorage.getItem(storageKey) || '[]');
         
         reportesTienda.push({
             id: Date.now(),
+            producto: nombreProducto,
             detalle: detalleProblema,
             status: "pendiente",
             fecha: new Date().toLocaleDateString()
         });
 
         localStorage.setItem(storageKey, JSON.stringify(reportesTienda));
-        alert("Tu reporte ha sido enviado con éxito a la tienda responsable del producto.");
+        alert("Reporte enviado exitosamente a la tienda con NIT: " + nitEmpresaVendedora);
     };
 
     document.addEventListener("DOMContentLoaded", () => {
