@@ -278,7 +278,7 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// RUTA DE PRODUCTOS CON SUBCONSULTA DINÁMICA PARA OBTENER EL CORREO REAL DE LA EMPRESA
+// RUTA DE PRODUCTOS CON EXTRACCIÓN AUTOMÁTICA DEL CORREO EMPRESARIAL
 app.get("/productos", function (req, res) {
     const sql = `
         SELECT 
