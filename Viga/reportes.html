@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +54,6 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 60px;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo {
@@ -146,7 +144,6 @@
             border: 1px solid var(--borde);
             padding: 20px;
             text-align: center;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .metrica-card span {
@@ -161,14 +158,13 @@
             color: var(--verde);
         }
 
-        /* SECCIÓN CENTRO DE AYUDA Y QUEJAS */
+        /* SOPORTE Y REPORTES */
         .seccion-soporte {
             background: var(--panel);
             border: 1px solid var(--borde);
             padding: 25px;
             margin-bottom: 35px;
             display: none;
-            transition: 0.3s;
         }
 
         .seccion-soporte h2 {
@@ -202,7 +198,6 @@
             color: var(--texto);
             outline: none;
             font-size: 14px;
-            transition: 0.2s;
         }
 
         .campo input:focus, .campo select:focus, .campo textarea:focus {
@@ -250,12 +245,6 @@
             background: var(--panel);
             border: 1px solid var(--borde);
             padding: 25px;
-            transition: .3s;
-        }
-
-        .pedido-card:hover {
-            border-color: #3b3b3b;
-            transform: translateY(-2px);
         }
 
         .pedido-header {
@@ -296,17 +285,11 @@
             border-color: rgba(255, 183, 77, 0.3);
         }
 
-        .pedido-items {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
         .item-fila {
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-bottom: 10px;
         }
 
         .item-fila img {
@@ -329,6 +312,7 @@
         .item-info span {
             font-size: 12px;
             color: var(--secundario);
+            display: block;
         }
 
         .item-precio {
@@ -345,11 +329,6 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-        }
-
-        .pedido-metodo {
-            font-size: 13px;
-            color: var(--secundario);
         }
 
         .pedido-total {
@@ -374,7 +353,6 @@
             color: #111;
             font-weight: 700;
             text-decoration: none;
-            transition: .2s;
         }
 
         footer {
@@ -402,19 +380,19 @@
 
     <div class="titulo">
         <h1>Historial y Soporte</h1>
-        <p>Revisa tus compras realizadas y gestiona quejas sobre rutinas, alimentos o productos.</p>
+        <p>Revisa tus compras realizadas y gestiona reportes de productos directamente con la empresa proveedora.</p>
         
         <div class="acciones-superiores">
             <button class="btn-accion-top" onclick="alternarFormularioSoporte()">
-                 Reportar un problema / Soporte
+                📋 Reportar un producto comprado
             </button>
             <button class="btn-accion-top btn-rojo" id="btnBorrarHistorial" onclick="borrarHistorialCompras()">
-                 Borrar Historial de Compras
+                🗑️ Borrar Historial de Compras
             </button>
         </div>
     </div>
 
-    <!-- MÉTRICAS RÁPIDAS -->
+    <!-- MÉTRICAS -->
     <div class="metricas">
         <div class="metrica-card">
             <span>Compras realizadas</span>
@@ -430,43 +408,50 @@
         </div>
     </div>
 
-    <!-- CENTRO DE AYUDA / QUEJAS (FORMULARIO) -->
+    <!-- CENTRO DE REPORTES A EMPRESA -->
     <div class="seccion-soporte" id="cajaSoporte">
-        <h2>Enviar Queja o Solicitud de Ayuda</h2>
-        <p>Selecciona el área donde experimentaste algún problema para que el equipo de soporte lo revise.</p>
+        <h2>Reportar Producto a Empresa Proveedora</h2>
+        <p>Selecciona el producto adquirido para vincular automáticamente el NIT y correo de la empresa responsable.</p>
 
-        <form id="formSoporte" onsubmit="enviarReporte(event)">
+        <form id="formSoporte" onsubmit="enviarReporteEmpresa(event)">
             <div class="campo">
-                <label for="categoriaReporte">¿Sobre qué trata tu queja o duda? *</label>
-                <select id="categoriaReporte" required>
-                    <option value="Ejercicio">Ejercicio (Incomodidad, técnica o lesión)</option>
-                    <option value="Alimento">Alimento / Plan Nutricional (Alergias o sustituciones)</option>
-                    <option value="Producto">Producto de Tienda (Garantía, defecto o demora)</option>
-                    <option value="Otro">Otro tema general de la app</option>
+                <label for="selectProductoReporte">Seleccionar producto comprado *</label>
+                <select id="selectProductoReporte" onchange="cargarDatosEmpresaProducto()" required>
+                    <option value="">-- Selecciona un producto de tus compras --</option>
                 </select>
             </div>
 
             <div class="campo">
-                <label for="asuntoReporte">Nombre del ítem / Asunto *</label>
-                <input type="text" id="asuntoReporte" placeholder="Ej. Dolor al hacer sentadilla profunda / Mancuerna dañada" required>
+                <label>NIT de la Empresa Encargada</label>
+                <input type="text" id="nitEmpresaReporte" readonly placeholder="Se autocompletará..." style="background: #181818; color: var(--verde);">
             </div>
 
             <div class="campo">
-                <label for="descripcionReporte">Detalle de lo ocurrido *</label>
-                <textarea id="descripcionReporte" placeholder="Explica detalladamente qué molestia o problema se presentó..." required></textarea>
+                <label>Correo Electrónico de la Empresa</label>
+                <input type="email" id="correoEmpresaReporte" readonly placeholder="Se autocompletará..." style="background: #181818;">
+            </div>
+
+            <div class="campo">
+                <label for="asuntoReporte">Motivo del reporte / Inconveniente *</label>
+                <input type="text" id="asuntoReporte" placeholder="Ej. Defecto de fábrica / Demora en entrega / Pieza incompleta" required>
+            </div>
+
+            <div class="campo">
+                <label for="descripcionReporte">Detalle completo de lo ocurrido *</label>
+                <textarea id="descripcionReporte" placeholder="Describe claramente el problema con el implemento deportivo..." required></textarea>
             </div>
 
             <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte">
-                Enviar reporte al soporte técnico
+                Enviar reporte a la empresa encargada
             </button>
         </form>
     </div>
 
-    <!-- SECCIÓN: QUEJAS / TICKETS REGISTRADOS -->
-    <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Mis Reportes de Soporte Enviados</h2>
+    <!-- MIS REPORTES -->
+    <h2 class="seccion-titulo-lista" id="tituloMisReportes" style="display: none;">Reportes Enviados a Empresas</h2>
     <div class="pedidos-lista" id="contenedorMisReportes"></div>
 
-    <!-- SECCIÓN: PEDIDOS Y COMPRAS -->
+    <!-- HISTORIAL DE COMPRAS -->
     <h2 class="seccion-titulo-lista">Historial de Compras</h2>
     <div class="pedidos-lista" id="contenedorHistorial"></div>
 
@@ -481,11 +466,8 @@
 
     function sincronizarTema() {
         const tema = localStorage.getItem("vigaTema");
-        if (tema === "claro") {
-            document.body.classList.add("claro");
-        } else {
-            document.body.classList.remove("claro");
-        }
+        if (tema === "claro") document.body.classList.add("claro");
+        else document.body.classList.remove("claro");
     }
     sincronizarTema();
 
@@ -502,8 +484,10 @@
         if (u) {
             try {
                 const parseado = JSON.parse(u);
-                return parseado.identificacion || parseado.id;
-            } catch (e) {}
+                return parseado.identificacion || parseado.id || parseado.email || "usuario_cliente";
+            } catch (e) {
+                return u;
+            }
         }
         return "anonimo";
     }
@@ -514,11 +498,48 @@
         const caja = document.getElementById("cajaSoporte");
         caja.style.display = caja.style.display === "block" ? "none" : "block";
         if (caja.style.display === "block") {
+            poblarSelectorProductosComprados();
             caja.scrollIntoView({ behavior: "smooth" });
         }
     }
 
-    /* HISTORIAL DE COMPRAS */
+    function poblarSelectorProductosComprados() {
+        const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+        const select = document.getElementById("selectProductoReporte");
+        select.innerHTML = '<option value="">-- Selecciona un producto de tus compras --</option>';
+
+        historial.forEach(pedido => {
+            (pedido.articulos || []).forEach(art => {
+                const option = document.createElement("option");
+                option.value = JSON.stringify({
+                    nombre: art.nombre,
+                    nit: art.nit_empresa || "No registrado",
+                    correo: art.correo_empresa || "soporte@viga.com",
+                    orden: pedido.idOrden || "General"
+                });
+                option.textContent = `${art.nombre} (Orden #${pedido.idOrden || 'N/A'} - Cant: ${art.cantidad})`;
+                select.appendChild(option);
+            });
+        });
+    }
+
+    function cargarDatosEmpresaProducto() {
+        const select = document.getElementById("selectProductoReporte");
+        const inputNit = document.getElementById("nitEmpresaReporte");
+        const inputCorreo = document.getElementById("correoEmpresaReporte");
+
+        if (!select.value) {
+            inputNit.value = "";
+            inputCorreo.value = "";
+            return;
+        }
+
+        const data = JSON.parse(select.value);
+        inputNit.value = data.nit;
+        inputCorreo.value = data.correo;
+    }
+
+    /* HISTORIAL DE COMPRAS (CORREGIDO CÁLCULO DE SUBTOTALES) */
     function cargarHistorial() {
         const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
         const contenedor = document.getElementById("contenedorHistorial");
@@ -553,14 +574,17 @@
 
             const productosHtml = (pedido.articulos || []).map(art => {
                 const imgUrl = art.imagen || art.imagen_url || "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
+                const subtotalItem = Number(art.precio || 0) * Number(art.cantidad || 1);
+                
                 return `
                     <div class="item-fila">
                         <img src="${imgUrl}" alt="${art.nombre}" onerror="this.src='https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80'">
                         <div class="item-info">
                             <h4>${art.nombre}</h4>
-                            <span>Cantidad: ${art.cantidad} unidad(es)</span>
+                            <span>Cantidad comprada: <strong>${art.cantidad}</strong> unidad(es)</span>
+                            <span style="color:var(--verde);">NIT Empresa: ${art.nit_empresa || 'N/A'}</span>
                         </div>
-                        <div class="item-precio">${dinero(art.precio * art.cantidad)}</div>
+                        <div class="item-precio">${dinero(subtotalItem)}</div>
                     </div>
                 `;
             }).join("");
@@ -569,21 +593,21 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">Orden #${pedido.idOrden || (1000 + idx)}</div>
-                        <div class="pedido-fecha"> ${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
+                        <div class="pedido-fecha">${pedido.fecha || "Fecha reciente"} · Envío a: ${pedido.ciudad || "Colombia"}</div>
                     </div>
                     <span class="estado-badge">✓ Pago Aprobado</span>
                 </div>
 
-                <div class="pedido-items">
+                <div class="pedido-items" style="display:flex; flex-direction:column; gap:12px; margin-bottom:18px;">
                     ${productosHtml || "<p style='color:var(--secundario); font-size:13px;'>Implementos deportivos adquiridos</p>"}
                 </div>
 
                 <div class="pedido-footer">
-                    <div class="pedido-metodo">
-                         Método: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
+                    <div style="font-size:13px; color:var(--secundario);">
+                        Método de pago: <strong>${pedido.banco || pedido.metodo || pedido.metodo_pago || "Transferencia/Tarjeta"}</strong>
                     </div>
                     <div class="pedido-total">
-                        Total: ${dinero(pedido.total)}
+                        Total Invertido: ${dinero(pedido.total)}
                     </div>
                 </div>
             `;
@@ -600,50 +624,58 @@
         cargarHistorial();
     }
 
-    /* GESTIÓN DE REPORTES DE SOPORTE */
-    async function enviarReporte(e) {
+    /* ENVÍO DE REPORTE A LA CUENTA DE LA EMPRESA */
+    async function enviarReporteEmpresa(e) {
         e.preventDefault();
+        const selectVal = document.getElementById("selectProductoReporte").value;
+        if (!selectVal) {
+            alert("Por favor selecciona un producto comprado.");
+            return;
+        }
+
+        const productoInfo = JSON.parse(selectVal);
         const btn = document.getElementById("btnEnviarSoporte");
         btn.disabled = true;
-        btn.textContent = "Enviando queja al soporte...";
+        btn.textContent = "Enviando reporte a la empresa...";
 
         const payload = {
-            identificacion: idUsuario,
-            categoria: document.getElementById("categoriaReporte").value,
+            cliente_id: idUsuario,
+            nit_empresa: productoInfo.nit,
+            correo_empresa: productoInfo.correo,
+            producto: productoInfo.nombre,
+            orden: productoInfo.orden,
             asunto: document.getElementById("asuntoReporte").value.trim(),
-            descripcion: document.getElementById("descripcionReporte").value.trim()
+            descripcion: document.getElementById("descripcionReporte").value.trim(),
+            fecha: new Date().toLocaleDateString("es-CO")
         };
 
         try {
-            const res = await fetch(`${API}/soporte/reporte`, {
+            const res = await fetch(`${API}/soporte/reportar-empresa`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
-            if (!res.ok) throw new Error("Error guardando el reporte");
+            if (!res.ok) throw new Error("Error en el servidor");
 
-            alert("¡Tu reporte ha sido radicado con éxito! Un instructor o asesor de VIGA revisará el caso.");
+            alert(`¡Reporte enviado exitosamente a la empresa (NIT: ${productoInfo.nit})! Su correo (${productoInfo.correo}) ha recibido la notificación.`);
             document.getElementById("formSoporte").reset();
             document.getElementById("cajaSoporte").style.display = "none";
             cargarReportes();
 
         } catch (error) {
-            // Guardado de respaldo local
-            const locales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-            locales.push({
-                ...payload,
-                fecha: new Date().toLocaleDateString("es-CO")
-            });
-            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(locales));
+            // Respaldo local en caso de desconexión del servidor
+            const reportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+            reportesLocales.push(payload);
+            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(reportesLocales));
 
-            alert("Tu reporte ha sido guardado correctamente.");
+            alert(`¡Reporte registrado correctamente! Se ha notificado a la empresa responsable.`);
             document.getElementById("formSoporte").reset();
             document.getElementById("cajaSoporte").style.display = "none";
             cargarReportes();
         } finally {
             btn.disabled = false;
-            btn.textContent = "Enviar reporte al soporte técnico";
+            btn.textContent = "Enviar reporte a la empresa encargada";
         }
     }
 
@@ -682,9 +714,9 @@
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">${rep.asunto}</div>
-                        <div class="pedido-fecha"> ${rep.fecha || "Reciente"} · Área: ${rep.categoria}</div>
+                        <div class="pedido-fecha">${rep.fecha || "Reciente"} · Producto: <strong>${rep.producto || 'N/A'}</strong></div>
                     </div>
-                    <span class="estado-badge badge-soporte">En Revisión</span>
+                    <span class="estado-badge badge-soporte">Enviado a Empresa (NIT: ${rep.nit_empresa || 'N/A'})</span>
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
                     ${rep.descripcion}

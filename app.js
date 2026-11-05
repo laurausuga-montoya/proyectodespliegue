@@ -213,7 +213,7 @@ app.post("/login-empresa", function (req, res) {
 });
 
 /* =========================================
-   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
+   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA (INCLUYE NIT Y CORREO)
 ========================================= */
 app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
     const identificacion_empresa = req.params.id;
@@ -278,8 +278,17 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
+// DEVUELVE LOS PRODUCTOS UNIENDO LOS DATOS DE LA EMPRESA (NIT y Correo)
 app.get("/productos", function (req, res) {
-    const sql = "SELECT * FROM productos ORDER BY (stock > 0) DESC, fecha_creacion DESC";
+    const sql = `
+        SELECT 
+            p.*, 
+            e.nit AS nit_empresa, 
+            e.correo_empresarial AS correo_empresa 
+        FROM productos p
+        LEFT JOIN usuarios e ON p.identificacion_empresa = e.identificacion
+        ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
+    `;
 
     conexion.query(sql, function (error, resultados) {
         if (error) return res.status(500).json({ error: "Error cargando la tienda." });
@@ -375,9 +384,6 @@ app.get("/empresa/:id/ventas", function (req, res) {
     });
 });
 
-/* =========================================
-   BORRAR HISTORIAL DE VENTAS DE LA EMPRESA
-========================================= */
 app.delete("/empresa/:id/ventas", function (req, res) {
     const idEmpresa = req.params.id;
 
@@ -396,33 +402,41 @@ app.delete("/empresa/:id/ventas", function (req, res) {
 });
 
 /* =========================================
-   SOPORTE Y REPORTES DE USUARIOS (QUEJAS)
+   SOPORTE Y REPORTES DIRIGIDOS A EMPRESAS
 ========================================= */
-app.post("/soporte/reporte", function (req, res) {
-    const { identificacion, categoria, asunto, descripcion } = req.body;
+app.post("/soporte/reportar-empresa", function (req, res) {
+    const { cliente_id, nit_empresa, correo_empresa, producto, orden, asunto, descripcion, fecha } = req.body;
 
-    if (!categoria || !asunto || !descripcion) {
-        return res.status(400).json({ error: "Completa la categoría, asunto y detalle del reporte." });
+    if (!nit_empresa || !producto || !asunto || !descripcion) {
+        return res.status(400).json({ error: "Faltan datos obligatorios para el reporte." });
     }
 
     const sql = `
-        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) 
-        VALUES (?, ?, ?, ?)
+        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, nit_empresa, correo_empresa, producto, orden_compra) 
+        VALUES (?, 'Producto', ?, ?, ?, ?, ?, ?)
     `;
 
-    conexion.query(sql, [identificacion || null, categoria, asunto, descripcion], function (error, resultado) {
+    conexion.query(sql, [cliente_id || null, asunto, descripcion, nit_empresa, correo_empresa, producto, orden], function (error, resultado) {
         if (error) {
-            console.error("❌ Error al guardar reporte de soporte:", error);
-            return res.status(500).json({ error: "No se pudo enviar el reporte." });
+            console.error("❌ Error al guardar reporte hacia empresa:", error);
+            // Si la tabla no tiene las columnas adicionales, realizamos un respaldo básico
+            const sqlBasico = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) VALUES (?, 'Producto', ?, ?)`;
+            conexion.query(sqlBasico, [cliente_id || null, asunto, descripcion], function(err2) {
+                if(err2) return res.status(500).json({ error: "No se pudo registrar el reporte." });
+                return res.status(201).json({ mensaje: "Reporte registrado con éxito (modo básico)." });
+            });
+            return;
         }
-        res.status(201).json({ mensaje: "Reporte enviado con éxito al equipo de soporte.", id: resultado.insertId });
+
+        console.log(`📨 Reporte enviado con éxito a la empresa con NIT: ${nit_empresa} (${correo_empresa})`);
+        res.status(201).json({ mensaje: "Reporte enviado a la empresa encargada con éxito.", id: resultado.insertId });
     });
 });
 
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
-        SELECT id, categoria, asunto, descripcion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
         FROM reportes_soporte 
         WHERE identificacion_usuario = ? 
         ORDER BY fecha DESC
