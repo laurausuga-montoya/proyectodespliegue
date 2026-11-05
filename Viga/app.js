@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require("express");
-const mysql = mysql = require("mysql2");
+const mysql = require("mysql2");
 const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
@@ -213,7 +213,7 @@ app.post("/login-empresa", function (req, res) {
 });
 
 /* =========================================
-   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA (CON CORREO REAL)
+   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
 ========================================= */
 app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
     const identificacion_empresa = req.params.id;
@@ -278,7 +278,7 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// RUTA DE PRODUCTOS CON SUBCONSULTA SEGURA PARA OBTENER EL CORREO REAL
+// RUTA DE PRODUCTOS CON SUBCONSULTA DINÁMICA PARA OBTENER EL CORREO REAL DE LA EMPRESA
 app.get("/productos", function (req, res) {
     const sql = `
         SELECT 
