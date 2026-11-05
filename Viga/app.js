@@ -213,7 +213,7 @@ app.post("/login-empresa", function (req, res) {
 });
 
 /* =========================================
-   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
+   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA (CON CORREO REAL)
 ========================================= */
 app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
     const identificacion_empresa = req.params.id;
@@ -278,11 +278,28 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
+// RUTA DE PRODUCTOS CON VINCULACIÓN AL CORREO Y NIT REAL DE LA EMPRESA
 app.get("/productos", function (req, res) {
-    const sql = "SELECT * FROM productos ORDER BY (stock > 0) DESC, fecha_creacion DESC";
+    const sql = `
+        SELECT 
+            p.*, 
+            IFNULL(e.nit, p.identificacion_empresa) AS nit_empresa, 
+            IFNULL(e.correo_empresarial, p.correo_empresa) AS correo_empresa 
+        FROM productos p
+        LEFT JOIN usuarios e ON p.identificacion_empresa = e.identificacion
+        ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
+    `;
 
     conexion.query(sql, function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error cargando la tienda." });
+        if (error) {
+            console.warn("⚠️ Advertencia en JOIN de productos, usando respaldo simple:", error.message);
+            const sqlSimple = "SELECT *, identificacion_empresa AS nit_empresa FROM productos ORDER BY (stock > 0) DESC, fecha_creacion DESC";
+            conexion.query(sqlSimple, function(err2, res2) {
+                if (err2) return res.status(500).json({ error: "Error cargando la tienda." });
+                return res.json(res2);
+            });
+            return;
+        }
         res.json(resultados);
     });
 });
@@ -375,9 +392,6 @@ app.get("/empresa/:id/ventas", function (req, res) {
     });
 });
 
-/* =========================================
-   BORRAR HISTORIAL DE VENTAS DE LA EMPRESA
-========================================= */
 app.delete("/empresa/:id/ventas", function (req, res) {
     const idEmpresa = req.params.id;
 
@@ -396,33 +410,40 @@ app.delete("/empresa/:id/ventas", function (req, res) {
 });
 
 /* =========================================
-   SOPORTE Y REPORTES DE USUARIOS (QUEJAS)
+   SOPORTE Y REPORTES DIRIGIDOS A EMPRESAS
 ========================================= */
-app.post("/soporte/reporte", function (req, res) {
-    const { identificacion, categoria, asunto, descripcion } = req.body;
+app.post("/soporte/reportar-empresa", function (req, res) {
+    const { cliente_id, nit_empresa, correo_empresa, producto, orden, asunto, descripcion } = req.body;
 
-    if (!categoria || !asunto || !descripcion) {
-        return res.status(400).json({ error: "Completa la categoría, asunto y detalle del reporte." });
+    if (!nit_empresa || !producto || !asunto || !descripcion) {
+        return res.status(400).json({ error: "Faltan datos obligatorios para el reporte." });
     }
 
     const sql = `
-        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) 
-        VALUES (?, ?, ?, ?)
+        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, nit_empresa, correo_empresa, producto, orden_compra) 
+        VALUES (?, 'Producto', ?, ?, ?, ?, ?, ?)
     `;
 
-    conexion.query(sql, [identificacion || null, categoria, asunto, descripcion], function (error, resultado) {
+    conexion.query(sql, [cliente_id || null, asunto, descripcion, nit_empresa, correo_empresa, producto, orden], function (error, resultado) {
         if (error) {
-            console.error("❌ Error al guardar reporte de soporte:", error);
-            return res.status(500).json({ error: "No se pudo enviar el reporte." });
+            console.error("❌ Error al guardar reporte hacia empresa, intentando modo básico:", error.message);
+            const sqlBasico = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) VALUES (?, 'Producto', ?, ?)`;
+            conexion.query(sqlBasico, [cliente_id || null, asunto, descripcion], function(err2) {
+                if(err2) return res.status(500).json({ error: "No se pudo registrar el reporte." });
+                return res.status(201).json({ mensaje: "Reporte registrado con éxito (modo básico)." });
+            });
+            return;
         }
-        res.status(201).json({ mensaje: "Reporte enviado con éxito al equipo de soporte.", id: resultado.insertId });
+
+        console.log(`📨 Reporte enviado con éxito a la empresa con NIT: ${nit_empresa} (${correo_empresa})`);
+        res.status(201).json({ mensaje: "Reporte enviado a la empresa encargada con éxito.", id: resultado.insertId });
     });
 });
 
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
-        SELECT id, categoria, asunto, descripcion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, correo_empresa, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
         FROM reportes_soporte 
         WHERE identificacion_usuario = ? 
         ORDER BY fecha DESC
@@ -463,25 +484,10 @@ app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
     `;
 
     conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) {
-            console.error("❌ Error consultando datos físicos:", error);
-            const fallbackSql = `SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno FROM usuarios WHERE identificacion = ? LIMIT 1`;
-            return conexion.query(fallbackSql, [identificacion], function(err2, res2) {
-                if (err2 || res2.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
-                res2[0].tipo_discapacidad = 'ninguna';
-                res2[0].nivel_amputacion = 'ninguno';
-                res2[0].usa_protesis = 'no';
-                res2[0].detalle_movilidad = 'normal';
-                res.json(res2[0]);
-            });
-        }
-        if (resultados.length === 0) {
+        if (error || resultados.length === 0) {
             return res.status(404).json({ error: "Usuario no encontrado." });
         }
-
-        const fila = resultados[0];
-        fila.dias_entreno = (fila.dias_entreno !== null && fila.dias_entreno !== undefined) ? parseInt(fila.dias_entreno, 10) : 5;
-        res.json(fila);
+        res.json(resultados[0]);
     });
 });
 
@@ -500,6 +506,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
     const generoFinal = genero ? String(genero).trim() : 'No especificado';
     const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
     const diasFinal = (dias_entreno !== null && dias_entreno !== undefined) ? parseInt(dias_entreno, 10) : 5;
+    const lugarFinal = lugar_entrenamiento ? String(lugar_entrenamiento).trim() : 'casa_sin_implementos';
 
     const tipoDiscapacidadFinal = tipo_discapacidad ? String(tipo_discapacidad).trim() : 'ninguna';
     const nivelAmputacionFinal = nivel_amputacion ? String(nivel_amputacion).trim() : 'ninguno';
@@ -527,7 +534,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
             alturaFinal, 
             lesionFinal, 
             objetivo || null, 
-            lugar_entrenamiento || null, 
+            lugarFinal, 
             intensidad || null, 
             diasFinal,
             tipoDiscapacidadFinal,
@@ -538,19 +545,6 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
         ], 
         function (error, resultado) {
             if (error) {
-                if (error.code === 'ER_BAD_FIELD_ERROR') {
-                    const sqlFallback = `
-                        UPDATE usuarios 
-                        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?
-                        WHERE identificacion = ?
-                        LIMIT 1
-                    `;
-                    return conexion.query(sqlFallback, [generoFinal, peso, alturaFinal, lesionFinal, objetivo, lugar_entrenamiento, intensidad, diasFinal, identificacion], function(err2) {
-                        if (err2) return res.status(500).json({ error: err2.message });
-                        return res.json({ mensaje: "Guardado en modo compatibilidad.", dias_entreno: diasFinal });
-                    });
-                }
-
                 console.error("❌ Error en MySQL al guardar rutina:", error);
                 return res.status(500).json({ error: error.message });
             }
@@ -559,7 +553,7 @@ app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
                 return res.status(404).json({ error: "No se encontró el usuario en el sistema." });
             }
 
-            res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal });
+            res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal, lugar_entrenamiento: lugarFinal });
         }
     );
 });
