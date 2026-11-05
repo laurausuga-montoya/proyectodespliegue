@@ -326,6 +326,35 @@
 
             if (!res.ok) throw new Error("No se pudo procesar la compra.");
 
+            // ==========================================
+            // GUARDAR COMPRA EN EL HISTORIAL DE REPORTES
+            // ==========================================
+            let totalOrden = 0;
+            orden.articulos.forEach(art => {
+                totalOrden += Number(art.precio) * Number(art.cantidad);
+            });
+
+            const nuevoPedidoHistorial = {
+                idOrden: Math.floor(100000 + Math.random() * 900000),
+                fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString("es-CO", {hour: '2-digit', minute:'2-digit'}),
+                ciudad: orden.cliente?.ciudad || "Colombia",
+                metodo: `${orden.metodo_pago} (${orden.detalles_pago?.banco || 'Directo'})`,
+                total: totalOrden,
+                articulos: orden.articulos.map(art => ({
+                    nombre: art.nombre,
+                    cantidad: art.cantidad,
+                    precio: art.precio,
+                    imagen: art.imagen || art.imagen_url,
+                    nit_empresa: art.nit_empresa || art.nit || "No registrado",
+                    correo_empresa: art.correo_empresa || art.correo || "soporte@viga.com"
+                }))
+            };
+
+            const historialActual = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
+            historialActual.push(nuevoPedidoHistorial);
+            localStorage.setItem("viga_historial_compras", JSON.stringify(historialActual));
+            // ==========================================
+
             // Limpiar carritos de la sesión
             localStorage.removeItem("viga_carrito");
             localStorage.removeItem("viga_orden_temporal");
