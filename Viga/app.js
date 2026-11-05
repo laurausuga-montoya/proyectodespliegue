@@ -278,7 +278,7 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// RUTA DE PRODUCTOS CON VINCULACIÓN AL CORREO Y NIT REAL DE LA EMPRESA
+// RUTA DE PRODUCTOS CON JOIN CORREGIDO POR NIT Y CORREO EMPRESARIAL REAL
 app.get("/productos", function (req, res) {
     const sql = `
         SELECT 
@@ -286,7 +286,8 @@ app.get("/productos", function (req, res) {
             IFNULL(e.nit, p.identificacion_empresa) AS nit_empresa, 
             IFNULL(e.correo_empresarial, p.correo_empresa) AS correo_empresa 
         FROM productos p
-        LEFT JOIN usuarios e ON p.identificacion_empresa = e.identificacion
+        LEFT JOIN usuarios e 
+               ON (e.nit = p.identificacion_empresa OR e.identificacion = p.identificacion_empresa)
         ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
     `;
 
