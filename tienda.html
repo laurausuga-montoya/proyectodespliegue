@@ -181,7 +181,6 @@
             flex-grow: 1;
         }
 
-        /* INFORMACIÓN DE LA EMPRESA QUE PUBLICÓ */
         .empresa-info-box {
             background: #f1f3f5;
             border-left: 3px solid #37E359;
@@ -189,10 +188,6 @@
             font-size: 12px;
             color: #333;
             margin-bottom: 15px;
-        }
-
-        .empresa-info-box strong {
-            color: #111;
         }
 
         .precio-stock {
@@ -248,7 +243,6 @@
 <header>
     <a href="inicio.html" class="logo">VIGA</a>
     <div class="acciones-header">
-        <a href="reportes.html" class="btn-header">📋 Historial y Reportes</a>
         <a href="checkout.html" class="btn-header">
             🛒 Carrito <span id="contadorCarrito" class="badge-carrito">0</span>
         </a>
@@ -292,7 +286,8 @@
             listaProductosServidor = await res.json();
             renderizarProductos();
         } catch (e) {
-            document.getElementById("grillaProductos").innerHTML = `<p style="grid-column:1/-1; color:#ff5252; text-align:center;">Error al conectar con la tienda.</p>`;
+            console.error(e);
+            document.getElementById("grillaProductos").innerHTML = `<p style="grid-column:1/-1; color:#ff5252; text-align:center;">Error al conectar con la tienda o cargar los productos.</p>`;
         }
     }
 
@@ -316,9 +311,8 @@
                 ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
-            // Datos de la empresa publicadora
-            const nitEmpresa = p.nit_empresa || p.nit || p.id_empresa || "NIT No Registrado";
-            const correoEmpresa = p.correo_empresa || p.email_empresa || p.correo || "soporte@viga.com";
+            const nitEmpresa = p.nit_empresa || p.nit || "No registrado";
+            const correoEmpresa = p.correo_empresa || p.correo || "soporte@viga.com";
 
             const card = document.createElement("div");
             card.className = "tarjeta-prod";
@@ -360,8 +354,8 @@
         let itemExistente = carrito.find(x => x.id === idProducto);
         const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
 
-        const nitEmpresaCalculado = producto.nit_empresa || producto.nit || producto.id_empresa || "";
-        const correoEmpresaCalculado = producto.correo_empresa || producto.email_empresa || producto.correo || "";
+        const nitEmpresaCalculado = producto.nit_empresa || producto.nit || "";
+        const correoEmpresaCalculado = producto.correo_empresa || producto.correo || "";
 
         if (cantidadActual < stockOriginal) {
             if (itemExistente) {
@@ -405,7 +399,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        syncTema();
+        sincronizarTema();
         actualizarContador();
         cargarCatalogo();
     });
