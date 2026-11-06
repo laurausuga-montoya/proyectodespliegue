@@ -278,15 +278,19 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// RUTA DE PRODUCTOS CON LEFT JOIN ROBUSTO PARA EL CORREO DE LA EMPRESA
+// RUTA DE PRODUCTOS CON SUBCONSULTAS DE SEGURIDAD PARA EL CORREO CORPORATIVO
 app.get("/productos", function (req, res) {
     const sql = `
         SELECT 
             p.*, 
             p.identificacion_empresa AS nit_empresa,
-            COALESCE(u.correo_empresarial, u.correo, 'smarfit@gmail.com') AS correo_empresa
+            COALESCE(
+                (SELECT u.correo_empresarial FROM usuarios u WHERE u.identificacion = p.identificacion_empresa LIMIT 1),
+                (SELECT u.correo FROM usuarios u WHERE u.identificacion = p.identificacion_empresa LIMIT 1),
+                p.correo_empresa,
+                'smarfit@gmail.com'
+            ) AS correo_empresa
         FROM productos p
-        LEFT JOIN usuarios u ON (u.nit = p.identificacion_empresa OR u.identificacion = p.identificacion_empresa)
         ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
     `;
 
