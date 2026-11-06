@@ -72,25 +72,20 @@ app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "lo
 app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html")));
 app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registro.html")));
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
+app.get("/inicio", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.html")));
+app.get("/perfil", (req, res) => res.sendFile(path.resolve(__dirname, "perfil.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN Y REGISTRO)
 ========================================= */
 app.post("/login", function (req, res) {
-    console.log("DATOS RECIBIDOS EN LOGIN:", req.body);
-
-    // Extrae los valores sin importar cómo los haya nombrado el formulario web
-    const keys = Object.keys(req.body || {});
-    const values = Object.values(req.body || {});
-
-    const correoIngresado = req.body.correo || req.body.email || req.body.username || req.body.user || (keys.length > 0 ? req.body[keys[0]] : null);
-    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || (keys.length > 1 ? req.body[keys[1]] : null);
+    const correoIngresado = req.body.correo || req.body.email || req.body.username;
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.pass;
 
     if (!correoIngresado || !passwordIngresado) {
         return res.status(400).json({ error: "Faltan campos obligatorios." });
     }
 
-    // Consulta exacta usando la columna 'password' de tu base de datos
     const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
     
     conexion.query(sql, [correoIngresado, passwordIngresado], function (error, resultados) {
@@ -120,6 +115,25 @@ app.post("/registro", function (req, res) {
             return res.status(500).json({ error: "No se pudo registrar el usuario: " + error.message });
         }
         res.status(201).json({ mensaje: "Usuario registrado con éxito." });
+    });
+});
+
+/* =========================================
+   PERFIL DE USUARIO (SOSTENER SESIÓN)
+========================================= */
+app.get("/usuarios/:identificacion", function (req, res) {
+    const identificacion = req.params.identificacion;
+    const sql = "SELECT identificacion, correo, nombres, apellidos, fecha_nacimiento, telefono, direccion, icono, tema FROM usuarios WHERE identificacion = ?";
+    
+    conexion.query(sql, [identificacion], function (error, resultados) {
+        if (error) {
+            console.error("❌ Error al obtener perfil:", error.message);
+            return res.status(500).json({ error: "Error al obtener el perfil." });
+        }
+        if (resultados.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+        res.json(resultados[0]);
     });
 });
 
@@ -166,7 +180,6 @@ app.post("/soporte/reportar-empresa", upload.single("imagen"), function (req, re
     });
 });
 
-// Ver reportes de un usuario
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
@@ -198,7 +211,6 @@ app.get("/empresa/:nit/reportes", function (req, res) {
     });
 });
 
-// Resolver reporte: Reembolso (rebajando 15%) o Reenvío (en 30 días hábiles)
 app.post("/empresa/resolver-reporte/:id", function (req, res) {
     const reporteId = req.params.id;
     const { tipo_resolucion, precio_producto } = req.body; 
