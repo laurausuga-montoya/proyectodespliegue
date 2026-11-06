@@ -413,6 +413,7 @@
         <h2>Reportar Producto a Empresa Proveedora</h2>
         <p>Selecciona el producto adquirido para vincular automáticamente el NIT y correo de la empresa responsable, adjuntando la respectiva evidencia fotográfica.</p>
 
+        <!-- Formulario configurado con enctype para soportar archivos de imagen -->
         <form id="formSoporte" onsubmit="enviarReporteEmpresa(event)" enctype="multipart/form-data">
             <div class="campo">
                 <label for="selectProductoReporte">Seleccionar producto comprado *</label>
@@ -441,6 +442,7 @@
                 <textarea id="descripcionReporte" placeholder="Describe claramente el problema con el implemento deportivo..." required></textarea>
             </div>
 
+            <!-- CAMPO NUEVO PARA ADJUNTAR LA FOTO -->
             <div class="campo">
                 <label for="imagenReporte">Foto de lo que te llegó (Evidencia) *</label>
                 <input type="file" id="imagenReporte" name="imagen" accept="image/*" required>
@@ -629,7 +631,7 @@
         cargarHistorial();
     }
 
-    /* ENVÍO DE REPORTE CON FOTO A LA EMPRESA */
+    /* ENVÍO DE REPORTE CON FOTO A LA EMPRESA (USANDO FORMDATA) */
     async function enviarReporteEmpresa(e) {
         e.preventDefault();
         const selectVal = document.getElementById("selectProductoReporte").value;
@@ -678,6 +680,7 @@
         }
     }
 
+    /* CARGAR Y MOSTRAR REPORTES CON FOTO Y SOLUCIONES */
     async function cargarReportes() {
         const contenedor = document.getElementById("contenedorMisReportes");
         const titulo = document.getElementById("tituloMisReportes");
