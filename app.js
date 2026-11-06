@@ -79,11 +79,7 @@ app.get("/perfil", (req, res) => res.sendFile(path.resolve(__dirname, "perfil.ht
    AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
 ========================================= */
 app.post("/login", function (req, res) {
-    console.log("BODY RECIBIDO EN LOGIN:", req.body);
-
     const keys = Object.keys(req.body || {});
-    const values = Object.values(req.body || {});
-
     const correoIngresado = req.body.correo || req.body.email || req.body.username || req.body.user || (keys.length > 0 ? req.body[keys[0]] : null);
     const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || (keys.length > 1 ? req.body[keys[1]] : null);
 
@@ -124,11 +120,11 @@ app.post("/registro", function (req, res) {
 });
 
 /* =========================================
-   PERFIL DE USUARIO (SOSTENER SESIÓN)
+   PERFIL DE USUARIO (SEGURO Y COMPATIBLE)
 ========================================= */
 app.get("/usuarios/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
-    const sql = "SELECT identificacion, correo, nombres, apellidos, fecha_nacimiento, telefono, direccion, icono, tema FROM usuarios WHERE identificacion = ?";
+    const sql = "SELECT * FROM usuarios WHERE identificacion = ?";
     
     conexion.query(sql, [identificacion], function (error, resultados) {
         if (error) {
