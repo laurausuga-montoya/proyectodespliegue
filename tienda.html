@@ -312,6 +312,7 @@
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
             const nitEmpresa = p.nit_empresa || p.nit || "No registrado";
+            // Corrección aplicada aquí para leer directamente la propiedad dinámica del backend
             const correoEmpresa = p.correo_empresa || p.correo_empresarial || p.correo || "No registrado";
 
             const card = document.createElement("div");
