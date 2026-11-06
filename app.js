@@ -278,27 +278,22 @@ app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
     });
 });
 
-// RUTA DE PRODUCTOS SEGURA CON RESPALDO (FALLBACK)
+// RUTA DE PRODUCTOS CON LEFT JOIN ROBUSTO PARA EL CORREO DE LA EMPRESA
 app.get("/productos", function (req, res) {
     const sql = `
         SELECT 
             p.*, 
-            IFNULL(e.nit, p.identificacion_empresa) AS nit_empresa, 
-            IFNULL(e.correo_empresarial, 'soporte@viga.com') AS correo_empresa 
+            p.identificacion_empresa AS nit_empresa,
+            COALESCE(u.correo_empresarial, u.correo, 'smarfit@gmail.com') AS correo_empresa
         FROM productos p
-        LEFT JOIN usuarios e ON p.identificacion_empresa = e.identificacion
+        LEFT JOIN usuarios u ON (u.nit = p.identificacion_empresa OR u.identificacion = p.identificacion_empresa)
         ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
     `;
 
     conexion.query(sql, function (error, resultados) {
         if (error) {
-            console.warn("⚠️ Advertencia en JOIN de productos, usando respaldo simple:", error.message);
-            const sqlSimple = "SELECT *, identificacion_empresa AS nit_empresa, 'soporte@viga.com' AS correo_empresa FROM productos ORDER BY (stock > 0) DESC, fecha_creacion DESC";
-            conexion.query(sqlSimple, function(err2, res2) {
-                if (err2) return res.status(500).json({ error: "Error cargando la tienda." });
-                return res.json(res2);
-            });
-            return;
+            console.error("❌ Error cargando productos:", error.message);
+            return res.status(500).json({ error: "Error cargando la tienda." });
         }
         res.json(resultados);
     });
@@ -443,7 +438,7 @@ app.post("/soporte/reportar-empresa", function (req, res) {
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
-        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, correo_empresa, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
         FROM reportes_soporte 
         WHERE identificacion_usuario = ? 
         ORDER BY fecha DESC
