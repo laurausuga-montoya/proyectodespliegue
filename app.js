@@ -74,17 +74,23 @@ app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registr
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN SEGURO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
 ========================================= */
 app.post("/login", function (req, res) {
-    const correoIngresado = req.body.correo || req.body.email || req.body.username;
-    const passwordIngresado = req.body.password || req.body.contrasena || req.body.pass;
+    console.log("DATOS RECIBIDOS EN LOGIN:", req.body);
+
+    // Extrae los valores sin importar cómo los haya nombrado el formulario web
+    const keys = Object.keys(req.body || {});
+    const values = Object.values(req.body || {});
+
+    const correoIngresado = req.body.correo || req.body.email || req.body.username || req.body.user || (keys.length > 0 ? req.body[keys[0]] : null);
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || (keys.length > 1 ? req.body[keys[1]] : null);
 
     if (!correoIngresado || !passwordIngresado) {
         return res.status(400).json({ error: "Faltan campos obligatorios." });
     }
 
-    // Consulta SQL usando estrictamente la columna 'password' de tu base de datos
+    // Consulta exacta usando la columna 'password' de tu base de datos
     const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
     
     conexion.query(sql, [correoIngresado, passwordIngresado], function (error, resultados) {
