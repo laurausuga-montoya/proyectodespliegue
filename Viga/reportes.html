@@ -411,9 +411,9 @@
     <!-- CENTRO DE REPORTES A EMPRESA -->
     <div class="seccion-soporte" id="cajaSoporte">
         <h2>Reportar Producto a Empresa Proveedora</h2>
-        <p>Selecciona el producto adquirido para vincular automáticamente el NIT y correo de la empresa responsable.</p>
+        <p>Selecciona el producto adquirido para vincular automáticamente el NIT y correo de la empresa responsable, adjuntando la respectiva evidencia fotográfica.</p>
 
-        <form id="formSoporte" onsubmit="enviarReporteEmpresa(event)">
+        <form id="formSoporte" onsubmit="enviarReporteEmpresa(event)" enctype="multipart/form-data">
             <div class="campo">
                 <label for="selectProductoReporte">Seleccionar producto comprado *</label>
                 <select id="selectProductoReporte" onchange="cargarDatosEmpresaProducto()" required>
@@ -439,6 +439,11 @@
             <div class="campo">
                 <label for="descripcionReporte">Detalle completo de lo ocurrido *</label>
                 <textarea id="descripcionReporte" placeholder="Describe claramente el problema con el implemento deportivo..." required></textarea>
+            </div>
+
+            <div class="campo">
+                <label for="imagenReporte">Foto de lo que te llegó (Evidencia) *</label>
+                <input type="file" id="imagenReporte" name="imagen" accept="image/*" required>
             </div>
 
             <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte">
@@ -539,7 +544,7 @@
         inputCorreo.value = data.correo;
     }
 
-    /* HISTORIAL DE COMPRAS (CORREGIDO CÁLCULO DE SUBTOTALES) */
+    /* HISTORIAL DE COMPRAS */
     function cargarHistorial() {
         const historial = JSON.parse(localStorage.getItem("viga_historial_compras") || "[]");
         const contenedor = document.getElementById("contenedorHistorial");
@@ -624,7 +629,7 @@
         cargarHistorial();
     }
 
-    /* ENVÍO DE REPORTE A LA CUENTA DE LA EMPRESA */
+    /* ENVÍO DE REPORTE CON FOTO A LA EMPRESA */
     async function enviarReporteEmpresa(e) {
         e.preventDefault();
         const selectVal = document.getElementById("selectProductoReporte").value;
@@ -636,43 +641,37 @@
         const productoInfo = JSON.parse(selectVal);
         const btn = document.getElementById("btnEnviarSoporte");
         btn.disabled = true;
-        btn.textContent = "Enviando reporte a la empresa...";
+        btn.textContent = "Enviando reporte con foto...";
 
-        const payload = {
-            cliente_id: idUsuario,
-            nit_empresa: productoInfo.nit,
-            correo_empresa: productoInfo.correo,
-            producto: productoInfo.nombre,
-            orden: productoInfo.orden,
-            asunto: document.getElementById("asuntoReporte").value.trim(),
-            descripcion: document.getElementById("descripcionReporte").value.trim(),
-            fecha: new Date().toLocaleDateString("es-CO")
-        };
+        const formData = new FormData();
+        formData.append("cliente_id", idUsuario);
+        formData.append("nit_empresa", productoInfo.nit);
+        formData.append("correo_empresa", productoInfo.correo);
+        formData.append("producto", productoInfo.nombre);
+        formData.append("orden", productoInfo.orden);
+        formData.append("asunto", document.getElementById("asuntoReporte").value.trim());
+        formData.append("descripcion", document.getElementById("descripcionReporte").value.trim());
+        
+        const archivoInput = document.getElementById("imagenReporte");
+        if (archivoInput.files[0]) {
+            formData.append("imagen", archivoInput.files[0]);
+        }
 
         try {
             const res = await fetch(`${API}/soporte/reportar-empresa`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                body: formData
             });
 
             if (!res.ok) throw new Error("Error en el servidor");
 
-            alert(`¡Reporte enviado exitosamente a la empresa (NIT: ${productoInfo.nit})! Su correo (${productoInfo.correo}) ha recibido la notificación.`);
+            alert(`¡Reporte con foto enviado exitosamente a la empresa (NIT: ${productoInfo.nit})!`);
             document.getElementById("formSoporte").reset();
             document.getElementById("cajaSoporte").style.display = "none";
             cargarReportes();
 
         } catch (error) {
-            // Respaldo local en caso de desconexión del servidor
-            const reportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-            reportesLocales.push(payload);
-            localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(reportesLocales));
-
-            alert(`¡Reporte registrado correctamente! Se ha notificado a la empresa responsable.`);
-            document.getElementById("formSoporte").reset();
-            document.getElementById("cajaSoporte").style.display = "none";
-            cargarReportes();
+            alert("Error al enviar el reporte con la imagen al servidor.");
         } finally {
             btn.disabled = false;
             btn.textContent = "Enviar reporte a la empresa encargada";
@@ -692,10 +691,6 @@
             }
         } catch (e) {}
 
-        if (!lista || lista.length === 0) {
-            lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-        }
-
         contador.textContent = lista.length;
 
         if (lista.length === 0) {
@@ -710,17 +705,30 @@
         lista.forEach(rep => {
             const card = document.createElement("div");
             card.className = "pedido-card";
+            
+            let imagenHtml = "";
+            if (rep.imagen_url) {
+                imagenHtml = `<div style="margin-top:10px;"><img src="${API}${rep.imagen_url}" alt="Evidencia" style="max-width:120px; border-radius:4px; border:1px solid var(--borde);"></div>`;
+            }
+
+            let solucionHtml = "";
+            if (rep.estado === 'Resuelto') {
+                solucionHtml = `<div style="margin-top:10px; padding:8px; background:rgba(55,227,89,0.1); border-left:3px solid var(--verde); font-size:13px; color:var(--verde);"><strong>Resolución de la Empresa:</strong> ${rep.solucion}</div>`;
+            }
+
             card.innerHTML = `
                 <div class="pedido-header">
                     <div>
                         <div class="pedido-id">${rep.asunto}</div>
                         <div class="pedido-fecha">${rep.fecha || "Reciente"} · Producto: <strong>${rep.producto || 'N/A'}</strong></div>
                     </div>
-                    <span class="estado-badge badge-soporte">Enviado a Empresa (NIT: ${rep.nit_empresa || 'N/A'})</span>
+                    <span class="estado-badge ${rep.estado === 'Resuelto' ? '' : 'badge-soporte'}">${rep.estado || 'Pendiente'}</span>
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
                     ${rep.descripcion}
                 </div>
+                ${imagenHtml}
+                ${solucionHtml}
             `;
             contenedor.appendChild(card);
         });
