@@ -68,6 +68,7 @@ app.get("/rutina-plan", (req, res) => res.sendFile(path.resolve(__dirname, "ruti
 app.get("/configuracion", (req, res) => res.sendFile(path.resolve(__dirname, "configuracion.html")));
 app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
 app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
+app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
    PRODUCTOS Y TIENDA
@@ -112,7 +113,7 @@ app.post("/soporte/reportar-empresa", upload.single("imagen"), function (req, re
     });
 });
 
-// Ver reportes de un usuario (para que vea las notificaciones de reembolso/reenvío en su historial)
+// Ver reportes de un usuario (para que vea el estado y solución en su historial)
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
