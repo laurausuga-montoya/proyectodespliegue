@@ -74,23 +74,20 @@ app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registr
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN ULTRA BLINDADO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN SEGURO)
 ========================================= */
 app.post("/login", function (req, res) {
-    console.log("BODY RECIBIDO:", req.body);
-    
-    // Toma automáticamente cualquier campo que envíe el formulario, sin importar su nombre
-    const valores = Object.values(req.body || {});
-    const correoIngresado = req.body.correo || req.body.email || req.body.username || req.body.user || valores[0];
-    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || valores[1];
+    const correoIngresado = req.body.correo || req.body.email || req.body.username;
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.pass;
 
     if (!correoIngresado || !passwordIngresado) {
         return res.status(400).json({ error: "Faltan campos obligatorios." });
     }
 
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND (password = ? OR contrasena = ?)";
+    // Consulta SQL usando estrictamente la columna 'password' de tu base de datos
+    const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
     
-    conexion.query(sql, [correoIngresado, passwordIngresado, passwordIngresado], function (error, resultados) {
+    conexion.query(sql, [correoIngresado, passwordIngresado], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login:", error.message);
             return res.status(500).json({ error: "Error en el servidor: " + error.message });
@@ -103,9 +100,9 @@ app.post("/login", function (req, res) {
 });
 
 app.post("/registro", function (req, res) {
-    const { identificacion, correo, email, contrasena, password, nombre, nombres } = req.body;
+    const { identificacion, correo, email, password, nombre, nombres } = req.body;
     const corr = correo || email;
-    const clav = password || contrasena;
+    const clav = password;
     const nom = nombres || nombre || "Usuario";
     const id = identificacion || ("CLI-" + Date.now());
 
