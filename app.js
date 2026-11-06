@@ -78,11 +78,12 @@ app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reporte
 app.post("/login", function (req, res) {
     const { correo, email, contrasena, password } = req.body;
     const identificador = correo || email;
-    const clave = contrasena || password;
+    const clave = password || contrasena;
 
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND (password = ? OR contrasena = ?)";
+    // Usamos estrictamente la columna 'password' que existe en tu tabla
+    const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
     
-    conexion.query(sql, [identificador, clave, clave], function (error, resultados) {
+    conexion.query(sql, [identificador, clave], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login:", error.message);
             return res.status(500).json({ error: "Error en el servidor: " + error.message });
@@ -97,8 +98,8 @@ app.post("/login", function (req, res) {
 app.post("/registro", function (req, res) {
     const { identificacion, correo, email, contrasena, password, nombre, nombres } = req.body;
     const corr = correo || email;
-    const clav = contrasena || password;
-    const nom = nombre || nombres || "Usuario";
+    const clav = password || contrasena;
+    const nom = nombres || nombre || "Usuario";
     const id = identificacion || ("CLI-" + Date.now());
 
     const sql = "INSERT INTO usuarios (identificacion, correo, password, nombres) VALUES (?, ?, ?, ?)";
