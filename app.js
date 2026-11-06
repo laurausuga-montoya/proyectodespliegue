@@ -71,6 +71,38 @@ app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "lo
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
+   AUTENTICACIÓN DE USUARIOS (LOGIN Y REGISTRO)
+========================================= */
+app.post("/login", function (req, res) {
+    const { correo, contrasena } = req.body;
+    const sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
+    
+    conexion.query(sql, [correo, contrasena], function (error, resultados) {
+        if (error) {
+            console.error("❌ Error en login:", error.message);
+            return res.status(500).json({ error: "Error en el servidor." });
+        }
+        if (resultados.length === 0) {
+            return res.status(401).json({ error: "Correo o contraseña incorrectos." });
+        }
+        res.json({ mensaje: "Login exitoso", usuario: resultados[0] });
+    });
+});
+
+app.post("/registro", function (req, res) {
+    const { identificacion, correo, contrasena, nombre } = req.body;
+    const sql = "INSERT INTO usuarios (identificacion, correo, contrasena, nombre) VALUES (?, ?, ?, ?)";
+    
+    conexion.query(sql, [identificacion, correo, contrasena, nombre], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error en registro:", error.message);
+            return res.status(500).json({ error: "No se pudo registrar el usuario." });
+        }
+        res.status(201).json({ mensaje: "Usuario registrado con éxito." });
+    });
+});
+
+/* =========================================
    PRODUCTOS Y TIENDA
 ========================================= */
 app.get("/productos", function (req, res) {
@@ -113,7 +145,7 @@ app.post("/soporte/reportar-empresa", upload.single("imagen"), function (req, re
     });
 });
 
-// Ver reportes de un usuario (para que vea el estado y solución en su historial)
+// Ver reportes de un usuario
 app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
     const identificacion = req.params.identificacion;
     const sql = `
@@ -131,7 +163,6 @@ app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
 /* =========================================
    PANEL EMPRESARIAL: RESOLVER REPORTE
 ========================================= */
-// Ver reportes dirigidos a una empresa específica por su NIT
 app.get("/empresa/:nit/reportes", function (req, res) {
     const nit = req.params.nit;
     const sql = `
@@ -149,7 +180,7 @@ app.get("/empresa/:nit/reportes", function (req, res) {
 // Resolver reporte: Reembolso (rebajando 15%) o Reenvío (en 30 días hábiles)
 app.post("/empresa/resolver-reporte/:id", function (req, res) {
     const reporteId = req.params.id;
-    const { tipo_resolucion, precio_producto } = req.body; // 'reembolso' o 'reenvio'
+    const { tipo_resolucion, precio_producto } = req.body; 
 
     if (!tipo_resolucion) {
         return res.status(400).json({ error: "Debe especificar el tipo de resolución." });
@@ -159,7 +190,7 @@ app.post("/empresa/resolver-reporte/:id", function (req, res) {
 
     if (tipo_resolucion === "reembolso") {
         const precioOriginal = Number(precio_producto) || 0;
-        const montoReembolso = precioOriginal * 0.85; // Se le rebaja un 15%
+        const montoReembolso = precioOriginal * 0.85; 
         mensajeSolucion = `Reembolso aprobado por $${montoReembolso.toLocaleString('es-CO')} (aplicada deducción del 15%).`;
     } else if (tipo_resolucion === "reenvio") {
         mensajeSolucion = `Nuevo producto en proceso de reenvío. Llegará en un plazo de 30 días hábiles.`;
