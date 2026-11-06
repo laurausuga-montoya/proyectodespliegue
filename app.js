@@ -68,19 +68,24 @@ app.get("/rutina-plan", (req, res) => res.sendFile(path.resolve(__dirname, "ruti
 app.get("/configuracion", (req, res) => res.sendFile(path.resolve(__dirname, "configuracion.html")));
 app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
 app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
+app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html")));
+app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registro.html")));
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
    AUTENTICACIÓN DE USUARIOS (LOGIN Y REGISTRO)
 ========================================= */
 app.post("/login", function (req, res) {
-    const { correo, contrasena } = req.body;
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
+    const { correo, email, contrasena, password } = req.body;
+    const identificador = correo || email;
+    const clave = contrasena || password;
+
+    const sql = "SELECT * FROM usuarios WHERE (correo = ? OR email = ?) AND (contrasena = ? OR password = ?)";
     
-    conexion.query(sql, [correo, contrasena], function (error, resultados) {
+    conexion.query(sql, [identificador, identificador, clave, clave], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login:", error.message);
-            return res.status(500).json({ error: "Error en el servidor." });
+            return res.status(500).json({ error: "Error en el servidor: " + error.message });
         }
         if (resultados.length === 0) {
             return res.status(401).json({ error: "Correo o contraseña incorrectos." });
@@ -90,13 +95,17 @@ app.post("/login", function (req, res) {
 });
 
 app.post("/registro", function (req, res) {
-    const { identificacion, correo, contrasena, nombre } = req.body;
+    const { identificacion, correo, email, contrasena, password, nombre } = req.body;
+    const corr = correo || email;
+    const clav = contrasena || password;
+    const id = identificacion || ("CLI-" + Date.now());
+
     const sql = "INSERT INTO usuarios (identificacion, correo, contrasena, nombre) VALUES (?, ?, ?, ?)";
     
-    conexion.query(sql, [identificacion, correo, contrasena, nombre], function (error, resultado) {
+    conexion.query(sql, [id, corr, clav, nombre], function (error, resultado) {
         if (error) {
             console.error("❌ Error en registro:", error.message);
-            return res.status(500).json({ error: "No se pudo registrar el usuario." });
+            return res.status(500).json({ error: "No se pudo registrar el usuario: " + error.message });
         }
         res.status(201).json({ mensaje: "Usuario registrado con éxito." });
     });
