@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 ========================================= */
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname)));
 
 /* =========================================
@@ -73,16 +74,19 @@ app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registr
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN Y REGISTRO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
 ========================================= */
 app.post("/login", function (req, res) {
-    const { correo, email, contrasena, password } = req.body;
-    const identificador = correo || email;
-    const clave = password || contrasena;
+    const correoIngresado = req.body.correo || req.body.email || req.body.username;
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave;
 
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
+    if (!correoIngresado || !passwordIngresado) {
+        return res.status(400).json({ error: "Faltan campos obligatorios." });
+    }
+
+    const sql = "SELECT * FROM usuarios WHERE correo = ? AND (password = ? OR contrasena = ?)";
     
-    conexion.query(sql, [identificador, clave], function (error, resultados) {
+    conexion.query(sql, [correoIngresado, passwordIngresado, passwordIngresado], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login:", error.message);
             return res.status(500).json({ error: "Error en el servidor: " + error.message });
