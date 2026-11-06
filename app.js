@@ -74,11 +74,15 @@ app.get("/registro", (req, res) => res.sendFile(path.resolve(__dirname, "registr
 app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reportes.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN ULTRA BLINDADO)
 ========================================= */
 app.post("/login", function (req, res) {
-    const correoIngresado = req.body.correo || req.body.email || req.body.username;
-    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave;
+    console.log("BODY RECIBIDO:", req.body);
+    
+    // Toma automáticamente cualquier campo que envíe el formulario, sin importar su nombre
+    const valores = Object.values(req.body || {});
+    const correoIngresado = req.body.correo || req.body.email || req.body.username || req.body.user || valores[0];
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || valores[1];
 
     if (!correoIngresado || !passwordIngresado) {
         return res.status(400).json({ error: "Faltan campos obligatorios." });
