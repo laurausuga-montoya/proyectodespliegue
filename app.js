@@ -76,12 +76,13 @@ app.get("/reportes", (req, res) => res.sendFile(path.resolve(__dirname, "reporte
    AUTENTICACIÓN DE USUARIOS (LOGIN Y REGISTRO)
 ========================================= */
 app.post("/login", function (req, res) {
-    const { correo, contrasena, password } = req.body;
+    const { correo, email, contrasena, password } = req.body;
+    const identificador = correo || email;
     const clave = contrasena || password;
 
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
+    const sql = "SELECT * FROM usuarios WHERE correo = ? AND (password = ? OR contrasena = ?)";
     
-    conexion.query(sql, [correo, clave], function (error, resultados) {
+    conexion.query(sql, [identificador, clave, clave], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login:", error.message);
             return res.status(500).json({ error: "Error en el servidor: " + error.message });
@@ -94,13 +95,15 @@ app.post("/login", function (req, res) {
 });
 
 app.post("/registro", function (req, res) {
-    const { identificacion, correo, contrasena, password, nombre } = req.body;
+    const { identificacion, correo, email, contrasena, password, nombre, nombres } = req.body;
+    const corr = correo || email;
     const clav = contrasena || password;
+    const nom = nombre || nombres || "Usuario";
     const id = identificacion || ("CLI-" + Date.now());
 
     const sql = "INSERT INTO usuarios (identificacion, correo, password, nombres) VALUES (?, ?, ?, ?)";
     
-    conexion.query(sql, [id, correo, clav, nombre], function (error, resultado) {
+    conexion.query(sql, [id, corr, clav, nom], function (error, resultado) {
         if (error) {
             console.error("❌ Error en registro:", error.message);
             return res.status(500).json({ error: "No se pudo registrar el usuario: " + error.message });
