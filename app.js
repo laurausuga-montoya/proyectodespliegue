@@ -76,7 +76,7 @@ app.get("/inicio", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.ht
 app.get("/perfil", (req, res) => res.sendFile(path.resolve(__dirname, "perfil.html")));
 
 /* =========================================
-   AUTENTICACIÓN DE USUARIOS (LOGIN BLINDADO)
+   AUTENTICACIÓN DE USUARIOS (LOGIN)
 ========================================= */
 app.post("/login", function (req, res) {
     const keys = Object.keys(req.body || {});
@@ -97,7 +97,15 @@ app.post("/login", function (req, res) {
         if (resultados.length === 0) {
             return res.status(401).json({ error: "Correo o contraseña incorrectos." });
         }
-        res.json({ mensaje: "Login exitoso", usuario: resultados[0] });
+        
+        // Adjuntamos tanto nombre como nombres para compatibilidad total con el frontend
+        const usuarioEncontrado = {
+            ...resultados[0],
+            nombre: resultados[0].nombres || resultados[0].nombre || "Usuario",
+            nombres: resultados[0].nombres || resultados[0].nombre || "Usuario"
+        };
+
+        res.json({ mensaje: "Login exitoso", usuario: usuarioEncontrado });
     });
 });
 
@@ -120,9 +128,9 @@ app.post("/registro", function (req, res) {
 });
 
 /* =========================================
-   PERFIL DE USUARIO (SEGURO Y COMPATIBLE)
+   PERFIL DE USUARIO (AMBAS RUTAS: PLURAL Y SINGULAR)
 ========================================= */
-app.get("/usuarios/:identificacion", function (req, res) {
+function consultarPerfil(req, res) {
     const identificacion = req.params.identificacion;
     const sql = "SELECT * FROM usuarios WHERE identificacion = ?";
     
@@ -134,9 +142,19 @@ app.get("/usuarios/:identificacion", function (req, res) {
         if (resultados.length === 0) {
             return res.status(404).json({ error: "Usuario no encontrado." });
         }
-        res.json(resultados[0]);
+
+        const usuarioData = {
+            ...resultados[0],
+            nombre: resultados[0].nombres || resultados[0].nombre || "Usuario",
+            nombres: resultados[0].nombres || resultados[0].nombre || "Usuario"
+        };
+
+        res.json(usuarioData);
     });
-});
+}
+
+app.get("/usuarios/:identificacion", consultarPerfil);
+app.get("/usuario/:identificacion", consultarPerfil);
 
 /* =========================================
    PRODUCTOS Y TIENDA
