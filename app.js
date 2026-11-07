@@ -98,7 +98,6 @@ app.post("/login", function (req, res) {
             return res.status(401).json({ error: "Correo o contraseña incorrectos." });
         }
         
-        // Adjuntamos tanto nombre como nombres para compatibilidad total con el frontend
         const usuarioEncontrado = {
             ...resultados[0],
             nombre: resultados[0].nombres || resultados[0].nombre || "Usuario",
@@ -128,7 +127,7 @@ app.post("/registro", function (req, res) {
 });
 
 /* =========================================
-   PERFIL DE USUARIO (AMBAS RUTAS: PLURAL Y SINGULAR)
+   PERFIL DE USUARIO
 ========================================= */
 function consultarPerfil(req, res) {
     const identificacion = req.params.identificacion;
