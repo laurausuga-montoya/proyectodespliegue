@@ -82,7 +82,7 @@ app.get("/productos", (req, res) => {
     });
 });
 
-// Obtener productos de una empresa específica (Soluciona el error 404)
+// Obtener productos de una empresa específica (Soluciona el error 404 del panel)
 app.get("/empresa/:nit/productos", (req, res) => {
     const nitEmpresa = req.params.nit;
     const sql = "SELECT * FROM productos WHERE identificacion_empresa = ?";
@@ -123,12 +123,53 @@ app.post("/productos", upload.single("imagen"), (req, res) => {
     });
 });
 
-// Eliminar producto
+// Actualizar producto (PUT)
+app.put("/productos/:id", upload.single("imagen"), (req, res) => {
+    const productoId = req.params.id;
+    const nombreProd = req.body.nombre || req.body.nombre_producto;
+    const categoriaProd = req.body.categoria || "Otros";
+    const descripcionProd = req.body.descripcion || "";
+    const precioProd = req.body.precio || 0;
+    const stockProd = req.body.stock || 0;
+
+    let sql = `UPDATE productos SET nombre = ?, categoria = ?, descripcion = ?, precio = ?, stock = ?`;
+    let params = [nombreProd, categoriaProd, descripcionProd, precioProd, stockProd];
+
+    if (req.file) {
+        sql += `, imagen_url = ?`;
+        params.push(`/uploads/${req.file.filename}`);
+    }
+
+    sql += ` WHERE id = ?`;
+    params.push(productoId);
+
+    conexion.query(sql, params, (error) => {
+        if (error) return res.status(500).json({ error: "No se pudo actualizar." });
+        res.json({ mensaje: "Actualizado con éxito." });
+    });
+});
+
+// Eliminar producto (DELETE)
 app.delete("/productos/:id", (req, res) => {
     const sql = "DELETE FROM productos WHERE id = ?";
     conexion.query(sql, [req.params.id], (error) => {
         if (error) return res.status(500).json({ error: "No se pudo eliminar." });
         res.json({ mensaje: "Eliminado con éxito." });
+    });
+});
+
+// Obtener reportes de soporte de la empresa
+app.get("/empresa/:nit/reportes", (req, res) => {
+    const nit = req.params.nit;
+    const sql = `
+        SELECT id, identificacion_usuario, asunto, descripcion, producto, orden_compra, imagen_url, estado, solucion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        FROM reportes_soporte 
+        WHERE nit_empresa = ? 
+        ORDER BY fecha DESC
+    `;
+    conexion.query(sql, [nit], (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error al obtener reportes." });
+        res.json(resultados);
     });
 });
 
