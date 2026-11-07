@@ -108,33 +108,34 @@ app.post("/login", function (req, res) {
     });
 });
 /* =========================================
-   AUTENTICACIÓN DE EMPRESAS (LOGIN EMPRESARIAL)
+   AUTENTICACIÓN DE EMPRESAS (LOGIN BLINDADO)
 ========================================= */
 app.post("/login-empresa", function (req, res) {
-    const { nit, correo, email, password, contrasena, clave } = req.body;
-    const identificadorNit = nit;
-    const correoIngresado = correo || email;
-    const passwordIngresado = password || contrasena || clave;
+    const keys = Object.keys(req.body || {});
+    
+    // Capturamos cualquier varianza del identificador (NIT, correo, email, etc.)
+    const identificador = req.body.nit || req.body.correo || req.body.email || req.body.username || req.body.user || (keys.length > 0 ? req.body[keys[0]] : null);
+    const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || (keys.length > 1 ? req.body[keys[1]] : null);
 
-    if (!identificadorNit || !passwordIngresado) {
-        return res.status(400).json({ error: "Faltan el NIT y la contraseña obligatorios." });
+    if (!identificador || !passwordIngresado) {
+        return res.status(400).json({ error: "Faltan las credenciales obligatorias." });
     }
 
-    // Cambia "empresas" por el nombre real de tu tabla de empresas en MySQL si es diferente
-    const sql = "SELECT * FROM empresas WHERE nit = ? AND password = ?";
+    // Buscamos si coincide por NIT o por correo electrónico
+    const sql = "SELECT * FROM empresas WHERE (nit = ? OR correo = ? OR email = ?) AND password = ?";
     
-    conexion.query(sql, [identificadorNit, passwordIngresado], function (error, resultados) {
+    conexion.query(sql, [identificador, identificador, identificador, passwordIngresado], function (error, resultados) {
         if (error) {
             console.error("❌ Error en login empresa:", error.message);
             return res.status(500).json({ error: "Error en el servidor: " + error.message });
         }
         if (resultados.length === 0) {
-            return res.status(401).json({ error: "NIT o contraseña de empresa incorrectos." });
+            return res.status(401).json({ error: "Credenciales de empresa incorrectas." });
         }
         
         const empresaEncontrada = {
             ...resultados[0],
-            nit: resultados[0].nit || identificadorNit,
+            nit: resultados[0].nit || identificador,
             nombre: resultados[0].nombre || resultados[0].nombres || "Empresa"
         };
 
