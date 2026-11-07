@@ -355,7 +355,12 @@
                 <td class="producto-nombre">${escapar(p.nombre)}</td>
                 <td>${escapar(p.categoria || "Otros")}</td>
                 <td>${dinero(p.precio)}</td>
-                <td>${Number(p.stock || 0)}</td>
+                <td>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <input type="number" id="stock-rapido-${p.id}" value="${Number(p.stock || 0)}" min="0" style="width: 70px; padding: 4px; background: #121212; color: #fff; border: 1px solid #414141; border-radius: 4px;">
+                        <button onclick="actualizarStockRapido('${p.id}')" style="background: var(--verde); color: #102014; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold;" title="Guardar stock">✔</button>
+                    </div>
+                </td>
                 <td><span class="estado ${Number(p.stock) > 0 ? '' : 'estado-agotado'}">${Number(p.stock) > 0 ? 'Disponible' : 'Agotado'}</span></td>
                 <td>
                     <div class="acciones">
@@ -469,6 +474,33 @@
             await cargarProductos();
         } catch (err) {
             alert("Error al eliminar el producto.");
+        }
+    }
+
+    async function actualizarStockRapido(id) {
+        const p = productos.find(item => String(item.id) === String(id));
+        if (!p) return;
+        
+        const nuevoStock = document.getElementById(`stock-rapido-${id}`).value;
+        
+        const formulario = new FormData();
+        formulario.append("nombre", p.nombre);
+        formulario.append("categoria", p.categoria || "Otros");
+        formulario.append("descripcion", p.descripcion || "Sin descripción");
+        formulario.append("precio", p.precio);
+        formulario.append("stock", nuevoStock);
+
+        try {
+            const res = await fetch("https://viga-c607.onrender.com/productos/" + encodeURIComponent(id), { 
+                method: "PUT", 
+                body: formulario 
+            });
+            if (!res.ok) throw new Error("No se pudo actualizar");
+            
+            await cargarProductos();
+            alert("Stock actualizado correctamente");
+        } catch (err) {
+            alert("Error al actualizar el stock: " + err.message);
         }
     }
 
