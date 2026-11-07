@@ -87,7 +87,6 @@
         .layout {
             display: grid;
             grid-template-columns: 235px minmax(0, 1fr);
-            min-height: calc(100vh - 76px);
         }
 
         aside {
@@ -713,16 +712,33 @@
     const API = "https://viga-c607.onrender.com";
 
     const empresaGuardada = localStorage.getItem("empresaLogueada");
+    if (!empresaGuardada) {
+        window.location.href = "login.empresa.html";
+    }
 
-    let empresa = null;
+    try {
+        empresa = JSON.parse(empresaGuardada);
+    } catch (e) {
+        window.location.href = "login.empresa.html";
+    }
+
+    const nitEmpresa = empresa.nit || empresa.identificacion || empresa.id;
+    const nombreComercial = empresa.nombre_comercial || empresa.nombres || empresa.nombre || "Mi empresa";
+
+    if ($("nombreEmpresaBarra")) $("nombreEmpresaBarra").textContent = nombreComercial;
+    if ($("saludoEmpresa")) $("saludoEmpresa").textContent = "Gestiona tu negocio, " + nombreComercial;
+    if ($("avatarEmpresa")) $("avatarEmpresa").textContent = nombreComercial.charAt(0).toUpperCase();
+
     let productos = [];
     let imagenSeleccionada = null;
 
     const $ = id => document.getElementById(id);
 
     function mostrarMensaje(texto, tipo = "") {
-        $("mensajeProducto").textContent = texto;
-        $("mensajeProducto").className = "mensaje " + tipo;
+        if ($("mensajeProducto")) {
+            $("mensajeProducto").textContent = texto;
+            $("mensajeProducto").className = "mensaje " + tipo;
+        }
     }
 
     function escapar(texto) {
@@ -782,58 +798,66 @@
     });
 
     function limpiarFormulario() {
-        $("productoForm").reset();
-        $("productoId").value = "";
-        $("tituloFormulario").textContent = "Agregar producto";
-        $("btnGuardarProducto").textContent = "Guardar producto";
-        $("vistaImagen").style.display = "none";
-        $("vistaImagen").src = "";
+        if ($("productoForm")) $("productoForm").reset();
+        if ($("productoId")) $("productoId").value = "";
+        if ($("tituloFormulario")) $("tituloFormulario").textContent = "Agregar producto";
+        if ($("btnGuardarProducto")) $("btnGuardarProducto").textContent = "Guardar producto";
+        if ($("vistaImagen")) {
+            $("vistaImagen").style.display = "none";
+            $("vistaImagen").src = "";
+        }
         imagenSeleccionada = null;
         mostrarMensaje("");
     }
 
-    $("btnCancelarEdicion").addEventListener("click", () => {
-        limpiarFormulario();
-        abrirSeccion("productos");
-    });
+    if ($("btnCancelarEdicion")) {
+        $("btnCancelarEdicion").addEventListener("click", () => {
+            limpiarFormulario();
+            abrirSeccion("productos");
+        });
+    }
 
-    $("imagen").addEventListener("change", event => {
-        const archivo = event.target.files[0];
-        imagenSeleccionada = null;
+    if ($("imagen")) {
+        $("imagen").addEventListener("change", event => {
+            const archivo = event.target.files[0];
+            imagenSeleccionada = null;
 
-        if (!archivo) {
-            $("vistaImagen").style.display = "none";
-            return;
-        }
+            if (!archivo) {
+                if ($("vistaImagen")) $("vistaImagen").style.display = "none";
+                return;
+            }
 
-        const tiposPermitidos = [
-            "image/jpeg",
-            "image/png",
-            "image/webp"
-        ];
+            const tiposPermitidos = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
 
-        if (!tiposPermitidos.includes(archivo.type)) {
-            event.target.value = "";
-            mostrarMensaje("Selecciona una imagen JPG, PNG o WebP.", "error");
-            return;
-        }
+            if (!tiposPermitidos.includes(archivo.type)) {
+                event.target.value = "";
+                mostrarMensaje("Selecciona una imagen JPG, PNG o WebP.", "error");
+                return;
+            }
 
-        if (archivo.size > 3 * 1024 * 1024) {
-            event.target.value = "";
-            mostrarMensaje("La imagen no puede superar los 3 MB.", "error");
-            return;
-        }
+            if (archivo.size > 3 * 1024 * 1024) {
+                event.target.value = "";
+                mostrarMensaje("La imagen no puede superar los 3 MB.", "error");
+                return;
+            }
 
-        const lector = new FileReader();
+            const lector = new FileReader();
 
-        lector.onload = () => {
-            imagenSeleccionada = lector.result;
-            $("vistaImagen").src = lector.result;
-            $("vistaImagen").style.display = "block";
-        };
+            lector.onload = () => {
+                imagenSeleccionada = lector.result;
+                if ($("vistaImagen")) {
+                    $("vistaImagen").src = lector.result;
+                    $("vistaImagen").style.display = "block";
+                }
+            };
 
-        lector.readAsDataURL(archivo);
-    });
+            lector.readAsDataURL(archivo);
+        });
+    }
 
     async function peticion(ruta, opciones = {}) {
         const respuesta = await fetch(API + ruta, {
@@ -856,23 +880,25 @@
     }
 
     async function cargarProductos() {
-        if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        if (!nitEmpresa) return;
 
         try {
             const datos = await peticion(
-                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos"
+                "/empresa/" + encodeURIComponent(nitEmpresa) + "/productos"
             );
 
             productos = Array.isArray(datos) ? datos : (datos.productos || []);
             renderizarProductos();
 
         } catch (error) {
-            $("tablaProductos").innerHTML =
-                '<div class="vacio">' + escapar(error.message) + '</div>';
-
-            $("recientes").innerHTML =
-                '<div class="vacio">No fue posible cargar el catálogo.</div>';
+            if ($("tablaProductos")) {
+                $("tablaProductos").innerHTML =
+                    '<div class="vacio">' + escapar(error.message) + '</div>';
+            }
+            if ($("recientes")) {
+                $("recientes").innerHTML =
+                    '<div class="vacio">No fue posible cargar el catálogo.</div>';
+            }
         }
     }
 
@@ -881,16 +907,19 @@
         const disponibles = productos.filter(p => Number(p.stock) > 0).length;
         const agotados = productos.filter(p => Number(p.stock) <= 0).length;
 
-        $("totalProductos").textContent = total;
-        $("productosDisponibles").textContent = disponibles;
-        $("productosAgotados").textContent = agotados;
+        if ($("totalProductos")) $("totalProductos").textContent = total;
+        if ($("productosDisponibles")) $("productosDisponibles").textContent = disponibles;
+        if ($("productosAgotados")) $("productosAgotados").textContent = agotados;
 
         if (total === 0) {
-            $("tablaProductos").innerHTML =
-                '<div class="vacio">Aún no tienes productos. Agrega el primero para comenzar.</div>';
-
-            $("recientes").innerHTML =
-                '<div class="vacio">Tu catálogo está vacío.</div>';
+            if ($("tablaProductos")) {
+                $("tablaProductos").innerHTML =
+                    '<div class="vacio">Aún no tienes productos. Agrega el primero para comenzar.</div>';
+            }
+            if ($("recientes")) {
+                $("recientes").innerHTML =
+                    '<div class="vacio">Tu catálogo está vacío.</div>';
+            }
             return;
         }
 
@@ -921,51 +950,55 @@
             `;
         }).join("");
 
-        $("tablaProductos").innerHTML = `
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>${filas(productos)}</tbody>
-                </table>
-            </div>
-        `;
-
-        $("recientes").innerHTML = `
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${productos.slice(0, 5).map(p => `
+        if ($("tablaProductos")) {
+            $("tablaProductos").innerHTML = `
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>${escapar(p.nombre)}</td>
-                                <td>${dinero(p.precio)}</td>
-                                <td>${Number(p.stock || 0)}</td>
-                                <td>
-                                    <button class="boton boton-secundario"
-                                        data-editar="${escapar(p.id)}">Editar</button>
-                                </td>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
-                        `).join("")}
-                    </tbody>
-                </table>
-            </div>
-        `;
+                        </thead>
+                        <tbody>${filas(productos)}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        if ($("recientes")) {
+            $("recientes").innerHTML = `
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productos.slice(0, 5).map(p => `
+                                <tr>
+                                    <td>${escapar(p.nombre)}</td>
+                                    <td>${dinero(p.precio)}</td>
+                                    <td>${Number(p.stock || 0)}</td>
+                                    <td>
+                                        <button class="boton boton-secundario"
+                                            data-editar="${escapar(p.id)}">Editar</button>
+                                    </td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
 
         document.querySelectorAll("[data-editar]").forEach(boton => {
             boton.addEventListener("click", () => {
@@ -986,212 +1019,170 @@
 
         limpiarFormulario();
 
-        $("productoId").value = producto.id;
-        $("nombreProducto").value = producto.nombre || "";
-        $("categoria").value = producto.categoria || "";
-        $("descripcion").value = producto.descripcion || "";
-        $("precio").value = producto.precio || "";
-        $("stock").value = producto.stock ?? 0;
+        if ($("productoId")) $("productoId").value = producto.id;
+        if ($("nombreProducto")) $("nombreProducto").value = producto.nombre || "";
+        if ($("categoria")) $("categoria").value = producto.categoria || "";
+        if ($("descripcion")) $("descripcion").value = producto.descripcion || "";
+        if ($("precio")) $("precio").value = producto.precio || "";
+        if ($("stock")) $("stock").value = producto.stock ?? 0;
 
-        if (producto.imagen_url) {
+        if (producto.imagen_url && $("vistaImagen")) {
             $("vistaImagen").src = producto.imagen_url;
             $("vistaImagen").style.display = "block";
         }
 
-        $("tituloFormulario").textContent = "Editar producto";
-        $("btnGuardarProducto").textContent = "Guardar cambios";
+        if ($("tituloFormulario")) $("tituloFormulario").textContent = "Editar producto";
+        if ($("btnGuardarProducto")) $("btnGuardarProducto").textContent = "Guardar cambios";
 
         abrirSeccion("nuevo");
     }
 
-    $("productoForm").addEventListener("submit", async event => {
-        event.preventDefault();
-        mostrarMensaje("");
+    if ($("productoForm")) {
+        $("productoForm").addEventListener("submit", async event => {
+            event.preventDefault();
+            mostrarMensaje("");
 
-        if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
-        const id = $("productoId").value;
+            if (!nitEmpresa) return;
+            const id = $("productoId") ? $("productoId").value : "";
 
-        const producto = {
-            nombre: $("nombreProducto").value.trim(),
-            categoria: $("categoria").value,
-            descripcion: $("descripcion").value.trim(),
-            precio: Number($("precio").value),
-            stock: Number($("stock").value)
-        };
+            const formulario = new FormData();
+            formulario.append("identificacion_empresa", nitEmpresa);
+            formulario.append("nombre", $("nombreProducto").value.trim());
+            formulario.append("categoria", $("categoria").value);
+            formulario.append("descripcion", $("descripcion").value.trim());
+            formulario.append("precio", $("precio").value);
+            formulario.append("stock", $("stock").value);
 
-        const formulario = new FormData();
-        Object.entries(producto).forEach(([clave, valor]) => {
-            formulario.append(clave, String(valor));
-        });
+            if ($("imagen") && $("imagen").files[0]) {
+                formulario.append("imagen", $("imagen").files[0]);
+            }
 
-        if ($("imagen").files[0]) {
-            formulario.append("imagen", $("imagen").files[0]);
-        }
+            const boton = $("btnGuardarProducto");
+            if (boton) {
+                boton.disabled = true;
+                boton.textContent = "Guardando...";
+            }
 
-        const boton = $("btnGuardarProducto");
-        boton.disabled = true;
-        boton.textContent = "Guardando...";
+            try {
+                const base = "/productos";
 
-        try {
-            const base = "/empresa/" + encodeURIComponent(idEmpresa) + "/productos";
+                await peticion(
+                    id ? base + "/" + encodeURIComponent(id) : base,
+                    {
+                        method: id ? "PUT" : "POST",
+                        body: formulario
+                    }
+                );
 
-            await peticion(
-                id ? base + "/" + encodeURIComponent(id) : base,
-                {
-                    method: id ? "PUT" : "POST",
-                    body: formulario
+                mostrarMensaje(
+                    id ? "Producto actualizado correctamente." : "Producto agregado correctamente.",
+                    "correcto"
+                );
+
+                limpiarFormulario();
+                await cargarProductos();
+                abrirSeccion("productos");
+
+            } catch (error) {
+                mostrarMensaje(error.message, "error");
+            } finally {
+                if (boton) {
+                    boton.disabled = false;
+                    boton.textContent = id ? "Guardar cambios" : "Guardar producto";
                 }
-            );
-
-            mostrarMensaje(
-                id ? "Producto actualizado correctamente." :
-                     "Producto agregado correctamente.",
-                "correcto"
-            );
-
-            limpiarFormulario();
-            await cargarProductos();
-            abrirSeccion("productos");
-
-        } catch (error) {
-            mostrarMensaje(error.message, "error");
-        } finally {
-            boton.disabled = false;
-            boton.textContent = id ? "Guardar cambios" : "Guardar producto";
-        }
-    });
+            }
+        });
+    }
 
     async function eliminarProducto(id) {
-        if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        if (!nitEmpresa) return;
         const producto = productos.find(p => String(p.id) === String(id));
 
         if (!confirm('¿Seguro que deseas eliminar "' + (producto?.nombre || "este producto") + '"?')) return;
 
         try {
             await peticion(
-                "/empresa/" + encodeURIComponent(idEmpresa) + "/productos/" + encodeURIComponent(id),
+                "/productos/" + encodeURIComponent(id),
                 { method: "DELETE" }
             );
 
             await cargarProductos();
+            mostrarMensaje("Producto eliminado correctamente.", "correcto");
         } catch (error) {
-            alert(error.message);
+            alert("No se pudo eliminar el producto: " + error.message);
         }
     }
 
-    /* =========================================================
-       CARGAR HISTORIAL DE PRODUCTOS COMPRADOS (VENTAS)
-    ========================================================= */
     async function cargarVentasEmpresa() {
-        if (!empresa) return;
-        const idEmpresa = empresa.id || empresa.nit || empresa.identificacion;
+        if (!nitEmpresa) return;
         const contenedor = $("contenedorTablaVentas");
+        if (!contenedor) return;
 
         try {
-            const ventas = await peticion(
-                "/empresa/" + encodeURIComponent(idEmpresa) + "/ventas"
-            );
+            const ventas = await peticion("/empresa/" + encodeURIComponent(nitEmpresa) + "/reportes");
+            
+            let dineroTotal = 0;
+            let unidadesTotal = 0;
 
             if (!Array.isArray(ventas) || ventas.length === 0) {
-                contenedor.innerHTML =
-                    '<div class="vacio">Aún no se registran compras de tus productos.</div>';
-                $("ventasDineroTotal").textContent = "$ 0";
-                $("ventasUnidadesTotal").textContent = "0";
-                $("ventasPedidosTotal").textContent = "0";
+                if ($("ventasDineroTotal")) $("ventasDineroTotal").textContent = dinero(0);
+                if ($("ventasUnidadesTotal")) $("ventasUnidadesTotal").textContent = "0";
+                if ($("ventasPedidosTotal")) $("ventasPedidosTotal").textContent = "0";
+                contenedor.innerHTML = '<div class="vacio">No hay ventas registradas todavía.</div>';
                 return;
             }
 
-            let sumaDinero = 0;
-            let sumaUnidades = 0;
+            ventas.forEach(v => {
+                const cant = Number(v.cantidad || 1);
+                const prec = Number(v.precio || v.precio_unitario || 0);
+                dineroTotal += (prec * cant);
+                unidadesTotal += cant;
+            });
 
-            const filas = ventas.map(v => {
-                sumaDinero += Number(v.total || 0);
-                sumaUnidades += Number(v.cantidad || 0);
-
-                return `
-                    <tr>
-                        <td style="color:#aaa;">${escapar(v.fecha || "--")}</td>
-                        <td class="producto-nombre">${escapar(v.nombre_producto)}</td>
-                        <td>${escapar(v.cantidad)}</td>
-                        <td style="color:var(--verde); font-weight:600;">${dinero(v.total)}</td>
-                        <td>${escapar(v.cliente_nombre || "Cliente")}</td>
-                        <td>${escapar(v.cliente_ciudad || "Colombia")}</td>
-                        <td>${escapar(v.cliente_telefono || "--")}</td>
-                        <td>${escapar(v.metodo_pago || "Directo")}</td>
-                    </tr>
-                `;
-            }).join("");
-
-            $("ventasDineroTotal").textContent = dinero(sumaDinero);
-            $("ventasUnidadesTotal").textContent = sumaUnidades;
-            $("ventasPedidosTotal").textContent = ventas.length;
+            if ($("ventasDineroTotal")) $("ventasDineroTotal").textContent = dinero(dineroTotal);
+            if ($("ventasUnidadesTotal")) $("ventasUnidadesTotal").textContent = unidadesTotal;
+            if ($("ventasPedidosTotal")) $("ventasPedidosTotal").textContent = ventas.length;
 
             contenedor.innerHTML = `
                 <div class="tabla-contenedor">
                     <table>
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>ID Venta</th>
                                 <th>Producto</th>
-                                <th>Cant.</th>
-                                <th>Total</th>
                                 <th>Cliente</th>
-                                <th>Ciudad</th>
-                                <th>Teléfono</th>
-                                <th>Método</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody>${filas}</tbody>
+                        <tbody>
+                            ${ventas.map(v => `
+                                <tr>
+                                    <td>#${escapar(v.id)}</td>
+                                    <td class="producto-nombre">${escapar(v.producto || v.nombre_producto || "Implemento")}</td>
+                                    <td>${escapar(v.cliente_nombre || v.identificacion_usuario || "Cliente")}</td>
+                                    <td>${escapar(v.fecha || "-")}</td>
+                                    <td><span class="estado">${escapar(v.estado || "Completado")}</span></td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
                     </table>
                 </div>
             `;
-
-        } catch (error) {
-            contenedor.innerHTML =
-                '<div class="vacio">' + escapar(error.message) + '</div>';
+        } catch (err) {
+            contenedor.innerHTML = '<div class="vacio">Error cargando el historial de ventas.</div>';
         }
     }
 
-    $("btnCerrarSesion").addEventListener("click", () => {
-        if (!confirm("¿Deseas cerrar tu sesión empresarial?")) return;
-
-        localStorage.removeItem("empresaLogueada");
-        window.location.href = "index.empresa.html";
-    });
-
-    function iniciarPanel() {
-        if (!empresaGuardada) {
-            $("tablaProductos").innerHTML =
-                '<div class="vacio">No se encontró una sesión empresarial. Inicia sesión para acceder.</div>';
-            return;
-        }
-
-        try {
-            empresa = JSON.parse(empresaGuardada);
-            if (!empresa.id && empresa.nit) empresa.id = empresa.nit;
-            if (!empresa.id && empresa.identificacion) empresa.id = empresa.identificacion;
-        } catch {
-            empresa = null;
-        }
-
-        if (!empresa || !empresa.id) {
-            $("tablaProductos").innerHTML =
-                '<div class="vacio">La sesión empresarial no contiene un identificador válido.</div>';
-            return;
-        }
-
-        const nombre = empresa.nombre || empresa.nombre_comercial || "Mi empresa";
-
-        $("nombreEmpresaBarra").textContent = nombre;
-        $("saludoEmpresa").textContent = "Bienvenido, " + nombre;
-        $("avatarEmpresa").textContent = nombre.charAt(0).toUpperCase();
-
-        cargarProductos();
+    if ($("btnCerrarSesion")) {
+        $("btnCerrarSesion").addEventListener("click", () => {
+            localStorage.removeItem("empresaLogueada");
+            window.location.href = "login.empresa.html";
+        });
     }
 
-    iniciarPanel();
+    // Inicializar carga de datos al abrir la página
+    cargarProductos();
 </script>
 
 </body>
