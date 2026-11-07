@@ -108,12 +108,10 @@ app.post("/login", function (req, res) {
     });
 });
 /* =========================================
-   AUTENTICACIÓN DE EMPRESAS (LOGIN BLINDADO)
+   AUTENTICACIÓN DE EMPRESAS (TABLA USUARIOS)
 ========================================= */
 app.post("/login-empresa", function (req, res) {
     const keys = Object.keys(req.body || {});
-    
-    // Capturamos cualquier varianza del identificador (NIT, correo, email, etc.)
     const identificador = req.body.nit || req.body.correo || req.body.email || req.body.username || req.body.user || (keys.length > 0 ? req.body[keys[0]] : null);
     const passwordIngresado = req.body.password || req.body.contrasena || req.body.clave || req.body.pass || (keys.length > 1 ? req.body[keys[1]] : null);
 
@@ -121,8 +119,8 @@ app.post("/login-empresa", function (req, res) {
         return res.status(400).json({ error: "Faltan las credenciales obligatorias." });
     }
 
-    // Buscamos si coincide por NIT o por correo electrónico
-    const sql = "SELECT * FROM empresas WHERE (nit = ? OR correo = ? OR email = ?) AND password = ?";
+    // Buscamos en la tabla "usuarios" donde el correo o el NIT coincidan y la contraseña sea "password"
+    const sql = "SELECT * FROM usuarios WHERE (correo = ? OR correo_empresarial = ? OR nit = ?) AND password = ?";
     
     conexion.query(sql, [identificador, identificador, identificador, passwordIngresado], function (error, resultados) {
         if (error) {
@@ -136,7 +134,7 @@ app.post("/login-empresa", function (req, res) {
         const empresaEncontrada = {
             ...resultados[0],
             nit: resultados[0].nit || identificador,
-            nombre: resultados[0].nombre || resultados[0].nombres || "Empresa"
+            nombre: resultados[0].nombre_comercial || resultados[0].nombres || "Empresa"
         };
 
         res.json({ mensaje: "Login empresarial exitoso", empresa: empresaEncontrada });
