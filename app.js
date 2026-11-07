@@ -108,7 +108,7 @@ app.post("/login", function (req, res) {
     });
 });
 /* =========================================
-   AUTENTICACIÓN DE EMPRESAS (TABLA USUARIOS)
+   AUTENTICACIÓN DE EMPRESAS (DEFINITIVO)
 ========================================= */
 app.post("/login-empresa", function (req, res) {
     const keys = Object.keys(req.body || {});
@@ -119,8 +119,8 @@ app.post("/login-empresa", function (req, res) {
         return res.status(400).json({ error: "Faltan las credenciales obligatorias." });
     }
 
-    // Buscamos en la tabla "usuarios" donde el correo o el NIT coincidan y la contraseña sea "password"
-    const sql = "SELECT * FROM usuarios WHERE (correo = ? OR correo_empresarial = ? OR nit = ?) AND password = ?";
+    // Buscamos apuntando explícitamente a correo_empresarial, correo y nit
+    const sql = "SELECT * FROM usuarios WHERE (correo_empresarial = ? OR correo = ? OR nit = ?) AND password = ?";
     
     conexion.query(sql, [identificador, identificador, identificador, passwordIngresado], function (error, resultados) {
         if (error) {
@@ -133,14 +133,13 @@ app.post("/login-empresa", function (req, res) {
         
         const empresaEncontrada = {
             ...resultados[0],
-            nit: resultados[0].nit || identificador,
+            nit: resultados[0].nit || resultados[0].identificacion || identificador,
             nombre: resultados[0].nombre_comercial || resultados[0].nombres || "Empresa"
         };
 
         res.json({ mensaje: "Login empresarial exitoso", empresa: empresaEncontrada });
     });
 });
-
 app.post("/registro", function (req, res) {
     const { identificacion, correo, email, password, nombre, nombres } = req.body;
     const corr = correo || email;
