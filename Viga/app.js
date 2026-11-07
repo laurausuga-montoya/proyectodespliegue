@@ -9,60 +9,35 @@ const fs = require("fs");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* =========================================
-   MIDDLEWARE Y ARCHIVOS ESTÁTICOS
-========================================= */
 app.use(cors());
-app.use(express.json());
+
+// Límite de 50MB para fotos de reportes en base64
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.resolve(__dirname)));
 
-/* =========================================
-   RUTA DIRECTA PARA FORZAR CSS
-========================================= */
-app.get("/index.css", function (req, res) {
-    res.setHeader("Content-Type", "text/css");
-    res.sendFile(path.resolve(__dirname, "index.css"), function (err) {
-        if (err) {
-            console.error("❌ Error al enviar index.css:", err);
-            res.status(404).send("Archivo index.css no encontrado.");
-        }
-    });
-});
-
-/* =========================================
-   CONFIGURACIÓN DE SUBIDA DE IMÁGENES
-========================================= */
-if (!fs.existsSync("./uploads")) {
-    fs.mkdirSync("./uploads");
+const uploadDir = path.resolve(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
-
-app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadDir));
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "./uploads");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, '-'));
-    }
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, '-'))
 });
 const upload = multer({ storage: storage });
 
-/* =========================================
-   CONEXIÓN A BASE DE DATOS MYSQL
-========================================= */
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_NAME || "basedb",
     port: process.env.DB_PORT || 3306,
-    ssl: { 
-        rejectUnauthorized: false 
-    }
+    ssl: { rejectUnauthorized: false }
 });
 
-conexion.connect(function (error) {
+conexion.connect(error => {
     if (error) {
         console.error("❌ Error conectando con MySQL:", error.message);
         return;
@@ -70,560 +45,230 @@ conexion.connect(function (error) {
     console.log("✅ Conectado correctamente a MySQL");
 });
 
-/* =========================================
-   RUTAS DE VISTAS HTML
-========================================= */
-app.get("/", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "index.html"));
-});
+// Rutas de Vistas HTML
+app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, "index.html")));
+app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html")));
+app.get("/tienda", (req, res) => res.sendFile(path.resolve(__dirname, "tienda.html")));
+app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
+app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
+app.get("/resolver-reporte", (req, res) => res.sendFile(path.resolve(__dirname, "resolver-reporte.html")));
 
-app.get("/tienda", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "tienda.html"));
-});
+// Autenticación de Usuario Personal
+app.post("/login", (req, res) => {
+    const correo = req.body.correo || req.body.email;
+    const password = req.body.password || req.body.contrasena || req.body.clave;
 
-app.get("/checkout", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "checkout.html"));
-});
-
-app.get("/pago", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "pago.html"));
-});
-
-app.get("/informes", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "informes.html"));
-});
-
-app.get("/rutinas", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "rutinas.html"));
-});
-
-app.get("/rutina-plan", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "rutina.plan.html"));
-});
-
-app.get("/configuracion", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "configuracion.html"));
-});
-
-app.get("/empresa", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "inicio.empresa.html"));
-});
-
-app.get("/login-empresa", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "login.empresa.html"));
-});
-
-/* =========================================
-   USUARIOS: REGISTRO Y LOGIN
-========================================= */
-app.post("/registrar", function (req, res) {
-    const { identificacion, nombres, apellidos, fecha_nacimiento, telefono, correo, password, direccion } = req.body;
-
-    if (!identificacion || !nombres || !apellidos || !fecha_nacimiento || !correo || !password) {
-        return res.status(400).json({ error: "Faltan datos obligatorios." });
+    if (!correo || !password) {
+        return res.status(400).json({ error: "Faltan credenciales obligatorias." });
     }
 
-    const sql = `
-        INSERT INTO usuarios (identificacion, nombres, apellidos, fecha_nacimiento, telefono, correo, password, direccion)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const valores = [identificacion, nombres, apellidos, fecha_nacimiento, telefono || null, correo, password, direccion || null];
-
-    conexion.query(sql, valores, function (error, resultado) {
-        if (error) {
-            if (error.code === "ER_DUP_ENTRY") {
-                return res.status(400).json({ error: "La identificación o el correo ya están registrados." });
-            }
-            return res.status(500).json({ error: "No se pudo guardar el usuario." });
-        }
-        res.status(201).json({ mensaje: "Usuario registrado correctamente.", id: resultado.insertId });
+    const sql = "SELECT * FROM usuarios WHERE LOWER(correo) = LOWER(?) AND password = ?";
+    conexion.query(sql, [correo, password], (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error en el servidor: " + error.message });
+        if (resultados.length === 0) return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
+        res.json({ mensaje: "Login exitoso", usuario: resultados[0] });
     });
 });
 
-app.post("/login", function (req, res) {
-    const usuario = req.body.usuario || req.body.correo;
-    const password = req.body.password;
-
-    if (!usuario || !password) {
-        return res.status(400).json({ mensaje: "Completa usuario y contraseña." });
-    }
-
-    const sql = `
-        SELECT identificacion, nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono, tema, notificaciones_rutina, notificaciones_alimentacion
-        FROM usuarios 
-        WHERE (correo = ? OR telefono = ? OR identificacion = ?) AND password = ? 
-        LIMIT 1
-    `;
-
-    conexion.query(sql, [usuario, usuario, usuario, password], function (error, resultados) {
-        if (error) return res.status(500).json({ mensaje: "Error en la base de datos." });
-        if (resultados.length === 0) return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos." });
-        res.json({ mensaje: "Inicio de sesión correcto.", usuario: resultados[0] });
-    });
-});
-
-/* =========================================
-   EMPRESAS: REGISTRO Y LOGIN
-========================================= */
-app.post("/registrar-empresa", function (req, res) {
-    const { nombre_comercial, nit, telefono, correo, direccion, password } = req.body;
-
-    if (!nit || !nombre_comercial || !correo || !password) {
-        return res.status(400).json({ error: "Faltan datos obligatorios." });
-    }
-
-    const sql = `
-        INSERT INTO usuarios 
-        (identificacion, nit, nombre_comercial, correo_empresarial, telefono_empresarial, direccion_comercial, contrasena_empresarial) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const valores = [nit, nit, nombre_comercial, correo, telefono || null, direccion || null, password];
-
-    conexion.query(sql, valores, function (error) {
-        if (error) {
-            if (error.code === "ER_DUP_ENTRY") {
-                return res.status(400).json({ error: "El NIT o el correo ya están registrados." });
-            }
-            return res.status(500).json({ error: "No se pudo registrar la empresa." });
-        }
-        res.status(201).json({ mensaje: "Empresa registrada correctamente." });
-    });
-});
-
-app.post("/login-empresa", function (req, res) {
-    const { correo_empresarial, contrasena_empresarial } = req.body;
-
-    if (!correo_empresarial || !contrasena_empresarial) {
-        return res.status(400).json({ error: "Completa el correo y la contraseña." });
-    }
-
-    const sql = `
-        SELECT identificacion as id, nit, nombre_comercial as nombre, correo_empresarial as correo 
-        FROM usuarios 
-        WHERE correo_empresarial = ? AND contrasena_empresarial = ? 
-        LIMIT 1
-    `;
-
-    conexion.query(sql, [correo_empresarial, contrasena_empresarial], function (error, resultados) {
+// Obtener Perfil de Usuario Personal
+app.get("/usuarios/:id", (req, res) => {
+    const idUsuario = req.params.id;
+    const sql = "SELECT * FROM usuarios WHERE identificacion = ?";
+    conexion.query(sql, [idUsuario], (error, resultados) => {
         if (error) return res.status(500).json({ error: "Error en el servidor." });
-        if (resultados.length === 0) return res.status(401).json({ error: "Correo o contraseña empresarial incorrectos." });
-        
-        res.json({ mensaje: "Inicio de sesión exitoso.", empresa: resultados[0] });
+        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
+        res.json(resultados[0]);
     });
 });
 
-/* =========================================
-   PRODUCTOS: GESTIÓN DE TIENDA Y EMPRESA
-========================================= */
-app.post("/empresa/:id/productos", upload.single("imagen"), function (req, res) {
-    const identificacion_empresa = req.params.id;
-    const { nombre, categoria, descripcion, precio, stock } = req.body;
+// Login de Empresa
+app.post("/login-empresa", (req, res) => {
+    const correo = req.body.correo_empresarial || req.body.correo || req.body.email;
+    const password = req.body.contrasena_empresarial || req.body.password || req.body.clave;
+
+    if (!correo || !password) {
+        return res.status(400).json({ error: "Faltan credenciales obligatorias." });
+    }
+
+    const sql = "SELECT * FROM usuarios WHERE (LOWER(correo_empresarial) = LOWER(?) OR LOWER(correo) = LOWER(?)) AND password = ?";
+    conexion.query(sql, [correo, correo, password], (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error en el servidor: " + error.message });
+        if (resultados.length === 0) return res.status(401).json({ error: "Credenciales incorrectas." });
+
+        const empresaEncontrada = {
+            ...resultados[0],
+            id: resultados[0].id || resultados[0].identificacion || resultados[0].nit || "EMP-01",
+            nit: resultados[0].nit || resultados[0].identificacion || resultados[0].id || "EMP-01",
+            nombre: resultados[0].nombre_comercial || resultados[0].nombres || "Empresa"
+        };
+        res.json({ mensaje: "Login exitoso", empresa: empresaEncontrada });
+    });
+});
+
+// Catálogo de Productos General
+app.get("/productos", (req, res) => {
+    const sql = "SELECT p.*, p.identificacion_empresa AS nit_empresa FROM productos p ORDER BY p.fecha_creacion DESC";
+    conexion.query(sql, (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error cargando productos." });
+        res.json(resultados);
+    });
+});
+
+// Productos de una Empresa Específica
+app.get("/empresa/:nit/productos", (req, res) => {
+    const nitEmpresa = req.params.nit;
+    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ?";
+    conexion.query(sql, [nitEmpresa], (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error al consultar los productos." });
+        res.json(resultados);
+    });
+});
+
+// Crear Producto
+app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (req, res) => {
+    const empresaNit = req.params.nit || req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
+    const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo;
+    const categoriaProd = req.body.categoria || "Otros";
+    const descripcionProd = req.body.descripcion || "";
+    const precioProd = req.body.precio || 0;
+    const stockProd = req.body.stock || 0;
     const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
 
+    if (!empresaNit || !nombreProd || !precioProd) {
+        return res.status(400).json({ error: "Faltan campos obligatorios." });
+    }
+
     const sql = `
-        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url, fecha_creacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
     `;
 
-    conexion.query(
-        sql, 
-        [identificacion_empresa, nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, imagen_url], 
-        function (error, resultado) {
-            if (error) {
-                console.error("❌ ERROR MYSQL AL GUARDAR PRODUCTO:", error);
-                return res.status(500).json({ error: "Error al guardar el producto: " + error.message });
-            }
-            res.status(201).json({ mensaje: "Producto guardado con éxito.", id: resultado.insertId });
-        }
-    );
-});
-
-app.get("/empresa/:id/productos", function (req, res) {
-    const identificacion_empresa = req.params.id;
-    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ? ORDER BY fecha_creacion DESC";
-
-    conexion.query(sql, [identificacion_empresa], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error al cargar el catálogo: " + error.message });
-        res.json(resultados);
+    conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], (error, resultado) => {
+        if (error) return res.status(500).json({ error: "No se pudo guardar: " + error.message });
+        res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
     });
 });
 
-app.put("/empresa/:id_empresa/productos/:id_producto", upload.single("imagen"), function (req, res) {
-    const { id_empresa, id_producto } = req.params;
-    const { nombre, categoria, descripcion, precio, stock } = req.body;
+// Actualizar Producto
+app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen"), (req, res) => {
+    const productoId = req.params.id;
+    const nombreProd = req.body.nombre || req.body.nombre_producto;
+    const categoriaProd = req.body.categoria || "Otros";
+    const descripcionProd = req.body.descripcion || "";
+    const precioProd = req.body.precio || 0;
+    const stockProd = req.body.stock || 0;
+
+    let sql = `UPDATE productos SET nombre = ?, categoria = ?, descripcion = ?, precio = ?, stock = ?`;
+    let params = [nombreProd, categoriaProd, descripcionProd, precioProd, stockProd];
 
     if (req.file) {
-        const imagen_url = `/uploads/${req.file.filename}`;
-        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=?, imagen_url=? WHERE id=? AND identificacion_empresa=?`;
-        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, imagen_url, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
-            res.json({ mensaje: "Producto actualizado con éxito." });
-        });
-    } else {
-        const sql = `UPDATE productos SET nombre=?, categoria=?, descripcion=?, precio=?, stock=? WHERE id=? AND identificacion_empresa=?`;
-        conexion.query(sql, [nombre, categoria, descripcion, Number(precio), parseInt(stock) || 0, id_producto, id_empresa], function (error) {
-            if (error) return res.status(500).json({ error: "Error al actualizar producto." });
-            res.json({ mensaje: "Producto actualizado con éxito." });
-        });
+        sql += `, imagen_url = ?`;
+        params.push(`/uploads/${req.file.filename}`);
     }
-});
 
-app.delete("/empresa/:id_empresa/productos/:id_producto", function (req, res) {
-    const { id_empresa, id_producto } = req.params;
-    const sql = "DELETE FROM productos WHERE id = ? AND identificacion_empresa = ?";
+    sql += ` WHERE id = ?`;
+    params.push(productoId);
 
-    conexion.query(sql, [id_producto, id_empresa], function (error) {
-        if (error) return res.status(500).json({ error: "Error al eliminar producto." });
-        res.json({ mensaje: "Producto eliminado correctamente." });
+    conexion.query(sql, params, (error) => {
+        if (error) return res.status(500).json({ error: "No se pudo actualizar." });
+        res.json({ mensaje: "Actualizado con éxito." });
     });
 });
 
-// RUTA DE PRODUCTOS CON EXTRACCIÓN AUTOMÁTICA DEL CORREO EMPRESARIAL
-app.get("/productos", function (req, res) {
-    const sql = `
-        SELECT 
-            p.*, 
-            p.identificacion_empresa AS nit_empresa,
-            COALESCE(
-                (SELECT u.correo_empresarial FROM usuarios u WHERE u.nit = p.identificacion_empresa OR u.identificacion = p.identificacion_empresa LIMIT 1),
-                p.correo_empresa,
-                'Sin correo'
-            ) AS correo_empresa
-        FROM productos p
-        ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
-    `;
-
-    conexion.query(sql, function (error, resultados) {
-        if (error) {
-            console.error("❌ Error cargando productos:", error.message);
-            return res.status(500).json({ error: "Error cargando la tienda." });
-        }
-        res.json(resultados);
+// Eliminar Producto
+app.delete(["/productos/:id", "/empresa/:nit/productos/:id"], (req, res) => {
+    const sql = "DELETE FROM productos WHERE id = ?";
+    conexion.query(sql, [req.params.id], (error) => {
+        if (error) return res.status(500).json({ error: "No se pudo eliminar." });
+        res.json({ mensaje: "Eliminado con éxito." });
     });
 });
 
-/* =========================================
-   COMPRAS, DESCUENTO DE STOCK Y VENTAS
-========================================= */
-app.post("/compras/procesar", function (req, res) {
+// Procesar Pago y Descontar Stock
+app.post("/compras/procesar", (req, res) => {
     const { articulos, cliente, metodo_pago } = req.body;
 
-    if (!articulos || articulos.length === 0) {
-        return res.status(400).json({ error: "No hay productos en la orden." });
+    if (!articulos || !cliente || articulos.length === 0) {
+        return res.status(400).json({ error: "Faltan datos de la orden." });
     }
 
-    let procesados = 0;
-    const totalArticulos = articulos.length;
+    const total = articulos.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    let productosActualizados = 0;
+    let errores = false;
 
     articulos.forEach(item => {
-        const sqlStock = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
-        conexion.query(sqlStock, [parseInt(item.cantidad, 10), item.id], function (err) {
-            if (err) console.error("❌ Error al descontar stock:", err);
-        });
-
-        const sqlEmpresa = "SELECT identificacion_empresa FROM productos WHERE id = ? LIMIT 1";
-        conexion.query(sqlEmpresa, [item.id], function (errEmpresa, filas) {
-            if (!errEmpresa && filas.length > 0) {
-                const idEmpresa = filas[0].identificacion_empresa;
-                const totalItem = Number(item.precio) * Number(item.cantidad);
-
-                const sqlVenta = `
-                    INSERT INTO ventas (
-                        id_producto, identificacion_empresa, nombre_producto,
-                        cantidad, precio_unitario, total,
-                        cliente_nombre, cliente_ciudad, cliente_telefono, metodo_pago
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `;
-                conexion.query(sqlVenta, [
-                    item.id,
-                    idEmpresa,
-                    item.nombre,
-                    item.cantidad,
-                    item.precio,
-                    totalItem,
-                    cliente.nombre || "Cliente VIGA",
-                    cliente.ciudad || "Colombia",
-                    cliente.telefono || "",
-                    metodo_pago || "Directo"
-                ], function(errVenta) {
-                    if (errVenta) console.error("❌ Error guardando venta:", errVenta);
-                    procesados++;
-                    if (procesados === totalArticulos) {
-                        return res.json({ mensaje: "Ventas registradas y stock actualizado con éxito." });
-                    }
-                });
-            } else {
-                procesados++;
-                if (procesados === totalArticulos) {
-                    return res.json({ mensaje: "Ventas procesadas." });
+        conexion.query("SELECT stock FROM productos WHERE id = ?", [item.id], (err, resultados) => {
+            if (err || resultados.length === 0) {
+                productosActualizados++;
+                if (productosActualizados === articulos.length && !errores) {
+                    return res.json({ mensaje: "Compra procesada con éxito", total, metodo: metodo_pago });
                 }
+                return;
             }
+
+            const stockActual = resultados[0].stock;
+            const nuevoStock = Math.max(0, stockActual - item.cantidad);
+
+            conexion.query("UPDATE productos SET stock = ? WHERE id = ?", [nuevoStock, item.id], (updateErr) => {
+                if (updateErr) errores = true;
+                productosActualizados++;
+
+                if (productosActualizados === articulos.length) {
+                    if (errores) return res.status(500).json({ error: "Error parcial al descontar stock." });
+                    return res.json({ mensaje: "Compra procesada con éxito", total, metodo: metodo_pago });
+                }
+            });
         });
     });
 });
 
-app.get("/empresa/:id/ventas", function (req, res) {
-    const idEmpresa = req.params.id;
-    const sql = `
-        SELECT 
-            id,
-            nombre_producto,
-            cantidad,
-            precio_unitario,
-            total,
-            cliente_nombre,
-            cliente_ciudad,
-            cliente_telefono,
-            metodo_pago,
-            DATE_FORMAT(fecha_venta, '%d/%m/%Y %H:%i') AS fecha
-        FROM ventas 
-        WHERE identificacion_empresa = ? 
-        ORDER BY fecha_venta DESC
-    `;
-
-    conexion.query(sql, [idEmpresa], function (error, resultados) {
-        if (error) {
-            console.error("❌ Error al obtener ventas:", error);
-            return res.status(500).json({ error: "Error al consultar las ventas." });
-        }
-        res.json(resultados);
+// Crear Reporte de Soporte
+app.post("/soporte/reporte", (req, res) => {
+    const { identificacion_usuario, categoria, asunto, descripcion, imagen_url } = req.body;
+    const sql = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, imagen_url, estado, fecha) VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())`;
+    
+    conexion.query(sql, [identificacion_usuario, categoria, asunto, descripcion, imagen_url || null], (err) => {
+        if (err) console.error("Aviso al guardar en BD:", err.message);
+        res.json({ mensaje: "Reporte procesado exitosamente." });
     });
 });
 
-app.delete("/empresa/:id/ventas", function (req, res) {
-    const idEmpresa = req.params.id;
-
-    if (!idEmpresa) {
-        return res.status(400).json({ error: "Identificación de empresa requerida." });
-    }
-
-    const sql = "DELETE FROM ventas WHERE identificacion_empresa = ?";
-    conexion.query(sql, [idEmpresa], function (error, resultado) {
-        if (error) {
-            console.error("❌ Error al borrar historial de ventas:", error);
-            return res.status(500).json({ error: "Error al borrar el historial de ventas." });
-        }
-        res.json({ mensaje: "Historial de ventas eliminado correctamente.", eliminados: resultado.affectedRows });
-    });
-});
-
-/* =========================================
-   SOPORTE Y REPORTES DIRIGIDOS A EMPRESAS
-========================================= */
-app.post("/soporte/reportar-empresa", function (req, res) {
-    const { cliente_id, nit_empresa, correo_empresa, producto, orden, asunto, descripcion } = req.body;
-
-    if (!nit_empresa || !producto || !asunto || !descripcion) {
-        return res.status(400).json({ error: "Faltan datos obligatorios para el reporte." });
-    }
-
+// Listar Reportes de una Empresa
+app.get("/empresa/:nit/reportes", (req, res) => {
+    const nit = req.params.nit;
     const sql = `
-        INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, nit_empresa, correo_empresa, producto, orden_compra) 
-        VALUES (?, 'Producto', ?, ?, ?, ?, ?, ?)
-    `;
-
-    conexion.query(sql, [cliente_id || null, asunto, descripcion, nit_empresa, correo_empresa, producto, orden], function (error, resultado) {
-        if (error) {
-            console.error("❌ Error al guardar reporte hacia empresa, intentando modo básico:", error.message);
-            const sqlBasico = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion) VALUES (?, 'Producto', ?, ?)`;
-            conexion.query(sqlBasico, [cliente_id || null, asunto, descripcion], function(err2) {
-                if(err2) return res.status(500).json({ error: "No se pudo registrar el reporte." });
-                return res.status(201).json({ mensaje: "Reporte registrado con éxito (modo básico)." });
-            });
-            return;
-        }
-
-        console.log(`📨 Reporte enviado con éxito a la empresa con NIT: ${nit_empresa} (${correo_empresa})`);
-        res.status(201).json({ mensaje: "Reporte enviado a la empresa encargada con éxito.", id: resultado.insertId });
-    });
-});
-
-app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const sql = `
-        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, correo_empresa, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        SELECT id, identificacion_usuario, asunto, descripcion, producto, imagen_url, estado, solucion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
         FROM reportes_soporte 
-        WHERE identificacion_usuario = ? 
+        WHERE nit_empresa = ? 
         ORDER BY fecha DESC
     `;
-
-    conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error al consultar los reportes." });
+    conexion.query(sql, [nit], (error, resultados) => {
+        if (error) return res.status(500).json({ error: "Error al obtener reportes." });
         res.json(resultados);
     });
 });
 
-app.delete("/soporte/mis-reportes/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const sql = "DELETE FROM reportes_soporte WHERE identificacion_usuario = ?";
+// Resolver Reporte por parte de la Empresa
+app.put("/reportes/:id/resolver", (req, res) => {
+    const idReporte = req.params.id;
+    const { tipo_solucion, detalle_solucion } = req.body;
 
-    conexion.query(sql, [identificacion], function (error) {
-        if (error) return res.status(500).json({ error: "Error al limpiar los reportes." });
-        res.json({ mensaje: "Historial de reportes limpiado." });
-    });
-});
-
-/* =========================================
-   PERFIL FÍSICO / RUTINA AISLADA POR USUARIO
-========================================= */
-app.get("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const identificacion = String(req.params.identificacion || "").trim();
-
-    if (!identificacion || identificacion === "undefined" || identificacion === "null") {
-        return res.status(400).json({ error: "Identificación de usuario inválida." });
+    if (!tipo_solucion || !detalle_solucion) {
+        return res.status(400).json({ error: "Faltan datos de resolución." });
     }
 
-    const sql = `
-        SELECT genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno,
-               tipo_discapacidad, nivel_amputacion, usa_protesis, detalle_movilidad
-        FROM usuarios 
-        WHERE identificacion = ? 
-        LIMIT 1
-    `;
+    const solucionFinal = `${tipo_solucion}: ${detalle_solucion}`;
+    const sql = "UPDATE reportes_soporte SET estado = 'resuelto', solucion = ? WHERE id = ?";
 
-    conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error || resultados.length === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado." });
+    conexion.query(sql, [solucionFinal, idReporte], (error) => {
+        if (error) {
+            console.error("❌ Error resolviendo reporte:", error.message);
+            return res.status(500).json({ error: "No se pudo actualizar en la base de datos." });
         }
-        res.json(resultados[0]);
+        res.json({ mensaje: "Reporte resuelto con éxito.", solucion: solucionFinal });
     });
 });
 
-app.put("/usuario/:identificacion/datos-fisicos", function (req, res) {
-    const identificacion = String(req.params.identificacion || "").trim();
-
-    if (!identificacion || identificacion === "undefined" || identificacion === "null" || identificacion === "") {
-        return res.status(400).json({ error: "Identificación de usuario requerida." });
-    }
-
-    let { 
-        genero, peso, altura, lesion, objetivo, lugar_entrenamiento, intensidad, dias_entreno,
-        tipo_discapacidad, nivel_amputacion, usa_protesis, detalle_movilidad 
-    } = req.body;
-
-    const generoFinal = genero ? String(genero).trim() : 'No especificado';
-    const lesionFinal = lesion ? String(lesion).trim() : 'ninguna';
-    const diasFinal = (dias_entreno !== null && dias_entreno !== undefined) ? parseInt(dias_entreno, 10) : 5;
-    const lugarFinal = lugar_entrenamiento ? String(lugar_entrenamiento).trim() : 'casa_sin_implementos';
-
-    const tipoDiscapacidadFinal = tipo_discapacidad ? String(tipo_discapacidad).trim() : 'ninguna';
-    const nivelAmputacionFinal = nivel_amputacion ? String(nivel_amputacion).trim() : 'ninguno';
-    const usaProtesisFinal = usa_protesis ? String(usa_protesis).trim() : 'no';
-    const detalleMovilidadFinal = detalle_movilidad ? String(detalle_movilidad).trim() : 'normal';
-
-    let alturaFinal = altura ? Number(altura) : null;
-    if (alturaFinal && alturaFinal > 3) {
-        alturaFinal = Number((alturaFinal / 100).toFixed(2));
-    }
-
-    const sql = `
-        UPDATE usuarios 
-        SET genero = ?, peso = ?, altura = ?, lesion = ?, objetivo = ?, lugar_entrenamiento = ?, intensidad = ?, dias_entreno = ?,
-            tipo_discapacidad = ?, nivel_amputacion = ?, usa_protesis = ?, detalle_movilidad = ?
-        WHERE identificacion = ?
-        LIMIT 1
-    `;
-
-    conexion.query(
-        sql, 
-        [
-            generoFinal,
-            peso || null, 
-            alturaFinal, 
-            lesionFinal, 
-            objetivo || null, 
-            lugarFinal, 
-            intensidad || null, 
-            diasFinal,
-            tipoDiscapacidadFinal,
-            nivelAmputacionFinal,
-            usaProtesisFinal,
-            detalleMovilidadFinal,
-            identificacion
-        ], 
-        function (error, resultado) {
-            if (error) {
-                console.error("❌ Error en MySQL al guardar rutina:", error);
-                return res.status(500).json({ error: error.message });
-            }
-
-            if (resultado.affectedRows === 0) {
-                return res.status(404).json({ error: "No se encontró el usuario en el sistema." });
-            }
-
-            res.json({ mensaje: "Datos físicos guardados correctamente.", dias_entreno: diasFinal, lugar_entrenamiento: lugarFinal });
-        }
-    );
-});
-
-/* =========================================
-   PERFIL Y CONFIGURACIONES (USUARIO)
-========================================= */
-app.get("/usuario/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const sql = `SELECT identificacion, nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono, tema, notificaciones_rutina, notificaciones_alimentacion FROM usuarios WHERE identificacion = ? LIMIT 1`;
-
-    conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ mensaje: "Error consultando la base de datos." });
-        if (resultados.length === 0) return res.status(404).json({ mensaje: "Usuario no encontrado." });
-        res.json(resultados[0]);
-    });
-});
-
-app.put("/usuario/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const { nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono } = req.body;
-    const sql = `UPDATE usuarios SET nombres=?, apellidos=?, fecha_nacimiento=?, telefono=?, correo=?, direccion=?, icono=? WHERE identificacion=?`;
-
-    conexion.query(sql, [nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono, identificacion], function (error, resultado) {
-        if (error) return res.status(500).json({ mensaje: "No se pudo actualizar el perfil." });
-        if (resultado.affectedRows === 0) return res.status(404).json({ mensaje: "Usuario no encontrado." });
-        res.json({ mensaje: "Perfil actualizado correctamente." });
-    });
-});
-
-app.put("/configuracion/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const { tema, notificaciones_rutina, notificaciones_alimentacion } = req.body;
-    const temaFinal = tema === "claro" ? "claro" : "oscuro";
-    const rutina = Number(notificaciones_rutina) === 1 ? 1 : 0;
-    const alimentacion = Number(notificaciones_alimentacion) === 1 ? 1 : 0;
-
-    const sql = `UPDATE usuarios SET tema=?, notificaciones_rutina=?, notificaciones_alimentacion=? WHERE identificacion=?`;
-
-    conexion.query(sql, [temaFinal, rutina, alimentacion, identificacion], function (error, resultado) {
-        if (error) return res.status(500).json({ mensaje: "Error guardando las configuraciones." });
-        if (resultado.affectedRows === 0) return res.status(404).json({ mensaje: "Usuario no encontrado." });
-        res.json({ mensaje: "Configuraciones guardadas correctamente." });
-    });
-});
-
-app.put("/configuracion/:identificacion/password", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const { passwordActual, passwordNueva } = req.body;
-
-    if (!passwordActual || !passwordNueva) return res.status(400).json({ mensaje: "Debes completar las contraseñas." });
-
-    const buscarSql = `SELECT password FROM usuarios WHERE identificacion = ? LIMIT 1`;
-    conexion.query(buscarSql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ mensaje: "Error consultando la cuenta." });
-        if (resultados.length === 0) return res.status(404).json({ mensaje: "Usuario no encontrado." });
-
-        if (String(resultados[0].password) !== String(passwordActual)) {
-            return res.status(401).json({ mensaje: "La contraseña actual es incorrecta." });
-        }
-
-        const actualizarSql = `UPDATE usuarios SET password = ? WHERE identificacion = ?`;
-        conexion.query(actualizarSql, [passwordNueva, identificacion], function (errorActualizar) {
-            if (errorActualizar) return res.status(500).json({ mensaje: "No se pudo cambiar la contraseña." });
-            res.json({ mensaje: "Contraseña cambiada correctamente." });
-        });
-    });
-});
-
-/* =========================================
-   INICIAR SERVIDOR (0.0.0.0)
-========================================= */
-app.listen(PORT, "0.0.0.0", function () {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Servidor VIGA funcionando en http://0.0.0.0:${PORT}`);
 });

@@ -1,542 +1,322 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Panel empresarial</title>
+    <title>VIGA | Panel Empresarial</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+
     <style>
         :root {
             --fondo: #121212;
             --panel: #1b1b1b;
-            --panel2: #252525;
             --verde: #37E359;
             --texto: #f4f4f4;
             --secundario: #aaa;
-            --borde: #333;
+            --borde: #2d2d2d;
+            --input-fondo: #252525;
+            --input-borde: #3b3b3b;
+            --rojo: #ff5252;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Poppins', sans-serif; background: var(--fondo); color: var(--texto); min-height: 100vh; }
-        button, input, textarea, select { font: inherit; }
-        .barra { height: 76px; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; gap: 15px; background: var(--panel); border-bottom: 1px solid var(--borde); position: sticky; top: 0; z-index: 10; }
-        .logo { color: var(--verde); font-size: 29px; font-weight: 700; letter-spacing: 2px; }
-        .etiqueta { color: var(--secundario); font-size: 12px; }
-        .empresa-mini { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 42px; height: 42px; background: #263b2b; color: var(--verde); display: grid; place-items: center; font-weight: 700; }
-        .layout { display: grid; grid-template-columns: 235px minmax(0, 1fr); }
-        aside { padding: 25px 16px; background: var(--panel); border-right: 1px solid var(--borde); }
-        .menu-titulo { color: var(--secundario); font-size: 11px; margin: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .menu { display: grid; gap: 7px; }
-        .menu button { width: 100%; text-align: left; border: 0; padding: 13px 12px; background: transparent; color: #ccc; cursor: pointer; transition: .2s; }
-        .menu button:hover, .menu button.activo { background: #263b2b; color: var(--verde); }
-        .salir { margin-top: 35px; color: #ff9292 !important; }
-        main { width: 100%; max-width: 1500px; padding: 35px; margin: auto; }
-        .seccion { display: none; }
-        .seccion.activa { display: block; }
-        .encabezado { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 28px; }
-        h1 { font-size: clamp(23px, 3vw, 32px); margin-bottom: 7px; }
-        h2 { font-size: 20px; margin-bottom: 16px; }
-        .muted { color: var(--secundario); font-size: 13px; line-height: 1.7; }
-        .verde { color: var(--verde); }
-        .boton { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 11px 17px; background: var(--verde); color: #102014; font-weight: 600; cursor: pointer; border: 0; }
-        .boton:hover { filter: brightness(1.08); }
-        .boton-secundario { color: var(--texto); background: var(--panel2); border: 1px solid var(--borde); }
-        .boton-peligro { color: #ff9292; background: transparent; border: 1px solid #633636; }
-        .estadisticas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 28px; }
-        .tarjeta { padding: 23px; background: var(--panel); border: 1px solid var(--borde); }
-        .estadistica-numero { font-size: 30px; font-weight: 700; margin: 12px 0 4px; }
-        .bienvenida { padding: 27px; border: 1px solid #2d5035; background: linear-gradient(110deg, #1b1b1b, #203326); margin-bottom: 28px; }
-        .bienvenida p { color: #c7d0c9; font-size: 13px; line-height: 1.8; max-width: 650px; }
-        .tabla-contenedor { width: 100%; overflow-x: auto; border: 1px solid var(--borde); background: var(--panel); }
-        table { width: 100%; border-collapse: collapse; min-width: 650px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--borde); font-size: 13px; }
-        th { color: var(--secundario); background: #202020; font-weight: 500; }
-        .producto-nombre { font-weight: 600; }
-        .estado { display: inline-block; padding: 5px 9px; background: #263b2b; color: var(--verde); font-size: 11px; }
-        .estado-agotado { background: #3c2929; color: #ff9292; }
-        .acciones { display: flex; gap: 7px; }
-        .acciones button { padding: 7px 10px; font-size: 12px; }
-        .formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-        .campo { display: flex; flex-direction: column; gap: 8px; }
-        .campo.completo { grid-column: 1 / -1; }
-        .campo label { font-size: 13px; color: #ddd; }
-        .campo input, .campo textarea, .campo select { width: 100%; background: #121212; color: var(--texto); border: 1px solid #414141; padding: 12px; outline: none; }
-        .campo input:focus, .campo textarea:focus, .campo select:focus { border-color: var(--verde); }
-        .campo textarea { min-height: 105px; resize: vertical; }
-        .previsualizacion { display: none; width: 130px; height: 110px; object-fit: cover; border: 1px solid var(--borde); }
-        .form-acciones { display: flex; gap: 10px; grid-column: 1 / -1; margin-top: 5px; }
-        .mensaje { margin: 15px 0; font-size: 13px; }
-        .mensaje.error { color: #ff9292; }
-        .mensaje.correcto { color: var(--verde); }
-        .vacio { padding: 35px; text-align: center; color: var(--secundario); background: var(--panel); border: 1px solid var(--borde); }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --input-fondo: #f8f8f8;
+            --input-borde: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--verde);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .empresa-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-cerrar {
+            background: transparent;
+            border: 1px solid var(--borde);
+            color: var(--texto);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .btn-cerrar:hover {
+            color: var(--rojo);
+            border-color: var(--rojo);
+        }
+
+        main {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .pestanas {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid var(--borde);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--secundario);
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: .2s;
+        }
+
+        .tab-btn.activo {
+            color: var(--verde);
+            border-bottom-color: var(--verde);
+        }
+
+        .contenedor-seccion {
+            display: none;
+        }
+
+        .contenedor-seccion.activo {
+            display: block;
+        }
+
+        .reporte-card {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 22px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reporte-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge-estado {
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-pendiente {
+            background: rgba(255, 183, 77, 0.15);
+            color: #ffb74d;
+            border: 1px solid rgba(255, 183, 77, 0.3);
+        }
+
+        .badge-resuelto {
+            background: rgba(55, 227, 89, 0.15);
+            color: var(--verde);
+            border: 1px solid rgba(55, 227, 89, 0.3);
+        }
+
+        .btn-resolver {
+            background: var(--verde);
+            color: #111;
+            border: none;
+            padding: 10px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            align-self: flex-start;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .btn-resolver:hover {
+            filter: brightness(1.1);
+        }
+
+        .img-evidencia-min {
+            max-width: 140px;
+            max-height: 140px;
+            object-fit: cover;
+            border: 1px solid var(--borde);
+            margin-top: 8px;
+        }
     </style>
 </head>
+
 <body>
 
-<header class="barra">
-    <div>
-        <div class="logo">VIGA</div>
-        <div class="etiqueta">PORTAL EMPRESARIAL</div>
-    </div>
-    <div class="empresa-mini">
-        <div>
-            <strong id="nombreEmpresaBarra">Mi empresa</strong>
-            <div class="etiqueta">Cuenta empresarial</div>
+    <header>
+        <div class="logo">VIGA EMPRESA</div>
+        <div class="empresa-info">
+            <span id="txtNombreEmpresa" style="font-size: 14px; font-weight: 600;">Empresa</span>
+            <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
         </div>
-        <div class="avatar" id="avatarEmpresa">E</div>
-    </div>
-</header>
-
-<div class="layout">
-    <aside>
-        <p class="menu-titulo">Zona empresarial</p>
-        <nav class="menu">
-            <button class="activo" data-seccion="resumen">Resumen</button>
-            <button data-seccion="productos">Mi tienda</button>
-            <button data-seccion="nuevo">Agregar producto</button>
-            <button data-seccion="perfil">Mi empresa</button>
-            <button class="salir" id="btnCerrarSesion">Cerrar sesión</button>
-        </nav>
-    </aside>
+    </header>
 
     <main>
-        <!-- RESUMEN -->
-        <section class="seccion activa" id="resumen">
-            <div class="encabezado">
-                <div>
-                    <h1>¡Bienvenido a tu <span class="verde">tienda!</span></h1>
-                    <p class="muted">Administra tus implementos deportivos desde un solo lugar.</p>
-                </div>
-                <button class="boton" data-ir="nuevo">Nuevo producto</button>
+        <div class="pestanas">
+            <button class="tab-btn activo" onclick="cambiarTab('reportes', this)">Buzón de Reportes</button>
+            <button class="tab-btn" onclick="cambiarTab('productos', this)">Gestión de Productos</button>
+        </div>
+
+        <!-- SECCIÓN REPORTES -->
+        <div id="seccion-reportes" class="contenedor-seccion activo">
+            <div id="listaReportes">
+                <p style="color: var(--secundario);">Cargando reportes dirigidos a tu empresa...</p>
             </div>
+        </div>
 
-            <div class="bienvenida">
-                <span class="verde">PORTAL DE EMPRESAS VIGA</span>
-                <h2 id="saludoEmpresa">Gestiona tu negocio</h2>
-                <p>Publica tus productos, mantén actualizado el inventario y edita la información de tu catálogo.</p>
-            </div>
-
-            <div class="estadisticas">
-                <div class="tarjeta">
-                    <p class="muted">Productos registrados</p>
-                    <div class="estadistica-numero" id="totalProductos">—</div>
-                </div>
-                <div class="tarjeta">
-                    <p class="muted">Con existencias</p>
-                    <div class="estadistica-numero" id="productosDisponibles">—</div>
-                </div>
-                <div class="tarjeta">
-                    <p class="muted">Agotados</p>
-                    <div class="estadistica-numero" id="productosAgotados">—</div>
-                </div>
-            </div>
-
-            <div class="encabezado">
-                <div>
-                    <h2>Productos recientes</h2>
-                    <p class="muted">Los últimos productos de tu catálogo.</p>
-                </div>
-                <button class="boton boton-secundario" data-ir="productos">Ver mi tienda</button>
-            </div>
-
-            <div id="recientes">
-                <div class="vacio">Cargando productos...</div>
-            </div>
-        </section>
-
-        <!-- TIENDA -->
-        <section class="seccion" id="productos">
-            <div class="encabezado">
-                <div>
-                    <h1>Mi tienda</h1>
-                    <p class="muted">Consulta y administra los productos de tu empresa.</p>
-                </div>
-                <button class="boton" data-ir="nuevo">Agregar producto</button>
-            </div>
-
-            <div id="tablaProductos">
-                <div class="vacio">Cargando productos...</div>
-            </div>
-        </section>
-
-        <!-- AGREGAR / EDITAR PRODUCTO -->
-        <section class="seccion" id="nuevo">
-            <div class="encabezado">
-                <div>
-                    <h1 id="tituloFormulario">Agregar producto</h1>
-                    <p class="muted">Completa los datos del implemento que deseas publicar.</p>
-                </div>
-            </div>
-
-            <div class="tarjeta">
-                <form id="productoForm" class="formulario">
-                    <input type="hidden" id="productoId">
-
-                    <div class="campo">
-                        <label for="nombreProducto">Nombre del producto *</label>
-                        <input id="nombreProducto" maxlength="150" placeholder="Ej. Mancuernas ajustables" required>
-                    </div>
-
-                    <div class="campo">
-                        <label for="categoria">Categoría *</label>
-                        <select id="categoria" required>
-                            <option value="">Selecciona una categoría</option>
-                            <option value="Pesas y mancuernas">Pesas y mancuernas</option>
-                            <option value="Máquinas">Máquinas de ejercicio</option>
-                            <option value="Accesorios">Accesorios deportivos</option>
-                            <option value="Ropa deportiva">Ropa deportiva</option>
-                            <option value="Protección">Protección deportiva</option>
-                            <option value="Otros">Otros</option>
-                        </select>
-                    </div>
-
-                    <div class="campo completo">
-                        <label for="descripcion">Descripción *</label>
-                        <textarea id="descripcion" maxlength="2000" placeholder="Describe las características..." required></textarea>
-                    </div>
-
-                    <div class="campo">
-                        <label for="precio">Precio en pesos colombianos (COP) *</label>
-                        <input id="precio" type="number" min="1" step="1" placeholder="Ej. 150000" required>
-                    </div>
-
-                    <div class="campo">
-                        <label for="stock">Unidades disponibles *</label>
-                        <input id="stock" type="number" min="0" step="1" placeholder="Ej. 20" required>
-                    </div>
-
-                    <div class="campo completo">
-                        <label for="imagen">Imagen del producto</label>
-                        <input id="imagen" type="file" accept="image/jpeg,image/png,image/webp">
-                        <img id="vistaImagen" class="previsualizacion" alt="Vista previa">
-                    </div>
-
-                    <div class="form-acciones">
-                        <button class="boton" id="btnGuardarProducto" type="submit">Guardar producto</button>
-                        <button class="boton boton-secundario" type="button" id="btnCancelarEdicion">Cancelar</button>
-                    </div>
-                </form>
-                <p id="mensajeProducto" class="mensaje" role="status"></p>
-            </div>
-        </section>
-
-        <!-- MI EMPRESA -->
-        <section class="seccion" id="perfil">
-            <div class="encabezado">
-                <div>
-                    <h1>Historial de ventas</h1>
-                    <p class="muted">Consulta el registro de productos vendidos.</p>
-                </div>
-                <button class="boton boton-secundario" onclick="cargarVentasEmpresa()">Actualizar ventas</button>
-            </div>
-            <div id="contenedorTablaVentas">
-                <div class="vacio">Cargando historial...</div>
-            </div>
-        </section>
+        <!-- SECCIÓN PRODUCTOS -->
+        <div id="seccion-productos" class="contenedor-seccion">
+            <p style="color: var(--secundario);">Administra el inventario de tu tienda oficial desde aquí.</p>
+        </div>
     </main>
-</div>
 
-<script>
-    const empresaGuardada = localStorage.getItem("empresaLogueada") || localStorage.getItem("empresa");
+    <script>
+        const API = "https://viga-c607.onrender.com";
 
-    if (!empresaGuardada) {
-        window.location.href = "login.empresa.html";
-    }
-
-    let empresa = {};
-    try {
-        empresa = JSON.parse(empresaGuardada);
-    } catch (e) {
-        window.location.href = "login.empresa.html";
-    }
-
-    const nitEmpresa = empresa.nit || empresa.identificacion || empresa.id;
-    const nombreComercial = empresa.nombre_comercial || empresa.nombres || empresa.nombre || "Mi empresa";
-
-    const $ = id => document.getElementById(id);
-
-    if ($("nombreEmpresaBarra")) $("nombreEmpresaBarra").textContent = nombreComercial;
-    if ($("saludoEmpresa")) $("saludoEmpresa").textContent = "Gestiona tu negocio, " + nombreComercial;
-    if ($("avatarEmpresa")) $("avatarEmpresa").textContent = nombreComercial.charAt(0).toUpperCase();
-
-    let productos = [];
-
-    function mostrarMensaje(texto, tipo = "") {
-        if ($("mensajeProducto")) {
-            $("mensajeProducto").textContent = texto;
-            $("mensajeProducto").className = "mensaje " + tipo;
+        function sincronizarTema() {
+            const tema = localStorage.getItem("vigaTema");
+            if (tema === "claro") document.body.classList.add("claro");
         }
-    }
+        sincronizarTema();
 
-    function escapar(texto) {
-        return String(texto ?? "").replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    }
-
-    function dinero(valor) {
-        return Number(valor || 0).toLocaleString("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
-    }
-
-    function abrirSeccion(nombre) {
-        document.querySelectorAll(".seccion").forEach(s => s.classList.toggle("activa", s.id === nombre));
-        document.querySelectorAll("[data-seccion]").forEach(b => b.classList.toggle("activo", b.dataset.seccion === nombre));
-        if (nombre === "productos" || nombre === "resumen") cargarProductos();
-        if (nombre === "perfil") cargarVentasEmpresa();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    document.querySelectorAll("[data-seccion]").forEach(b => b.addEventListener("click", () => abrirSeccion(b.dataset.seccion)));
-    document.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => {
-        if (b.dataset.ir === "nuevo") limpiarFormulario();
-        abrirSeccion(b.dataset.ir);
-    }));
-
-    function limpiarFormulario() {
-        if ($("productoForm")) $("productoForm").reset();
-        if ($("productoId")) $("productoId").value = "";
-        if ($("tituloFormulario")) $("tituloFormulario").textContent = "Agregar producto";
-        if ($("btnGuardarProducto")) $("btnGuardarProducto").textContent = "Guardar producto";
-        if ($("vistaImagen")) {
-            $("vistaImagen").style.display = "none";
-            $("vistaImagen").src = "";
-        }
-        mostrarMensaje("");
-    }
-
-    if ($("btnCancelarEdicion")) {
-        $("btnCancelarEdicion").addEventListener("click", () => {
-            limpiarFormulario();
-            abrirSeccion("productos");
-        });
-    }
-
-    if ($("imagen")) {
-        $("imagen").addEventListener("change", e => {
-            const archivo = e.target.files[0];
-            if (archivo && $("vistaImagen")) {
-                const lector = new FileReader();
-                lector.onload = ev => {
-                    $("vistaImagen").src = ev.target.result;
-                    $("vistaImagen").style.display = "block";
-                };
-                lector.readAsDataURL(archivo);
+        function obtenerEmpresa() {
+            const raw = localStorage.getItem("empresa") || localStorage.getItem("usuario");
+            if (raw) {
+                try { return JSON.parse(raw); } catch (e) {}
             }
-        });
-    }
-
-    async function cargarProductos() {
-        if (!nitEmpresa) return;
-        try {
-            const res = await fetch("https://viga-c607.onrender.com/empresa/" + encodeURIComponent(nitEmpresa) + "/productos");
-            const datos = await res.json();
-            productos = Array.isArray(datos) ? datos : (datos.productos || []);
-            renderizarProductos();
-        } catch (err) {
-            if ($("tablaProductos")) $("tablaProductos").innerHTML = '<div class="vacio">Error al cargar el inventario.</div>';
-        }
-    }
-
-    function renderizarProductos() {
-        const total = productos.length;
-        const disponibles = productos.filter(p => Number(p.stock) > 0).length;
-        const agotados = productos.filter(p => Number(p.stock) <= 0).length;
-
-        if ($("totalProductos")) $("totalProductos").textContent = total;
-        if ($("productosDisponibles")) $("productosDisponibles").textContent = disponibles;
-        if ($("productosAgotados")) $("productosAgotados").textContent = agotados;
-
-        if (total === 0) {
-            if ($("tablaProductos")) $("tablaProductos").innerHTML = '<div class="vacio">Aún no tienes productos.</div>';
-            if ($("recientes")) $("recientes").innerHTML = '<div class="vacio">Catálogo vacío.</div>';
-            return;
+            return { nit: "4560987-9", nombre: "Empresa Asociada" };
         }
 
-        const filas = productos.map(p => `
-            <tr>
-                <td class="producto-nombre">${escapar(p.nombre)}</td>
-                <td>${escapar(p.categoria || "Otros")}</td>
-                <td>${dinero(p.precio)}</td>
-                <td>
-                    <div style="display: flex; gap: 5px; align-items: center;">
-                        <input type="number" id="stock-rapido-${p.id}" value="${Number(p.stock || 0)}" min="0" style="width: 70px; padding: 4px; background: #121212; color: #fff; border: 1px solid #414141; border-radius: 4px;">
-                        <button onclick="actualizarStockRapido('${p.id}')" style="background: var(--verde); color: #102014; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold;" title="Guardar stock">✔</button>
-                    </div>
-                </td>
-                <td><span class="estado ${Number(p.stock) > 0 ? '' : 'estado-agotado'}">${Number(p.stock) > 0 ? 'Disponible' : 'Agotado'}</span></td>
-                <td>
-                    <div class="acciones">
-                        <button class="boton boton-secundario" data-editar="${escapar(p.id)}">Editar</button>
-                        <button class="boton boton-peligro" data-eliminar="${escapar(p.id)}">Eliminar</button>
-                    </div>
-                </td>
-            </tr>
-        `).join("");
+        const empresaActual = obtenerEmpresa();
+        const nitEmpresa = empresaActual.nit || empresaActual.identificacion || "4560987-9";
 
-        if ($("tablaProductos")) {
-            $("tablaProductos").innerHTML = `
-                <div class="tabla-contenedor">
-                    <table>
-                        <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
-                        <tbody>${filas}</tbody>
-                    </table>
-                </div>
-            `;
+        document.getElementById("txtNombreEmpresa").textContent = `${empresaActual.nombre || 'Mi Empresa'} (NIT: ${nitEmpresa})`;
+
+        function cambiarTab(tab, btn) {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
+            document.querySelectorAll(".contenedor-seccion").forEach(s => s.classList.remove("activo"));
+
+            btn.classList.add("activo");
+            document.getElementById(`seccion-${tab}`).classList.add("activo");
         }
 
-        if ($("recientes")) {
-            $("recientes").innerHTML = `
-                <div class="tabla-contenedor">
-                    <table>
-                        <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th></tr></thead>
-                        <tbody>${productos.slice(0, 5).map(p => `<tr><td>${escapar(p.nombre)}</td><td>${dinero(p.precio)}</td><td>${Number(p.stock)}</td></tr>`).join("")}</tbody>
-                    </table>
-                </div>
-            `;
+        // Redirige a la nueva hoja de resolución pasando ID y NIT
+        function irAResolver(idReporte, nit) {
+            window.location.href = `resolver.reporte.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nit)}`;
         }
 
-        document.querySelectorAll("[data-editar]").forEach(btn => {
-            btn.addEventListener("click", () => editarProducto(btn.dataset.editar));
-        });
-        document.querySelectorAll("[data-eliminar]").forEach(btn => {
-            btn.addEventListener("click", () => eliminarProducto(btn.dataset.eliminar));
-        });
-    }
-
-    function editarProducto(id) {
-        const p = productos.find(item => String(item.id) === String(id));
-        if (!p) return;
-        limpiarFormulario();
-        if ($("productoId")) $("productoId").value = p.id;
-        if ($("nombreProducto")) $("nombreProducto").value = p.nombre || "";
-        if ($("categoria")) $("categoria").value = p.categoria || "";
-        if ($("descripcion")) $("descripcion").value = p.descripcion || "";
-        if ($("precio")) $("precio").value = p.precio || "";
-        if ($("stock")) $("stock").value = p.stock ?? 0;
-        if (p.imagen_url && $("vistaImagen")) {
-            $("vistaImagen").src = p.imagen_url;
-            $("vistaImagen").style.display = "block";
-        }
-        if ($("tituloFormulario")) $("tituloFormulario").textContent = "Editar producto";
-        if ($("btnGuardarProducto")) $("btnGuardarProducto").textContent = "Guardar cambios";
-        abrirSeccion("nuevo");
-    }
-
-    if ($("productoForm")) {
-        $("productoForm").addEventListener("submit", async e => {
-            e.preventDefault();
-            mostrarMensaje("");
-
-            if (!nitEmpresa) {
-                mostrarMensaje("Error: No se encontró el NIT de la empresa. Vuelve a iniciar sesión.", "error");
-                return;
-            }
-
-            const id = $("productoId") ? $("productoId").value : "";
-            const formulario = new FormData();
-            formulario.append("identificacion_empresa", nitEmpresa);
-            formulario.append("nombre", $("nombreProducto").value.trim());
-            formulario.append("categoria", $("categoria").value);
-            formulario.append("descripcion", $("descripcion").value.trim());
-            formulario.append("precio", $("precio").value);
-            formulario.append("stock", $("stock").value);
-
-            if ($("imagen") && $("imagen").files[0]) {
-                formulario.append("imagen", $("imagen").files[0]);
-            }
-
-            const boton = $("btnGuardarProducto");
-            if (boton) { boton.disabled = true; boton.textContent = "Guardando..."; }
+        async function cargarReportes() {
+            const contenedor = document.getElementById("listaReportes");
+            const storageKey = "reportes_nit_" + nitEmpresa;
+            let reportes = JSON.parse(localStorage.getItem(storageKey) || "[]");
 
             try {
-                const url = id ? "https://viga-c607.onrender.com/productos/" + encodeURIComponent(id) : "https://viga-c607.onrender.com/productos";
-                const method = id ? "PUT" : "POST";
+                const res = await fetch(`${API}/empresa/${encodeURIComponent(nitEmpresa)}/reportes?t=${Date.now()}`);
+                if (res.ok) {
+                    const datosServer = await res.json();
+                    if (datosServer && datosServer.length > 0) reportes = datosServer;
+                }
+            } catch (e) {}
 
-                const res = await fetch(url, { method: method, body: formulario });
-                const datos = await res.json();
-                if (!res.ok) throw new Error(datos.error || "No se pudo guardar.");
-
-                mostrarMensaje(id ? "Producto actualizado correctamente." : "¡Producto guardado y sincronizado!", "correcto");
-                limpiarFormulario();
-                await cargarProductos();
-                abrirSeccion("productos");
-            } catch (err) {
-                mostrarMensaje(err.message, "error");
-            } finally {
-                if (boton) { boton.disabled = false; boton.textContent = id ? "Guardar cambios" : "Guardar producto"; }
-            }
-        });
-    }
-
-    async function eliminarProducto(id) {
-        if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
-        try {
-            const res = await fetch("https://viga-c607.onrender.com/productos/" + encodeURIComponent(id), { method: "DELETE" });
-            if (!res.ok) throw new Error("No se pudo eliminar");
-            await cargarProductos();
-        } catch (err) {
-            alert("Error al eliminar el producto.");
-        }
-    }
-
-    async function actualizarStockRapido(id) {
-        const p = productos.find(item => String(item.id) === String(id));
-        if (!p) return;
-        
-        const nuevoStock = document.getElementById(`stock-rapido-${id}`).value;
-        
-        const formulario = new FormData();
-        formulario.append("nombre", p.nombre);
-        formulario.append("categoria", p.categoria || "Otros");
-        formulario.append("descripcion", p.descripcion || "Sin descripción");
-        formulario.append("precio", p.precio);
-        formulario.append("stock", nuevoStock);
-
-        try {
-            const res = await fetch("https://viga-c607.onrender.com/productos/" + encodeURIComponent(id), { 
-                method: "PUT", 
-                body: formulario 
-            });
-            if (!res.ok) throw new Error("No se pudo actualizar");
-            
-            await cargarProductos();
-            alert("Stock actualizado correctamente");
-        } catch (err) {
-            alert("Error al actualizar el stock: " + err.message);
-        }
-    }
-
-    async function cargarVentasEmpresa() {
-        if (!nitEmpresa) return;
-        const cont = $("contenedorTablaVentas");
-        if (!cont) return;
-        try {
-            const res = await fetch("https://viga-c607.onrender.com/empresa/" + encodeURIComponent(nitEmpresa) + "/reportes");
-            const ventas = await res.json();
-            if (!Array.isArray(ventas) || ventas.length === 0) {
-                cont.innerHTML = '<div class="vacio">No hay ventas registradas.</div>';
+            if (!reportes || reportes.length === 0) {
+                contenedor.innerHTML = `<p style="padding: 40px; text-align: center; color: var(--secundario); background: var(--panel); border: 1px solid var(--borde);">No hay reportes de soporte pendientes para tu empresa.</p>`;
                 return;
             }
-            cont.innerHTML = `
-                <div class="tabla-contenedor">
-                    <table>
-                        <thead><tr><th>ID</th><th>Producto</th><th>Cliente</th><th>Fecha</th><th>Estado</th></tr></thead>
-                        <tbody>${ventas.map(v => `<tr><td>#${escapar(v.id)}</td><td>${escapar(v.producto)}</td><td>${escapar(v.identificacion_usuario || "Cliente")}</td><td>${escapar(v.fecha)}</td><td><span class="estado">${escapar(v.estado)}</span></td></tr>`).join("")}</tbody>
-                    </table>
-                </div>
-            `;
-        } catch (e) {
-            cont.innerHTML = '<div class="vacio">Error cargando ventas.</div>';
-        }
-    }
 
-    if ($("btnCerrarSesion")) {
-        $("btnCerrarSesion").addEventListener("click", () => {
-            localStorage.removeItem("empresaLogueada");
+            contenedor.innerHTML = "";
+            reportes.slice().reverse().forEach(rep => {
+                const esResuelto = (rep.status === "resuelto" || rep.estado === "resuelto");
+                const card = document.createElement("div");
+                card.className = "reporte-card";
+
+                const imagenEvidencia = rep.imagen_url ? `<div><span style="font-size:12px; color:var(--secundario);">Foto adjunta por el cliente:</span><br><img src="${rep.imagen_url}" class="img-evidencia-min" alt="Evidencia"></div>` : "";
+
+                card.innerHTML = `
+                    <div class="reporte-header">
+                        <div>
+                            <strong style="color:var(--verde); font-size:16px;">${rep.producto || rep.asunto || "Reporte de Producto"}</strong>
+                            <div style="font-size:12px; color:var(--secundario); margin-top:2px;">Fecha: ${rep.fecha || "Reciente"} · Categoría: ${rep.categoria || "Garantía"}</div>
+                        </div>
+                        <span class="badge-estado ${esResuelto ? 'badge-resuelto' : 'badge-pendiente'}">
+                            ${esResuelto ? '✓ Resuelto' : 'Pendiente'}
+                        </span>
+                    </div>
+
+                    <div style="font-size:14px; line-height:1.6;">
+                        ${rep.descripcion || "Sin descripción proporcionada."}
+                    </div>
+
+                    ${imagenEvidencia}
+
+                    ${esResuelto 
+                        ? `<div style="background:var(--input-fondo); padding:12px; border-left:3px solid var(--verde); font-size:13px; color:var(--texto);">
+                                <strong>Solución otorgada:</strong> ${rep.solucion || 'Finalizado satisfactoriamente.'}
+                           </div>` 
+                        : `<button class="btn-resolver" onclick="irAResolver('${rep.id}', '${nitEmpresa}')">
+                                Resolver Solicitud
+                           </button>`
+                    }
+                `;
+                contenedor.appendChild(card);
+            });
+        }
+
+        function cerrarSesion() {
             localStorage.removeItem("empresa");
             window.location.href = "login.empresa.html";
-        });
-    }
+        }
 
-    cargarProductos();
-</script>
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarReportes();
+        });
+    </script>
 </body>
+
 </html>

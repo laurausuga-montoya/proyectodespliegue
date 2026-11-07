@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Gestión de Reclamos y Soluciones</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tema.css">
+    <script src="tema.js"></script>
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+            --input-fondo: #252525;
+            --input-borde: #3b3b3b;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --input-fondo: #f8f8f8;
+            --input-borde: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--fondo);
+            color: var(--texto);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            height: 75px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--verde);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .btn-volver {
+            color: var(--texto);
+            text-decoration: none;
+            border: 1px solid var(--borde);
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .btn-volver:hover {
+            color: var(--verde);
+            border-color: var(--verde);
+        }
+
+        main {
+            width: 90%;
+            max-width: 780px;
+            margin: 40px auto;
+        }
+
+        .tarjeta-gestion {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .seccion-detalles {
+            background: var(--input-fondo);
+            border: 1px solid var(--borde);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .dato-linea {
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 8px;
+        }
+
+        .dato-linea strong {
+            color: var(--verde);
+        }
+
+        .foto-evidencia {
+            max-width: 240px;
+            max-height: 240px;
+            object-fit: cover;
+            border: 1px solid var(--borde);
+            margin-top: 10px;
+            background: #000;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: var(--texto);
+            font-weight: 600;
+        }
+
+        .campo select,
+        .campo input,
+        .campo textarea {
+            padding: 12px;
+            background: var(--input-fondo);
+            border: 1px solid var(--input-borde);
+            color: var(--texto);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .campo select:focus,
+        .campo input:focus,
+        .campo textarea:focus {
+            border-color: var(--verde);
+        }
+
+        .btn-confirmar {
+            width: 100%;
+            padding: 14px;
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-confirmar:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-confirmar:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="inicio.empresa.html" class="logo">VIGA EMPRESA</a>
+        <a href="inicio.empresa.html" class="btn-volver">← Volver al Panel</a>
+    </header>
+
+    <main>
+        <div class="tarjeta-gestion">
+            <div>
+                <h1 style="color: var(--verde); font-size: 24px; margin-bottom: 4px;">Resolver Reporte de Soporte</h1>
+                <p style="font-size: 13px; color: var(--secundario);">Revisa los antecedentes del reclamo y confirma la solución definitiva.</p>
+            </div>
+
+            <div class="seccion-detalles">
+                <div class="dato-linea">
+                    <span>Producto en reclamo:</span>
+                    <strong id="detProducto">Cargando...</strong>
+                </div>
+                <div class="dato-linea">
+                    <span>Usuario demandante:</span>
+                    <strong id="detUsuario">--</strong>
+                </div>
+                <div class="dato-linea">
+                    <span>Categoría:</span>
+                    <span id="detCategoria">--</span>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--secundario); display: block; margin-top: 4px;">Descripción del cliente:</span>
+                    <p id="detDescripcion" style="font-size: 14px; margin-top: 4px; line-height: 1.6;">--</p>
+                </div>
+                <div id="cajaFoto" style="display: none;">
+                    <span style="font-size: 13px; color: var(--secundario); display: block; margin-top: 6px;">Evidencia fotográfica adjunta:</span>
+                    <img id="detFoto" class="foto-evidencia" src="" alt="Evidencia">
+                </div>
+            </div>
+
+            <form id="formResolucion" onsubmit="enviarResolucion(event)">
+                <div class="campo">
+                    <label for="tipoAccion">Resolución a aplicar *</label>
+                    <select id="tipoAccion" onchange="cambiarTipoAccion()" required>
+                        <option value="Reenvío de Producto">Reenviar producto nuevo en días hábiles</option>
+                        <option value="Devolución de Dinero">Devolver el dinero al medio de pago origen</option>
+                    </select>
+                </div>
+
+                <div class="campo" id="bloqueReenvio">
+                    <label for="diasHabiles">Tiempo de entrega de la nueva unidad (Días hábiles) *</label>
+                    <input type="number" id="diasHabiles" min="1" max="30" value="3" required>
+                </div>
+
+                <div class="campo" id="bloqueDevolucion" style="display: none;">
+                    <label for="detalleReembolso">Instrucciones de reintegro monetario *</label>
+                    <input type="text" id="detalleReembolso" value="Reintegro procesado al mismo número de cuenta / método pagador">
+                </div>
+
+                <div class="campo">
+                    <label for="comentarioEmpresa">Mensaje explicativo para el cliente *</label>
+                    <textarea id="comentarioEmpresa" rows="3" placeholder="Ingresa número de guía, confirmación o mensaje de atención..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-confirmar" id="btnGuardar">
+                    Confirmar Solución y Notificar
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API = "https://viga-c607.onrender.com";
+        const params = new URLSearchParams(window.location.search);
+        const reporteId = params.get("id");
+        const nitEmpresa = params.get("nit");
+
+        function sincronizarTema() {
+            const tema = localStorage.getItem("vigaTema");
+            if (tema === "claro") document.body.classList.add("claro");
+        }
+        sincronizarTema();
+
+        function cargarDatosReporte() {
+            if (!reporteId) {
+                alert("Identificador de reporte ausente.");
+                window.location.href = "inicio.empresa.html";
+                return;
+            }
+
+            const storageKey = "reportes_nit_" + nitEmpresa;
+            const reportes = JSON.parse(localStorage.getItem(storageKey) || "[]");
+            const rep = reportes.find(r => String(r.id) === String(reporteId));
+
+            if (rep) {
+                document.getElementById("detProducto").textContent = rep.producto || rep.asunto || "Producto VIGA";
+                document.getElementById("detUsuario").textContent = rep.identificacion_usuario || "Cliente";
+                document.getElementById("detCategoria").textContent = rep.categoria || "Garantía";
+                document.getElementById("detDescripcion").textContent = rep.descripcion || "Sin detalle.";
+
+                if (rep.imagen_url) {
+                    document.getElementById("cajaFoto").style.display = "block";
+                    document.getElementById("detFoto").src = rep.imagen_url;
+                }
+            } else {
+                document.getElementById("detProducto").textContent = `Reporte #${reporteId}`;
+            }
+        }
+
+        function cambiarTipoAccion() {
+            const tipo = document.getElementById("tipoAccion").value;
+            if (tipo === "Reenvío de Producto") {
+                document.getElementById("bloqueReenvio").style.display = "flex";
+                document.getElementById("bloqueDevolucion").style.display = "none";
+                document.getElementById("diasHabiles").required = true;
+                document.getElementById("detalleReembolso").required = false;
+            } else {
+                document.getElementById("bloqueReenvio").style.display = "none";
+                document.getElementById("bloqueDevolucion").style.display = "flex";
+                document.getElementById("diasHabiles").required = false;
+                document.getElementById("detalleReembolso").required = true;
+            }
+        }
+
+        async function enviarResolucion(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnGuardar");
+            btn.disabled = true;
+            btn.textContent = "Guardando resolución...";
+
+            const tipo = document.getElementById("tipoAccion").value;
+            const comentario = document.getElementById("comentarioEmpresa").value.trim();
+
+            let detalle = "";
+            if (tipo === "Reenvío de Producto") {
+                const dias = document.getElementById("diasHabiles").value || "3";
+                detalle = `Se reenviará un reemplazo nuevo en ${dias} días hábiles. Nota: ${comentario}`;
+            } else {
+                const canal = document.getElementById("detalleReembolso").value;
+                detalle = `Devolución de dinero realizada (${canal}). Nota: ${comentario}`;
+            }
+
+            try {
+                await fetch(`${API}/reportes/${encodeURIComponent(reporteId)}/resolver`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tipo_solucion: tipo, detalle_solucion: detalle })
+                });
+            } catch (err) {
+                console.warn("Actualizando localmente:", err);
+            }
+
+            const storageKey = "reportes_nit_" + nitEmpresa;
+            let reportes = JSON.parse(localStorage.getItem(storageKey) || "[]");
+            reportes = reportes.map(r => {
+                if (String(r.id) === String(reporteId)) {
+                    r.status = "resuelto";
+                    r.solucion = `${tipo}: ${detalle}`;
+                }
+                return r;
+            });
+            localStorage.setItem(storageKey, JSON.stringify(reportes));
+
+            alert("¡Solución confirmada y enviada al cliente!");
+            window.location.href = "inicio.empresa.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarDatosReporte();
+        });
+    </script>
+</body>
+
+</html>
