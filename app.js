@@ -291,13 +291,13 @@ app.post("/empresa/resolver-reporte/:id", function (req, res) {
     });
 });
 /* =========================================
-   OBTENER PRODUCTOS DE UNA EMPRESA POR SU NIT
+   OBTENER PRODUCTOS DE UNA EMPRESA
 ========================================= */
 app.get("/empresa/:nit/productos", function (req, res) {
     const nitEmpresa = req.params.nit;
-    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ? OR nit_empresa = ?";
+    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ? OR nit_empresa = ? OR correo_empresa = ?";
     
-    conexion.query(sql, [nitEmpresa, nitEmpresa], function (error, resultados) {
+    conexion.query(sql, [nitEmpresa, nitEmpresa, nitEmpresa], function (error, resultados) {
         if (error) {
             console.error("❌ Error al obtener productos de la empresa:", error.message);
             return res.status(500).json({ error: "Error al consultar los productos." });
@@ -305,7 +305,6 @@ app.get("/empresa/:nit/productos", function (req, res) {
         res.json(resultados);
     });
 });
-
 /* =========================================
    INICIAR SERVIDOR
 ========================================= */
