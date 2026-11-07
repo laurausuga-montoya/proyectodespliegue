@@ -108,7 +108,7 @@ app.post("/login", function (req, res) {
     });
 });
 /* =========================================
-   AUTENTICACIÓN DE EMPRESAS (DEFINITIVO Y SINCRONIZADO)
+   AUTENTICACIÓN DE EMPRESAS (FLEXIBLE)
 ========================================= */
 app.post("/login-empresa", function (req, res) {
     const correoIngresado = req.body.correo_empresarial || req.body.correo || req.body.email;
@@ -118,8 +118,8 @@ app.post("/login-empresa", function (req, res) {
         return res.status(400).json({ error: "Faltan el correo o la contraseña obligatorios." });
     }
 
-    // Buscamos en la tabla usuarios usando correo_empresarial o correo, y validando contra la columna password
-    const sql = "SELECT * FROM usuarios WHERE (correo_empresarial = ? OR correo = ?) AND password = ?";
+    // Buscamos sin distinción de mayúsculas/minúsculas y abarcando ambas columnas de correo
+    const sql = "SELECT * FROM usuarios WHERE (LOWER(correo_empresarial) = LOWER(?) OR LOWER(correo) = LOWER(?)) AND password = ?";
     
     conexion.query(sql, [correoIngresado, correoIngresado, passwordIngresado], function (error, resultados) {
         if (error) {
@@ -133,7 +133,8 @@ app.post("/login-empresa", function (req, res) {
         
         const empresaEncontrada = {
             ...resultados[0],
-            id: resultados[0].id || resultados[0].identificacion,
+            // Aseguramos que siempre tenga un id válido para que el frontend no lo rechace
+            id: resultados[0].id || resultados[0].identificacion || resultados[0].nit || "EMP-01",
             nombre: resultados[0].nombre_comercial || resultados[0].nombres || "Empresa"
         };
 
