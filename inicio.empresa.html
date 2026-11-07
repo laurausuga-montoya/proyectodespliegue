@@ -833,11 +833,17 @@
                 <td class="producto-nombre">${escapar(p.nombre)}</td>
                 <td>${escapar(p.categoria || "Sin categoría")}</td>
                 <td>${dinero(p.precio)}</td>
-                <td>${p.stock}</td>
+                <td>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <input type="number" id="stock-rapido-${p.id}" value="${Number(p.stock || 0)}" min="0" style="width: 70px; padding: 4px; background: #121212; color: #fff; border: 1px solid #414141; border-radius: 4px;">
+                        <button onclick="actualizarStockRapido('${p.id}')" style="background: var(--verde); color: #102014; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold;" title="Guardar stock">✔</button>
+                    </div>
+                </td>
                 <td>${Number(p.stock) > 0 ? '<span class="estado">Disponible</span>' : '<span class="estado estado-agotado">Agotado</span>'}</td>
                 <td>
                     <div class="acciones">
-                        <button class="boton boton-secundario" onclick="editarProducto(${p.id})">Editar</button>
+                        <button class="boton boton-secundario" onclick="editarProducto('${p.id}')">Editar</button>
+                        <button class="boton boton-peligro" onclick="eliminarProducto('${p.id}')">Eliminar</button>
                     </div>
                 </td>
             </tr>
@@ -912,6 +918,47 @@
             boton.textContent = id ? "Guardar cambios" : "Guardar producto";
         }
     });
+
+    async function actualizarStockRapido(id) {
+        if(verificarBloqueoCuenta()) return;
+        const p = productos.find(item => String(item.id) === String(id));
+        if (!p) return;
+        
+        const nuevoStock = document.getElementById(`stock-rapido-${id}`).value;
+        
+        const formulario = new FormData();
+        formulario.append("nombre", p.nombre);
+        formulario.append("categoria", p.categoria || "Otros");
+        formulario.append("descripcion", p.descripcion || "Sin descripción");
+        formulario.append("precio", p.precio);
+        formulario.append("stock", nuevoStock);
+        formulario.append("nit_empresa", nitEmpresaActual);
+
+        try {
+            const base = "/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos";
+            await peticion(base + "/" + encodeURIComponent(id), { 
+                method: "PUT", 
+                body: formulario 
+            });
+            
+            await cargarProductos();
+            alert("Stock actualizado correctamente");
+        } catch (err) {
+            alert("Error al actualizar el stock: " + err.message);
+        }
+    }
+
+    async function eliminarProducto(id) {
+        if(verificarBloqueoCuenta()) return;
+        if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+        
+        try {
+            await peticion("/productos/" + encodeURIComponent(id), { method: "DELETE" });
+            await cargarProductos();
+        } catch (err) {
+            alert("Error al eliminar el producto: " + err.message);
+        }
+    }
 
     async function cargarVentasEmpresa() {
         $("ventasDineroTotal").textContent = dinero(0);
