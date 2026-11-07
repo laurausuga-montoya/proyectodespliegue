@@ -136,7 +136,7 @@
             gap: 25px;
         }
 
-        /* DISEÑO DE TARJETA ORIGINAL */
+        /* DISEÑO DE TARJETA */
         .tarjeta-prod {
             background: #ffffff;
             color: #111111;
@@ -322,6 +322,7 @@
                 ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
+            // NOTA: Hemos removido completamente de aquí cualquier div o texto que mostrara el NIT
             const card = document.createElement("div");
             card.className = "tarjeta-prod";
             card.innerHTML = `
@@ -330,6 +331,7 @@
                     <span class="categoria-tag">${p.categoria || 'OTROS'}</span>
                     <h3 class="nombre-prod">${p.nombre}</h3>
                     <p class="desc-prod">${p.descripcion || ''}</p>
+                    
                     <div class="precio-stock">
                         <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
                         <span class="stock-txt ${!hayStock ? 'agotado-txt' : ''}" id="stockTxt-${p.id}">
@@ -367,7 +369,9 @@
                     cantidad: 1,
                     stock: stockOriginal,
                     imagen_url: producto.imagen_url,
-                    nit_empresa: producto.nit_empresa // Dato oculto añadido para reportes
+                    
+                    // Este es el dato interno que permite que funcione el sistema de reportes posteriormente
+                    nit_empresa: producto.nit_empresa || producto.identificacion_empresa || ""
                 });
             }
 
