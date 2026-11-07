@@ -322,7 +322,13 @@
                 ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
-            // NOTA: Hemos removido completamente de aquí cualquier div o texto que mostrara el NIT
+            // FILTRO DE LIMPIEZA: Extrae solo el texto y borra el cuadro del NIT si viene de la base de datos
+            const divTemp = document.createElement("div");
+            divTemp.innerHTML = p.descripcion || '';
+            // Remueve el texto específico del NIT y Contacto si quedó pegado en el texto puro
+            let descripcionLimpia = divTemp.textContent || divTemp.innerText || "";
+            descripcionLimpia = descripcionLimpia.replace(/NIT:\s*\S+/g, '').replace(/Contacto:\s*.+/g, '').trim();
+
             const card = document.createElement("div");
             card.className = "tarjeta-prod";
             card.innerHTML = `
@@ -330,7 +336,7 @@
                 <div class="info-prod">
                     <span class="categoria-tag">${p.categoria || 'OTROS'}</span>
                     <h3 class="nombre-prod">${p.nombre}</h3>
-                    <p class="desc-prod">${p.descripcion || ''}</p>
+                    <p class="desc-prod">${descripcionLimpia}</p>
                     
                     <div class="precio-stock">
                         <span class="precio-txt">$${Number(p.precio).toLocaleString('es-CO')}</span>
