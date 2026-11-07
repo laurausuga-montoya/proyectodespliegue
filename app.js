@@ -107,6 +107,7 @@ app.post("/login", function (req, res) {
         res.json({ mensaje: "Login exitoso", usuario: usuarioEncontrado });
     });
 });
+
 /* =========================================
    AUTENTICACIÓN DE EMPRESAS (DEFINITIVO)
 ========================================= */
@@ -118,7 +119,6 @@ app.post("/login-empresa", function (req, res) {
         return res.status(400).json({ error: "Faltan el correo o la contraseña obligatorios." });
     }
 
-    // Buscamos la empresa y validamos su contraseña
     const sql = "SELECT * FROM usuarios WHERE (LOWER(correo_empresarial) = LOWER(?) OR LOWER(correo) = LOWER(?)) AND password = ?";
     
     conexion.query(sql, [correoIngresado, correoIngresado, passwordIngresado], function (error, resultados) {
@@ -134,12 +134,14 @@ app.post("/login-empresa", function (req, res) {
         const empresaEncontrada = {
             ...resultados[0],
             id: resultados[0].id || resultados[0].identificacion || resultados[0].nit || "EMP-01",
+            nit: resultados[0].nit || resultados[0].identificacion || resultados[0].id || "EMP-01",
             nombre: resultados[0].nombre_comercial || resultados[0].nombres || "Empresa"
         };
 
         res.json({ mensaje: "Login empresarial exitoso", empresa: empresaEncontrada });
     });
 });
+
 app.post("/registro", function (req, res) {
     const { identificacion, correo, email, password, nombre, nombres } = req.body;
     const corr = correo || email;
@@ -188,7 +190,25 @@ app.get("/usuarios/:identificacion", consultarPerfil);
 app.get("/usuario/:identificacion", consultarPerfil);
 
 /* =========================================
-   OBTENER PRODUCTOS DE UNA EMPRESA (CORREGIDO)
+   PRODUCTOS Y TIENDA (GET)
+========================================= */
+app.get("/productos", function (req, res) {
+    const sql = `
+        SELECT 
+            p.*, 
+            p.identificacion_empresa AS nit_empresa,
+            COALESCE(p.correo_empresa, 'smarfit@gmail.com') AS correo_empresa
+        FROM productos p
+        ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
+    `;
+    conexion.query(sql, function (error, resultados) {
+        if (error) return res.status(500).json({ error: "Error cargando la tienda." });
+        res.json(resultados);
+    });
+});
+
+/* =========================================
+   OBTENER PRODUCTOS DE UNA EMPRESA (POR NIT)
 ========================================= */
 app.get("/empresa/:nit/productos", function (req, res) {
     const nitEmpresa = req.params.nit;
@@ -202,6 +222,40 @@ app.get("/empresa/:nit/productos", function (req, res) {
         res.json(resultados);
     });
 });
+
+/* =========================================
+   CREAR / AGREGAR NUEVO PRODUCTO (POST)
+========================================= */
+app.post("/productos", upload.single("imagen"), function (req, res) {
+    console.log("📩 Datos recibidos en POST /productos:", req.body);
+    console.log("📷 Archivo recibido:", req.file);
+
+    const empresaNit = req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
+    const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo || req.body.producto;
+    const categoriaProd = req.body.categoria || req.body.cat || "Otros";
+    const descripcionProd = req.body.descripcion || req.body.desc || "";
+    const precioProd = req.body.precio || req.body.precio_unitario || req.body.valor || 0;
+    const stockProd = req.body.stock || req.body.cantidad || req.body.existencias || 0;
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
+
+    if (!empresaNit || !nombreProd || !precioProd) {
+        return res.status(400).json({ error: "Faltan campos obligatorios para guardar el producto (NIT, nombre o precio)." });
+    }
+
+    const sql = `
+        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url, fecha_creacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+    `;
+
+    conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al guardar producto en MySQL:", error.message);
+            return res.status(500).json({ error: "No se pudo guardar el producto: " + error.message });
+        }
+        res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
+    });
+});
+
 /* =========================================
    SOPORTE Y REPORTES CON FOTO (CLIENTE)
 ========================================= */
@@ -242,7 +296,7 @@ app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
 });
 
 /* =========================================
-   PANEL EMPRESARIAL: RESOLVER REPORTE
+   PANEL EMPRESARIAL: REPORTES Y RESOLUCIÓN
 ========================================= */
 app.get("/empresa/:nit/reportes", function (req, res) {
     const nit = req.params.nit;
@@ -287,56 +341,9 @@ app.post("/empresa/resolver-reporte/:id", function (req, res) {
         res.json({ mensaje: "Reporte resuelto y notificado al usuario con éxito.", solucion: mensajeSolucion });
     });
 });
+
 /* =========================================
-   OBTENER PRODUCTOS DE UNA EMPRESA
-========================================= */
-app.get("/empresa/:nit/productos", function (req, res) {
-    const nitEmpresa = req.params.nit;
-    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ? OR nit_empresa = ? OR correo_empresa = ?";
-    
-    conexion.query(sql, [nitEmpresa, nitEmpresa, nitEmpresa], function (error, resultados) {
-        if (error) {
-            console.error("❌ Error al obtener productos de la empresa:", error.message);
-            return res.status(500).json({ error: "Error al consultar los productos." });
-        }
-        res.json(resultados);
-    });
-});
-/* =========================================
-   CREAR / AGREGAR NUEVO PRODUCTO (ROBUSTO Y FLEXIBLE)
-========================================= */
-app.post("/productos", upload.single("imagen"), function (req, res) {
-    console.log("📩 Datos recibidos en POST /productos:", req.body);
-    console.log("📷 Archivo recibido:", req.file);
-
-    // Captura cualquier nombre posible que envíe el formulario frontend
-    const empresaNit = req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit || "4560987-9";
-    const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo || req.body.producto;
-    const categoriaProd = req.body.categoria || req.body.cat || "Otros";
-    const descripcionProd = req.body.descripcion || req.body.desc || "";
-    const precioProd = req.body.precio || req.body.precio_unitario || req.body.valor || 0;
-    const stockProd = req.body.stock || req.body.cantidad || req.body.existencias || 0;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
-
-    if (!nombreProd || !precioProd) {
-        return res.status(400).json({ error: "Faltan el nombre o el precio del producto." });
-    }
-
-    const sql = `
-        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url, fecha_creacion)
-        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    `;
-
-    conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], function (error, resultado) {
-        if (error) {
-            console.error("❌ Error al guardar producto en MySQL:", error.message);
-            return res.status(500).json({ error: "No se pudo guardar el producto: " + error.message });
-        }
-        res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
-    });
-});
-/* =========================================
-   INICIAR SERVIDO
+   INICIAR SERVIDOR
 ========================================= */
 app.listen(PORT, "0.0.0.0", function () {
     console.log(`🚀 Servidor VIGA funcionando en http://0.0.0.0:${PORT}`);
