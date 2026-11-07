@@ -303,6 +303,31 @@ app.get("/empresa/:nit/productos", function (req, res) {
     });
 });
 /* =========================================
+   CREAR / AGREGAR NUEVO PRODUCTO (EMPRESA)
+========================================= */
+app.post("/productos", upload.single("imagen"), function (req, res) {
+    const { identificacion_empresa, nit_empresa, nombre, categoria, descripcion, precio, stock } = req.body;
+    const nitFinal = identificacion_empresa || nit_empresa;
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!nitFinal || !nombre || !precio) {
+        return res.status(400).json({ error: "Faltan campos obligatorios para guardar el producto." });
+    }
+
+    const sql = `
+        INSERT INTO productos (identificacion_empresa, nombre, categoria, descripcion, precio, stock, imagen_url, fecha_creacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+    `;
+
+    conexion.query(sql, [nitFinal, nombre, categoria || 'Otros', descripcion || '', precio, stock || 0, imagen_url], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al guardar producto:", error.message);
+            return res.status(500).json({ error: "No se pudo guardar el producto: " + error.message });
+        }
+        res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
+    });
+});
+/* =========================================
    INICIAR SERVIDO
 ========================================= */
 app.listen(PORT, "0.0.0.0", function () {
