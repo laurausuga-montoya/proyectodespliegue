@@ -502,7 +502,7 @@
             if (!identificacion) return;
 
             try {
-                const respuesta = await fetch(API + "/usuario/" + encodeURIComponent(identificacion));
+                const respuesta = await fetch(API + "/usuarios/" + encodeURIComponent(identificacion));
                 const usuario = await respuesta.json();
 
                 if (!respuesta.ok) {
