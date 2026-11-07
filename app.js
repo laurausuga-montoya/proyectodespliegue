@@ -73,6 +73,25 @@ app.post("/login", (req, res) => {
     });
 });
 
+// Obtener datos del perfil de un usuario - CORREGIDO AQUÍ 👇
+app.get("/usuarios/:id", (req, res) => {
+    const idUsuario = req.params.id;
+    
+    const sql = "SELECT identificacion, nombres, apellidos, correo, telefono, icono, genero, peso, estatura, edad, objetivo FROM usuarios WHERE identificacion = ?";
+    
+    conexion.query(sql, [idUsuario], (error, resultados) => {
+        if (error) {
+            console.error("❌ Error al obtener perfil:", error.message);
+            return res.status(500).json({ error: "Error en el servidor." });
+        }
+        if (resultados.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+        
+        res.json(resultados[0]);
+    });
+});
+
 // Login de Empresa
 app.post("/login-empresa", (req, res) => {
     const correo = req.body.correo_empresarial || req.body.correo || req.body.email;
