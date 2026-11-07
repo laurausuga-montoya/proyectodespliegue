@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Aumentamos el límite a 50mb para permitir recibir imágenes adjuntas (Base64) desde los reportes
+// Límite de 50MB para fotos de evidencias en base64
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.resolve(__dirname)));
@@ -45,20 +45,15 @@ conexion.connect(error => {
     console.log("✅ Conectado correctamente a MySQL");
 });
 
-// ==========================================
-// RUTAS DE VISTAS HTML
-// ==========================================
+// Vistas HTML
 app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, "index.html")));
 app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html")));
 app.get("/tienda", (req, res) => res.sendFile(path.resolve(__dirname, "tienda.html")));
 app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
 app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
+app.get("/resolver-reporte", (req, res) => res.sendFile(path.resolve(__dirname, "resolver-reporte.html")));
 
-// ==========================================
-// USUARIOS PERSONALES
-// ==========================================
-
-// Login de Usuario Personal
+// Autenticación de Usuario Personal
 app.post("/login", (req, res) => {
     const correo = req.body.correo || req.body.email;
     const password = req.body.password || req.body.contrasena || req.body.clave;
@@ -69,40 +64,22 @@ app.post("/login", (req, res) => {
 
     const sql = "SELECT * FROM usuarios WHERE LOWER(correo) = LOWER(?) AND password = ?";
     conexion.query(sql, [correo, password], (error, resultados) => {
-        if (error) {
-            console.error("❌ Error en login personal:", error.message);
-            return res.status(500).json({ error: "Error en el servidor: " + error.message });
-        }
-        if (resultados.length === 0) {
-            return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
-        }
-
+        if (error) return res.status(500).json({ error: "Error en el servidor: " + error.message });
+        if (resultados.length === 0) return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
         res.json({ mensaje: "Login exitoso", usuario: resultados[0] });
     });
 });
 
-// Obtener datos del perfil de un usuario
+// Perfil de Usuario Personal
 app.get("/usuarios/:id", (req, res) => {
     const idUsuario = req.params.id;
-    
     const sql = "SELECT * FROM usuarios WHERE identificacion = ?";
-    
     conexion.query(sql, [idUsuario], (error, resultados) => {
-        if (error) {
-            console.error("❌ Error al obtener perfil:", error.message);
-            return res.status(500).json({ error: "Error en el servidor." });
-        }
-        if (resultados.length === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado." });
-        }
-        
+        if (error) return res.status(500).json({ error: "Error en el servidor." });
+        if (resultados.length === 0) return res.status(404).json({ error: "Usuario no encontrado." });
         res.json(resultados[0]);
     });
 });
-
-// ==========================================
-// EMPRESAS
-// ==========================================
 
 // Login de Empresa
 app.post("/login-empresa", (req, res) => {
@@ -128,11 +105,7 @@ app.post("/login-empresa", (req, res) => {
     });
 });
 
-// ==========================================
-// PRODUCTOS
-// ==========================================
-
-// Obtener todos los productos (Tienda general)
+// Catálogo de Productos General
 app.get("/productos", (req, res) => {
     const sql = "SELECT p.*, p.identificacion_empresa AS nit_empresa FROM productos p ORDER BY p.fecha_creacion DESC";
     conexion.query(sql, (error, resultados) => {
@@ -141,20 +114,17 @@ app.get("/productos", (req, res) => {
     });
 });
 
-// Obtener productos de una empresa específica
+// Productos de una Empresa Específica
 app.get("/empresa/:nit/productos", (req, res) => {
     const nitEmpresa = req.params.nit;
     const sql = "SELECT * FROM productos WHERE identificacion_empresa = ?";
     conexion.query(sql, [nitEmpresa], (error, resultados) => {
-        if (error) {
-            console.error("❌ Error al obtener productos:", error.message);
-            return res.status(500).json({ error: "Error al consultar los productos." });
-        }
+        if (error) return res.status(500).json({ error: "Error al consultar los productos." });
         res.json(resultados);
     });
 });
 
-// Crear producto (POST)
+// Crear Producto
 app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (req, res) => {
     const empresaNit = req.params.nit || req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
     const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo;
@@ -165,7 +135,7 @@ app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (re
     const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
 
     if (!empresaNit || !nombreProd || !precioProd) {
-        return res.status(400).json({ error: "Faltan campos obligatorios (NIT, nombre o precio)." });
+        return res.status(400).json({ error: "Faltan campos obligatorios." });
     }
 
     const sql = `
@@ -174,15 +144,12 @@ app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (re
     `;
 
     conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], (error, resultado) => {
-        if (error) {
-            console.error("❌ Error al guardar producto en MySQL:", error.message);
-            return res.status(500).json({ error: "No se pudo guardar: " + error.message });
-        }
+        if (error) return res.status(500).json({ error: "No se pudo guardar: " + error.message });
         res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
     });
 });
 
-// Actualizar producto (PUT)
+// Actualizar Producto
 app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen"), (req, res) => {
     const productoId = req.params.id;
     const nombreProd = req.body.nombre || req.body.nombre_producto;
@@ -203,31 +170,21 @@ app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen
     params.push(productoId);
 
     conexion.query(sql, params, (error) => {
-        if (error) {
-            console.error("❌ Error al actualizar producto en MySQL:", error.message);
-            return res.status(500).json({ error: "No se pudo actualizar." });
-        }
+        if (error) return res.status(500).json({ error: "No se pudo actualizar." });
         res.json({ mensaje: "Actualizado con éxito." });
     });
 });
 
-// Eliminar producto (DELETE)
+// Eliminar Producto
 app.delete(["/productos/:id", "/empresa/:nit/productos/:id"], (req, res) => {
     const sql = "DELETE FROM productos WHERE id = ?";
     conexion.query(sql, [req.params.id], (error) => {
-        if (error) {
-            console.error("❌ Error al eliminar producto en MySQL:", error.message);
-            return res.status(500).json({ error: "No se pudo eliminar." });
-        }
+        if (error) return res.status(500).json({ error: "No se pudo eliminar." });
         res.json({ mensaje: "Eliminado con éxito." });
     });
 });
 
-// ==========================================
-// COMPRAS Y REPORTES
-// ==========================================
-
-// Procesar compra, descontar del inventario y responder éxito
+// Procesar Pago y Descontar Stock
 app.post("/compras/procesar", (req, res) => {
     const { articulos, cliente, metodo_pago } = req.body;
 
@@ -239,10 +196,8 @@ app.post("/compras/procesar", (req, res) => {
     let productosActualizados = 0;
     let errores = false;
 
-    // Iterar sobre cada artículo para actualizar su stock
     articulos.forEach(item => {
         conexion.query("SELECT stock FROM productos WHERE id = ?", [item.id], (err, resultados) => {
-            // Si hay un error con este artículo, lo saltamos pero sumamos a la cuenta para que no se quede colgado
             if (err || resultados.length === 0) {
                 productosActualizados++;
                 if (productosActualizados === articulos.length && !errores) {
@@ -252,22 +207,14 @@ app.post("/compras/procesar", (req, res) => {
             }
 
             const stockActual = resultados[0].stock;
-            const nuevoStock = stockActual - item.cantidad;
-            const stockFinal = nuevoStock < 0 ? 0 : nuevoStock; // Evita stock negativo
+            const nuevoStock = Math.max(0, stockActual - item.cantidad);
 
-            conexion.query("UPDATE productos SET stock = ? WHERE id = ?", [stockFinal, item.id], (updateErr) => {
-                if (updateErr) {
-                    console.error("Error descontando stock:", updateErr.message);
-                    errores = true;
-                }
-                
+            conexion.query("UPDATE productos SET stock = ? WHERE id = ?", [nuevoStock, item.id], (updateErr) => {
+                if (updateErr) errores = true;
                 productosActualizados++;
-                
-                // Si ya procesamos todos los artículos, terminamos
+
                 if (productosActualizados === articulos.length) {
-                    if (errores) {
-                        return res.status(500).json({ error: "Hubo un error descontando el stock parcial." });
-                    }
+                    if (errores) return res.status(500).json({ error: "Error parcial al descontar stock." });
                     return res.json({ mensaje: "Compra procesada con éxito", total, metodo: metodo_pago });
                 }
             });
@@ -275,26 +222,22 @@ app.post("/compras/procesar", (req, res) => {
     });
 });
 
-// Guardar un reporte enviado hacia la base de datos MySQL
+// Crear Reporte de Soporte
 app.post("/soporte/reporte", (req, res) => {
     const { identificacion_usuario, categoria, asunto, descripcion, imagen_url } = req.body;
-    
-    // Si usas la tabla 'reportes_soporte' se inserta así. Si no existe aún la tabla, la respuesta no rompe el flujo
     const sql = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, imagen_url, estado, fecha) VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())`;
     
     conexion.query(sql, [identificacion_usuario, categoria, asunto, descripcion, imagen_url || null], (err) => {
-        if (err) {
-            console.error("No se pudo insertar reporte, pero el frontend continúa:", err.message);
-        }
+        if (err) console.error("Aviso al guardar en BD:", err.message);
         res.json({ mensaje: "Reporte procesado exitosamente." });
     });
 });
 
-// Obtener reportes de soporte de la empresa
+// Listar Reportes de una Empresa
 app.get("/empresa/:nit/reportes", (req, res) => {
     const nit = req.params.nit;
     const sql = `
-        SELECT id, identificacion_usuario, asunto, descripcion, producto, orden_compra, imagen_url, estado, solucion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
+        SELECT id, identificacion_usuario, asunto, descripcion, producto, imagen_url, estado, solucion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
         FROM reportes_soporte 
         WHERE nit_empresa = ? 
         ORDER BY fecha DESC
@@ -302,6 +245,27 @@ app.get("/empresa/:nit/reportes", (req, res) => {
     conexion.query(sql, [nit], (error, resultados) => {
         if (error) return res.status(500).json({ error: "Error al obtener reportes." });
         res.json(resultados);
+    });
+});
+
+// Resolver Reporte por parte de la Empresa
+app.put("/reportes/:id/resolver", (req, res) => {
+    const idReporte = req.params.id;
+    const { tipo_solucion, detalle_solucion } = req.body;
+
+    if (!tipo_solucion || !detalle_solucion) {
+        return res.status(400).json({ error: "Faltan datos de resolución." });
+    }
+
+    const solucionFinal = `${tipo_solucion}: ${detalle_solucion}`;
+    const sql = "UPDATE reportes_soporte SET estado = 'resuelto', solucion = ? WHERE id = ?";
+
+    conexion.query(sql, [solucionFinal, idReporte], (error) => {
+        if (error) {
+            console.error("❌ Error resolviendo reporte:", error.message);
+            return res.status(500).json({ error: "No se pudo actualizar en la base de datos." });
+        }
+        res.json({ mensaje: "Reporte resuelto con éxito.", solucion: solucionFinal });
     });
 });
 
