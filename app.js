@@ -107,6 +107,40 @@ app.post("/login", function (req, res) {
         res.json({ mensaje: "Login exitoso", usuario: usuarioEncontrado });
     });
 });
+/* =========================================
+   AUTENTICACIÓN DE EMPRESAS (LOGIN EMPRESARIAL)
+========================================= */
+app.post("/login-empresa", function (req, res) {
+    const { nit, correo, email, password, contrasena, clave } = req.body;
+    const identificadorNit = nit;
+    const correoIngresado = correo || email;
+    const passwordIngresado = password || contrasena || clave;
+
+    if (!identificadorNit || !passwordIngresado) {
+        return res.status(400).json({ error: "Faltan el NIT y la contraseña obligatorios." });
+    }
+
+    // Cambia "empresas" por el nombre real de tu tabla de empresas en MySQL si es diferente
+    const sql = "SELECT * FROM empresas WHERE nit = ? AND password = ?";
+    
+    conexion.query(sql, [identificadorNit, passwordIngresado], function (error, resultados) {
+        if (error) {
+            console.error("❌ Error en login empresa:", error.message);
+            return res.status(500).json({ error: "Error en el servidor: " + error.message });
+        }
+        if (resultados.length === 0) {
+            return res.status(401).json({ error: "NIT o contraseña de empresa incorrectos." });
+        }
+        
+        const empresaEncontrada = {
+            ...resultados[0],
+            nit: resultados[0].nit || identificadorNit,
+            nombre: resultados[0].nombre || resultados[0].nombres || "Empresa"
+        };
+
+        res.json({ mensaje: "Login empresarial exitoso", empresa: empresaEncontrada });
+    });
+});
 
 app.post("/registro", function (req, res) {
     const { identificacion, correo, email, password, nombre, nombres } = req.body;
