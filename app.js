@@ -224,7 +224,7 @@ app.get("/empresa/:nit/productos", function (req, res) {
 });
 
 /* =========================================
-   CREAR / AGREGAR NUEVO PRODUCTO (POST)
+   CREAR / AGREGAR NUEVO PRODUCTO (DEFINITIVO)
 ========================================= */
 app.post("/productos", upload.single("imagen"), function (req, res) {
     console.log("📩 Datos recibidos en POST /productos:", req.body);
