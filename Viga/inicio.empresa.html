@@ -14,18 +14,20 @@
         :root {
             --fondo: #121212;
             --panel: #1b1b1b;
+            --panel-secundario: #222222;
             --verde: #37E359;
             --texto: #f4f4f4;
             --secundario: #aaa;
             --borde: #2d2d2d;
+            --rojo: #ff5252;
             --input-fondo: #252525;
             --input-borde: #3b3b3b;
-            --rojo: #ff5252;
         }
 
         body.claro {
             --fondo: #f4f4f4;
             --panel: #ffffff;
+            --panel-secundario: #f0f0f0;
             --texto: #111111;
             --secundario: #666666;
             --borde: #dddddd;
@@ -44,7 +46,8 @@
             background: var(--fondo);
             color: var(--texto);
             min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -57,133 +60,254 @@
             padding: 0 40px;
         }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--verde);
-            text-decoration: none;
-            letter-spacing: 2px;
+        .logo-box {
+            display: flex;
+            flex-direction: column;
         }
 
-        .empresa-info {
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--verde);
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .sub-logo {
+            font-size: 11px;
+            color: var(--secundario);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .usuario-header {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .btn-cerrar {
-            background: transparent;
-            border: 1px solid var(--borde);
-            color: var(--texto);
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: .2s;
+        .info-empresa-txt {
+            text-align: right;
         }
 
-        .btn-cerrar:hover {
-            color: var(--rojo);
-            border-color: var(--rojo);
-        }
-
-        main {
-            width: 90%;
-            max-width: 1100px;
-            margin: 35px auto;
-        }
-
-        .pestanas {
-            display: flex;
-            gap: 15px;
-            border-bottom: 1px solid var(--borde);
-            margin-bottom: 25px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--secundario);
+        .nombre-empresa {
             font-size: 15px;
-            font-weight: 600;
-            padding: 12px 20px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: .2s;
-        }
-
-        .tab-btn.activo {
-            color: var(--verde);
-            border-bottom-color: var(--verde);
-        }
-
-        .contenedor-seccion {
-            display: none;
-        }
-
-        .contenedor-seccion.activo {
+            font-weight: 700;
             display: block;
         }
 
-        .reporte-card {
-            background: var(--panel);
-            border: 1px solid var(--borde);
-            padding: 22px;
-            margin-bottom: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .nit-empresa {
+            font-size: 12px;
+            color: var(--secundario);
         }
 
-        .reporte-header {
+        .avatar-empresa {
+            width: 38px;
+            height: 38px;
+            background: rgba(55, 227, 89, 0.2);
+            color: var(--verde);
+            border-radius: 6px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--borde);
-            padding-bottom: 10px;
-            flex-wrap: wrap;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            border: 1px solid rgba(55, 227, 89, 0.4);
+        }
+
+        .layout-principal {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 75px);
+        }
+
+        /* BARRA LATERAL */
+        aside {
+            width: 250px;
+            background: var(--panel);
+            border-right: 1px solid var(--borde);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
 
-        .badge-estado {
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 700;
+        .menu-titulo {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--secundario);
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-left: 10px;
         }
 
-        .badge-pendiente {
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--texto);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 14px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: .2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--panel-secundario);
+            color: var(--verde);
+        }
+
+        .nav-btn.activo {
+            background: rgba(55, 227, 89, 0.15);
+            color: var(--verde);
+            font-weight: 700;
+            border-left: 3px solid var(--verde);
+        }
+
+        .nav-btn.cerrar {
+            margin-top: auto;
+            color: var(--rojo);
+        }
+
+        .nav-btn.cerrar:hover {
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--rojo);
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .cabecera-seccion {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .cabecera-seccion h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--texto);
+        }
+
+        .cabecera-seccion p {
+            color: var(--secundario);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .btn-accion-top {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            color: var(--texto);
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: .2s;
+        }
+
+        .btn-accion-top:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+        }
+
+        /* TABLA DE REPORTES */
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: var(--panel-secundario);
+            color: var(--secundario);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--borde);
+            color: var(--texto);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge.pendiente {
             background: rgba(255, 183, 77, 0.15);
             color: #ffb74d;
             border: 1px solid rgba(255, 183, 77, 0.3);
         }
 
-        .badge-resuelto {
+        .badge.resuelto {
             background: rgba(55, 227, 89, 0.15);
             color: var(--verde);
             border: 1px solid rgba(55, 227, 89, 0.3);
         }
 
-        .btn-resolver {
+        .btn-resolver-tabla {
             background: var(--verde);
             color: #111;
-            border: none;
-            padding: 10px 18px;
             font-weight: 700;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
             cursor: pointer;
-            align-self: flex-start;
-            font-size: 13px;
+            border-radius: 3px;
             transition: .2s;
         }
 
-        .btn-resolver:hover {
+        .btn-resolver-tabla:hover {
             filter: brightness(1.1);
+            transform: scale(1.02);
         }
 
-        .img-evidencia-min {
-            max-width: 140px;
-            max-height: 140px;
-            object-fit: cover;
-            border: 1px solid var(--borde);
-            margin-top: 8px;
+        .texto-solventado {
+            color: var(--secundario);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 850px) {
+            .layout-principal { flex-direction: column; }
+            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--borde); }
+            main { padding: 20px; }
         }
     </style>
 </head>
@@ -191,31 +315,62 @@
 <body>
 
     <header>
-        <div class="logo">VIGA EMPRESA</div>
-        <div class="empresa-info">
-            <span id="txtNombreEmpresa" style="font-size: 14px; font-weight: 600;">Empresa</span>
-            <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
+        <div class="logo-box">
+            <a href="inicio.empresa.html" class="logo">VIGA</a>
+            <span class="sub-logo">Portal Empresarial</span>
+        </div>
+        <div class="usuario-header">
+            <div class="info-empresa-txt">
+                <span class="nombre-empresa" id="lblNombreEmpresa">SmartFit</span>
+                <span class="nit-empresa" id="lblNitEmpresa">NIT: 4560987-9</span>
+            </div>
+            <div class="avatar-empresa" id="lblAvatarEmpresa">S</div>
         </div>
     </header>
 
-    <main>
-        <div class="pestanas">
-            <button class="tab-btn activo" onclick="cambiarTab('reportes', this)">Buzón de Reportes</button>
-            <button class="tab-btn" onclick="cambiarTab('productos', this)">Gestión de Productos</button>
-        </div>
+    <div class="layout-principal">
+        <aside>
+            <span class="menu-titulo">Zona Empresarial</span>
+            <a href="inicio.empresa.html" class="nav-btn">Resumen</a>
+            <a href="tienda.html" class="nav-btn">Mi tienda</a>
+            <a href="agregar-producto.html" class="nav-btn">Agregar producto</a>
+            <a href="perfil.empresa.html" class="nav-btn">Mi empresa</a>
+            <a href="inicio.empresa.html" class="nav-btn activo">Reportes</a>
+            <button class="nav-btn cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
+        </aside>
 
-        <!-- SECCIÓN REPORTES -->
-        <div id="seccion-reportes" class="contenedor-seccion activo">
-            <div id="listaReportes">
-                <p style="color: var(--secundario);">Cargando reportes dirigidos a tu empresa...</p>
+        <main>
+            <div class="cabecera-seccion">
+                <div>
+                    <h1>Reportes de usuarios</h1>
+                    <p>Gestiona los reportes sobre tus productos. Si alcanzas 10 reportes pendientes, tu cuenta será suspendida.</p>
+                </div>
+                <button class="btn-accion-top" onclick="cargarReportes()">Actualizar reportes</button>
             </div>
-        </div>
 
-        <!-- SECCIÓN PRODUCTOS -->
-        <div id="seccion-productos" class="contenedor-seccion">
-            <p style="color: var(--secundario);">Administra el inventario de tu tienda oficial desde aquí.</p>
-        </div>
-    </main>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto / Asunto</th>
+                            <th>Área</th>
+                            <th>Detalle</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaReportes">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--secundario); padding: 30px;">
+                                Cargando reportes registrados...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 
     <script>
         const API = "https://viga-c607.onrender.com";
@@ -223,88 +378,88 @@
         function sincronizarTema() {
             const tema = localStorage.getItem("vigaTema");
             if (tema === "claro") document.body.classList.add("claro");
+            else document.body.classList.remove("claro");
         }
         sincronizarTema();
 
-        function obtenerEmpresa() {
+        function obtenerEmpresaSesion() {
             const raw = localStorage.getItem("empresa") || localStorage.getItem("usuario");
             if (raw) {
                 try { return JSON.parse(raw); } catch (e) {}
             }
-            return { nit: "4560987-9", nombre: "Empresa Asociada" };
+            return { nit: "4560987-9", nombre: "SmartFit" };
         }
 
-        const empresaActual = obtenerEmpresa();
-        const nitEmpresa = empresaActual.nit || empresaActual.identificacion || "4560987-9";
+        const empresa = obtenerEmpresaSesion();
+        const nitEmpresa = empresa.nit || empresa.identificacion || "4560987-9";
+        const nombreEmpresa = empresa.nombre || empresa.nombres || "SmartFit";
 
-        document.getElementById("txtNombreEmpresa").textContent = `${empresaActual.nombre || 'Mi Empresa'} (NIT: ${nitEmpresa})`;
+        document.getElementById("lblNombreEmpresa").textContent = nombreEmpresa;
+        document.getElementById("lblNitEmpresa").textContent = `NIT: ${nitEmpresa}`;
+        document.getElementById("lblAvatarEmpresa").textContent = nombreEmpresa.charAt(0).toUpperCase();
 
-        function cambiarTab(tab, btn) {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
-            document.querySelectorAll(".contenedor-seccion").forEach(s => s.classList.remove("activo"));
-
-            btn.classList.add("activo");
-            document.getElementById(`seccion-${tab}`).classList.add("activo");
-        }
-
-        // Redirige a la nueva hoja de resolución pasando ID y NIT
-        function irAResolver(idReporte, nit) {
-            window.location.href = `resolver-reporte.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nit)}`;
+        // REDIRECCIÓN DIRECTA A LA HOJA DE RESOLUCIÓN
+        function irAResolver(idReporte) {
+            if (!idReporte) {
+                alert("Identificador de reporte ausente.");
+                return;
+            }
+            window.location.href = `resolver-reporte.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nitEmpresa)}`;
         }
 
         async function cargarReportes() {
-            const contenedor = document.getElementById("listaReportes");
+            const tbody = document.getElementById("cuerpoTablaReportes");
             const storageKey = "reportes_nit_" + nitEmpresa;
             let reportes = JSON.parse(localStorage.getItem(storageKey) || "[]");
 
             try {
                 const res = await fetch(`${API}/empresa/${encodeURIComponent(nitEmpresa)}/reportes?t=${Date.now()}`);
                 if (res.ok) {
-                    const datosServer = await res.json();
-                    if (datosServer && datosServer.length > 0) reportes = datosServer;
+                    const datosServidor = await res.json();
+                    if (datosServidor && datosServidor.length > 0) {
+                        reportes = datosServidor;
+                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn("Fallo conectando al servidor, cargando datos locales:", e);
+            }
 
             if (!reportes || reportes.length === 0) {
-                contenedor.innerHTML = `<p style="padding: 40px; text-align: center; color: var(--secundario); background: var(--panel); border: 1px solid var(--borde);">No hay reportes de soporte pendientes para tu empresa.</p>`;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--secundario); padding: 35px;">
+                            No hay reportes de soporte dirigidos a tu empresa.
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
-            contenedor.innerHTML = "";
+            tbody.innerHTML = "";
             reportes.slice().reverse().forEach(rep => {
-                const esResuelto = (rep.status === "resuelto" || rep.estado === "resuelto");
-                const card = document.createElement("div");
-                card.className = "reporte-card";
+                const esResuelto = (rep.estado === "resuelto" || rep.status === "resuelto");
+                const tr = document.createElement("tr");
 
-                const imagenEvidencia = rep.imagen_url ? `<div><span style="font-size:12px; color:var(--secundario);">Foto adjunta por el cliente:</span><br><img src="${rep.imagen_url}" class="img-evidencia-min" alt="Evidencia"></div>` : "";
+                const botonAccion = esResuelto
+                    ? `<span class="texto-solventado">Solventado</span>`
+                    : `<button type="button" class="btn-resolver-tabla" onclick="irAResolver('${rep.id}')">Resolver</button>`;
 
-                card.innerHTML = `
-                    <div class="reporte-header">
-                        <div>
-                            <strong style="color:var(--verde); font-size:16px;">${rep.producto || rep.asunto || "Reporte de Producto"}</strong>
-                            <div style="font-size:12px; color:var(--secundario); margin-top:2px;">Fecha: ${rep.fecha || "Reciente"} · Categoría: ${rep.categoria || "Garantía"}</div>
-                        </div>
-                        <span class="badge-estado ${esResuelto ? 'badge-resuelto' : 'badge-pendiente'}">
-                            ${esResuelto ? '✓ Resuelto' : 'Pendiente'}
+                tr.innerHTML = `
+                    <td>${rep.fecha || "Reciente"}</td>
+                    <td><strong>${rep.producto || rep.asunto || "Producto"}</strong></td>
+                    <td>${rep.categoria || rep.area || "Producto"}</td>
+                    <td style="max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${rep.descripcion || rep.detalle || "--"}
+                    </td>
+                    <td>
+                        <span class="badge ${esResuelto ? 'resuelto' : 'pendiente'}">
+                            ${esResuelto ? 'resuelto' : 'pendiente'}
                         </span>
-                    </div>
-
-                    <div style="font-size:14px; line-height:1.6;">
-                        ${rep.descripcion || "Sin descripción proporcionada."}
-                    </div>
-
-                    ${imagenEvidencia}
-
-                    ${esResuelto 
-                        ? `<div style="background:var(--input-fondo); padding:12px; border-left:3px solid var(--verde); font-size:13px; color:var(--texto);">
-                                <strong>Solución otorgada:</strong> ${rep.solucion || 'Finalizado satisfactoriamente.'}
-                           </div>` 
-                        : `<button class="btn-resolver" onclick="irAResolver('${rep.id}', '${nitEmpresa}')">
-                                Resolver Solicitud
-                           </button>`
-                    }
+                    </td>
+                    <td>${botonAccion}</td>
                 `;
-                contenedor.appendChild(card);
+
+                tbody.appendChild(tr);
             });
         }
 
