@@ -188,23 +188,20 @@ app.get("/usuarios/:identificacion", consultarPerfil);
 app.get("/usuario/:identificacion", consultarPerfil);
 
 /* =========================================
-   PRODUCTOS Y TIENDA
+   OBTENER PRODUCTOS DE UNA EMPRESA (CORREGIDO)
 ========================================= */
-app.get("/productos", function (req, res) {
-    const sql = `
-        SELECT 
-            p.*, 
-            p.identificacion_empresa AS nit_empresa,
-            COALESCE(p.correo_empresa, 'smarfit@gmail.com') AS correo_empresa
-        FROM productos p
-        ORDER BY (p.stock > 0) DESC, p.fecha_creacion DESC
-    `;
-    conexion.query(sql, function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error cargando la tienda." });
+app.get("/empresa/:nit/productos", function (req, res) {
+    const nitEmpresa = req.params.nit;
+    const sql = "SELECT * FROM productos WHERE identificacion_empresa = ?";
+    
+    conexion.query(sql, [nitEmpresa], function (error, resultados) {
+        if (error) {
+            console.error("❌ Error al obtener productos de la empresa:", error.message);
+            return res.status(500).json({ error: "Error al consultar los productos." });
+        }
         res.json(resultados);
     });
 });
-
 /* =========================================
    SOPORTE Y REPORTES CON FOTO (CLIENTE)
 ========================================= */
@@ -306,7 +303,7 @@ app.get("/empresa/:nit/productos", function (req, res) {
     });
 });
 /* =========================================
-   INICIAR SERVIDOR
+   INICIAR SERVIDO
 ========================================= */
 app.listen(PORT, "0.0.0.0", function () {
     console.log(`🚀 Servidor VIGA funcionando en http://0.0.0.0:${PORT}`);
