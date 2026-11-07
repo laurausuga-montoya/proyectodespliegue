@@ -73,11 +73,11 @@ app.post("/login", (req, res) => {
     });
 });
 
-// Obtener datos del perfil de un usuario - CORREGIDO AQUÍ 👇
+// Obtener datos del perfil de un usuario - CORREGIDO (SELECT *)
 app.get("/usuarios/:id", (req, res) => {
     const idUsuario = req.params.id;
     
-    const sql = "SELECT identificacion, nombres, apellidos, correo, telefono, icono, genero, peso, estatura, edad, objetivo FROM usuarios WHERE identificacion = ?";
+    const sql = "SELECT * FROM usuarios WHERE identificacion = ?";
     
     conexion.query(sql, [idUsuario], (error, resultados) => {
         if (error) {
@@ -140,7 +140,6 @@ app.get("/empresa/:nit/productos", (req, res) => {
 
 // Crear producto (POST)
 app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (req, res) => {
-    // Captura el NIT ya sea desde la URL (req.params) o desde el cuerpo del formulario (req.body)
     const empresaNit = req.params.nit || req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
     const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo;
     const categoriaProd = req.body.categoria || "Otros";

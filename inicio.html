@@ -502,6 +502,7 @@
             if (!identificacion) return;
 
             try {
+                // CORREGIDO AQUÍ 👇: '/usuarios/' en vez de '/usuario/'
                 const respuesta = await fetch(API + "/usuarios/" + encodeURIComponent(identificacion));
                 const usuario = await respuesta.json();
 
@@ -517,7 +518,9 @@
                     }
                 }
 
-                const nombre = usuario.nombres || "Usuario";
+                // CORREGIDO AQUÍ 👇: Acepta tanto 'nombre' como 'nombres'
+                const nombre = usuario.nombres || usuario.nombre || "Usuario";
+                
                 const elNombreUsuario = document.getElementById("nombreUsuario");
                 if (elNombreUsuario) elNombreUsuario.textContent = nombre;
 
