@@ -192,6 +192,11 @@
             flex-grow: 1;
         }
 
+        /* REGLA CSS AGRESIVA: Oculta cualquier caja div interna en la descripción */
+        .desc-prod div {
+            display: none !important;
+        }
+
         .precio-stock {
             display: flex;
             justify-content: space-between;
@@ -233,7 +238,6 @@
             filter: brightness(1.08);
         }
 
-        /* BOTÓN AGOTADO SIN ALERTAS */
         .btn-comprar:disabled,
         .btn-comprar.btn-agotado {
             background: #e0e0e0 !important;
@@ -322,12 +326,18 @@
                 ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API}${p.imagen_url}`) 
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
-            // FILTRO DE LIMPIEZA: Extrae solo el texto y borra el cuadro del NIT si viene de la base de datos
-            const divTemp = document.createElement("div");
-            divTemp.innerHTML = p.descripcion || '';
-            // Remueve el texto específico del NIT y Contacto si quedó pegado en el texto puro
-            let descripcionLimpia = divTemp.textContent || divTemp.innerText || "";
-            descripcionLimpia = descripcionLimpia.replace(/NIT:\s*\S+/g, '').replace(/Contacto:\s*.+/g, '').trim();
+            // JS AGRESIVO: Destruye las cajas y corta cualquier texto que contenga "NIT:"
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = p.descripcion || '';
+            Array.from(tempDiv.children).forEach(hijo => {
+                if(hijo.textContent.includes("NIT:") || hijo.textContent.includes("Contacto:")) {
+                    hijo.remove();
+                }
+            });
+            let descripcionLimpia = tempDiv.innerHTML;
+            if(descripcionLimpia.includes("NIT:")) {
+                descripcionLimpia = descripcionLimpia.split("NIT:")[0];
+            }
 
             const card = document.createElement("div");
             card.className = "tarjeta-prod";
@@ -375,8 +385,6 @@
                     cantidad: 1,
                     stock: stockOriginal,
                     imagen_url: producto.imagen_url,
-                    
-                    // Este es el dato interno que permite que funcione el sistema de reportes posteriormente
                     nit_empresa: producto.nit_empresa || producto.identificacion_empresa || ""
                 });
             }
