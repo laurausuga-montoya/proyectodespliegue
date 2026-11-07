@@ -237,7 +237,6 @@
 </div>
 
 <script>
-    const API = "https://viga-c607.onrender.com";
     const empresaGuardada = localStorage.getItem("empresaLogueada") || localStorage.getItem("empresa");
 
     if (!empresaGuardada) {
@@ -327,7 +326,7 @@
     async function cargarProductos() {
         if (!nitEmpresa) return;
         try {
-            const res = await fetch(API + "/empresa/" + encodeURIComponent(nitEmpresa) + "/productos");
+            const res = await fetch("https://viga-c607.onrender.com/empresa/" + encodeURIComponent(nitEmpresa) + "/productos");
             const datos = await res.json();
             productos = Array.isArray(datos) ? datos : (datos.productos || []);
             renderizarProductos();
@@ -443,8 +442,7 @@
             if (boton) { boton.disabled = true; boton.textContent = "Guardando..."; }
 
             try {
-                // RUTA CORREGIDA: Apunta estrictamente a /productos para POST y /productos/:id para PUT
-               const url = id ? "https://viga-c607.onrender.com/productos/" + encodeURIComponent(id) : "https://viga-c607.onrender.com/productos";
+                const url = id ? "https://viga-c607.onrender.com/productos/" + encodeURIComponent(id) : "https://viga-c607.onrender.com/productos";
                 const method = id ? "PUT" : "POST";
 
                 const res = await fetch(url, { method: method, body: formulario });
@@ -466,7 +464,7 @@
     async function eliminarProducto(id) {
         if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
         try {
-            const res = await fetch(API + "/productos/" + encodeURIComponent(id), { method: "DELETE" });
+            const res = await fetch("https://viga-c607.onrender.com/productos/" + encodeURIComponent(id), { method: "DELETE" });
             if (!res.ok) throw new Error("No se pudo eliminar");
             await cargarProductos();
         } catch (err) {
@@ -479,7 +477,7 @@
         const cont = $("contenedorTablaVentas");
         if (!cont) return;
         try {
-            const res = await fetch(API + "/empresa/" + encodeURIComponent(nitEmpresa) + "/reportes");
+            const res = await fetch("https://viga-c607.onrender.com/empresa/" + encodeURIComponent(nitEmpresa) + "/reportes");
             const ventas = await res.json();
             if (!Array.isArray(ventas) || ventas.length === 0) {
                 cont.innerHTML = '<div class="vacio">No hay ventas registradas.</div>';
