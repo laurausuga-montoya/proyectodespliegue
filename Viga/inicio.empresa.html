@@ -444,7 +444,7 @@
 
             try {
                 // RUTA CORREGIDA: Apunta estrictamente a /productos para POST y /productos/:id para PUT
-                const url = id ? API + "/productos/" + encodeURIComponent(id) : API + "/productos";
+               const url = id ? "https://viga-c607.onrender.com/productos/" + encodeURIComponent(id) : "https://viga-c607.onrender.com/productos";
                 const method = id ? "PUT" : "POST";
 
                 const res = await fetch(url, { method: method, body: formulario });
