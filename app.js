@@ -95,7 +95,7 @@ app.get("/empresa/:nit/productos", (req, res) => {
     });
 });
 
-// Crear producto (POST) - CORREGIDO AQUÍ 👇
+// Crear producto (POST)
 app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (req, res) => {
     // Captura el NIT ya sea desde la URL (req.params) o desde el cuerpo del formulario (req.body)
     const empresaNit = req.params.nit || req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
@@ -124,8 +124,8 @@ app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (re
     });
 });
 
-// Actualizar producto (PUT)
-app.put("/productos/:id", upload.single("imagen"), (req, res) => {
+// Actualizar producto (PUT) - CORREGIDO AQUÍ 👇
+app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen"), (req, res) => {
     const productoId = req.params.id;
     const nombreProd = req.body.nombre || req.body.nombre_producto;
     const categoriaProd = req.body.categoria || "Otros";
@@ -145,16 +145,22 @@ app.put("/productos/:id", upload.single("imagen"), (req, res) => {
     params.push(productoId);
 
     conexion.query(sql, params, (error) => {
-        if (error) return res.status(500).json({ error: "No se pudo actualizar." });
+        if (error) {
+            console.error("❌ Error al actualizar producto en MySQL:", error.message);
+            return res.status(500).json({ error: "No se pudo actualizar." });
+        }
         res.json({ mensaje: "Actualizado con éxito." });
     });
 });
 
-// Eliminar producto (DELETE)
-app.delete("/productos/:id", (req, res) => {
+// Eliminar producto (DELETE) - CORREGIDO AQUÍ 👇
+app.delete(["/productos/:id", "/empresa/:nit/productos/:id"], (req, res) => {
     const sql = "DELETE FROM productos WHERE id = ?";
     conexion.query(sql, [req.params.id], (error) => {
-        if (error) return res.status(500).json({ error: "No se pudo eliminar." });
+        if (error) {
+            console.error("❌ Error al eliminar producto en MySQL:", error.message);
+            return res.status(500).json({ error: "No se pudo eliminar." });
+        }
         res.json({ mensaje: "Eliminado con éxito." });
     });
 });
