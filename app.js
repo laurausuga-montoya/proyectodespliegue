@@ -18,17 +18,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname)));
 
 /* =========================================
-   CONFIGURACIÓN DE SUBIDA DE IMÁGENES
+   CONFIGURACIÓN DE SUBIDA DE IMÁGENES (RUTA ABSOLUTA)
 ========================================= */
-if (!fs.existsSync("./uploads")) {
-    fs.mkdirSync("./uploads");
+const uploadDir = path.resolve(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadDir));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "./uploads");
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, '-'));
@@ -109,7 +110,7 @@ app.post("/login", function (req, res) {
 });
 
 /* =========================================
-   AUTENTICACIÓN DE EMPRESAS (DEFINITIVO)
+   AUTENTICACIÓN DE EMPRESAS
 ========================================= */
 app.post("/login-empresa", function (req, res) {
     const correoIngresado = req.body.correo_empresarial || req.body.correo || req.body.email;
@@ -190,7 +191,7 @@ app.get("/usuarios/:identificacion", consultarPerfil);
 app.get("/usuario/:identificacion", consultarPerfil);
 
 /* =========================================
-   PRODUCTOS Y TIENDA (GET)
+   PRODUCTOS Y TIENDA (GET GENERAL)
 ========================================= */
 app.get("/productos", function (req, res) {
     const sql = `
@@ -208,7 +209,7 @@ app.get("/productos", function (req, res) {
 });
 
 /* =========================================
-   OBTENER PRODUCTOS DE UNA EMPRESA (POR NIT)
+   OBTENER PRODUCTOS DE UNA EMPRESA
 ========================================= */
 app.get("/empresa/:nit/productos", function (req, res) {
     const nitEmpresa = req.params.nit;
@@ -224,12 +225,9 @@ app.get("/empresa/:nit/productos", function (req, res) {
 });
 
 /* =========================================
-   CREAR / AGREGAR NUEVO PRODUCTO (DEFINITIVO)
+   CREAR PRODUCTO (POST)
 ========================================= */
 app.post("/productos", upload.single("imagen"), function (req, res) {
-    console.log("📩 Datos recibidos en POST /productos:", req.body);
-    console.log("📷 Archivo recibido:", req.file);
-
     const empresaNit = req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
     const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo || req.body.producto;
     const categoriaProd = req.body.categoria || req.body.cat || "Otros";
@@ -239,7 +237,7 @@ app.post("/productos", upload.single("imagen"), function (req, res) {
     const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
 
     if (!empresaNit || !nombreProd || !precioProd) {
-        return res.status(400).json({ error: "Faltan campos obligatorios para guardar el producto (NIT, nombre o precio)." });
+        return res.status(400).json({ error: "Faltan campos obligatorios (NIT, nombre, precio)." });
     }
 
     const sql = `
@@ -249,15 +247,62 @@ app.post("/productos", upload.single("imagen"), function (req, res) {
 
     conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], function (error, resultado) {
         if (error) {
-            console.error("❌ Error al guardar producto en MySQL:", error.message);
-            return res.status(500).json({ error: "No se pudo guardar el producto: " + error.message });
+            console.error("❌ Error al guardar producto:", error.message);
+            return res.status(500).json({ error: "No se pudo guardar: " + error.message });
         }
         res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
     });
 });
 
 /* =========================================
-   SOPORTE Y REPORTES CON FOTO (CLIENTE)
+   ACTUALIZAR PRODUCTO (PUT)
+========================================= */
+app.put("/productos/:id", upload.single("imagen"), function (req, res) {
+    const productoId = req.params.id;
+    const nombreProd = req.body.nombre || req.body.nombre_producto;
+    const categoriaProd = req.body.categoria || "Otros";
+    const descripcionProd = req.body.descripcion || "";
+    const precioProd = req.body.precio || 0;
+    const stockProd = req.body.stock || 0;
+
+    let sql = `UPDATE productos SET nombre = ?, categoria = ?, descripcion = ?, precio = ?, stock = ?`;
+    let params = [nombreProd, categoriaProd, descripcionProd, precioProd, stockProd];
+
+    if (req.file) {
+        const imagen_url = `/uploads/${req.file.filename}`;
+        sql += `, imagen_url = ?`;
+        params.push(imagen_url);
+    }
+
+    sql += ` WHERE id = ?`;
+    params.push(productoId);
+
+    conexion.query(sql, params, function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al actualizar producto:", error.message);
+            return res.status(500).json({ error: "No se pudo actualizar: " + error.message });
+        }
+        res.json({ mensaje: "Producto actualizado con éxito." });
+    });
+});
+
+/* =========================================
+   ELIMINAR PRODUCTO (DELETE)
+========================================= */
+app.delete("/productos/:id", function (req, res) {
+    const productoId = req.params.id;
+    const sql = "DELETE FROM productos WHERE id = ?";
+    conexion.query(sql, [productoId], function (error, resultado) {
+        if (error) {
+            console.error("❌ Error al eliminar producto:", error.message);
+            return res.status(500).json({ error: "No se pudo eliminar: " + error.message });
+        }
+        res.json({ mensaje: "Producto eliminado con éxito." });
+    });
+});
+
+/* =========================================
+   SOPORTE Y REPORTES
 ========================================= */
 app.post("/soporte/reportar-empresa", upload.single("imagen"), function (req, res) {
     const { cliente_id, nit_empresa, correo_empresa, producto, orden, asunto, descripcion } = req.body;
@@ -281,23 +326,6 @@ app.post("/soporte/reportar-empresa", upload.single("imagen"), function (req, re
     });
 });
 
-app.get("/soporte/mis-reportes/:identificacion", function (req, res) {
-    const identificacion = req.params.identificacion;
-    const sql = `
-        SELECT id, categoria, asunto, descripcion, producto, nit_empresa, correo_empresa, imagen_url, estado, solucion, DATE_FORMAT(fecha, '%d/%m/%Y %H:%i') AS fecha 
-        FROM reportes_soporte 
-        WHERE identificacion_usuario = ? 
-        ORDER BY fecha DESC
-    `;
-    conexion.query(sql, [identificacion], function (error, resultados) {
-        if (error) return res.status(500).json({ error: "Error al consultar los reportes." });
-        res.json(resultados);
-    });
-});
-
-/* =========================================
-   PANEL EMPRESARIAL: REPORTES Y RESOLUCIÓN
-========================================= */
 app.get("/empresa/:nit/reportes", function (req, res) {
     const nit = req.params.nit;
     const sql = `
@@ -309,36 +337,6 @@ app.get("/empresa/:nit/reportes", function (req, res) {
     conexion.query(sql, [nit], function (error, resultados) {
         if (error) return res.status(500).json({ error: "Error al obtener reportes de la empresa." });
         res.json(resultados);
-    });
-});
-
-app.post("/empresa/resolver-reporte/:id", function (req, res) {
-    const reporteId = req.params.id;
-    const { tipo_resolucion, precio_producto } = req.body; 
-
-    if (!tipo_resolucion) {
-        return res.status(400).json({ error: "Debe especificar el tipo de resolución." });
-    }
-
-    let mensajeSolucion = "";
-
-    if (tipo_resolucion === "reembolso") {
-        const precioOriginal = Number(precio_producto) || 0;
-        const montoReembolso = precioOriginal * 0.85; 
-        mensajeSolucion = `Reembolso aprobado por $${montoReembolso.toLocaleString('es-CO')} (aplicada deducción del 15%).`;
-    } else if (tipo_resolucion === "reenvio") {
-        mensajeSolucion = `Nuevo producto en proceso de reenvío. Llegará en un plazo de 30 días hábiles.`;
-    } else {
-        return res.status(400).json({ error: "Tipo de resolución no válido." });
-    }
-
-    const sql = `UPDATE reportes_soporte SET estado = 'Resuelto', solucion = ? WHERE id = ?`;
-    conexion.query(sql, [mensajeSolucion, reporteId], function (error, resultado) {
-        if (error) {
-            console.error("❌ Error al resolver reporte:", error);
-            return res.status(500).json({ error: "Error al procesar la solución." });
-        }
-        res.json({ mensaje: "Reporte resuelto y notificado al usuario con éxito.", solucion: mensajeSolucion });
     });
 });
 
