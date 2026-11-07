@@ -95,9 +95,10 @@ app.get("/empresa/:nit/productos", (req, res) => {
     });
 });
 
-// Crear producto (POST)
-app.post("/productos", upload.single("imagen"), (req, res) => {
-    const empresaNit = req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
+// Crear producto (POST) - CORREGIDO AQUÍ 👇
+app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (req, res) => {
+    // Captura el NIT ya sea desde la URL (req.params) o desde el cuerpo del formulario (req.body)
+    const empresaNit = req.params.nit || req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit;
     const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo;
     const categoriaProd = req.body.categoria || "Otros";
     const descripcionProd = req.body.descripcion || "";
