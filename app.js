@@ -45,9 +45,33 @@ conexion.connect(error => {
 
 // Rutas de Vistas HTML
 app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, "index.html")));
+app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html")));
 app.get("/tienda", (req, res) => res.sendFile(path.resolve(__dirname, "tienda.html")));
 app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
 app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
+
+// Login de Usuario Personal
+app.post("/login", (req, res) => {
+    const correo = req.body.correo || req.body.email;
+    const password = req.body.password || req.body.contrasena || req.body.clave;
+
+    if (!correo || !password) {
+        return res.status(400).json({ error: "Faltan credenciales obligatorias." });
+    }
+
+    const sql = "SELECT * FROM usuarios WHERE LOWER(correo) = LOWER(?) AND password = ?";
+    conexion.query(sql, [correo, password], (error, resultados) => {
+        if (error) {
+            console.error("❌ Error en login personal:", error.message);
+            return res.status(500).json({ error: "Error en el servidor: " + error.message });
+        }
+        if (resultados.length === 0) {
+            return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
+        }
+
+        res.json({ mensaje: "Login exitoso", usuario: resultados[0] });
+    });
+});
 
 // Login de Empresa
 app.post("/login-empresa", (req, res) => {
@@ -124,7 +148,7 @@ app.post(["/productos", "/empresa/:nit/productos"], upload.single("imagen"), (re
     });
 });
 
-// Actualizar producto (PUT) - CORREGIDO AQUÍ 👇
+// Actualizar producto (PUT)
 app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen"), (req, res) => {
     const productoId = req.params.id;
     const nombreProd = req.body.nombre || req.body.nombre_producto;
@@ -153,7 +177,7 @@ app.put(["/productos/:id", "/empresa/:nit/productos/:id"], upload.single("imagen
     });
 });
 
-// Eliminar producto (DELETE) - CORREGIDO AQUÍ 👇
+// Eliminar producto (DELETE)
 app.delete(["/productos/:id", "/empresa/:nit/productos/:id"], (req, res) => {
     const sql = "DELETE FROM productos WHERE id = ?";
     conexion.query(sql, [req.params.id], (error) => {
