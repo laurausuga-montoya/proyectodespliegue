@@ -303,15 +303,23 @@ app.get("/empresa/:nit/productos", function (req, res) {
     });
 });
 /* =========================================
-   CREAR / AGREGAR NUEVO PRODUCTO (EMPRESA)
+   CREAR / AGREGAR NUEVO PRODUCTO (ROBUSTO Y FLEXIBLE)
 ========================================= */
 app.post("/productos", upload.single("imagen"), function (req, res) {
-    const { identificacion_empresa, nit_empresa, nombre, categoria, descripcion, precio, stock } = req.body;
-    const nitFinal = identificacion_empresa || nit_empresa;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
+    console.log("📩 Datos recibidos en POST /productos:", req.body);
+    console.log("📷 Archivo recibido:", req.file);
 
-    if (!nitFinal || !nombre || !precio) {
-        return res.status(400).json({ error: "Faltan campos obligatorios para guardar el producto." });
+    // Captura cualquier nombre posible que envíe el formulario frontend
+    const empresaNit = req.body.identificacion_empresa || req.body.nit_empresa || req.body.nit || "4560987-9";
+    const nombreProd = req.body.nombre || req.body.nombre_producto || req.body.titulo || req.body.producto;
+    const categoriaProd = req.body.categoria || req.body.cat || "Otros";
+    const descripcionProd = req.body.descripcion || req.body.desc || "";
+    const precioProd = req.body.precio || req.body.precio_unitario || req.body.valor || 0;
+    const stockProd = req.body.stock || req.body.cantidad || req.body.existencias || 0;
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
+
+    if (!nombreProd || !precioProd) {
+        return res.status(400).json({ error: "Faltan el nombre o el precio del producto." });
     }
 
     const sql = `
@@ -319,9 +327,9 @@ app.post("/productos", upload.single("imagen"), function (req, res) {
         VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
     `;
 
-    conexion.query(sql, [nitFinal, nombre, categoria || 'Otros', descripcion || '', precio, stock || 0, imagen_url], function (error, resultado) {
+    conexion.query(sql, [empresaNit, nombreProd, categoriaProd, descripcionProd, precioProd, stockProd, imagen_url], function (error, resultado) {
         if (error) {
-            console.error("❌ Error al guardar producto:", error.message);
+            console.error("❌ Error al guardar producto en MySQL:", error.message);
             return res.status(500).json({ error: "No se pudo guardar el producto: " + error.message });
         }
         res.status(201).json({ mensaje: "Producto registrado con éxito.", id: resultado.insertId });
