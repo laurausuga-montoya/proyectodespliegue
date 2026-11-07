@@ -207,6 +207,26 @@
             resize: vertical;
             min-height: 85px;
         }
+        
+        /* ESTILOS PARA LA IMAGEN DE EVIDENCIA */
+        .preview-reporte {
+            display: none;
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: cover;
+            border: 1px solid var(--input-borde);
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .img-reporte-lista {
+            max-width: 120px;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid var(--borde);
+        }
 
         .btn-enviar-soporte {
             width: 100%;
@@ -445,6 +465,13 @@
                 <textarea id="descripcionReporte" placeholder="Describe detalladamente el inconveniente con el producto..." required></textarea>
             </div>
 
+            <!-- NUEVO CAMPO: IMAGEN DE EVIDENCIA -->
+            <div class="campo">
+                <label for="imagenReporte">Adjuntar evidencia (Foto opcional)</label>
+                <input type="file" id="imagenReporte" accept="image/jpeg,image/png,image/webp">
+                <img id="previewReporte" class="preview-reporte" alt="Previsualización de evidencia">
+            </div>
+
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn-enviar-soporte" id="btnEnviarSoporte" style="flex: 2;">
                     Enviar reporte a la empresa
@@ -472,6 +499,7 @@
 
 <script>
     const API = "https://viga-c607.onrender.com";
+    let evidenciaBase64 = null; // Variable para almacenar la imagen del reporte
 
     function sincronizarTema() {
         const tema = localStorage.getItem("vigaTema");
@@ -502,6 +530,21 @@
 
     const idUsuario = obtenerIdUsuario();
 
+    // Evento para previsualizar la foto cargada y convertirla a Base64
+    document.getElementById("imagenReporte").addEventListener("change", function(e) {
+        const archivo = e.target.files[0];
+        if (archivo) {
+            const lector = new FileReader();
+            lector.onload = function(ev) {
+                evidenciaBase64 = ev.target.result;
+                const preview = document.getElementById("previewReporte");
+                preview.src = evidenciaBase64;
+                preview.style.display = "block";
+            };
+            lector.readAsDataURL(archivo);
+        }
+    });
+
     // Se abre el formulario tomando automáticamente el NIT registrado por la empresa en el producto
     function iniciarReporteItem(nitEmpresa, nombreProducto) {
         if (!nitEmpresa || nitEmpresa === "undefined" || nitEmpresa === "null") {
@@ -522,6 +565,11 @@
     function cerrarFormularioSoporte() {
         document.getElementById("cajaSoporte").style.display = "none";
         document.getElementById("formSoporte").reset();
+        
+        // Limpiar la imagen de evidencia
+        document.getElementById("previewReporte").style.display = "none";
+        document.getElementById("previewReporte").src = "";
+        evidenciaBase64 = null;
     }
 
     function cargarHistorial() {
@@ -622,12 +670,13 @@
         btn.disabled = true;
         btn.textContent = "Enviando reporte...";
 
-        // Estructura exacta solicitada por tu base de datos MySQL (reportes_soporte)
+        // Estructura adaptada para enviar la imagen
         const payloadDB = {
             identificacion_usuario: String(idUsuario),
             categoria: categoria,
             asunto: nombreProducto,
-            descripcion: descripcion
+            descripcion: descripcion,
+            imagen_url: evidenciaBase64 // <- Se incluye la imagen codificada
         };
 
         try {
@@ -648,6 +697,7 @@
                 asunto: nombreProducto,
                 categoria: categoria,
                 descripcion: descripcion,
+                imagen_url: evidenciaBase64, // <- Guardamos la imagen en el panel de empresa
                 status: "pendiente",
                 fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
             });
@@ -703,6 +753,10 @@
         lista.slice().reverse().forEach(rep => {
             const card = document.createElement("div");
             card.className = "pedido-card";
+            
+            // Si el reporte tiene imagen, preparamos la etiqueta <img>
+            const imagenAdjuntaHtml = rep.imagen_url ? `<img src="${rep.imagen_url}" class="img-reporte-lista" alt="Evidencia">` : "";
+
             card.innerHTML = `
                 <div class="pedido-header">
                     <div>
@@ -713,6 +767,8 @@
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
                     ${rep.descripcion}
+                    <br>
+                    ${imagenAdjuntaHtml}
                 </div>
             `;
             contenedor.appendChild(card);
