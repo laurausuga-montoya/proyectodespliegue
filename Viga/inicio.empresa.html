@@ -238,8 +238,6 @@
 
 <script>
     const API = "https://viga-c607.onrender.com";
-    
-    // MODIFICADO: Lee de ambas opciones posibles de localStorage para evitar errores de sesión
     const empresaGuardada = localStorage.getItem("empresaLogueada") || localStorage.getItem("empresa");
 
     if (!empresaGuardada) {
@@ -445,6 +443,7 @@
             if (boton) { boton.disabled = true; boton.textContent = "Guardando..."; }
 
             try {
+                // RUTA CORREGIDA: Apunta estrictamente a /productos para POST y /productos/:id para PUT
                 const url = id ? API + "/productos/" + encodeURIComponent(id) : API + "/productos";
                 const method = id ? "PUT" : "POST";
 
