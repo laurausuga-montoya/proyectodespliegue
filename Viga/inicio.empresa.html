@@ -238,7 +238,9 @@
 
 <script>
     const API = "https://viga-c607.onrender.com";
-    const empresaGuardada = localStorage.getItem("empresaLogueada");
+    
+    // MODIFICADO: Lee de ambas opciones posibles de localStorage para evitar errores de sesión
+    const empresaGuardada = localStorage.getItem("empresaLogueada") || localStorage.getItem("empresa");
 
     if (!empresaGuardada) {
         window.location.href = "login.empresa.html";
@@ -421,7 +423,11 @@
             e.preventDefault();
             mostrarMensaje("");
 
-            if (!nitEmpresa) return;
+            if (!nitEmpresa) {
+                mostrarMensaje("Error: No se encontró el NIT de la empresa. Vuelve a iniciar sesión.", "error");
+                return;
+            }
+
             const id = $("productoId") ? $("productoId").value : "";
             const formulario = new FormData();
             formulario.append("identificacion_empresa", nitEmpresa);
@@ -496,6 +502,7 @@
     if ($("btnCerrarSesion")) {
         $("btnCerrarSesion").addEventListener("click", () => {
             localStorage.removeItem("empresaLogueada");
+            localStorage.removeItem("empresa");
             window.location.href = "login.empresa.html";
         });
     }
