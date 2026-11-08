@@ -400,13 +400,12 @@
         document.getElementById("lblNitEmpresa").textContent = `NIT: ${nitEmpresa}`;
         document.getElementById("lblAvatarEmpresa").textContent = nombreEmpresa.charAt(0).toUpperCase();
 
-        // REDIRECCIÓN A LA PÁGINA (CORREGIDO EN PLURAL)
         function irAResolver(idReporte) {
             if (!idReporte) {
                 alert("Identificador de reporte ausente.");
                 return;
             }
-            window.location.href = `resolver-reportes.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nitEmpresa)}`;
+            window.location.assign(`/resolver-reportes.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nitEmpresa)}`);
         }
 
         async function cargarReportes() {
@@ -442,7 +441,6 @@
                 const esResuelto = (rep.estado === "resuelto" || rep.status === "resuelto");
                 const tr = document.createElement("tr");
 
-                // Enlace directo en la celda de acción
                 const botonAccion = esResuelto
                     ? `<span class="texto-solventado">Solventado</span>`
                     : `<a href="resolver-reportes.html?id=${encodeURIComponent(rep.id)}&nit=${encodeURIComponent(nitEmpresa)}" class="btn-resolver-tabla">Resolver</a>`;

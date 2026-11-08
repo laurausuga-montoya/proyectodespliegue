@@ -51,7 +51,22 @@ app.get("/login", (req, res) => res.sendFile(path.resolve(__dirname, "login.html
 app.get("/tienda", (req, res) => res.sendFile(path.resolve(__dirname, "tienda.html")));
 app.get("/empresa", (req, res) => res.sendFile(path.resolve(__dirname, "inicio.empresa.html")));
 app.get("/login-empresa", (req, res) => res.sendFile(path.resolve(__dirname, "login.empresa.html")));
-app.get("/resolver-reporte", (req, res) => res.sendFile(path.resolve(__dirname, "resolver-reporte.html")));
+
+// RUTA DINÁMICA DE RESOLUCIÓN (Soporta plural, singular, con y sin .html)
+app.get(["/resolver-reportes", "/resolver-reportes.html", "/resolver-reporte", "/resolver-reporte.html"], (req, res) => {
+    const rutaPlural = path.resolve(__dirname, "resolver-reportes.html");
+    const rutaSingular = path.resolve(__dirname, "resolver-reporte.html");
+    const rutaEnCarpeta = path.resolve(__dirname, "Viga", "resolver-reportes.html");
+
+    if (fs.existsSync(rutaPlural)) {
+        return res.sendFile(rutaPlural);
+    } else if (fs.existsSync(rutaSingular)) {
+        return res.sendFile(rutaSingular);
+    } else if (fs.existsSync(rutaEnCarpeta)) {
+        return res.sendFile(rutaEnCarpeta);
+    }
+    res.status(404).send("El archivo de resolución no se encuentra en el servidor.");
+});
 
 // Autenticación de Usuario Personal
 app.post("/login", (req, res) => {
