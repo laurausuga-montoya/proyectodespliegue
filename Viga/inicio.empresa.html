@@ -260,6 +260,50 @@
             border-bottom: none;
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge.pendiente {
+            background: rgba(255, 183, 77, 0.15);
+            color: #ffb74d;
+            border: 1px solid rgba(255, 183, 77, 0.3);
+        }
+
+        .badge.resuelto {
+            background: rgba(55, 227, 89, 0.15);
+            color: var(--verde);
+            border: 1px solid rgba(55, 227, 89, 0.3);
+        }
+
+        .btn-resolver-tabla {
+            background: var(--verde);
+            color: #111;
+            font-weight: 700;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: .2s;
+        }
+
+        .btn-resolver-tabla:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .texto-solventado {
+            color: var(--secundario);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         @media (max-width: 850px) {
             .layout-principal { flex-direction: column; }
             aside { width: 100%; border-right: none; border-bottom: 1px solid var(--borde); }
@@ -354,6 +398,15 @@
         document.getElementById("lblNitEmpresa").textContent = `NIT: ${nitEmpresa}`;
         document.getElementById("lblAvatarEmpresa").textContent = nombreEmpresa.charAt(0).toUpperCase();
 
+        // REDIRECCIÓN DIRECTA A LA HOJA DE RESOLUCIÓN
+        function irAResolver(idReporte) {
+            if (!idReporte) {
+                alert("Identificador de reporte ausente.");
+                return;
+            }
+            window.location.href = `resolver-reporte.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nitEmpresa)}`;
+        }
+
         async function cargarReportes() {
             const tbody = document.getElementById("cuerpoTablaReportes");
             const storageKey = "reportes_nit_" + nitEmpresa;
@@ -387,13 +440,9 @@
                 const esResuelto = (rep.estado === "resuelto" || rep.status === "resuelto");
                 const tr = document.createElement("tr");
 
-                // ENLACE DIRECTO CORREGIDO: Apunta al archivo exacto "resolver-reportes.html" con 's'
                 const botonAccion = esResuelto
-                    ? `<span style="color: var(--secundario, #aaa); font-size: 12px; font-weight: 600;">Solventado</span>`
-                    : `<a href="resolver-reportes.html?id=${encodeURIComponent(rep.id)}&nit=${encodeURIComponent(nitEmpresa)}" 
-                          style="background: #37E359; color: #111; font-weight: 700; border: none; padding: 6px 14px; font-size: 12px; border-radius: 3px; text-decoration: none; display: inline-block; cursor: pointer;">
-                          Resolver
-                       </a>`;
+                    ? `<span class="texto-solventado">Solventado</span>`
+                    : `<button type="button" class="btn-resolver-tabla" onclick="irAResolver('${rep.id}')">Resolver</button>`;
 
                 tr.innerHTML = `
                     <td>${rep.fecha || "Reciente"}</td>
@@ -403,7 +452,7 @@
                         ${rep.descripcion || rep.detalle || "--"}
                     </td>
                     <td>
-                        <span style="padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: capitalize; background: ${esResuelto ? 'rgba(55, 227, 89, 0.15)' : 'rgba(255, 183, 77, 0.15)'}; color: ${esResuelto ? '#37E359' : '#ffb74d'}; border: 1px solid ${esResuelto ? 'rgba(55, 227, 89, 0.3)' : 'rgba(255, 183, 77, 0.3)'};">
+                        <span class="badge ${esResuelto ? 'resuelto' : 'pendiente'}">
                             ${esResuelto ? 'resuelto' : 'pendiente'}
                         </span>
                     </td>
