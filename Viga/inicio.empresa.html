@@ -998,8 +998,8 @@
                     <td>${escapar(r.categoria || "Producto")}</td>
                     <td>${escapar(r.descripcion || r.detalle || "")}</td>
                     <td><span class="estado ${r.status === 'resuelto' ? '' : 'estado-agotado'}">${escapar(r.status || 'pendiente')}</span></td>
-                    <td>
-                        ${r.status !== 'resuelto' ? `<a href="resolver-reporte.html?id=${encodeURIComponent(r.id)}&nit=${encodeURIComponent(nitEmpresaActual)}" class="boton">Ir</a>` : 'Solventado'}
+                   <td>
+                        <button class="boton" onclick="window.location.assign('resolver-reporte.html?id=${encodeURIComponent(r.id)}&nit=${encodeURIComponent(nitEmpresaActual)}')">Ir</button>
                     </td>
                 </tr>
             `).join("");
