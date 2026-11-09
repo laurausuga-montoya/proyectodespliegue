@@ -1,477 +1,1037 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIGA | Panel Empresarial</title>
+    <title>VIGA | Panel empresarial</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="tema.css">
-    <script src="tema.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
 
     <style>
         :root {
             --fondo: #121212;
             --panel: #1b1b1b;
-            --panel-secundario: #222222;
+            --panel2: #252525;
             --verde: #37E359;
             --texto: #f4f4f4;
             --secundario: #aaa;
-            --borde: #2d2d2d;
-            --rojo: #ff5252;
-            --input-fondo: #252525;
-            --input-borde: #3b3b3b;
-        }
-
-        body.claro {
-            --fondo: #f4f4f4;
-            --panel: #ffffff;
-            --panel-secundario: #f0f0f0;
-            --texto: #111111;
-            --secundario: #666666;
-            --borde: #dddddd;
-            --input-fondo: #f8f8f8;
-            --input-borde: #cccccc;
+            --borde: #333;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         body {
+            font-family: 'Poppins', sans-serif;
             background: var(--fondo);
             color: var(--texto);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        header {
-            height: 75px;
-            background: var(--panel);
-            border-bottom: 1px solid var(--borde);
+        button, input, textarea, select {
+            font: inherit;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .barra {
+            height: 76px;
+            padding: 0 5%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
-        }
-
-        .logo-box {
-            display: flex;
-            flex-direction: column;
+            gap: 15px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--borde);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .logo {
-            font-size: 26px;
-            font-weight: 700;
             color: var(--verde);
+            font-size: 29px;
+            font-weight: 700;
             letter-spacing: 2px;
-            text-decoration: none;
         }
 
-        .sub-logo {
-            font-size: 11px;
+        .etiqueta {
             color: var(--secundario);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .usuario-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .info-empresa-txt {
-            text-align: right;
-        }
-
-        .nombre-empresa {
-            font-size: 15px;
-            font-weight: 700;
-            display: block;
-        }
-
-        .nit-empresa {
             font-size: 12px;
-            color: var(--secundario);
         }
 
-        .avatar-empresa {
-            width: 38px;
-            height: 38px;
-            background: rgba(55, 227, 89, 0.2);
-            color: var(--verde);
-            border-radius: 6px;
+        .empresa-mini {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 0%;
+            background: #263b2b;
+            color: var(--verde);
+            display: grid;
+            place-items: center;
             font-weight: 700;
-            font-size: 18px;
-            border: 1px solid rgba(55, 227, 89, 0.4);
         }
 
-        .layout-principal {
-            display: flex;
-            flex: 1;
-            min-height: calc(100vh - 75px);
+        .layout {
+            display: grid;
+            grid-template-columns: 235px minmax(0, 1fr);
         }
 
-        /* BARRA LATERAL */
         aside {
-            width: 250px;
+            padding: 25px 16px;
             background: var(--panel);
             border-right: 1px solid var(--borde);
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
         .menu-titulo {
-            font-size: 11px;
-            text-transform: uppercase;
             color: var(--secundario);
-            letter-spacing: 1.5px;
-            margin-bottom: 12px;
-            padding-left: 10px;
+            font-size: 11px;
+            margin: 12px 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--texto);
-            font-size: 14px;
-            font-weight: 500;
-            padding: 12px 14px;
+        .menu {
+            display: grid;
+            gap: 7px;
+        }
+
+        .menu button, .menu a {
+            width: 100%;
             text-align: left;
+            border: 0;
+            border-radius: 0px;
+            padding: 13px 12px;
+            background: transparent;
+            color: #ccc;
             cursor: pointer;
-            border-radius: 4px;
-            transition: .2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             text-decoration: none;
-        }
-
-        .nav-btn:hover {
-            background: var(--panel-secundario);
-            color: var(--verde);
-        }
-
-        .nav-btn.activo {
-            background: rgba(55, 227, 89, 0.15);
-            color: var(--verde);
-            font-weight: 700;
-            border-left: 3px solid var(--verde);
-        }
-
-        .nav-btn.cerrar {
-            margin-top: auto;
-            color: var(--rojo);
-        }
-
-        .nav-btn.cerrar:hover {
-            background: rgba(255, 82, 82, 0.15);
-            color: var(--rojo);
-        }
-
-        /* CONTENIDO PRINCIPAL */
-        main {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-        }
-
-        .cabecera-seccion {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .cabecera-seccion h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--texto);
-        }
-
-        .cabecera-seccion p {
-            color: var(--secundario);
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        .btn-accion-top {
-            background: var(--panel);
-            border: 1px solid var(--borde);
-            color: var(--texto);
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 4px;
+            align-items: center;
             transition: .2s;
         }
 
-        .btn-accion-top:hover {
-            border-color: var(--verde);
+        .menu button:hover,
+        .menu button.activo,
+        .menu a:hover,
+        .menu a.activo {
+            background: #263b2b;
             color: var(--verde);
         }
 
-        /* TABLA DE REPORTES */
+        .badge-reportes {
+            background: #ff9292;
+            color: #121212;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .salir {
+            margin-top: 35px;
+            color: #ff9292 !important;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1500px;
+            padding: 35px;
+            min-width: 0;
+            margin: auto;
+        }
+
+        .seccion {
+            display: none;
+        }
+
+        .seccion.activa {
+            display: block;
+        }
+
+        .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-size: clamp(23px, 3vw, 32px);
+            margin-bottom: 7px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .muted {
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .verde {
+            color: var(--verde);
+        }
+
+        .boton {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 17px;
+            border: 1px solid transparent;
+            border-radius: 0px;
+            background: var(--verde);
+            color: #102014;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .boton:hover {
+            filter: brightness(1.08);
+        }
+
+        .boton:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .boton-secundario {
+            color: var(--texto);
+            background: var(--panel2);
+            border-color: var(--borde);
+        }
+
+        .boton-peligro {
+            color: #ff9292;
+            background: transparent;
+            border-color: #633636;
+        }
+
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .estadisticas-vertical-larga {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 28px;
+            width: 100%;
+        }
+
+        .tarjeta-horizontal {
+            padding: 23px 30px;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tarjeta-horizontal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .estadistica-numero-derecha {
+            font-size: 34px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .tarjeta {
+            padding: 23px;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 0px;
+            min-width: 0;
+        }
+
+        .estadistica-numero {
+            font-size: 30px;
+            font-weight: 700;
+            margin: 12px 0 4px;
+        }
+
+        .bienvenida {
+            padding: 27px;
+            border-radius: 0px;
+            border: 1px solid #2d5035;
+            background: linear-gradient(110deg, #1b1b1b, #203326);
+            margin-bottom: 28px;
+        }
+
+        .bienvenida.bloqueada {
+            border-color: #633636;
+            background: linear-gradient(110deg, #1b1b1b, #3c2929);
+        }
+
+        .bienvenida p {
+            color: #c7d0c9;
+            font-size: 13px;
+            line-height: 1.8;
+            max-width: 650px;
+        }
+
         .tabla-contenedor {
             width: 100%;
             overflow-x: auto;
-            background: var(--panel);
             border: 1px solid var(--borde);
-            border-radius: 6px;
+            border-radius: 0px;
+            background: var(--panel);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 15px;
             text-align: left;
+            border-bottom: 1px solid var(--borde);
             font-size: 13px;
         }
 
         th {
-            background: var(--panel-secundario);
             color: var(--secundario);
-            font-weight: 600;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--borde);
-        }
-
-        td {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--borde);
-            color: var(--texto);
-            vertical-align: middle;
+            font-weight: 500;
+            background: #202020;
         }
 
         tr:last-child td {
-            border-bottom: none;
+            border-bottom: 0;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .badge.pendiente {
-            background: rgba(255, 183, 77, 0.15);
-            color: #ffb74d;
-            border: 1px solid rgba(255, 183, 77, 0.3);
-        }
-
-        .badge.resuelto {
-            background: rgba(55, 227, 89, 0.15);
-            color: var(--verde);
-            border: 1px solid rgba(55, 227, 89, 0.3);
-        }
-
-        /* BOTÓN VER (Reemplazo directo de Resolver) */
-        .btn-ver-tabla {
-            background: var(--verde);
-            color: #111;
-            font-weight: 700;
-            border: none;
-            padding: 6px 16px;
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 3px;
-            text-decoration: none;
-            display: inline-block;
-            transition: .2s;
-            text-align: center;
-        }
-
-        .btn-ver-tabla:hover {
-            filter: brightness(1.1);
-            transform: scale(1.02);
-        }
-
-        .texto-solventado {
-            color: var(--secundario);
-            font-size: 12px;
+        .producto-nombre {
             font-weight: 600;
         }
 
-        @media (max-width: 850px) {
-            .layout-principal { flex-direction: column; }
-            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--borde); }
-            main { padding: 20px; }
+        .estado {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 0px;
+            background: #263b2b;
+            color: var(--verde);
+            font-size: 11px;
+        }
+
+        .estado-agotado {
+            background: #3c2929;
+            color: #ff9292;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .acciones button {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        .campo input,
+        .campo textarea,
+        .campo select {
+            width: 100%;
+            background: #121212;
+            color: var(--texto);
+            border: 1px solid #414141;
+            padding: 12px;
+            border-radius: 0px;
+            outline: none;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus,
+        .campo select:focus {
+            border-color: var(--verde);
+        }
+
+        .campo textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .previsualizacion {
+            display: none;
+            width: 130px;
+            height: 110px;
+            object-fit: cover;
+            border: 1px solid var(--borde);
+        }
+
+        .form-acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+
+        .mensaje {
+            margin: 15px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .mensaje.error {
+            color: #ff9292;
+        }
+
+        .mensaje.correcto {
+            color: var(--verde);
+        }
+
+        .vacio {
+            padding: 35px;
+            text-align: center;
+            color: var(--secundario);
+            background: var(--panel);
+            border: 1px solid var(--borde);
         }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <div class="logo-box">
-            <a href="inicio.empresa.html" class="logo">VIGA</a>
-            <span class="sub-logo">Portal Empresarial</span>
-        </div>
-        <div class="usuario-header">
-            <div class="info-empresa-txt">
-                <span class="nombre-empresa" id="lblNombreEmpresa">SmartFit</span>
-                <span class="nit-empresa" id="lblNitEmpresa">NIT: 4560987-9</span>
-            </div>
-            <div class="avatar-empresa" id="lblAvatarEmpresa">S</div>
-        </div>
-    </header>
-
-    <div class="layout-principal">
-        <aside>
-            <span class="menu-titulo">Zona Empresarial</span>
-            <a href="inicio.empresa.html" class="nav-btn">Resumen</a>
-            <a href="tienda.html" class="nav-btn">Mi tienda</a>
-            <a href="agregar-producto.html" class="nav-btn">Agregar producto</a>
-            <a href="perfil.empresa.html" class="nav-btn">Mi empresa</a>
-            <a href="inicio.empresa.html" class="nav-btn activo">Reportes</a>
-            <button class="nav-btn cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
-        </aside>
-
-        <main>
-            <div class="cabecera-seccion">
-                <div>
-                    <h1>Reportes de usuarios</h1>
-                    <p>Gestiona los reportes sobre tus productos. Si alcanzas 10 reportes pendientes, tu cuenta será suspendida.</p>
-                </div>
-                <button class="btn-accion-top" onclick="cargarReportes()">Actualizar reportes</button>
-            </div>
-
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Producto / Asunto</th>
-                            <th>Área</th>
-                            <th>Detalle</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cuerpoTablaReportes">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--secundario); padding: 30px;">
-                                Cargando reportes registrados...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+<header class="barra">
+    <div>
+        <div class="logo">VIGA</div>
+        <div class="etiqueta">PORTAL EMPRESARIAL</div>
     </div>
 
-    <script>
-        const API = "https://viga-c607.onrender.com";
+    <div class="empresa-mini">
+        <div>
+            <strong id="nombreEmpresaBarra">Mi empresa</strong>
+            <div class="etiqueta" id="nitEmpresaBarra">NIT: --</div>
+        </div>
+        <div class="avatar" id="avatarEmpresa">E</div>
+    </div>
+</header>
 
-        function sincronizarTema() {
-            const tema = localStorage.getItem("vigaTema");
-            if (tema === "claro") document.body.classList.add("claro");
-            else document.body.classList.remove("claro");
+<div class="layout">
+
+    <aside>
+        <p class="menu-titulo">Zona empresarial</p>
+
+        <nav class="menu">
+            <button class="activo" data-seccion="resumen">Resumen</button>
+            <button data-seccion="productos">Mi tienda</button>
+            <button data-seccion="nuevo">Agregar producto</button>
+            <button data-seccion="perfil">Mi empresa</button>
+            <button data-seccion="reportes">
+                Reportes 
+                <span id="badgeReportes" class="badge-reportes" style="display:none;">0</span>
+            </button>
+            <button class="salir" id="btnCerrarSesion">Cerrar sesión</button>
+        </nav>
+    </aside>
+
+    <main>
+
+        <!-- RESUMEN -->
+        <section class="seccion activa" id="resumen">
+            <div class="encabezado">
+                <div>
+                    <h1>¡Bienvenido a tu <span class="verde">tienda!</span></h1>
+                    <p class="muted">Administra tus implementos deportivos desde un solo lugar.</p>
+                </div>
+                <button class="boton" data-ir="nuevo" id="btnNuevoProdResumen">Nuevo producto</button>
+            </div>
+
+            <div class="bienvenida" id="alertaBloqueoBanner">
+                <span class="verde">PORTAL DE EMPRESAS VIGA</span>
+                <h2 id="saludoEmpresa">Gestiona tu negocio</h2>
+                <p id="textoBannerBloqueo">
+                    Publica tus productos, mantén actualizado el inventario y edita la información de tu catálogo.
+                </p>
+            </div>
+
+            <div class="estadisticas">
+                <div class="tarjeta">
+                    <p class="muted">Productos registrados</p>
+                    <div class="estadistica-numero" id="totalProductos">—</div>
+                    <p class="muted">En tu catálogo</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Con existencias</p>
+                    <div class="estadistica-numero" id="productosDisponibles">—</div>
+                    <p class="muted">Productos con stock</p>
+                </div>
+
+                <div class="tarjeta">
+                    <p class="muted">Agotados</p>
+                    <div class="estadistica-numero" id="productosAgotados">—</div>
+                    <p class="muted">Sin unidades disponibles</p>
+                </div>
+            </div>
+
+            <div class="encabezado">
+                <div>
+                    <h2>Productos recientes</h2>
+                    <p class="muted">Los últimos productos de tu catálogo.</p>
+                </div>
+                <button class="boton boton-secundario" data-ir="productos">Ver mi tienda</button>
+            </div>
+
+            <div id="recientes">
+                <div class="vacio">Cargando tus productos...</div>
+            </div>
+        </section>
+
+        <!-- TIENDA -->
+        <section class="seccion" id="productos">
+            <div class="encabezado">
+                <div>
+                    <h1>Mi tienda</h1>
+                    <p class="muted">Consulta y administra los productos de tu empresa.</p>
+                </div>
+                <button class="boton" data-ir="nuevo" id="btnAgregarProdTienda">Agregar producto</button>
+            </div>
+
+            <div id="tablaProductos">
+                <div class="vacio">Cargando productos...</div>
+            </div>
+        </section>
+
+        <!-- AGREGAR / EDITAR PRODUCTO -->
+        <section class="seccion" id="nuevo">
+            <div class="encabezado">
+                <div>
+                    <h1 id="tituloFormulario">Agregar producto</h1>
+                    <p class="muted">Completa los datos del implemento que deseas publicar.</p>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <form id="productoForm" class="formulario">
+                    <input type="hidden" id="productoId">
+
+                    <div class="campo">
+                        <label for="nombreProducto">Nombre del producto *</label>
+                        <input id="nombreProducto" maxlength="150" placeholder="Ej. Mancuernas ajustables" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="categoria">Categoría *</label>
+                        <select id="categoria" required>
+                            <option value="">Selecciona una categoría</option>
+                            <option value="Pesas y mancuernas">Pesas y mancuernas</option>
+                            <option value="Máquinas">Máquinas de ejercicio</option>
+                            <option value="Accesorios">Accesorios deportivos</option>
+                            <option value="Ropa deportiva">Ropa deportiva</option>
+                            <option value="Protección">Protección deportiva</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="descripcion">Descripción *</label>
+                        <textarea id="descripcion" maxlength="2000" placeholder="Describe las características..." required></textarea>
+                    </div>
+
+                    <div class="campo">
+                        <label for="precio">Precio en COP *</label>
+                        <input id="precio" type="number" min="1" step="1" placeholder="Ej. 150000" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="stock">Unidades disponibles *</label>
+                        <input id="stock" type="number" min="0" step="1" placeholder="Ej. 20" required>
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="imagen">Imagen del producto</label>
+                        <input id="imagen" type="file" accept="image/jpeg,image/png,image/webp">
+                        <img id="vistaImagen" class="previsualizacion" alt="Vista previa">
+                    </div>
+
+                    <div class="form-acciones">
+                        <button class="boton" id="btnGuardarProducto" type="submit">Guardar producto</button>
+                        <button class="boton boton-secundario" type="button" id="btnCancelarEdicion">Cancelar</button>
+                    </div>
+                </form>
+                <p id="mensajeProducto" class="mensaje" role="status"></p>
+            </div>
+        </section>
+
+        <!-- MI EMPRESA -->
+        <section class="seccion" id="perfil">
+            <div class="encabezado">
+                <div>
+                    <h1>Mi empresa</h1>
+                    <p class="muted">Historial de ventas y métricas de tu negocio.</p>
+                </div>
+                <button class="boton boton-secundario" onclick="cargarVentasEmpresa()">Actualizar datos</button>
+            </div>
+
+            <div class="estadisticas-vertical-larga">
+                <div class="tarjeta-horizontal">
+                    <div class="tarjeta-horizontal-info">
+                        <p class="muted">Ingresos generados</p>
+                        <p class="muted">Total dinero recibido en tu cuenta</p>
+                    </div>
+                    <div class="estadistica-numero-derecha verde" id="ventasDineroTotal">$ 0</div>
+                </div>
+
+                <div class="tarjeta-horizontal">
+                    <div class="tarjeta-horizontal-info">
+                        <p class="muted">Unidades vendidas</p>
+                        <p class="muted">Implementos entregados a clientes</p>
+                    </div>
+                    <div class="estadistica-numero-derecha verde" id="ventasUnidadesTotal">0</div>
+                </div>
+
+                <div class="tarjeta-horizontal">
+                    <div class="tarjeta-horizontal-info">
+                        <p class="muted">Pedidos recibidos</p>
+                        <p class="muted">Compras registradas desde la plataforma</p>
+                    </div>
+                    <div class="estadistica-numero-derecha verde" id="ventasPedidosTotal">0</div>
+                </div>
+            </div>
+
+            <h2>Historial de ventas recientes</h2>
+            <div id="contenedorTablaVentas">
+                <div class="vacio">Cargando historial...</div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: REPORTES RECIBIDOS -->
+        <section class="seccion" id="reportes">
+            <div class="encabezado">
+                <div>
+                    <h1>Reportes de usuarios</h1>
+                    <p class="muted">Gestiona los reportes sobre tus productos. Si alcanzas 10 reportes pendientes, tu cuenta será suspendida.</p>
+                </div>
+                <button class="boton boton-secundario" onclick="cargarReportesEmpresa()">Actualizar reportes</button>
+            </div>
+
+            <div id="contenedorTablaReportes">
+                <div class="vacio">Cargando reportes...</div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+
+    let empresa = JSON.parse(localStorage.getItem("empresaLogueada") || '{"nit": "900123456", "nombre": "Tienda Deportiva Viga"}');
+    let productos = [];
+    let reportesEmpresa = [];
+    let imagenSeleccionada = null;
+
+    const $ = id => document.getElementById(id);
+    const nitEmpresaActual = empresa.nit || empresa.id || empresa.identificacion || "default_nit";
+
+    if(empresa) {
+        $("nombreEmpresaBarra").textContent = empresa.nombre || "Mi empresa";
+        $("nitEmpresaBarra").textContent = "NIT: " + nitEmpresaActual;
+        $("saludoEmpresa").textContent = "Gestiona tu negocio, " + (empresa.nombre || "");
+        $("avatarEmpresa").textContent = (empresa.nombre || "E").charAt(0).toUpperCase();
+    }
+
+    function mostrarMensaje(texto, tipo = "") {
+        $("mensajeProducto").textContent = texto;
+        $("mensajeProducto").className = "mensaje " + tipo;
+    }
+
+    function escapar(texto) {
+        return String(texto ?? "").replace(/[&<>"']/g, caracter => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[caracter]);
+    }
+
+    function dinero(valor) {
+        return Number(valor || 0).toLocaleString("es-CO", {
+            style: "currency", currency: "COP", maximumFractionDigits: 0
+        });
+    }
+
+    function abrirSeccion(nombre) {
+        document.querySelectorAll(".seccion").forEach(seccion => {
+            seccion.classList.toggle("activa", seccion.id === nombre);
+        });
+
+        document.querySelectorAll("[data-seccion]").forEach(boton => {
+            boton.classList.toggle("activo", boton.dataset.seccion === nombre);
+        });
+
+        if (nombre === "productos" || nombre === "resumen") cargarProductos();
+        if (nombre === "perfil") cargarVentasEmpresa();
+        if (nombre === "reportes") cargarReportesEmpresa();
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-seccion]").forEach(boton => {
+        boton.addEventListener("click", () => abrirSeccion(boton.dataset.seccion));
+    });
+
+    document.querySelectorAll("[data-ir]").forEach(boton => {
+        boton.addEventListener("click", () => {
+            if (boton.dataset.ir === "nuevo" && verificarBloqueoCuenta()) return;
+            if (boton.dataset.ir === "nuevo") limpiarFormulario();
+            abrirSeccion(boton.dataset.ir);
+        });
+    });
+
+    function verificarBloqueoCuenta() {
+        const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
+        if (pendientes.length >= 10) {
+            alert("Tu cuenta empresarial se encuentra suspendida por acumular 10 o más reportes sin solucionar.");
+            return true;
         }
-        sincronizarTema();
+        return false;
+    }
 
-        function obtenerEmpresaSesion() {
-            const raw = localStorage.getItem("empresa") || localStorage.getItem("usuario");
-            if (raw) {
-                try { return JSON.parse(raw); } catch (e) {}
+    function actualizarBannerBloqueo(cantPendientes) {
+        const banner = $("alertaBloqueoBanner");
+        const texto = $("textoBannerBloqueo");
+        const btnNuevo1 = $("btnNuevoProdResumen");
+        const btnNuevo2 = $("btnAgregarProdTienda");
+
+        if (cantPendientes >= 10) {
+            banner.classList.add("bloqueada");
+            texto.innerHTML = `<strong style="color: #ff9292;">¡CUENTA SUSPENDIDA!</strong> Has acumulado ${cantPendientes} reportes pendientes sin resolver.`;
+            if(btnNuevo1) btnNuevo1.disabled = true;
+            if(btnNuevo2) btnNuevo2.disabled = true;
+        } else {
+            banner.classList.remove("bloqueada");
+            texto.innerHTML = `Publica tus productos, mantén actualizado el inventario y edita la información de tu catálogo. Reportes pendientes: <strong>${cantPendientes}/10</strong>.`;
+            if(btnNuevo1) btnNuevo1.disabled = false;
+            if(btnNuevo2) btnNuevo2.disabled = false;
+        }
+    }
+
+    function limpiarFormulario() {
+        $("productoForm").reset();
+        $("productoId").value = "";
+        $("tituloFormulario").textContent = "Agregar producto";
+        $("btnGuardarProducto").textContent = "Guardar producto";
+        $("vistaImagen").style.display = "none";
+        $("vistaImagen").src = "";
+        imagenSeleccionada = null;
+        mostrarMensaje("");
+    }
+
+    $("btnCancelarEdicion").addEventListener("click", () => {
+        limpiarFormulario();
+        abrirSeccion("productos");
+    });
+
+    $("imagen").addEventListener("change", event => {
+        const archivo = event.target.files[0];
+        if (!archivo) return;
+        const lector = new FileReader();
+        lector.onload = () => {
+            imagenSeleccionada = lector.result;
+            $("vistaImagen").src = lector.result;
+            $("vistaImagen").style.display = "block";
+        };
+        lector.readAsDataURL(archivo);
+    });
+
+    async function peticion(ruta, opciones = {}) {
+        const respuesta = await fetch(API + ruta, {
+            ...opciones,
+            headers: {
+                ...(opciones.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+                ...(opciones.headers || {})
             }
-            return { nit: "4560987-9", nombre: "SmartFit" };
+        });
+        const datos = await respuesta.json().catch(() => ({}));
+        if (!respuesta.ok) throw new Error(datos.error || "No se pudo completar la solicitud.");
+        return datos;
+    }
+
+    async function cargarProductos() {
+        if (!empresa) return;
+
+        try {
+            const datos = await peticion("/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos");
+            productos = Array.isArray(datos) ? datos : (datos.productos || []);
+            renderizarProductos();
+            await cargarReportesEmpresa();
+        } catch (error) {
+            $("tablaProductos").innerHTML = '<div class="vacio">' + escapar(error.message) + '</div>';
+            $("recientes").innerHTML = '<div class="vacio">No fue posible cargar el catálogo.</div>';
+        }
+    }
+
+    function renderizarProductos() {
+        const total = productos.length;
+        const disponibles = productos.filter(p => Number(p.stock) > 0).length;
+        const agotados = productos.filter(p => Number(p.stock) <= 0).length;
+
+        $("totalProductos").textContent = total;
+        $("productosDisponibles").textContent = disponibles;
+        $("productosAgotados").textContent = agotados;
+
+        if (total === 0) {
+            $("tablaProductos").innerHTML = '<div class="vacio">Aún no tienes productos. Agrega el primero para comenzar.</div>';
+            $("recientes").innerHTML = '<div class="vacio">Tu catálogo está vacío.</div>';
+            return;
         }
 
-        const empresa = obtenerEmpresaSesion();
-        const nitEmpresa = empresa.nit || empresa.identificacion || "4560987-9";
-        const nombreEmpresa = empresa.nombre || empresa.nombres || "SmartFit";
+        const filas = lista => lista.map(p => `
+            <tr>
+                <td class="producto-nombre">${escapar(p.nombre)}</td>
+                <td>${escapar(p.categoria || "Sin categoría")}</td>
+                <td>${dinero(p.precio)}</td>
+                <td>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <input type="number" id="stock-rapido-${p.id}" value="${Number(p.stock || 0)}" min="0" style="width: 70px; padding: 4px; background: #121212; color: #fff; border: 1px solid #414141; border-radius: 4px;">
+                        <button onclick="actualizarStockRapido('${p.id}')" style="background: var(--verde); color: #102014; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold;" title="Guardar stock">✔</button>
+                    </div>
+                </td>
+                <td>${Number(p.stock) > 0 ? '<span class="estado">Disponible</span>' : '<span class="estado estado-agotado">Agotado</span>'}</td>
+                <td>
+                    <div class="acciones">
+                        <button class="boton boton-secundario" onclick="editarProducto('${p.id}')">Editar</button>
+                        <button class="boton boton-peligro" onclick="eliminarProducto('${p.id}')">Eliminar</button>
+                    </div>
+                </td>
+            </tr>
+        `).join("");
 
-        document.getElementById("lblNombreEmpresa").textContent = nombreEmpresa;
-        document.getElementById("lblNitEmpresa").textContent = `NIT: ${nitEmpresa}`;
-        document.getElementById("lblAvatarEmpresa").textContent = nombreEmpresa.charAt(0).toUpperCase();
+        $("tablaProductos").innerHTML = `<div class="tabla-contenedor"><table><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${filas(productos)}</tbody></table></div>`;
+        $("recientes").innerHTML = `<div class="tabla-contenedor"><table><thead><tr><th>Producto</th><th>Precio</th><th>Stock</th></tr></thead><tbody>${productos.slice(0, 5).map(p => `<tr><td>${escapar(p.nombre)}</td><td>${dinero(p.precio)}</td><td>${p.stock}</td></tr>`).join("")}</tbody></table></div>`;
+    }
 
-        function irAReporte(idReporte) {
-            window.location.href = "resolver-reportes.html?id=" + encodeURIComponent(idReporte) + "&nit=" + encodeURIComponent(nitEmpresa);
+    function editarProducto(id) {
+        if(verificarBloqueoCuenta()) return;
+        const producto = productos.find(p => String(p.id) === String(id));
+        if (!producto) return;
+        $("productoId").value = producto.id;
+        $("nombreProducto").value = producto.nombre || "";
+        $("categoria").value = producto.categoria || "";
+        $("descripcion").value = producto.descripcion || "";
+        $("precio").value = producto.precio || "";
+        $("stock").value = producto.stock ?? 0;
+        abrirSeccion("nuevo");
+    }
+
+    $("productoForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (verificarBloqueoCuenta()) return;
+        mostrarMensaje("");
+
+        if (!empresa) return;
+        const id = $("productoId").value;
+
+        const formulario = new FormData();
+        formulario.append("nombre", $("nombreProducto").value.trim());
+        formulario.append("categoria", $("categoria").value);
+        formulario.append("descripcion", $("descripcion").value.trim());
+        formulario.append("precio", Number($("precio").value));
+        formulario.append("stock", Number($("stock").value));
+        
+        // ENVÍA EL NIT FIJO DE LA EMPRESA ASOCIADO AL PRODUCTO
+        formulario.append("nit_empresa", nitEmpresaActual);
+
+        if ($("imagen").files[0]) {
+            formulario.append("imagen", $("imagen").files[0]);
         }
 
-        async function cargarReportes() {
-            const tbody = document.getElementById("cuerpoTablaReportes");
-            const storageKey = "reportes_nit_" + nitEmpresa;
-            let reportes = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        const boton = $("btnGuardarProducto");
+        boton.disabled = true;
+        boton.textContent = "Guardando...";
 
-            try {
-                const res = await fetch(`${API}/empresa/${encodeURIComponent(nitEmpresa)}/reportes?t=${Date.now()}`);
-                if (res.ok) {
-                    const datosServidor = await res.json();
-                    if (datosServidor && datosServidor.length > 0) {
-                        reportes = datosServidor;
-                    }
+        try {
+            const base = "/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos";
+            await peticion(
+                id ? base + "/" + encodeURIComponent(id) : base,
+                {
+                    method: id ? "PUT" : "POST",
+                    body: formulario
                 }
-            } catch (e) {
-                console.warn("Fallo conectando al servidor, cargando datos locales:", e);
+            );
+
+            mostrarMensaje(
+                id ? "Producto actualizado correctamente." : "Producto agregado correctamente.",
+                "correcto"
+            );
+
+            limpiarFormulario();
+            await cargarProductos();
+            abrirSeccion("productos");
+
+        } catch (error) {
+            mostrarMensaje(error.message, "error");
+        } finally {
+            boton.disabled = false;
+            boton.textContent = id ? "Guardar cambios" : "Guardar producto";
+        }
+    });
+
+    async function actualizarStockRapido(id) {
+        if(verificarBloqueoCuenta()) return;
+        const p = productos.find(item => String(item.id) === String(id));
+        if (!p) return;
+        
+        const nuevoStock = document.getElementById(`stock-rapido-${id}`).value;
+        
+        const formulario = new FormData();
+        formulario.append("nombre", p.nombre);
+        formulario.append("categoria", p.categoria || "Otros");
+        formulario.append("descripcion", p.descripcion || "Sin descripción");
+        formulario.append("precio", p.precio);
+        formulario.append("stock", nuevoStock);
+        formulario.append("nit_empresa", nitEmpresaActual);
+
+        try {
+            const base = "/empresa/" + encodeURIComponent(nitEmpresaActual) + "/productos";
+            await peticion(base + "/" + encodeURIComponent(id), { 
+                method: "PUT", 
+                body: formulario 
+            });
+            
+            await cargarProductos();
+            alert("Stock actualizado correctamente");
+        } catch (err) {
+            alert("Error al actualizar el stock: " + err.message);
+        }
+    }
+
+    async function eliminarProducto(id) {
+        if(verificarBloqueoCuenta()) return;
+        if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+        
+        try {
+            await peticion("/productos/" + encodeURIComponent(id), { method: "DELETE" });
+            await cargarProductos();
+        } catch (err) {
+            alert("Error al eliminar el producto: " + err.message);
+        }
+    }
+
+    async function cargarVentasEmpresa() {
+        $("ventasDineroTotal").textContent = dinero(0);
+        $("ventasUnidadesTotal").textContent = "0";
+        $("ventasPedidosTotal").textContent = "0";
+        $("contenedorTablaVentas").innerHTML = `<div class="vacio">No hay ventas recientes registradas.</div>`;
+    }
+
+    // CARGA DE REPORTES USANDO EXCLUSIVAMENTE EL NIT DE LA EMPRESA
+    async function cargarReportesEmpresa() {
+        try {
+            let storageKey = "reportes_nit_" + nitEmpresaActual;
+            reportesEmpresa = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+            const badge = $("badgeReportes");
+            const pendientes = reportesEmpresa.filter(r => r.status === "pendiente" || r.estado === "pendiente");
+
+            if (pendientes.length > 0) {
+                badge.textContent = pendientes.length;
+                badge.style.display = "inline-block";
+            } else {
+                badge.style.display = "none";
             }
 
-            if (!reportes || reportes.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: var(--secundario); padding: 35px;">
-                            No hay reportes de soporte dirigidos a tu empresa.
-                        </td>
-                    </tr>
-                `;
+            actualizarBannerBloqueo(pendientes.length);
+
+            const contenedor = $("contenedorTablaReportes");
+            if (reportesEmpresa.length === 0) {
+                contenedor.innerHTML = '<div class="vacio">No hay reportes de usuarios para esta empresa.</div>';
                 return;
             }
 
-            tbody.innerHTML = "";
-            reportes.slice().reverse().forEach(rep => {
-                const esResuelto = (rep.estado === "resuelto" || rep.status === "resuelto");
-                const tr = document.createElement("tr");
-
-                // Botón VER como enlace nativo que no depende de eventos JS
-                const botonAccion = esResuelto
-                    ? `<span class="texto-solventado">Solventado</span>`
-                    : `<a href="resolver-reportes.html?id=${encodeURIComponent(rep.id)}&nit=${encodeURIComponent(nitEmpresa)}" class="btn-ver-tabla">Ver</a>`;
-
-                tr.innerHTML = `
-                    <td>${rep.fecha || "Reciente"}</td>
-                    <td><strong>${rep.producto || rep.asunto || "Producto"}</strong></td>
-                    <td>${rep.categoria || rep.area || "Producto"}</td>
-                    <td style="max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        ${rep.descripcion || rep.detalle || "--"}
-                    </td>
+            const filas = reportesEmpresa.map(r => `
+                <tr>
+                    <td>${escapar(r.fecha || "Reciente")}</td>
+                    <td><strong>${escapar(r.producto || r.asunto || "General")}</strong></td>
+                    <td>${escapar(r.categoria || "Producto")}</td>
+                    <td>${escapar(r.descripcion || r.detalle || "")}</td>
+                    <td><span class="estado ${r.status === 'resuelto' ? '' : 'estado-agotado'}">${escapar(r.status || 'pendiente')}</span></td>
                     <td>
-                        <span class="badge ${esResuelto ? 'resuelto' : 'pendiente'}">
-                            ${esResuelto ? 'resuelto' : 'pendiente'}
-                        </span>
+                        ${r.status !== 'resuelto' ? `<a href="resolver-reporte.html?id=${encodeURIComponent(r.id)}&nit=${encodeURIComponent(nitEmpresaActual)}" class="boton">Ir</a>` : 'Solventado'}
                     </td>
-                    <td>${botonAccion}</td>
-                `;
+                </tr>
+            `).join("");
 
-                tbody.appendChild(tr);
-            });
+            contenedor.innerHTML = `<div class="tabla-contenedor"><table><thead><tr><th>Fecha</th><th>Producto / Asunto</th><th>Área</th><th>Detalle</th><th>Estado</th><th>Acción</th></tr></thead><tbody>${filas}</tbody></table></div>`;
+        } catch (e) {
+            $("contenedorTablaReportes").innerHTML = '<div class="vacio">Error al cargar los reportes.</div>';
         }
+    }
 
-        function cerrarSesion() {
-            localStorage.removeItem("empresa");
-            window.location.href = "login.empresa.html";
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            cargarReportes();
+    function resolverReporte(idReporte) {
+        let storageKey = "reportes_nit_" + nitEmpresaActual;
+        let lista = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        
+        lista = lista.map(r => {
+            if (r.id === idReporte) r.status = "resuelto";
+            return r;
         });
-    </script>
-</body>
 
+        localStorage.setItem(storageKey, JSON.stringify(lista));
+        cargarReportesEmpresa();
+    }
+
+    $("btnCerrarSesion").addEventListener("click", () => {
+        localStorage.removeItem("empresaLogueada");
+        window.location.href = "login.empresa.html";
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarProductos();
+    });
+</script>
+
+</body>
 </html>
