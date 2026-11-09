@@ -240,11 +240,25 @@ app.post("/compras/procesar", (req, res) => {
 // Crear Reporte de Soporte
 app.post("/soporte/reporte", (req, res) => {
     const { identificacion_usuario, categoria, asunto, descripcion, imagen_url } = req.body;
-    const sql = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, imagen_url, estado, fecha) VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())`;
     
-    conexion.query(sql, [identificacion_usuario, categoria, asunto, descripcion, imagen_url || null], (err) => {
-        if (err) console.error("Aviso al guardar en BD:", err.message);
-        res.json({ mensaje: "Reporte procesado exitosamente." });
+    // 1. Verificar si el usuario ya reportó este mismo producto/asunto
+    const sqlVerificar = "SELECT id FROM reportes_soporte WHERE identificacion_usuario = ? AND asunto = ?";
+    
+    conexion.query(sqlVerificar, [identificacion_usuario, asunto], (err, resultados) => {
+        if (err) return res.status(500).json({ error: "Error en el servidor al verificar reportes." });
+
+        if (resultados.length > 0) {
+            // Si ya hay un resultado, bloqueamos la creación y enviamos un error
+            return res.status(400).json({ error: "Ya has reportado este producto anteriormente." });
+        }
+
+        // 2. Si no existe, procedemos a guardarlo
+        const sql = `INSERT INTO reportes_soporte (identificacion_usuario, categoria, asunto, descripcion, imagen_url, estado, fecha) VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())`;
+        
+        conexion.query(sql, [identificacion_usuario, categoria, asunto, descripcion, imagen_url || null], (err) => {
+            if (err) console.error("Aviso al guardar en BD:", err.message);
+            res.json({ mensaje: "Reporte procesado exitosamente." });
+        });
     });
 });
 
