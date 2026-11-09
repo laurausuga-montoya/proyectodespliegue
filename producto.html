@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Detalles del Producto</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="tema.js"></script>
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #2d2d2d;
+            --input-fondo: #252525;
+            --input-borde: #3b3b3b;
+        }
+
+        body.claro {
+            --fondo: #f4f4f4;
+            --panel: #ffffff;
+            --texto: #111111;
+            --secundario: #666666;
+            --borde: #dddddd;
+            --input-fondo: #f8f8f8;
+            --input-borde: #cccccc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background: var(--fondo); color: var(--texto); min-height: 100vh; }
+
+        header {
+            height: 80px; background: var(--panel); border-bottom: 1px solid var(--borde);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 5%;
+        }
+
+        .logo { font-size: 30px; font-weight: 700; color: var(--verde); text-decoration: none; letter-spacing: 2px;}
+        .btn-volver { color: var(--texto); text-decoration: none; font-size: 14px; font-weight: 500; transition: 0.2s; }
+        .btn-volver:hover { color: var(--verde); }
+
+        .contenedor { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        /* SECCIÓN PRODUCTO */
+        .img-producto { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; border: 1px solid var(--borde); background: var(--panel); }
+        .info-producto h1 { font-size: 32px; margin-bottom: 10px; color: var(--verde); }
+        .info-producto .precio { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
+        .info-producto .empresa { font-size: 13px; color: var(--secundario); margin-bottom: 25px; display: block; }
+        .info-producto p { font-size: 14px; line-height: 1.7; color: var(--secundario); margin-bottom: 25px; }
+        .btn-comprar { width: 100%; background: var(--verde); color: #111; padding: 15px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; border-radius: 4px; }
+        .btn-comprar:hover { filter: brightness(1.1); }
+
+        /* SECCIÓN RESEÑAS */
+        .seccion-resenas { grid-column: 1 / -1; margin-top: 20px; border-top: 1px solid var(--borde); padding-top: 40px; }
+        .seccion-resenas h2 { font-size: 24px; margin-bottom: 25px; }
+
+        .formulario-resena { background: var(--panel); padding: 25px; border: 1px solid var(--borde); border-radius: 8px; margin-bottom: 40px; }
+        
+        .estrellas-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px; margin-bottom: 15px; }
+        .estrellas-input input { display: none; }
+        .estrellas-input label { font-size: 30px; color: #444; cursor: pointer; transition: 0.2s; }
+        .estrellas-input label:hover, .estrellas-input label:hover ~ label, .estrellas-input input:checked ~ label { color: #ffca28; }
+
+        textarea { width: 100%; background: var(--input-fondo); color: var(--texto); border: 1px solid var(--input-borde); padding: 15px; border-radius: 4px; outline: none; resize: vertical; min-height: 100px; margin-bottom: 15px; }
+        textarea:focus { border-color: var(--verde); }
+
+        .form-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .btn-enviar-resena { background: var(--verde); color: #111; padding: 10px 25px; font-weight: 700; border: none; cursor: pointer; border-radius: 4px; }
+        .preview-img { max-width: 100px; max-height: 100px; display: none; border-radius: 4px; margin-top: 10px; border: 1px solid var(--borde); object-fit: cover; }
+
+        /* LISTA DE RESEÑAS */
+        .lista-resenas { display: flex; flex-direction: column; gap: 20px; }
+        .resena-card { background: var(--panel); padding: 20px; border: 1px solid var(--borde); border-radius: 8px; }
+        .resena-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .resena-nombre { font-weight: 700; font-size: 15px; }
+        .resena-fecha { font-size: 12px; color: var(--secundario); }
+        .estrellas-display { color: #ffca28; font-size: 16px; margin-bottom: 10px; letter-spacing: 2px;}
+        .resena-texto { font-size: 14px; line-height: 1.6; color: var(--secundario); margin-bottom: 15px; }
+        .resena-img { max-width: 150px; max-height: 150px; border-radius: 4px; object-fit: cover; border: 1px solid var(--borde); }
+
+        @media (max-width: 800px) { .contenedor { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="tienda.html" class="logo">VIGA</a>
+    <a href="tienda.html" class="btn-volver">Volver a la tienda</a>
+</header>
+
+<div class="contenedor">
+    <!-- DETALLES DEL PRODUCTO -->
+    <div>
+        <img id="imgProducto" class="img-producto" src="" alt="Producto" onerror="this.src='https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80'">
+    </div>
+    <div class="info-producto">
+        <h1 id="nombreProducto">Cargando producto...</h1>
+        <div class="precio" id="precioProducto">$ 0</div>
+        <span class="empresa" id="empresaProducto">Vendido por: --</span>
+        <p id="descProducto">Por favor espera, obteniendo detalles...</p>
+        <button class="btn-comprar" onclick="alert('Agregado al carrito')">Agregar al Carrito</button>
+    </div>
+
+    <!-- ZONA DE RESEÑAS -->
+    <div class="seccion-resenas">
+        <h2>Recomendaciones del Producto</h2>
+
+        <!-- FORMULARIO PARA CALIFICAR -->
+        <div class="formulario-resena">
+            <h3 style="font-size: 16px; margin-bottom: 10px;">Deja tu calificación</h3>
+            <form id="formResena" onsubmit="guardarResena(event)">
+                
+                <div class="estrellas-input">
+                    <input type="radio" id="star5" name="rating" value="5" required/><label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
+                </div>
+
+                <textarea id="textoResena" placeholder="¿Qué te pareció este producto? Escribe tu experiencia aquí..." required></textarea>
+                
+                <div class="form-footer">
+                    <div>
+                        <label for="fotoResena" style="cursor:pointer; font-size:13px; color:var(--verde); border: 1px solid var(--verde); padding: 6px 12px; border-radius: 4px;">📷 Adjuntar foto</label>
+                        <input type="file" id="fotoResena" accept="image/*" style="display:none;">
+                        <img id="previewFoto" class="preview-img">
+                    </div>
+                    <button type="submit" class="btn-enviar-resena">Publicar reseña</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- LISTA DE RESEÑAS PUBLICADAS -->
+        <div class="lista-resenas" id="contenedorResenas">
+            <p style="color: var(--secundario); font-size: 14px;">Aún no hay reseñas. ¡Sé el primero en calificarlo!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = "https://viga-c607.onrender.com";
+    const urlParams = new URLSearchParams(window.location.search);
+    const idProductoUrl = urlParams.get('id');
+    let fotoBase64 = null;
+
+    function sincronizarTema() {
+        const tema = localStorage.getItem("vigaTema");
+        if (tema === "claro") document.body.classList.add("claro");
+    }
+    sincronizarTema();
+
+    // 1. CARGAR DATOS DEL PRODUCTO DESDE EL SERVIDOR
+    async function cargarDetallesProducto() {
+        try {
+            const res = await fetch(`${API}/productos`);
+            const productos = await res.json();
+            const productoEncontrado = productos.find(p => String(p.id) === String(idProductoUrl));
+
+            if (productoEncontrado) {
+                document.title = `VIGA | ${productoEncontrado.nombre}`;
+                document.getElementById('imgProducto').src = productoEncontrado.imagen_url || productoEncontrado.imagen || 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80';
+                document.getElementById('nombreProducto').textContent = productoEncontrado.nombre;
+                document.getElementById('precioProducto').textContent = Number(productoEncontrado.precio).toLocaleString("es-CO", {style: "currency", currency: "COP", maximumFractionDigits: 0});
+                document.getElementById('empresaProducto').textContent = `Vendido por NIT: ${productoEncontrado.nit_empresa || 'Tienda Oficial'}`;
+                document.getElementById('descProducto').textContent = productoEncontrado.descripcion || "Sin descripción disponible.";
+            } else {
+                document.getElementById('nombreProducto').textContent = "Producto no encontrado";
+                document.getElementById('descProducto').textContent = "El producto que buscas ya no existe o fue eliminado.";
+            }
+        } catch (error) {
+            console.error("Error cargando producto:", error);
+        }
+    }
+
+    // 2. LÓGICA DE FOTO EN RESEÑA
+    document.getElementById("fotoResena").addEventListener("change", function(e) {
+        const archivo = e.target.files[0];
+        if (archivo) {
+            const lector = new FileReader();
+            lector.onload = function(ev) {
+                fotoBase64 = ev.target.result;
+                const preview = document.getElementById("previewFoto");
+                preview.src = fotoBase64;
+                preview.style.display = "block";
+            };
+            lector.readAsDataURL(archivo);
+        }
+    });
+
+    // 3. GUARDAR RESEÑA
+    function guardarResena(e) {
+        e.preventDefault();
+        if (!idProductoUrl) return alert("Error: No hay un producto seleccionado.");
+
+        // Obtener usuario logueado
+        const rawUser = localStorage.getItem("usuario") || localStorage.getItem("usuarioLogueado");
+        let nombreUsuario = "Usuario Anónimo";
+        if (rawUser) {
+            try { 
+                const u = JSON.parse(rawUser); 
+                nombreUsuario = u.nombres || u.nombre || "Cliente VIGA"; 
+            } catch (err) {}
+        }
+
+        const estrellas = document.querySelector('input[name="rating"]:checked').value;
+        const texto = document.getElementById("textoResena").value;
+
+        const nuevaResena = {
+            id: Date.now(),
+            usuario: nombreUsuario,
+            estrellas: Number(estrellas),
+            texto: texto,
+            imagen: fotoBase64,
+            fecha: new Date().toLocaleDateString("es-CO")
+        };
+
+        // Guardar en LocalStorage
+        const storageKey = `viga_reviews_${idProductoUrl}`;
+        let resenasGuardadas = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        resenasGuardadas.push(nuevaResena);
+        localStorage.setItem(storageKey, JSON.stringify(resenasGuardadas));
+
+        // Limpiar formulario y recargar
+        document.getElementById("formResena").reset();
+        document.getElementById("previewFoto").style.display = "none";
+        fotoBase64 = null;
+        
+        cargarResenas();
+    }
+
+    // 4. MOSTRAR RESEÑAS
+    function cargarResenas() {
+        if (!idProductoUrl) return;
+        const storageKey = `viga_reviews_${idProductoUrl}`;
+        const resenasGuardadas = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        const contenedor = document.getElementById("contenedorResenas");
+
+        if (resenasGuardadas.length === 0) {
+            contenedor.innerHTML = '<p style="color: var(--secundario); font-size: 14px;">Aún no hay reseñas. ¡Sé el primero en calificarlo!</p>';
+            return;
+        }
+
+        contenedor.innerHTML = "";
+        resenasGuardadas.slice().reverse().forEach(r => {
+            const estrellasHtml = '★'.repeat(r.estrellas) + '☆'.repeat(5 - r.estrellas);
+            const imgHtml = r.imagen ? `<img src="${r.imagen}" class="resena-img" alt="Foto del usuario">` : '';
+
+            contenedor.innerHTML += `
+                <div class="resena-card">
+                    <div class="resena-header">
+                        <span class="resena-nombre">${r.usuario}</span>
+                        <span class="resena-fecha">${r.fecha}</span>
+                    </div>
+                    <div class="estrellas-display">${estrellasHtml}</div>
+                    <div class="resena-texto">${r.texto}</div>
+                    ${imgHtml}
+                </div>
+            `;
+        });
+    }
+
+    // INICIAR
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarDetallesProducto();
+        cargarResenas();
+    });
+</script>
+
+</body>
+</html>

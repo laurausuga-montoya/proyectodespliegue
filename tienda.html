@@ -147,6 +147,12 @@
             height: 200px;
             object-fit: cover;
             background: #222222;
+            cursor: pointer;
+            transition: .2s;
+        }
+        
+        .img-prod:hover {
+            filter: brightness(0.9);
         }
 
         .info-prod {
@@ -312,13 +318,14 @@
                 : "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80";
 
             const nitEmpresa = p.nit_empresa || p.nit || "No registrado";
-            // Corrección aplicada aquí para leer directamente la propiedad dinámica del backend
             const correoEmpresa = p.correo_empresa || p.correo_empresarial || p.correo || "No registrado";
 
             const card = document.createElement("div");
             card.className = "tarjeta-prod";
             card.innerHTML = `
-                <img class="img-prod" src="${imagen}" alt="${p.nombre}">
+                <a href="producto.html?id=${p.id}" title="Ver detalles y reseñas">
+                    <img class="img-prod" src="${imagen}" alt="${p.nombre}">
+                </a>
                 <div class="info-prod">
                     <span class="categoria-tag">${p.categoria || 'OTROS'}</span>
                     <h3 class="nombre-prod">${p.nombre}</h3>
