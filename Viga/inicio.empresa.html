@@ -281,21 +281,23 @@
             border: 1px solid rgba(55, 227, 89, 0.3);
         }
 
-        .btn-resolver-tabla {
+        /* BOTÓN VER (Reemplazo directo de Resolver) */
+        .btn-ver-tabla {
             background: var(--verde);
             color: #111;
             font-weight: 700;
             border: none;
-            padding: 6px 14px;
+            padding: 6px 16px;
             font-size: 12px;
             cursor: pointer;
             border-radius: 3px;
             text-decoration: none;
             display: inline-block;
             transition: .2s;
+            text-align: center;
         }
 
-        .btn-resolver-tabla:hover {
+        .btn-ver-tabla:hover {
             filter: brightness(1.1);
             transform: scale(1.02);
         }
@@ -400,13 +402,8 @@
         document.getElementById("lblNitEmpresa").textContent = `NIT: ${nitEmpresa}`;
         document.getElementById("lblAvatarEmpresa").textContent = nombreEmpresa.charAt(0).toUpperCase();
 
-        // REDIRECCIÓN A LA PÁGINA (CORREGIDO EN PLURAL)
-        function irAResolver(idReporte) {
-            if (!idReporte) {
-                alert("Identificador de reporte ausente.");
-                return;
-            }
-            window.location.href = `resolver-reportes.html?id=${encodeURIComponent(idReporte)}&nit=${encodeURIComponent(nitEmpresa)}`;
+        function irAReporte(idReporte) {
+            window.location.href = "resolver-reportes.html?id=" + encodeURIComponent(idReporte) + "&nit=" + encodeURIComponent(nitEmpresa);
         }
 
         async function cargarReportes() {
@@ -442,10 +439,10 @@
                 const esResuelto = (rep.estado === "resuelto" || rep.status === "resuelto");
                 const tr = document.createElement("tr");
 
-                // Enlace directo en la celda de acción
+                // Botón VER como enlace nativo que no depende de eventos JS
                 const botonAccion = esResuelto
                     ? `<span class="texto-solventado">Solventado</span>`
-                    : `<a href="resolver-reportes.html?id=${encodeURIComponent(rep.id)}&nit=${encodeURIComponent(nitEmpresa)}" class="btn-resolver-tabla">Resolver</a>`;
+                    : `<a href="resolver-reportes.html?id=${encodeURIComponent(rep.id)}&nit=${encodeURIComponent(nitEmpresa)}" class="btn-ver-tabla">Ver</a>`;
 
                 tr.innerHTML = `
                     <td>${rep.fecha || "Reciente"}</td>
