@@ -667,47 +667,57 @@
             return;
         }
 
+        // --- BLOQUEO DE REPORTE DUPLICADO ---
+        const misReportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
+        const yaReportado = misReportesLocales.find(r => r.asunto === nombreProducto && (r.status === "pendiente" || !r.solucion));
+        
+        if (yaReportado) {
+            alert("Ya has reportado este producto y está en revisión por la empresa. Por favor, espera su respuesta.");
+            return;
+        }
+        // ------------------------------------
+
         btn.disabled = true;
         btn.textContent = "Enviando reporte...";
 
-        // Estructura adaptada para enviar la imagen
         const payloadDB = {
             identificacion_usuario: String(idUsuario),
             categoria: categoria,
             asunto: nombreProducto,
             descripcion: descripcion,
-            imagen_url: evidenciaBase64 // <- Se incluye la imagen codificada
+            imagen_url: evidenciaBase64
         };
 
         try {
-            // 1. Envía el reporte a la base de datos general del servidor en Render
             await fetch(`${API}/soporte/reporte`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payloadDB)
             });
 
-            // 2. Guarda el reporte de forma directa en el buzón exclusivo del NIT de la empresa: "reportes_nit_[NIT]"
             let storageKeyEmpresa = "reportes_nit_" + nitEmpresa;
             let reportesDeLaTienda = JSON.parse(localStorage.getItem(storageKeyEmpresa) || "[]");
             
+            // Creamos un ID único que usaremos en ambas partes
+            const reporteIdUnico = Date.now();
+
             reportesDeLaTienda.push({
-                id: Date.now(),
+                id: reporteIdUnico,
                 producto: nombreProducto,
                 asunto: nombreProducto,
                 categoria: categoria,
                 descripcion: descripcion,
-                imagen_url: evidenciaBase64, // <- Guardamos la imagen en el panel de empresa
+                imagen_url: evidenciaBase64,
                 status: "pendiente",
                 fecha: new Date().toLocaleDateString("es-CO") + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
             });
             localStorage.setItem(storageKeyEmpresa, JSON.stringify(reportesDeLaTienda));
 
-            // 3. Guarda copia local en el historial de reportes del usuario
-            const misReportesLocales = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
             misReportesLocales.push({
                 ...payloadDB,
+                id: reporteIdUnico, // Misma ID para poder vincular la respuesta
                 nitTienda: nitEmpresa,
+                status: "pendiente",
                 fecha: new Date().toLocaleDateString("es-CO")
             });
             localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(misReportesLocales));
@@ -729,15 +739,22 @@
         const titulo = document.getElementById("tituloMisReportes");
         const contador = document.getElementById("contadorReportes");
         
-        let lista = [];
-        try {
-            const res = await fetch(`${API}/soporte/mis-reportes/${encodeURIComponent(idUsuario)}?t=${Date.now()}`);
-            if (res.ok) lista = await res.json();
-        } catch (e) {}
+        let lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
 
-        if (!lista || lista.length === 0) {
-            lista = JSON.parse(localStorage.getItem(`viga_reportes_${idUsuario}`) || "[]");
-        }
+        // --- SINCRONIZAR RESPUESTAS DE LA EMPRESA ---
+        lista = lista.map(miReporte => {
+            if (miReporte.nitTienda) {
+                const reportesEmpresa = JSON.parse(localStorage.getItem("reportes_nit_" + miReporte.nitTienda) || "[]");
+                const reporteRespondido = reportesEmpresa.find(re => re.id === miReporte.id);
+                if (reporteRespondido && (reporteRespondido.status === "resuelto" || reporteRespondido.estado === "resuelto")) {
+                    miReporte.status = "resuelto";
+                    miReporte.solucion = reporteRespondido.solucion || "La empresa ha marcado este caso como solventado.";
+                }
+            }
+            return miReporte;
+        });
+        localStorage.setItem(`viga_reportes_${idUsuario}`, JSON.stringify(lista));
+        // ----------------------------------------------
 
         contador.textContent = lista.length;
 
@@ -754,8 +771,18 @@
             const card = document.createElement("div");
             card.className = "pedido-card";
             
-            // Si el reporte tiene imagen, preparamos la etiqueta <img>
             const imagenAdjuntaHtml = rep.imagen_url ? `<img src="${rep.imagen_url}" class="img-reporte-lista" alt="Evidencia">` : "";
+            const esResuelto = rep.status === "resuelto";
+            
+            // Etiqueta y mensaje de solución dependiendo del estado
+            const badgeClase = esResuelto ? "" : "badge-soporte";
+            const badgeTexto = esResuelto ? "✓ Solventado" : "En Revisión";
+            const mensajeSolucionHtml = esResuelto 
+                ? `<div style="background: rgba(55, 227, 89, 0.1); border-left: 3px solid var(--verde); padding: 10px 15px; margin-top: 15px; font-size: 13px; color: var(--texto);">
+                       <strong style="color: var(--verde);">Respuesta de la empresa:</strong><br>
+                       ${rep.solucion}
+                   </div>`
+                : '';
 
             card.innerHTML = `
                 <div class="pedido-header">
@@ -763,13 +790,14 @@
                         <div class="pedido-id">${rep.asunto || "Reporte de Producto"}</div>
                         <div class="pedido-fecha">${rep.fecha || "Reciente"} · Área: ${rep.categoria} ${rep.nitTienda ? '· NIT Destino: ' + rep.nitTienda : ''}</div>
                     </div>
-                    <span class="estado-badge badge-soporte">En Revisión</span>
+                    <span class="estado-badge ${badgeClase}">${badgeTexto}</span>
                 </div>
                 <div style="font-size:13px; color:var(--secundario); line-height:1.6;">
                     ${rep.descripcion}
                     <br>
                     ${imagenAdjuntaHtml}
                 </div>
+                ${mensajeSolucionHtml}
             `;
             contenedor.appendChild(card);
         });
