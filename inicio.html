@@ -75,7 +75,7 @@
         }
 
         /* ==============================
-            USUARIO
+            USUARIO Y FOTO 
         ============================== */
         .usuario {
             display: flex;
@@ -92,7 +92,6 @@
         .avatar {
             width: 46px;
             height: 46px;
-            border-radius: 0%;
             background: #37E359;
             color: #101010;
             display: flex;
@@ -104,11 +103,19 @@
             cursor: pointer;
             user-select: none;
             transition: 0.2s;
+            overflow: hidden; /* IMPORTANTE: Para que la foto no se salga del borde */
         }
 
         .avatar:hover {
             transform: scale(1.08);
             box-shadow: 0 0 18px rgba(55, 227, 89, 0.30);
+        }
+
+        /* ESTILO PARA LA FOTO DENTRO DEL CUADRITO */
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Adapta la foto al cuadro sin deformarla */
         }
 
         /* ==============================
@@ -152,7 +159,7 @@
         ============================== */
         main {
             width: 100%;
-            max-width: 98%; /* Se extiende casi hasta los extremos de la pantalla */
+            max-width: 98%;
             margin: auto;
             padding: 50px 20px;
         }
@@ -191,7 +198,7 @@
             border: 1px solid #292929;
             border-radius: 0px;
             padding: 30px;
-            min-height: 285px; /* Mantiene su altura original */
+            min-height: 285px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -260,136 +267,57 @@
         /* =================================================
             MODO CLARO
         ================================================= */
-        body.claro {
-            background: #f3f3f3;
-            color: #111;
-        }
-
-        body.claro header {
-            background: #ffffff;
-            border-bottom: 1px solid #dddddd;
-        }
-
-        body.claro .menu-btn {
-            color: #222;
-        }
-
-        body.claro .menu-btn:hover {
-            color: #37E359;
-        }
-
-        body.claro .nombre {
-            color: #444;
-        }
-
-        body.claro .menu {
-            background: #ffffff;
-            border-right: 1px solid #dddddd;
-        }
-
-        body.claro .menu a {
-            color: #222;
-        }
-
-        body.claro .menu a:hover {
-            background: #f0f0f0;
-            color: #159c35;
-        }
-
-        body.claro .bienvenida p {
-            color: #666;
-        }
-
-        body.claro .tarjeta {
-            background: #ffffff;
-            border: 1px solid #dddddd;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        body.claro .tarjeta:hover {
-            background: #ffffff;
-            border-color: #37E359;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        body.claro .tarjeta h2 {
-            color: #111;
-        }
-
-        body.claro .tarjeta p {
-            color: #666;
-        }
-
-        body.claro .fondo-menu {
-            background: rgba(0, 0, 0, 0.20);
-        }
+        body.claro { background: #f3f3f3; color: #111; }
+        body.claro header { background: #ffffff; border-bottom: 1px solid #dddddd; }
+        body.claro .menu-btn { color: #222; }
+        body.claro .menu-btn:hover { color: #37E359; }
+        body.claro .nombre { color: #444; }
+        body.claro .menu { background: #ffffff; border-right: 1px solid #dddddd; }
+        body.claro .menu a { color: #222; }
+        body.claro .menu a:hover { background: #f0f0f0; color: #159c35; }
+        body.claro .bienvenida p { color: #666; }
+        body.claro .tarjeta { background: #ffffff; border: 1px solid #dddddd; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); }
+        body.claro .tarjeta:hover { background: #ffffff; border-color: #37E359; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
+        body.claro .tarjeta h2 { color: #111; }
+        body.claro .tarjeta p { color: #666; }
+        body.claro .fondo-menu { background: rgba(0, 0, 0, 0.20); }
 
         /* ==============================
             RESPONSIVE
         ============================== */
-        @media (max-width: 850px) {
-            .contenedor-tarjetas {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        @media (max-width: 850px) { .contenedor-tarjetas { grid-template-columns: 1fr; } }
         @media (max-width: 600px) {
-            header {
-                padding: 0 18px;
-            }
-
-            .nombre {
-                display: none;
-            }
-
-            .logo {
-                font-size: 24px;
-            }
-
-            main {
-                padding: 35px 18px;
-            }
-
-            .bienvenida h1 {
-                font-size: 28px;
-            }
+            header { padding: 0 18px; }
+            .nombre { display: none; }
+            .logo { font-size: 24px; }
+            main { padding: 35px 18px; }
+            .bienvenida h1 { font-size: 28px; }
         }
     </style>
 
-    <!-- TEMA GLOBAL -->
     <link rel="stylesheet" href="tema.css">
     <script src="tema.js"></script>
 </head>
 
 <body>
 
-    <!-- =================================
-         HEADER
-    ================================== -->
     <header>
         <div class="lado-izquierdo">
             <button class="menu-btn" id="menuBtn" type="button" onclick="abrirMenu()">
                 ☰
             </button>
-            <div class="logo">
-                VIGA
-            </div>
+            <div class="logo">VIGA</div>
         </div>
 
         <!-- PERFIL -->
         <div class="usuario">
-            <span class="nombre" id="nombreUsuario">
-                Usuario
-            </span>
+            <span class="nombre" id="nombreUsuario">Usuario</span>
             <div class="avatar" id="avatar" onclick="irAlPerfil()" title="Mi perfil">
                 U
             </div>
         </div>
     </header>
 
-    <!-- =================================
-         MENU
-    ================================== -->
     <nav class="menu" id="menu">
         <a href="reportes.html"> Reportes</a>
         <a href="configuracion.html"> Configuraciones</a>
@@ -397,76 +325,44 @@
         <a href="login.html" onclick="cerrarSesion()"> Cerrar sesión</a>
     </nav>
 
-    <!-- FONDO DEL MENU -->
     <div class="fondo-menu" id="fondoMenu" onclick="cerrarMenu()"></div>
 
-    <!-- =================================
-         CONTENIDO
-    ================================== -->
     <main>
         <section class="bienvenida">
-            <h1>
-                Hola,
-                <span id="nombreBienvenida">
-                    Usuario
-                </span>
-            </h1>
-            <p>
-                Bienvenido a VIGA. ¿Qué quieres hacer hoy?
-            </p>
+            <h1>Hola, <span id="nombreBienvenida">Usuario</span></h1>
+            <p>Bienvenido a VIGA. ¿Qué quieres hacer hoy?</p>
         </section>
 
-        <!-- =================================
-             TARJETAS
-    ================================== -->
         <section class="contenedor-tarjetas">
-            <!-- RUTINAS -->
             <article class="tarjeta">
                 <div>
                     <div class="icono-tarjeta"></div>
                     <h2>Rutinas</h2>
-                    <p>
-                        Crea una rutina personalizada según tu peso, estatura, intensidad y lugar de entrenamiento.
-                    </p>
+                    <p>Crea una rutina personalizada según tu peso, estatura, intensidad y lugar de entrenamiento.</p>
                 </div>
-                <a href="#" id="btnRutinas" class="boton">
-                    Ver rutinas
-                </a>
+                <a href="#" id="btnRutinas" class="boton">Ver rutinas</a>
             </article>
 
-            <!-- ALIMENTACIÓN -->
             <article class="tarjeta">
                 <div>
                     <div class="icono-tarjeta"></div>
                     <h2>Alimentación</h2>
-                    <p>
-                        Consulta un plan de alimentación adaptado a tus objetivos.
-                    </p>
+                    <p>Consulta un plan de alimentación adaptado a tus objetivos.</p>
                 </div>
-                <a href="#" id="btnAlimentacion" class="boton">
-                    Ver plan
-                </a>
+                <a href="#" id="btnAlimentacion" class="boton">Ver plan</a>
             </article>
 
-            <!-- TIENDA -->
             <article class="tarjeta">
                 <div>
                     <div class="icono-tarjeta"></div>
                     <h2>Tienda</h2>
-                    <p>
-                        Encuentra productos y accesorios para tus entrenamientos.
-                    </p>
+                    <p>Encuentra productos y accesorios para tus entrenamientos.</p>
                 </div>
-                <a href="tienda.html" id="btnTienda" class="boton">
-                    Ir a tienda
-                </a>
+                <a href="tienda.html" id="btnTienda" class="boton">Ir a tienda</a>
             </article>
         </section>
     </main>
 
-    <!-- =================================
-         JAVASCRIPT
-    ================================== -->
     <script>
         const API = "https://viga-c607.onrender.com";
 
@@ -502,7 +398,6 @@
             if (!identificacion) return;
 
             try {
-                // CORREGIDO AQUÍ 👇: '/usuarios/' en vez de '/usuario/'
                 const respuesta = await fetch(API + "/usuarios/" + encodeURIComponent(identificacion));
                 const usuario = await respuesta.json();
 
@@ -518,7 +413,6 @@
                     }
                 }
 
-                // CORREGIDO AQUÍ 👇: Acepta tanto 'nombre' como 'nombres'
                 const nombre = usuario.nombres || usuario.nombre || "Usuario";
                 
                 const elNombreUsuario = document.getElementById("nombreUsuario");
@@ -527,9 +421,18 @@
                 const elNombreBienvenida = document.getElementById("nombreBienvenida");
                 if (elNombreBienvenida) elNombreBienvenida.textContent = nombre;
 
+                // ============================================
+                // ESTA ES LA MAGIA QUE PONE LA FOTO CORRECTAMENTE
+                // ============================================
                 const avatar = document.getElementById("avatar");
                 if (avatar) {
-                    avatar.textContent = usuario.icono || nombre.charAt(0).toUpperCase();
+                    if (usuario.icono && usuario.icono.startsWith("data:image")) {
+                        // Si detecta una foto en Base64, imprime una etiqueta de imagen
+                        avatar.innerHTML = `<img src="${usuario.icono}" alt="Foto de perfil">`;
+                    } else {
+                        // Si no, imprime el texto/emoji normal
+                        avatar.textContent = usuario.icono || nombre.charAt(0).toUpperCase();
+                    }
                 }
 
                 localStorage.setItem("usuario", JSON.stringify(usuario));
@@ -568,5 +471,4 @@
         });
     </script>
 </body>
-
 </html>
