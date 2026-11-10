@@ -595,7 +595,7 @@
             }
 
             try {
-                const respuesta = await fetch(API + "/usuario/" + encodeURIComponent(identificacion));
+                const respuesta = await fetch(API + "/usuarios/" + encodeURIComponent(identificacion));
                 if (!respuesta.ok) {
                     throw new Error("No se pudo obtener el usuario.");
                 }
