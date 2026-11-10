@@ -94,7 +94,7 @@
             padding: 35px;
         }
 
-        /* ICONO */
+        /* AVATAR Y FOTO DE PERFIL */
         .zona-icono {
             display: flex;
             flex-direction: column;
@@ -106,7 +106,7 @@
         .avatar {
             width: 110px;
             height: 110px;
-            border-radius: 0%;
+            border-radius: 50%; /* Hecho circular para que la foto se vea mejor */
             background: #37E359;
             color: #111;
             display: flex;
@@ -116,44 +116,37 @@
             font-weight: 700;
             border: 3px solid #37E359;
             margin-bottom: 15px;
+            overflow: hidden; /* Corta la imagen si sobresale */
+            object-fit: cover;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-cambiar-foto {
+            background: #252525;
+            color: var(--texto, white);
+            border: 1px solid #444;
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: none; /* Oculto hasta que se presione modificar */
+        }
+
+        .btn-cambiar-foto:hover {
+            border-color: #37E359;
+            color: #37E359;
         }
 
         .texto-icono {
             color: #999;
             font-size: 13px;
             margin-bottom: 12px;
-        }
-
-        .selector-iconos {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .icono {
-            width: 45px;
-            height: 45px;
-            border-radius: 0%;
-            border: 1px solid #444;
-            background: #252525;
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: .2s;
-        }
-
-        .icono:hover {
-            border-color: #37E359;
-            transform: scale(1.05);
-        }
-
-        .icono.seleccionado {
-            border: 2px solid #37E359;
-            background: #303030;
         }
 
         /* FORMULARIO */
@@ -337,20 +330,14 @@
     <div id="mensaje"></div>
 
     <section class="tarjeta">
-        <!-- ICONO -->
+        <!-- AVATAR Y CARGA DE FOTO -->
         <div class="zona-icono">
-            <div class="avatar" id="avatar">👤</div>
-            <div class="texto-icono">Elige tu icono de perfil</div>
-            <div class="selector-iconos">
-                <button type="button" class="icono" onclick="seleccionarIcono('👤')">👤</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('😀')">😀</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('😎')">😎</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('🧑')">🧑</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('🏋️')">🏋️</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('💪')">💪</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('🔥')">🔥</button>
-                <button type="button" class="icono" onclick="seleccionarIcono('⭐')">⭐</button>
-            </div>
+            <div class="avatar" id="avatarContenedor">👤</div>
+            
+            <label for="inputFoto" class="btn-cambiar-foto" id="btnCambiarFoto">📷 Cambiar foto</label>
+            <input type="file" id="inputFoto" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            
+            <div class="texto-icono" id="textoIcono" style="margin-top: 10px;">Foto de perfil</div>
         </div>
 
         <!-- FORMULARIO -->
@@ -431,8 +418,8 @@ const API = "https://viga-c607.onrender.com";
 
 let usuarioActual = null;
 let datosFisicosActuales = null;
-let iconoSeleccionado = "👤";
 let editando = false;
+let fotoBase64 = null;
 
 function obtenerIdentificacion() {
     const parametros = new URLSearchParams(window.location.search);
@@ -457,6 +444,19 @@ function mostrarMensaje(texto, tipo) {
     mensaje.textContent = texto;
     mensaje.className = tipo === "error" ? "mensaje-error" : "mensaje-exito";
 }
+
+// Cargar la imagen seleccionada por el usuario
+document.getElementById("inputFoto").addEventListener("change", function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(ev) {
+            fotoBase64 = ev.target.result;
+            document.getElementById("avatarContenedor").innerHTML = `<img src="${fotoBase64}" alt="Foto de perfil">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
 
 async function cargarPerfil() {
     const identificacion = obtenerIdentificacion();
@@ -493,9 +493,14 @@ async function cargarPerfil() {
         document.getElementById("correo").value = usuario.correo || "";
         document.getElementById("direccion").value = usuario.direccion || "";
 
-        iconoSeleccionado = usuario.icono || "👤";
-        document.getElementById("avatar").textContent = iconoSeleccionado;
-        marcarIcono();
+        // Cargar foto o avatar por defecto
+        if (usuario.icono && usuario.icono.startsWith("data:image")) {
+            fotoBase64 = usuario.icono;
+            document.getElementById("avatarContenedor").innerHTML = `<img src="${fotoBase64}" alt="Foto de perfil">`;
+        } else {
+            fotoBase64 = null;
+            document.getElementById("avatarContenedor").textContent = "👤";
+        }
 
         // 2. Cargar datos físicos y objetivo desde el endpoint específico
         try {
@@ -543,30 +548,12 @@ function activarEdicion() {
     document.getElementById("altura").disabled = false;
     document.getElementById("objetivo").disabled = false;
 
+    // Mostrar botón para cambiar foto
+    document.getElementById("btnCambiarFoto").style.display = "inline-block";
+    document.getElementById("textoIcono").style.display = "none";
+
     document.getElementById("btnGuardar").disabled = false;
     document.getElementById("btnModificar").disabled = true;
-}
-
-function seleccionarIcono(icono) {
-    if (!editando) {
-        mostrarMensaje("Primero presiona Modificar para cambiar tu icono.", "error");
-        return;
-    }
-
-    iconoSeleccionado = icono;
-    document.getElementById("avatar").textContent = icono;
-    marcarIcono();
-}
-
-function marcarIcono() {
-    const botones = document.querySelectorAll(".icono");
-    botones.forEach(function(boton) {
-        if (boton.textContent.trim() === iconoSeleccionado) {
-            boton.classList.add("seleccionado");
-        } else {
-            boton.classList.remove("seleccionado");
-        }
-    });
 }
 
 async function guardarPerfil() {
@@ -594,22 +581,28 @@ async function guardarPerfil() {
         return;
     }
 
+    // Para evitar sobrecargar la BD si la imagen es muy grande, tu app.js ya soporta hasta 50MB (configurado arriba)
+    const payload = {
+        nombres,
+        apellidos,
+        fecha_nacimiento,
+        telefono,
+        correo,
+        direccion,
+        icono: fotoBase64 || "👤"
+    };
+
+    document.getElementById("btnGuardar").disabled = true;
+    document.getElementById("btnGuardar").textContent = "Guardando...";
+
     try {
-        // 1. Guardar datos personales
+        // 1. Guardar datos personales (incluyendo foto en base64 en la columna icono)
         const respuesta = await fetch(
             API + "/usuario/" + encodeURIComponent(identificacion),
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    nombres,
-                    apellidos,
-                    fecha_nacimiento,
-                    telefono,
-                    correo,
-                    direccion,
-                    icono: iconoSeleccionado
-                })
+                body: JSON.stringify(payload)
             }
         );
 
@@ -639,7 +632,7 @@ async function guardarPerfil() {
             );
         }
 
-        mostrarMensaje("Perfil y datos físicos actualizados correctamente.", "exito");
+        mostrarMensaje("Perfil y foto actualizados correctamente.", "exito");
 
         // Volver a bloquear campos
         editando = false;
@@ -654,7 +647,9 @@ async function guardarPerfil() {
         document.getElementById("altura").disabled = true;
         document.getElementById("objetivo").disabled = true;
 
-        document.getElementById("btnGuardar").disabled = true;
+        document.getElementById("btnCambiarFoto").style.display = "none";
+        document.getElementById("textoIcono").style.display = "block";
+
         document.getElementById("btnModificar").disabled = false;
 
         // Actualizar localStorage
@@ -664,13 +659,15 @@ async function guardarPerfil() {
         usuarioActual.telefono = telefono;
         usuarioActual.correo = correo;
         usuarioActual.direccion = direccion;
-        usuarioActual.icono = iconoSeleccionado;
+        usuarioActual.icono = fotoBase64 || "👤";
 
         localStorage.setItem("usuario", JSON.stringify(usuarioActual));
 
     } catch (error) {
         console.error("Error guardando perfil:", error);
         mostrarMensaje(error.message || "No se pudieron guardar los cambios.", "error");
+    } finally {
+        document.getElementById("btnGuardar").textContent = "Guardar cambios";
     }
 }
 
