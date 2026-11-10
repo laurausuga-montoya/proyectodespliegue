@@ -300,30 +300,23 @@ app.put("/reportes/:id/resolver", (req, res) => {
 // Actualizar Perfil de Usuario y Foto
 app.put("/usuario/:id", (req, res) => {
     const idUsuario = req.params.id;
-    const { nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono } = req.body;
+    let { nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono } = req.body;
 
-    // Actualizamos la tabla usuarios (la columna 'icono' guardará la foto en Base64)
+    // Si la fecha viene vacía, la convertimos a null para que MySQL no dé error
+    if (!fecha_nacimiento || fecha_nacimiento.trim() === "") {
+        fecha_nacimiento = null;
+    }
+
     const sql = `UPDATE usuarios SET nombres = ?, apellidos = ?, fecha_nacimiento = ?, telefono = ?, correo = ?, direccion = ?, icono = ? WHERE identificacion = ?`;
     
     conexion.query(sql, [nombres, apellidos, fecha_nacimiento, telefono, correo, direccion, icono, idUsuario], (error, resultados) => {
         if (error) {
-            console.error("Error guardando perfil:", error);
+            // Imprimimos el error real en Render para saber exactamente qué falló
+            console.error("Error guardando perfil en BD:", error.message);
             return res.status(500).json({ error: "Error en la base de datos al guardar." });
         }
         res.json({ mensaje: "Perfil actualizado con éxito." });
     });
-});
-
-// Guardar Datos Físicos (Ruta de respaldo para evitar error 404)
-app.put("/usuario/:id/datos-fisicos", (req, res) => {
-    // Si más adelante creas una tabla de 'datos_fisicos' en MySQL, la lógica va aquí.
-    // Por ahora respondemos éxito para que el frontend no se rompa al guardar.
-    res.json({ mensaje: "Datos físicos procesados correctamente." });
-});
-
-// Obtener Datos Físicos (Para evitar error 404 al abrir el perfil)
-app.get("/usuario/:id/datos-fisicos", (req, res) => {
-    res.json({});
 });
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Servidor VIGA funcionando en http://0.0.0.0:${PORT}`);
