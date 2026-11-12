@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGA | Quiénes Somos</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --fondo: #121212;
+            --panel: #1b1b1b;
+            --verde: #37E359;
+            --texto: #f4f4f4;
+            --secundario: #aaa;
+            --borde: #353535;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 22px;
+            background: var(--fondo);
+            color: var(--texto);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+
+        .contenedor-somos {
+            width: 100%;
+            max-width: 800px;
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            padding: 50px;
+        }
+
+        .cabecera {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        .logo {
+            color: var(--verde);
+            font-size: 45px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .introduccion {
+            color: #c7c7c7;
+            font-size: 15px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .pilares {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .pilar {
+            background: #121212;
+            padding: 25px;
+            border-left: 4px solid var(--verde);
+        }
+
+        .pilar h3 {
+            color: var(--verde);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .pilar p {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .empresas-aliadas {
+            background: linear-gradient(145deg, #1b1b1b, #203326);
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .empresas-aliadas h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .empresas-aliadas p {
+            font-size: 14px;
+            color: #c7c7c7;
+        }
+
+        .boton-volver {
+            display: block;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 13px;
+            background: var(--verde);
+            color: #102014;
+            text-decoration: none;
+            font-weight: 700;
+            transition: opacity 0.3s;
+        }
+
+        .boton-volver:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .contenedor-somos {
+                padding: 30px 20px;
+            }
+            .logo {
+                font-size: 35px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor-somos">
+        
+        <header class="cabecera">
+            <div class="logo">VIGA</div>
+            <h1>¿Quiénes somos?</h1>
+        </header>
+
+        <section class="introduccion">
+            <p>
+                En VIGA creemos que alcanzar tu mejor versión no debería ser un proceso complicado ni fragmentado. Nacimos con el propósito de crear un ecosistema digital integral donde el entrenamiento físico, la nutrición inteligente y el equipamiento adecuado convergen en un solo lugar. Somos tu espacio definitivo para entrenar, alimentarte mejor y alcanzar tus metas.
+            </p>
+        </section>
+
+        <section class="pilares">
+            <div class="pilar">
+                <h3>Rutinas Personalizadas</h3>
+                <p>
+                    Entendemos que cada cuerpo y cada objetivo son únicos. Por eso, proveemos acceso exclusivo a planes de entrenamiento diseñados a medida, permitiéndote progresar a tu propio ritmo y maximizar tus resultados, ya sea desde casa o en el gimnasio.
+                </p>
+            </div>
+
+            <div class="pilar">
+                <h3>Alimentación y Dietas</h3>
+                <p>
+                    El ejercicio es solo la mitad del camino. En VIGA integramos módulos de dietas personalizadas para asegurar que tu cuerpo reciba el combustible exacto que necesita. Una nutrición estructurada es la base para sostener tu rendimiento y bienestar a largo plazo.
+                </p>
+            </div>
+
+            <div class="pilar">
+                <h3>Tienda de Implementos Especializada</h3>
+                <p>
+                    No necesitas buscar en otro lado lo que requieres para entrenar. Contamos con un catálogo extenso y seguro donde puedes adquirir implementos deportivos, suplementos y accesorios directamente desde nuestra plataforma, con un sistema de compras y gestión de inventario en tiempo real.
+                </p>
+            </div>
+        </section>
+
+        <section class="empresas-aliadas">
+            <h3>Nuestra red de Empresas Aliadas</h3>
+            <p>
+                VIGA no solo está pensado para el usuario final. Hemos desarrollado un sistema robusto para que empresas y marcas del
